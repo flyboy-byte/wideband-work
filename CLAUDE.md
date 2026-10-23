@@ -21,7 +21,8 @@ push to it. `master` tracks upstream unchanged; our work is on branch `analog-ou
    the task is part choice, schematic, placement, routing, checks, renders, fab files, audit,
    ordering or bring-up. If a file listed below is missing, run the skill's "Scaffold the project
    first" steps for the missing files only. If the skill is not installed, say so and stop.
-1. Read `work/STATE.md` (stage, revision, decisions already made, what is open). If it lists a review page, read its
+1. Read `work/STATE.md` (stage, revision, decisions already made, what is open), then `work/HANDOFF.md` if it
+   exists (dense context from the last long session: run history, tool quirks, next steps; a snapshot, so verify it). If it lists a review page, read its
    answered questions (`ArtifactData list questions`) and file them before anything else.
 2. Work the current stage only. A stage is done when its exit condition in `STATE.md` is met, not
    when more docs exist.
