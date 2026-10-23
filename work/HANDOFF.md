@@ -1,6 +1,6 @@
 # HANDOFF — dense session context (read after STATE.md)
 
-Written 2026-10-23 at the end of a ~500k-token session (Sonnet 5.5, then Opus 5.5); replaced the same day after the routing session. This is the "halfway tier":
+Written 2026-10-23 at the end of a ~500k-token session (Sonnet 5.5, then Opus 5.5); replaced twice the same day; this version is from the end of 2026-10-23. This is the "halfway tier":
 more than memory, less than the transcript. It holds what STATE.md and docs/ don't: run history, tool quirks,
 half-finished threads. Replace it (don't append forever) at the next handoff; durable facts belong in STATE/docs.
 
@@ -8,48 +8,44 @@ half-finished threads. Replace it (don't append forever) at the next handoff; du
 - `git -C ~/projects/wideband-work status` / `git log --oneline -15` (branch `analog-out`; `master` == upstream
   mck1117/wideband at 2bb80d2; remote is named `upstream`; never push).
 - `cd work && python3 checks/run_all.py`: expected now: module DRC 11 (upstream), module ERC 0, carrier DRC 26 (all
-  upstream's except 3 unconnected), **`drc_vs_upstream` 0 new / 3 unconnected**, carrier ERC 0, self-check 17/17, drift clean.
+  upstream's), **`drc_vs_upstream` 0 new / 1 unconnected**, `via_in_pad` 0 new, carrier ERC 0, self-check 17/17, drift clean.
   `python3 checks/drc_vs_upstream.py -v` lists the open pairs.
 - Firmware: `cd firmware && make -j12 BOARD=f0_module` (bootloader built once already). App 20,900 B of 25,596; RAM `.heap` 0 B.
 
-## The one thing in progress: carrier PCB routing
-`python3 work/gen/gen_carrier_pcb.py` (~1.5 min) = greedy place (TARGETS order) → `anneal()` (seed env `SEED`, default 4)
-→ nets from schematic → GND fan-out vias → +5V tap vias on upstream's top +5V track → keep-out aids → Freerouting
-(clearance 0.25 at export, neck-down off) → `finish_routes.finish()` grid A* for what is left → delete aids → fill → stitch.
-Env knobs for sweeps: `SEED`, `PASSES`, `ROUTE_CLEARANCE`, `TOP_NO_TRACKS` (JSON boxes), `FINISH_IGNORE` (rule areas the
-finisher may ignore, default `top_no_new_tracks_1`, the box around the regulator caps). Freerouting log: `work/gen/freerouting.log`.
+## The one thing in progress: carrier PCB routing, one connection short
+`python3 work/gen/gen_carrier_pcb.py` (~4 min) = greedy place (TARGETS order) → `anneal()` (SEED default 7) → nets from
+schematic → GND fan-out vias (+ one for D3's +5V pad) → +5V tap vias on upstream's top track → keep-out aids →
+**`finish_routes.negotiate()`** (PathFinder over PREROUTE nets; LOCAL_BOX limits big nets to a corner) → Freerouting
+(clearance 0.25, neck-down off) → `finish_routes.finish()` for leftovers → delete aids → GND islands removed → stitch →
+`join_gnd_pieces()` (via or routed track to the main pour). Checks: `checks/drc_vs_upstream.py -v`, `checks/via_in_pad.py`.
 
-Last raw output (seed 4, committed board):
+Last raw output (committed board, 6d294ae):
 ```
-DRC vs upstream: 0 new violations, 3 unconnected
-  open: Pad 1 [/AOUT_OA] of U6 @62.52,80.00 / Track [/AOUT_OA] @63.47,75.53
-  open: Track [/VREF3] @57.46,81.24 / Pad 5 [/VREF3] of U4 @55.44,80.95
-  open: Track [/AOUT_F2] @61.40,83.39 / Pad 3 [/AOUT_F2] of U6 @62.52,77.47
-finisher: "no path" for these three: walled in by routes Freerouting already laid
+DRC vs upstream: 0 new violations, 1 unconnected
+  open: Track [+5V] on F.Cu @63.29,80.90 / Track [+5V] on B.Cu @59.20,78.15   (D3 clamp diode to +5V, ~5 mm)
+via in pad: 0 new, 0 upstream
 ```
-Seed sweep (finisher on): seeds 1-10 → open 6,4,4,3,6,7,4,6,?,5; new violations 0 only on 2,4,5,7,8.
 
-Run history (one change per row):
+Run history after the first handoff (r1-r16 are in git history of this file):
 | Run | Change | Result |
 | --- | --- | --- |
-| r1-r5 | hand placement → nearest-legal-spot placer; netclass 0.25; mask web 0.1; cutout/edge keep-outs; top keep-out over 12V_RAW | 3 open + GND islands. **Root cause found later:** the placer pushed D5/C16 ~17 mm and JP2 ~16 mm from their targets |
-| r6 | GND fan-out vias (10 of 16 pads) | 13 open: fan-out didn't address the real cause |
-| r7 | annealing placer (net length + distance to existing copper) | 217 → 181 mm; all analog nets routed; CAN_H/+5V open; top tracks cut GND at C1/C2 |
-| r8 | route clearance 0.25, top tracks banned everywhere | 0 new, 10 open (bottom-only too tight, as r4) |
-| r9-r11 | ban box only around caps; keep +5V feed (no room: placer fails); +5V tap vias | 0 new, 5-7 open |
-| r12 | 0402 passives, 1N4148WS (schematic change) | net length 169 → 141; still 5 open |
-| r13 | seed sweep 2-8 | best seed 7: only AOUT_OA open (C15/R8 on opposite sides of two upstream sensor tracks) |
-| r14-15 | crossing penalty; feedback nets weighted ×3; neck-down off | no better (5-9) |
-| r16 | grid finisher, may use top near caps | **0 new, 3 open (seed 4)**: committed |
+| r17-r19 | finisher pre-routes the stage's nets one at a time, locked, in various orders | each order walls in a different net (AOUT, then AOUT_F2/+5V) |
+| r20 | **negotiated routing** (PathFinder: shared cells cost more each round, history cost, rip-up) | 12/12 local nets in 8 rounds, all signals routed; GND cut off at C2/C6 |
+| r21-r23 | 0.5 mm free ring round top-side SMD GND pads (bottom ring blocked U6's escape, so top only) | 12/12, only D3 +5V + GND islands |
+| r24-r25 | +5V whole branch / LSU_Heater+ into negotiation | worse (4 nets stuck in conflict over 80 rounds) |
+| r26 | seed sweep 1-10 with negotiation | seed 7 best: 2 open (LSU_Heater+ branch, D3 +5V) |
+| r27-r28 | D3 +5V fan-out via; keep LSU_Heater+ branch (worse: changes obstacles) → reverted; LSU_Heater+ negotiated in a LOCAL_BOX | 1 open (GND piece) |
+| r29 | GND island removal + `join_gnd_pieces` (via, else routed track) | **0 new / 0 open**: but 9 vias in SMD pads (new check) |
+| r30 | vias kept out of all SMD pads (finisher, fan-out, taps); CAN and D3 +5V in LOCAL_BOX | 0 new, 1 open (D3 +5V): committed 6d294ae |
+| r31 | seeds 1-2; then +5V weight 4 in placement | worse (6, 9 open): reverted |
 
 Next, in order:
-1. Rip-up in the finisher: when a pair has no path, remove the new (unlocked) tracks of the blocking net(s) in a window
-   around U6/U4, route the blocked pair first, then re-route the removed ones. Or route the op-amp's own nets (AOUT_OA,
-   AOUT_INN, AOUT_F2, VREF3) with the finisher *before* Freerouting, locked, so the router works around them.
-   The second is simpler; try it first.
-2. If still short: drop the CAN terminator (R10/JP2, optional feature we added) to free area; ask the owner in STATE.
-3. Then renders (top/bottom) and look; `drift.py record` both files; STATE stage update; review page; BOM/CPL; JLC
-   two-sided cost; audit pack.
+1. D3 → +5V: move D3 by hand in TARGETS next to the +5V top-track tap (around 63-64, 81), or swap D3's role: clamp to
+   the REF3030 input cap C11's +5V pad (same net, sits in the stage). Then re-run seed 7 only.
+2. Fix C17 (op-amp bypass) 4.5 mm from U6 pin 8: weight VOP12 or pin it next to pin 8. Silkscreen overlaps (R3/C12, U5/C11).
+3. Renders → look → review page → BOM/CPL → JLC two-sided quote → audit pack + Codex round → release gate.
+Notes: runs take ~4 min now (negotiation); a 10-seed sweep is ~45 min, so prefer targeted changes. `pkill -f` with the
+script name kills your own shell command; kill by PID.
 
 ## Design facts a cold session would otherwise re-derive (all sourced in docs/)
 - Analog out: module pad SEL_1 = PB1 = TIM3_CH4 (AF1, ST open pin data), shares the pump-DAC timer (46.9 kHz,
