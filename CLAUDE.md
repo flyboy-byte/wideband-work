@@ -3,6 +3,9 @@
 This is a custom PCB project set up with the `pcb-design` skill (KiCad, Freerouting, JLCPCB/LCSC).
 The procedure lives in that skill; this file only says where the state lives.
 
+`AGENTS.md` is the authoritative, model-agnostic guide (evidence tags, subagents, Codex audits) and wins over
+this file. Design notes are in `docs/`.
+
 ## Where the board files are
 The board is the upstream project `mck1117/wideband` (MIT), cloned at `../wideband` and linked here as `upstream/`.
 Do not edit or commit inside it; `git pull` there to update. Boards: `upstream/hardware/board_module/` (LSU 4.2/4.9/ADV

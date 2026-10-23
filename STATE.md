@@ -23,6 +23,7 @@ Mark a stage done only when its exit condition is true. Strike through, don't de
 | 11 | Bring-up | Bring-up tests from `REQUIREMENTS.md` run and recorded below; RISK items checked; lessons in `LESSONS.md` | |
 
 ## Decisions already made (do not re-ask)
+- 2026-10-23 `AGENTS.md` is the authoritative guide for all models; Codex audits follow its "Cross-model audits" section — owner asked for documentation for us, subagents and Codex.
 - 2026-10-23 Work in a separate repo (`wideband-work`), upstream clone `../wideband` stays untouched — owner's choice.
 - 2026-10-23 Intent: build and order the upstream design as is, then adapt it — owner ("both").
 - 2026-10-23 Upstream's `hardware/*/export/` files are upstream releases, not evidence of anything the owner ordered.
@@ -35,12 +36,12 @@ Mark a stage done only when its exit condition is true. Strike through, don't de
 <!-- checks:start -->
 | Check | Result | Summary | Date | Files (sha256/12) |
 | --- | --- | --- | --- | --- |
-| DRC module (errors) | FAIL | DRC 11 errors: solder_mask_bridge 10, clearance 1 (report checks/out/drc.json) | 2026-10-23 | `wideband_controller.kicad_pcb` 0179d031bc63 |
-| ERC module (errors) | PASS | ERC 0 errors (report checks/out/erc.json) | 2026-10-23 | `wideband_controller.kicad_sch` e54843a1e6ef |
-| DRC carrier (errors) | FAIL | DRC 29 errors: courtyards_overlap 14, clearance 8, malformed_courtyard 3, starved_thermal 2 (report checks/out/drc.json) | 2026-10-23 | `board_carrier.kicad_pcb` 71d343b660c5 |
-| ERC carrier (errors) | FAIL | ERC 8 errors: pin_not_driven 3, power_pin_not_driven 3, pin_not_connected 2 (report checks/out/erc.json) | 2026-10-23 | `board_carrier.kicad_sch` 1c4a6695af9a |
+| DRC module (errors) | FAIL | DRC 11 errors: solder_mask_bridge 10, clearance 1 (report checks/out/wideband_controller-drc.json) | 2026-10-23 | `wideband_controller.kicad_pcb` 0179d031bc63 |
+| ERC module (errors) | PASS | ERC 0 errors (report checks/out/wideband_controller-erc.json) | 2026-10-23 | `wideband_controller.kicad_sch` e54843a1e6ef |
+| DRC carrier (errors) | FAIL | DRC 29 errors: courtyards_overlap 14, clearance 8, malformed_courtyard 3, starved_thermal 2 (report checks/out/board_carrier-drc.json) | 2026-10-23 | `board_carrier.kicad_pcb` 71d343b660c5 |
+| ERC carrier (errors) | FAIL | ERC 8 errors: pin_not_driven 3, power_pin_not_driven 3, pin_not_connected 2 (report checks/out/board_carrier-erc.json) | 2026-10-23 | `board_carrier.kicad_sch` 1c4a6695af9a |
 
-Written by `checks/run_all.py` at commit no-git. Don't edit by hand.
+Written by `checks/run_all.py` at commit 7ce6b4e. Don't edit by hand.
 <!-- checks:end -->
 
 ## Bring-up results
@@ -52,5 +53,5 @@ Written by `checks/run_all.py` at commit no-git. Don't edit by hand.
 | --- | --- | --- |
 
 ## Open
-- Upstream module+carrier is CAN-only; analog output needs a design change. Netlist of `upstream/hardware/board_module` (KiCad 10 export, upstream files not an order): MCU is STM32F042K6T (U2); module pad J3-3 `SEL_1` = PB1 (TIM3_CH4), J3-4 `SEL_2` = PA8 (TIM1_CH1). `f0_module` firmware never reads SEL_1/SEL_2 (CAN index is set over CAN), and the carrier schematic has no SEL labels. So an analog output may need no module change: PWM out on a SEL pad, filter and scale on a new carrier. Still to check: firmware config for aux tables on f0, timer use, carrier 5 V headroom, whether TIM1 is already used.
+- Analog output: see `docs/analog-out.md`. Re-checked 2026-10-23: the SEL pads are a CAN-ID strap (not unused) and PA8 shares the heater's timer channel, so the earlier SEL_2 idea is rejected. Current proposal: SEL_1 (PB1) as TIM3_CH4 PWM, filter and scale on a new carrier; module unchanged. Open: confirm PB1 alternate function in the datasheet, f0 config room for the aux curve, Speeduino/FlashPro scaling, carrier op-amp supply.
 - Baseline checks on upstream at its HEAD (2026-10-23, error level): module DRC 11 / ERC 0; carrier DRC 29 / ERC 8. Not yet judged as real or harmless.

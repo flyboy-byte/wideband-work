@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """DRC or ERC through kicad-cli (KiCad 8+; verified on 10.0.7), with a one-line result for run_all.py.
 
-  kicad_check.py drc BOARD.kicad_pcb [--all]      error-level DRC (--all: warnings too); report in checks/out/drc.json
-  kicad_check.py erc SCHEMATIC.kicad_sch [--all]  error-level ERC; report in checks/out/erc.json
+  kicad_check.py drc BOARD.kicad_pcb [--all]      error-level DRC (--all: warnings too); report in checks/out/<board>-drc.json
+  kicad_check.py erc SCHEMATIC.kicad_sch [--all]  error-level ERC; report in checks/out/<schematic>-erc.json
 
 Exit 0 clean, 1 violations, 77 when kicad-cli is not installed (run_all.py records that as SKIPPED, never PASS)."""
 import collections, json, os, shutil, subprocess, sys
@@ -12,7 +12,7 @@ def main(kind, path, *flags):
     if not shutil.which('kicad-cli'):
         print('kicad-cli not installed'); return 77
     os.makedirs('checks/out', exist_ok=True)
-    out = f'checks/out/{kind}.json'
+    out = f'checks/out/{os.path.splitext(os.path.basename(path))[0]}-{kind}.json'
     sev = [] if '--all' in flags else ['--severity-error']
     cmd = ['kicad-cli', 'pcb' if kind == 'drc' else 'sch', kind, *sev, '--format', 'json', '-o', out, path]
     r = subprocess.run(cmd, capture_output=True, text=True)

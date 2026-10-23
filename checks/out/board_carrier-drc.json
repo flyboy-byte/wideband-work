@@ -1,7 +1,7 @@
 {
     "$schema": "https://schemas.kicad.org/drc.v1.json",
     "coordinate_units": "mm",
-    "date": "2026-10-23T08:10:18",
+    "date": "2026-10-23T12:10:07",
     "ignored_checks": [
         {
             "description": "Footprint has no courtyard defined",
@@ -476,104 +476,12 @@
             "description": "Clearance violation ( clearance 0.2000 mm; actual 0.0000 mm)",
             "items": [
                 {
-                    "description": "Via [/LSU_Heater+] on F.Cu - B.Cu",
+                    "description": "Track [/LSU_Heater+] on F.Cu, length 2.6000 mm",
                     "pos": {
-                        "x": 52.7,
-                        "y": 80.8
+                        "x": 61.0,
+                        "y": 74.7
                     },
-                    "uuid": "60caf7fd-aa4a-4754-b364-c569c1185271"
-                },
-                {
-                    "description": "Zone [GND] on F.Cu and B.Cu, priority 0",
-                    "pos": {
-                        "x": 80.0,
-                        "y": 91.25
-                    },
-                    "uuid": "00000000-0000-0000-0000-00005fc6961f"
-                }
-            ],
-            "severity": "error",
-            "type": "clearance"
-        },
-        {
-            "description": "Hole clearance violation (board setup constraints hole clearance 0.2500 mm; actual 0.0000 mm)",
-            "items": [
-                {
-                    "description": "Via [/LSU_Heater+] on F.Cu - B.Cu",
-                    "pos": {
-                        "x": 52.7,
-                        "y": 80.8
-                    },
-                    "uuid": "60caf7fd-aa4a-4754-b364-c569c1185271"
-                },
-                {
-                    "description": "Zone [GND] on F.Cu and B.Cu, priority 0",
-                    "pos": {
-                        "x": 80.0,
-                        "y": 91.25
-                    },
-                    "uuid": "00000000-0000-0000-0000-00005fc6961f"
-                }
-            ],
-            "severity": "error",
-            "type": "hole_clearance"
-        },
-        {
-            "description": "Clearance violation ( clearance 0.2000 mm; actual 0.0000 mm)",
-            "items": [
-                {
-                    "description": "Via [/LSU_Heater+] on F.Cu - B.Cu",
-                    "pos": {
-                        "x": 52.7,
-                        "y": 80.8
-                    },
-                    "uuid": "60caf7fd-aa4a-4754-b364-c569c1185271"
-                },
-                {
-                    "description": "Zone [GND] on F.Cu and B.Cu, priority 0",
-                    "pos": {
-                        "x": 80.0,
-                        "y": 91.25
-                    },
-                    "uuid": "00000000-0000-0000-0000-00005fc6961f"
-                }
-            ],
-            "severity": "error",
-            "type": "clearance"
-        },
-        {
-            "description": "Hole clearance violation (board setup constraints hole clearance 0.2500 mm; actual 0.0000 mm)",
-            "items": [
-                {
-                    "description": "Via [/LSU_Heater+] on F.Cu - B.Cu",
-                    "pos": {
-                        "x": 52.7,
-                        "y": 80.8
-                    },
-                    "uuid": "60caf7fd-aa4a-4754-b364-c569c1185271"
-                },
-                {
-                    "description": "Zone [GND] on F.Cu and B.Cu, priority 0",
-                    "pos": {
-                        "x": 80.0,
-                        "y": 91.25
-                    },
-                    "uuid": "00000000-0000-0000-0000-00005fc6961f"
-                }
-            ],
-            "severity": "error",
-            "type": "hole_clearance"
-        },
-        {
-            "description": "Clearance violation ( clearance 0.2000 mm; actual 0.0000 mm)",
-            "items": [
-                {
-                    "description": "Track [/LSU_Heater+] on F.Cu, length 2.2000 mm",
-                    "pos": {
-                        "x": 54.7,
-                        "y": 78.8
-                    },
-                    "uuid": "c52e86cc-e37f-4e0e-a0cf-5c8f9d31678a"
+                    "uuid": "e9cbfe39-a2f7-48e1-bb00-cc43bcd1a2f3"
                 },
                 {
                     "description": "Zone [GND] on F.Cu and B.Cu, priority 0",
@@ -614,6 +522,52 @@
             "description": "Clearance violation ( clearance 0.2000 mm; actual 0.0000 mm)",
             "items": [
                 {
+                    "description": "Track [/LSU_Heater+] on F.Cu, length 5.7983 mm",
+                    "pos": {
+                        "x": 56.9,
+                        "y": 78.8
+                    },
+                    "uuid": "179f3cd8-dfe6-44f7-8971-2572de3baf66"
+                },
+                {
+                    "description": "Zone [GND] on F.Cu and B.Cu, priority 0",
+                    "pos": {
+                        "x": 80.0,
+                        "y": 91.25
+                    },
+                    "uuid": "00000000-0000-0000-0000-00005fc6961f"
+                }
+            ],
+            "severity": "error",
+            "type": "clearance"
+        },
+        {
+            "description": "Clearance violation ( clearance 0.2000 mm; actual 0.0000 mm)",
+            "items": [
+                {
+                    "description": "Via [/LSU_Heater+] on F.Cu - B.Cu",
+                    "pos": {
+                        "x": 52.7,
+                        "y": 80.8
+                    },
+                    "uuid": "60caf7fd-aa4a-4754-b364-c569c1185271"
+                },
+                {
+                    "description": "Zone [GND] on F.Cu and B.Cu, priority 0",
+                    "pos": {
+                        "x": 80.0,
+                        "y": 91.25
+                    },
+                    "uuid": "00000000-0000-0000-0000-00005fc6961f"
+                }
+            ],
+            "severity": "error",
+            "type": "clearance"
+        },
+        {
+            "description": "Clearance violation ( clearance 0.2000 mm; actual 0.0000 mm)",
+            "items": [
+                {
                     "description": "Track [/LSU_Heater+] on B.Cu, length 7.6368 mm",
                     "pos": {
                         "x": 47.3,
@@ -637,12 +591,12 @@
             "description": "Clearance violation ( clearance 0.2000 mm; actual 0.0000 mm)",
             "items": [
                 {
-                    "description": "Track [/LSU_Heater+] on F.Cu, length 2.6000 mm",
+                    "description": "Track [/LSU_Heater+] on F.Cu, length 2.2000 mm",
                     "pos": {
-                        "x": 61.0,
-                        "y": 74.7
+                        "x": 54.7,
+                        "y": 78.8
                     },
-                    "uuid": "e9cbfe39-a2f7-48e1-bb00-cc43bcd1a2f3"
+                    "uuid": "c52e86cc-e37f-4e0e-a0cf-5c8f9d31678a"
                 },
                 {
                     "description": "Zone [GND] on F.Cu and B.Cu, priority 0",
@@ -657,15 +611,38 @@
             "type": "clearance"
         },
         {
+            "description": "Hole clearance violation (board setup constraints hole clearance 0.2500 mm; actual 0.0000 mm)",
+            "items": [
+                {
+                    "description": "Via [/LSU_Heater+] on F.Cu - B.Cu",
+                    "pos": {
+                        "x": 52.7,
+                        "y": 80.8
+                    },
+                    "uuid": "60caf7fd-aa4a-4754-b364-c569c1185271"
+                },
+                {
+                    "description": "Zone [GND] on F.Cu and B.Cu, priority 0",
+                    "pos": {
+                        "x": 80.0,
+                        "y": 91.25
+                    },
+                    "uuid": "00000000-0000-0000-0000-00005fc6961f"
+                }
+            ],
+            "severity": "error",
+            "type": "hole_clearance"
+        },
+        {
             "description": "Clearance violation ( clearance 0.2000 mm; actual 0.0000 mm)",
             "items": [
                 {
-                    "description": "Track [/LSU_Heater+] on F.Cu, length 5.7983 mm",
+                    "description": "Via [/LSU_Heater+] on F.Cu - B.Cu",
                     "pos": {
-                        "x": 56.9,
-                        "y": 78.8
+                        "x": 52.7,
+                        "y": 80.8
                     },
-                    "uuid": "179f3cd8-dfe6-44f7-8971-2572de3baf66"
+                    "uuid": "60caf7fd-aa4a-4754-b364-c569c1185271"
                 },
                 {
                     "description": "Zone [GND] on F.Cu and B.Cu, priority 0",
@@ -678,6 +655,29 @@
             ],
             "severity": "error",
             "type": "clearance"
+        },
+        {
+            "description": "Hole clearance violation (board setup constraints hole clearance 0.2500 mm; actual 0.0000 mm)",
+            "items": [
+                {
+                    "description": "Via [/LSU_Heater+] on F.Cu - B.Cu",
+                    "pos": {
+                        "x": 52.7,
+                        "y": 80.8
+                    },
+                    "uuid": "60caf7fd-aa4a-4754-b364-c569c1185271"
+                },
+                {
+                    "description": "Zone [GND] on F.Cu and B.Cu, priority 0",
+                    "pos": {
+                        "x": 80.0,
+                        "y": 91.25
+                    },
+                    "uuid": "00000000-0000-0000-0000-00005fc6961f"
+                }
+            ],
+            "severity": "error",
+            "type": "hole_clearance"
         }
     ]
 }
