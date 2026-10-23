@@ -17,6 +17,8 @@
 // this same header is imported by rusEFI to get struct layouts and firmware version
 #include "../for_rusefi/wideband_can.h"
 
+#include "auxout.h"
+
 static Configuration* configuration;
 
 static THD_WORKING_AREA(waCanTxThread, 512);
@@ -34,7 +36,12 @@ void CanTxThread(void*)
             SendCanForChannel(ch);
         }
 
-        prev = chThdSleepUntilWindowed(prev, chTimeAddX(prev, TIME_MS2I(WBO_TX_PERIOD_MS)));
+#ifdef AUXOUT_SEL1_PWM_CHANNEL
+        // This board has no RAM for an aux output thread
+        UpdateAuxOut();
+#endif
+
+        prev =chThdSleepUntilWindowed(prev, chTimeAddX(prev, TIME_MS2I(WBO_TX_PERIOD_MS)));
     }
 }
 

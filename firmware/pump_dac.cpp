@@ -49,6 +49,12 @@ static void SetPumpVoltage(int ch, float volts)
     pumpDac.SetDuty(pumpDacPwmCh[ch], volts / VCC_VOLTS);
 }
 
+// Another channel on the pump DAC timer, for boards that put a second output on it
+void SetPumpTimerDuty(int channel, float duty)
+{
+    pumpDac.SetDuty(channel, duty);
+}
+
 #endif
 
 #ifdef PUMP_DAC_DAC_DEVICE_0

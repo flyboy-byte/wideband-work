@@ -65,14 +65,14 @@ error (0.1 V) is 0.2 AFR, which is why the reference buffer matters [INFERRED].
 
 ## Firmware changes (our fork; f0 has no UART or TunerStudio, `halconf.h` HAL_USE_UART/SERIAL FALSE)
 
-- PB1 to TIM3_CH4 (confirmed in the KiCad STM32F042K symbol's alternate list; the AF number still to check in
-  ST DS10152), sharing TIM3 with the pump DAC; drop the SEL_1 strap read.
+- Done on branch `analog-out`, builds; details and budget in `firmware.md`. PB1 = TIM3_CH4 (AF1, confirmed in ST's
+  pin data), sharing TIM3 with the pump DAC; SEL_1 strap read dropped.
 - The config struct already has `auxOutBins/auxOutValues/auxOutputSource` and pads to 256 bytes in a 1 KB flash page
   (`firmware/boards/port.h`, `boards/f0_module/wideband_layout.ld:11`) [DOCUMENTED]. f0 has no
   `LoadDefaults()`, and there is no TunerStudio link to edit the curve, so the curve must be compiled in (presets,
   maybe chosen by the SEL_2 three-state strap) [INFERRED].
 - A test mode that holds the output at fixed voltages (1.00, 2.50, 4.00 V) for the multimeter, and a gain/offset trim.
-- Flash headroom on the 32 KB F042: UNKNOWN until we build it.
+- Flash: 4.8 KB left; RAM: 8 bytes left, so no new threads (`firmware.md`).
 
 ## Draft bring-up tests for the analog output (owner to confirm, then they move into `REQUIREMENTS.md`)
 

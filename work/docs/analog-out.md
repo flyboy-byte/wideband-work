@@ -26,7 +26,7 @@ FROM MEMORY = model recall, must be checked; UNKNOWN = not found.
 | F8 | PA7 runs as alternate function 2 | DOCUMENTED | `board.h` GPIOA comment |
 | F9 | Pump DAC = TIM3 channel 1 (`PWMD3`, ch 0) on PA6; SYSCLK / 1024 = 46.9 kHz at 48 MHz; config enables all four TIM3 channels active-high | DOCUMENTED | `io/io_pins.h`, `pump_dac.cpp:10-30` |
 | F10 | TIM14 is the system tick | DOCUMENTED | `mcuconf.h:143` (`STM32_ST_USE_TIMER 14`), upstream commit `2bb80d2` |
-| F11 | PA7 has TIM1_CH1N, PA8 has TIM1_CH1, PB1 has TIM3_CH4 (and TIM14_CH1, TIM1_CH3N) | DOCUMENTED | KiCad 10 library `MCU_ST_STM32F0.kicad_sym`, symbol `STM32F042K_4-6_Tx` alternates. AF numbers (AF1 for PB1/TIM3) still FROM MEMORY: check DS10152 |
+| F11 | PB1 AF1 = TIM3_CH4; PA7 AF2 = TIM1_CH1N; PA8 AF2 = TIM1_CH1 | DOCUMENTED | ST `STM32_open_pin_data` `GPIO-STM32F042_gpio_v1_0_Modes.xml`; also the KiCad 10 STM32F042K symbol |
 | F12 | Unrouted MCU pins on the module: PA4, PA5, PA9, PA10, PA15, PF0, PF1 | DOCUMENTED | module netlist (`unconnected-(U2-...)` nets) |
 | F13 | Sensor type is fixed to LSU 4.9 in f0 firmware; ESR drive on PB7 through 22k (R6); 4.2 (PB3, 6.8k) and ADV (PB4, 47k) drives are separate pins, so no lambda-x2-style crosstalk | DOCUMENTED | `port.cpp` `GetSensorType()`, module netlist |
 | F14 | F1 boards scale their aux output by (82+160)/160 = 1.51, so 3.3 V full scale is about 5.0 V | INFERRED | constant `AUXOUT_GAIN` in `boards/f1_rev3/wideband_board_config.h:47`; resistor values not read from a schematic |
@@ -39,7 +39,7 @@ FROM MEMORY = model recall, must be checked; UNKNOWN = not found.
 | --- | --- | --- | --- |
 | A1 | Module has no free pin, so analog out needs a module change | Sonnet 5.5 | **Wrong premise.** Counted 14 pads from the carrier symbol; the module has 16 (F2), and two strap pads exist (F3) |
 | A2 | Reuse SEL_2 (PA8) for PWM, "SEL pads unused by firmware" | Sonnet 5.5 | **Rejected.** SEL pads are a CAN-ID strap (F4); the grep that "showed" them unused was cut off by `head`. PA8's TIM1_CH1 is the complementary pair of the heater's TIM1_CH1N (F7, F8, F11), so it cannot carry an independent duty without disturbing the heater timer |
-| A3 | Reuse SEL_1 (PB1) as TIM3_CH4 | Opus 5.5 | **Current proposal**, below. Needs F11 confirmed |
+| A3 | Reuse SEL_1 (PB1) as TIM3_CH4 | Opus 5.5 | **Current proposal**, below. F11 confirmed; firmware written and builds (`firmware.md`), untested on hardware |
 
 ## Current proposal (A3)
 
@@ -90,8 +90,8 @@ module and copy lambda-x2's output stage onto our carrier, plus the reference bu
 
 ## Open questions
 
-1. AF number for PB1/TIM3_CH4 (DS10152).
-2. Flash headroom on the 32 KB F042 (build it).
+1. ~~AF number for PB1/TIM3_CH4~~ — AF1, confirmed 2026-10-23.
+2. ~~Flash headroom~~ — built 2026-10-23: 4.8 KB flash left, 8 B RAM left; see `firmware.md`.
 3. What 0-5 V scaling do Speeduino and FlashPro expect, and is 10-bit at 46.9 kHz plus filtering fast enough (lambda
    updates around 100 Hz)?
 4. Carrier design: see `docs/carrier.md`.

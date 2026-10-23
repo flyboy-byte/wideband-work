@@ -130,8 +130,21 @@ Configuration* GetConfiguration()
         config = cfg;
     }
 
+#ifdef AUXOUT_SEL1_PWM_CHANNEL
+    // No way to edit the curve on this board (no UART/TunerStudio), so it is compiled in:
+    // AFR 10.0 -> 0 V ... AFR 20.0 -> 5 V, linear (the 0 V = 10:1, 5 V = 20:1 standard)
+    for (int i = 0; i < 8; i++) {
+        config.auxOutBins[0][i] = 10.0f + (20.0f - 10.0f) / 7 * i;
+        config.auxOutValues[0][i] = 0.0f + (5.0f - 0.0f) / 7 * i;
+    }
+    config.auxOutputSource[0] = AuxOutputMode::Afr0;
+
+    // SEL_1 is the analog output, not a strap: never touch its pad mode here. Treat it as floating.
+    uint8_t sel1 = 1;
+#else
     // Now, override the index with a hardware-strapped option (if present)
     auto sel1 = readSelPin(ID_SEL1_PORT, ID_SEL1_PIN);
+#endif
     auto sel2 = readSelPin(ID_SEL2_PORT, ID_SEL2_PIN);
 
     // See https://github.com/mck1117/wideband/issues/11 to explain this madness

@@ -3,6 +3,9 @@
 #include "lambda_conversion.h"
 #include "port.h"
 #include "io_pins.h"
+#include "pump_dac.h"
+#include "sampling.h"
+#include "heater_control.h"
 
 #include "wideband_config.h"
 
@@ -110,7 +113,25 @@ void SetAuxDac(int channel, float voltage)
 
 #endif /* AUXOUT_DAC_DEVICE */
 
-#if (defined(AUXOUT_DAC_PWM_DEVICE) || defined(AUXOUT_DAC_DEVICE))
+#ifdef AUXOUT_SEL1_PWM_CHANNEL
+
+// No timer of its own: the output is a spare channel on the pump DAC timer (TIM3 CH4 on PB1)
+void SetAuxDac(int channel, float voltage)
+{
+    if (channel != 0)
+    {
+        return;
+    }
+
+    auto duty = voltage / AUXOUT_FULL_SCALE_VOLTS;
+    duty = clampF(0, duty, 1);
+
+    SetPumpTimerDuty(AUXOUT_SEL1_PWM_CHANNEL, duty);
+}
+
+#endif /* AUXOUT_SEL1_PWM_CHANNEL */
+
+#if (defined(AUXOUT_DAC_PWM_DEVICE) || defined(AUXOUT_DAC_DEVICE) || defined(AUXOUT_SEL1_PWM_CHANNEL))
 
 static float AuxGetInputSignal(AuxOutputMode sel)
 {
@@ -130,30 +151,62 @@ static float AuxGetInputSignal(AuxOutputMode sel)
     return 0;
 }
 
+static const Configuration* auxCfg;
+
+#ifdef AUXOUT_INVALID_VOLTS
+// Same test as the CAN frame's Valid flag (can.cpp)
+static bool IsLambdaValid(int ch)
+{
+    auto nernstDc = GetSampler(ch).GetNernstDc();
+    bool lambdaValid = nernstDc > (NERNST_TARGET - 0.1f) && nernstDc < (NERNST_TARGET + 0.1f) && GetLambda(ch) > 0.6f;
+
+    return lambdaValid && GetHeaterController(ch).IsRunningClosedLoop();
+}
+#endif
+
+void UpdateAuxOut()
+{
+    if (!auxCfg)
+    {
+        return;
+    }
+
+    for (int ch = 0; ch < AFR_CHANNELS; ch++)
+    {
+        float input = AuxGetInputSignal(auxCfg->auxOutputSource[ch]);
+        float voltage = interpolate2d(input, auxCfg->auxOutBins[ch], auxCfg->auxOutValues[ch]);
+
+#ifdef AUXOUT_INVALID_VOLTS
+        if (!IsLambdaValid(ch))
+        {
+            voltage = AUXOUT_INVALID_VOLTS;
+        }
+#endif
+
+        SetAuxDac(ch, voltage);
+    }
+}
+
+#ifndef AUXOUT_SEL1_PWM_CHANNEL
 /* TODO: merge with some other communication thread? */
 static THD_WORKING_AREA(waAuxOutThread, 256);
 void AuxOutThread(void*)
 {
-    const auto cfg = GetConfiguration();
-
     chRegSetThreadName("Aux out");
 
     while (1)
     {
-        for (int ch = 0; ch < AFR_CHANNELS; ch++)
-        {
-            float input = AuxGetInputSignal(cfg->auxOutputSource[ch]);
-            float voltage = interpolate2d(input, cfg->auxOutBins[ch], cfg->auxOutValues[ch]);
-
-            SetAuxDac(ch, voltage);
-        }
+        UpdateAuxOut();
 
         chThdSleepMilliseconds(10);
     }
 }
+#endif
 
 void InitAuxDac()
 {
+    auxCfg = GetConfiguration();
+
 #if defined(AUXOUT_DAC_PWM_DEVICE)
     auxDacFillPwmConfig();
     auxDac.Start(auxPwmConfig);
@@ -167,11 +220,19 @@ void InitAuxDac()
     SetAuxDac(0, 0.0);
 #endif
 
+#if defined(AUXOUT_SEL1_PWM_CHANNEL)
+    // The pump DAC has started TIM3 (InitPumpDac runs first); hand PB1 to TIM3_CH4 (AF1).
+    // No RAM for another thread here: the CAN TX thread calls UpdateAuxOut().
+    SetAuxDac(0, 0.0);
+    palSetPadMode(GPIOB, 1, PAL_MODE_ALTERNATE(1));
+#else
     chThdCreateStatic(waAuxOutThread, sizeof(waAuxOutThread), NORMALPRIO, AuxOutThread, nullptr);
+#endif
 }
 
-#else /* (AUXOUT_DAC_PWM_DEVICE || AUXOUT_DAC_DEVICE) */
+#else /* (AUXOUT_DAC_PWM_DEVICE || AUXOUT_DAC_DEVICE || AUXOUT_SEL1_PWM_CHANNEL) */
 
 void InitAuxDac() {}
+void UpdateAuxOut() {}
 
 #endif

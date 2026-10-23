@@ -1,6 +1,6 @@
 # STATE — rusEFI wideband (module + carrier)
 
-Status: Scaffolded, stage 1 Requirements not started (2026-10-23)
+Status: Stage 1 Requirements in progress; analog-out firmware drafted (2026-10-23)
 Revision in progress: none yet   Revisions used (never reused): none by the owner. Upstream module exports are rev A, B, C (upstream's own scheme, not ours).
 <If the project already names revisions its own way (v1.0.0), keep its scheme.>
 Review pages: fit check <link>  renders <link>  audit <link>
@@ -55,5 +55,5 @@ Written by `checks/run_all.py` at commit cc50242. Don't edit by hand.
 | --- | --- | --- |
 
 ## Open
-- Analog output: `docs/analog-out.md` (pin and timer, verified facts, attempt log) and `docs/carrier.md` (our carrier: spare connector pins J3-5/J3-7, analog stage, receivers, firmware changes, draft bring-up tests A1-A3). Decided with owner 2026-10-23: stay on the f0 module, copy lambda-x2's output stage onto our carrier, add a reference buffer and trim. Open: PB1 AF number, flash headroom (needs a firmware build: where does our firmware fork live?), op-amp choice, K20Z3 ECU pin, CAN termination jumper, owner to confirm tests A1-A3.
+- Analog output: `docs/analog-out.md`, `docs/carrier.md`, `docs/firmware.md`. Firmware done on branch `analog-out` and builds (2026-10-23): PB1/TIM3_CH4 (AF1 confirmed), updated from the CAN TX thread, compiled-in 10-20 AFR curve, 0 V while invalid; 4.8 KB flash and 8 B RAM left; untested on hardware. Open: carrier design (op-amp, reference, CAN termination), test mode + trim in firmware, invalid-output value (owner), owner to confirm tests A1-A3.
 - Baseline checks on upstream at its HEAD (2026-10-23, error level): module DRC 11 / ERC 0; carrier DRC 29 / ERC 8. Not yet judged as real or harmless.
