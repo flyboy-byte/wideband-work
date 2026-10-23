@@ -1,0 +1,50 @@
+[
+  {
+    "name": "DRC module (errors)",
+    "cmd": [
+      "python3",
+      "checks/kicad_check.py",
+      "drc",
+      "upstream/hardware/board_module/wideband_controller.kicad_pcb"
+    ],
+    "files": [
+      "upstream/hardware/board_module/wideband_controller.kicad_pcb"
+    ]
+  },
+  {
+    "name": "ERC module (errors)",
+    "cmd": [
+      "python3",
+      "checks/kicad_check.py",
+      "erc",
+      "upstream/hardware/board_module/wideband_controller.kicad_sch"
+    ],
+    "files": [
+      "upstream/hardware/board_module/wideband_controller.kicad_sch"
+    ]
+  },
+  {
+    "name": "DRC carrier (errors)",
+    "cmd": [
+      "python3",
+      "checks/kicad_check.py",
+      "drc",
+      "upstream/hardware/board_carrier/board_carrier.kicad_pcb"
+    ],
+    "files": [
+      "upstream/hardware/board_carrier/board_carrier.kicad_pcb"
+    ]
+  },
+  {
+    "name": "ERC carrier (errors)",
+    "cmd": [
+      "python3",
+      "checks/kicad_check.py",
+      "erc",
+      "upstream/hardware/board_carrier/board_carrier.kicad_sch"
+    ],
+    "files": [
+      "upstream/hardware/board_carrier/board_carrier.kicad_sch"
+    ]
+  }
+]
