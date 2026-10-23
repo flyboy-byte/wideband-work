@@ -63,8 +63,8 @@ error (0.1 V) is 0.2 AFR, which is why the reference buffer matters [INFERRED].
      -> LM2904 non-inverting, gain 1 + 68k/100k = 1.68 -> full scale 5.04 V
         dual loop: DC feedback (68k) from AFTER the 330R, so the ECU's input load causes no error;
         AC feedback Cf = 1 nF (C0G) from the op-amp output to IN-, so cable capacitance can't make it oscillate
-     -> 330R -> BAT54S clamp to +5V and GND -> J3-5
-   LM2904 supply: protected 12 V (LSU_Heater+ net) through 100R + 10u
+     -> 330R -> 1N4148W clamps to +5V and GND -> J3-5
+   LM2904 supply: protected 12 V (LSU_Heater+ net) through 1k, 18 V zener, 10u 50 V + 100n
    ```
 
    Why each choice [INFERRED unless tagged]:
@@ -74,8 +74,15 @@ error (0.1 V) is 0.2 AFR, which is why the reference buffer matters [INFERRED].
      -40 C (automotive LM358 family). It cannot swing to exactly 0 V, which only matters below about 10.0 AFR.
    - Dual loop: feedback taken plainly before the 330R reads 0.31% low into 100k (0.016 AFR at mid-scale); taken
      plainly after it, the stage oscillates with cable capacitance (stability table below). The 1 nF Cf fixes both.
-   - BAT54S clamp to +5V: if the op-amp fails high, the output is held near 5.3 V and the 330R limits the current to
-     about 15 mA. Schottky leakage at 5.0 V is small, unlike a 5.1 V zener's soft knee.
+   - 1N4148W clamps (Basic part, replaced the Extended BAT54S): if the op-amp fails high, the output is held near
+     5.7 V and the 330R limits the current to about 15 mA. Their leakage sits inside the DC feedback loop (taken after
+     the 330R), so it is corrected.
+   - Op-amp supply clamp: upstream's input TVS is an SMCJ30CA (C133648: 30 V standoff, 35.1 V breakdown per the JLC
+     listing), so the protected 12 V rail can reach about 35-48 V in a surge; the LM2904 is rated 32 V. 1k + 18 V zener
+     (BZT52C18, C173425) holds it below that; the op-amp draws about 1 mA, so the 1k costs about 1 V of headroom
+     (fine down to about 7.5 V battery for a 5 V output) [INFERRED].
+   - REF3030 output: 100 nF, inside the 0.1-10 uF stable range in TI's current datasheet (SBVS032J) [REPORTED via a
+     search summary of the table; confirm it is the REF3030 row].
 
    Simulation (`work/sim/analog_out.cir`, ngspice 47, behavioral op-amp, feedback outside the 330R) [DOCUMENTED run]:
 
@@ -109,11 +116,13 @@ error (0.1 V) is 0.2 AFR, which is why the reference buffer matters [INFERRED].
    | REF3030AIDBZR | C38423 | SOT-23 | 3.0 V, ±0.2%, 75 ppm/C, 25 mA, Vin 3.05-5.5 V, -40..+125 C | 43,373 |
    | 74LVC1G125GW,125 | C12519 | SOT-353 | 1.65-5.5 V, 32 mA, -40..+125 C | 50,292 |
    | LM2904DR (TI) | C7934 | SOIC-8 | 3-32 V, 3 mV offset, -40..+125 C | 219,267 |
-   | BAT54S,215 | C47546 | SOT-23 | 30 V, 200 mA, series pair | 290,694 |
+   | BZT52C18 | C173425 | SOD-123 | 17.1-18.9 V, 500 mW | 66,666 |
 
-   Passives: 0603 1% from JLC's Basic list, LCSC numbers to be confirmed when the BOM is generated. Open: does REF3030
-   need or tolerate an output capacitor next to the buffer (check the TI datasheet); whether JLC's API marks Basic
-   parts differently (every result above said Extended, including parts expected to be Basic).
+   Extended parts: these four (each carries JLC's per-part setup fee). The LM358DR2G (C7950) is Basic but rated
+   0-70 C only, so the LM2904 stays. JLC's API does mark Basic parts ("base"), checked 2026-10-23.
+   Basic: 1N4148W C81598; 0603 1% resistors 100R C22775, 120R C22787, 330R C23138, 1k C21190, 3.3k C22978,
+   68k C23231, 100k C25803; caps 100n X7R C14663, 1n X7R C1588 (compensation; C0G not needed at these voltages),
+   10u 50 V 1206 C13585. Full list with reasons: `work/gen/gen_carrier_sch.py` PARTS.
 3. **TEST jumper**: a solder jumper from module SEL_2 to GND, open by default, for bench test A1.
 4. **CAN termination**: decide whether to add an optional 120 ohm (solder jumper) for a bus with no other terminator.
 

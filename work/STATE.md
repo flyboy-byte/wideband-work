@@ -42,9 +42,11 @@ Mark a stage done only when its exit condition is true. Strike through, don't de
 | DRC module (errors) | FAIL | DRC 11 errors: solder_mask_bridge 10, clearance 1 (report checks/out/wideband_controller-drc.json) | 2026-10-23 | `wideband_controller.kicad_pcb` 0179d031bc63 |
 | ERC module (errors) | PASS | ERC 0 errors (report checks/out/wideband_controller-erc.json) | 2026-10-23 | `wideband_controller.kicad_sch` e54843a1e6ef |
 | DRC carrier (errors) | FAIL | DRC 29 errors: courtyards_overlap 14, clearance 8, malformed_courtyard 3, starved_thermal 2 (report checks/out/board_carrier-drc.json) | 2026-10-23 | `board_carrier.kicad_pcb` 71d343b660c5 |
-| ERC carrier (errors) | FAIL | ERC 8 errors: pin_not_driven 3, power_pin_not_driven 3, pin_not_connected 2 (report checks/out/board_carrier-erc.json) | 2026-10-23 | `board_carrier.kicad_sch` 1c4a6695af9a |
+| ERC carrier (errors) | PASS | ERC 0 errors (report checks/out/board_carrier-erc.json) | 2026-10-23 | `board_carrier.kicad_sch` cba379bb5498 |
+| Carrier netlist self-check (generator table) | PASS | netlist self-check: 17 nets, 0 problems | 2026-10-23 | `board_carrier.kicad_sch` cba379bb5498, `gen_carrier_sch.py` bfb73db4c799 |
+| No hand edits waiting | PASS | no drift | 2026-10-23 |  |
 
-Written by `checks/run_all.py` at commit cc50242. Don't edit by hand.
+Written by `checks/run_all.py` at commit 2748da2. Don't edit by hand.
 <!-- checks:end -->
 
 ## Bring-up results
@@ -56,5 +58,5 @@ Written by `checks/run_all.py` at commit cc50242. Don't edit by hand.
 | --- | --- | --- |
 
 ## Open
-- Analog output: `docs/analog-out.md`, `docs/carrier.md`, `docs/firmware.md`, `sim/analog_out.cir`. Firmware on branch `analog-out` builds (2026-10-23): PB1/TIM3_CH4, updated from the CAN TX thread, compiled-in 10-20 AFR curve, 0 V while invalid, full scale 5.04 V; 4.8 KB flash, 8 B RAM left; untested on hardware. Carrier analog stage proposed with parts (REF3030 C38423, 74LVC1G125 C12519, LM2904DR C7934, BAT54S C47546) and a behavioral filter simulation (0.7 mV ripple, 4.1 ms settling). Op-amp stability checked with TI's LM2904 model: feedback after the 330R oscillates; dual loop with Cf 1 nF has no overshoot from 1 pF to 47 nF (`sim/stability.sh`). Firmware test mode (SEL_2 low at power-up) and compiled-in trim added; RAM now full to the byte (no runtime allocation, so safe). Next: the carrier schematic as code. Open: how the owner will flash the module (SWD probe or rusEFI over CAN). Open: REF3030 output capacitor, CAN termination jumper, invalid-output value (owner), owner to confirm tests A1-A3.
+- Analog output: `docs/analog-out.md`, `docs/carrier.md`, `docs/firmware.md`, `sim/analog_out.cir`. Firmware on branch `analog-out` builds (2026-10-23): PB1/TIM3_CH4, updated from the CAN TX thread, compiled-in 10-20 AFR curve, 0 V while invalid, full scale 5.04 V; 4.8 KB flash, 8 B RAM left; untested on hardware. Carrier analog stage proposed with parts (REF3030 C38423, 74LVC1G125 C12519, LM2904DR C7934, BAT54S C47546) and a behavioral filter simulation (0.7 mV ripple, 4.1 ms settling). Op-amp stability checked with TI's LM2904 model: feedback after the 330R oscillates; dual loop with Cf 1 nF has no overshoot from 1 pF to 47 nF (`sim/stability.sh`). Firmware test mode (SEL_2 low at power-up) and compiled-in trim added; RAM now full to the byte (no runtime allocation, so safe). Carrier schematic generated from code (`gen/gen_carrier_sch.py`, A3 sheet, upstream drawing kept): ERC 0 errors, netlist self-check 17/17 nets (2026-10-23). Next: carrier PCB (placement and routing of the new parts). Open: how the owner will flash the module (SWD probe or rusEFI over CAN). Open: invalid-output value (owner), owner to confirm tests A1-A3.
 - Baseline checks on upstream at its HEAD (2026-10-23, error level): module DRC 11 / ERC 0; carrier DRC 29 / ERC 8. Not yet judged as real or harmless.

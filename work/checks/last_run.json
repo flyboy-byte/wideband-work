@@ -1,6 +1,6 @@
 {
  "date": "2026-10-23",
- "git_head": "cc50242",
+ "git_head": "2748da2",
  "results": [
   {
    "name": "DRC module (errors)",
@@ -28,11 +28,26 @@
   },
   {
    "name": "ERC carrier (errors)",
-   "status": "fail",
-   "summary": "ERC 8 errors: pin_not_driven 3, power_pin_not_driven 3, pin_not_connected 2 (report checks/out/board_carrier-erc.json)",
+   "status": "pass",
+   "summary": "ERC 0 errors (report checks/out/board_carrier-erc.json)",
    "files": {
-    "../hardware/board_carrier/board_carrier.kicad_sch": "1c4a6695af9a"
+    "../hardware/board_carrier/board_carrier.kicad_sch": "cba379bb5498"
    }
+  },
+  {
+   "name": "Carrier netlist self-check (generator table)",
+   "status": "pass",
+   "summary": "netlist self-check: 17 nets, 0 problems",
+   "files": {
+    "../hardware/board_carrier/board_carrier.kicad_sch": "cba379bb5498",
+    "gen/gen_carrier_sch.py": "bfb73db4c799"
+   }
+  },
+  {
+   "name": "No hand edits waiting",
+   "status": "pass",
+   "summary": "no drift",
+   "files": {}
   }
  ]
 }

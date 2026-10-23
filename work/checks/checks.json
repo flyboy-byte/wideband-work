@@ -46,5 +46,26 @@
     "files": [
       "../hardware/board_carrier/board_carrier.kicad_sch"
     ]
+  },
+  {
+    "name": "Carrier netlist self-check (generator table)",
+    "cmd": [
+      "python3",
+      "gen/gen_carrier_sch.py",
+      "--check"
+    ],
+    "files": [
+      "../hardware/board_carrier/board_carrier.kicad_sch",
+      "gen/gen_carrier_sch.py"
+    ]
+  },
+  {
+    "name": "No hand edits waiting",
+    "cmd": [
+      "python3",
+      "checks/drift.py",
+      "check"
+    ],
+    "files": []
   }
 ]
