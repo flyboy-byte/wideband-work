@@ -1,0 +1,156 @@
+{
+    "$schema": "https://schemas.kicad.org/erc.v1.json",
+    "coordinate_units": "mm",
+    "date": "2026-10-23T12:10:07",
+    "ignored_checks": [
+        {
+            "description": "Global label only appears once in the schematic",
+            "key": "single_global_label"
+        },
+        {
+            "description": "Four connection points are joined together",
+            "key": "four_way_junction"
+        },
+        {
+            "description": "SPICE model issue",
+            "key": "simulation_model_issue"
+        },
+        {
+            "description": "Assigned footprint doesn't match footprint filters",
+            "key": "footprint_filter"
+        }
+    ],
+    "included_severities": [
+        "error"
+    ],
+    "kicad_version": "10.0.7",
+    "sheets": [
+        {
+            "path": "/",
+            "uuid_path": "/ced346c9-14a8-4e20-a33d-cc66a3846faa",
+            "violations": [
+                {
+                    "description": "Pin not connected",
+                    "items": [
+                        {
+                            "description": "Symbol U3 Pin 3 [SEL_1, Input, Line]",
+                            "pos": {
+                                "x": 57.785,
+                                "y": 135.89
+                            },
+                            "uuid": "60204056-d7b9-4c66-9ee6-94a134977ecc"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "pin_not_connected"
+                },
+                {
+                    "description": "Input pin not driven by any Output pins",
+                    "items": [
+                        {
+                            "description": "Symbol U3 Pin 3 [SEL_1, Input, Line]",
+                            "pos": {
+                                "x": 57.785,
+                                "y": 135.89
+                            },
+                            "uuid": "60204056-d7b9-4c66-9ee6-94a134977ecc"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "pin_not_driven"
+                },
+                {
+                    "description": "Pin not connected",
+                    "items": [
+                        {
+                            "description": "Symbol U3 Pin 4 [SEL_2, Input, Line]",
+                            "pos": {
+                                "x": 57.785,
+                                "y": 138.43
+                            },
+                            "uuid": "66b7ae7d-1bb6-47d9-b5c2-1a3b652f8077"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "pin_not_connected"
+                },
+                {
+                    "description": "Input pin not driven by any Output pins",
+                    "items": [
+                        {
+                            "description": "Symbol U3 Pin 4 [SEL_2, Input, Line]",
+                            "pos": {
+                                "x": 57.785,
+                                "y": 138.43
+                            },
+                            "uuid": "66b7ae7d-1bb6-47d9-b5c2-1a3b652f8077"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "pin_not_driven"
+                },
+                {
+                    "description": "Input pin not driven by any Output pins",
+                    "items": [
+                        {
+                            "description": "Symbol U3 Pin 8 [Boot0, Input, Line]",
+                            "pos": {
+                                "x": 57.785,
+                                "y": 146.05
+                            },
+                            "uuid": "3ddb6ec6-7394-47b3-8af0-7d9eff7d0d5c"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "pin_not_driven"
+                },
+                {
+                    "description": "Input Power pin not driven by any Output Power pins",
+                    "items": [
+                        {
+                            "description": "Symbol U2 Pin 1 [VI, Power input, Line]",
+                            "pos": {
+                                "x": 100.33,
+                                "y": 76.2
+                            },
+                            "uuid": "5f0c8554-5df8-4de0-bbf7-03cef0132338"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "power_pin_not_driven"
+                },
+                {
+                    "description": "Input Power pin not driven by any Output Power pins",
+                    "items": [
+                        {
+                            "description": "Symbol U1 Pin 5 [VIO, Power input, Line]",
+                            "pos": {
+                                "x": 173.355,
+                                "y": 86.995
+                            },
+                            "uuid": "4298f958-b48b-46db-abad-da9459af899d"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "power_pin_not_driven"
+                },
+                {
+                    "description": "Input Power pin not driven by any Output Power pins",
+                    "items": [
+                        {
+                            "description": "Symbol #PWR0101 Hidden pin 1 [GND, Power input, Line]",
+                            "pos": {
+                                "x": 186.055,
+                                "y": 94.615
+                            },
+                            "uuid": "062014d7-1058-4e6b-87de-3baa7bc673c4"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "power_pin_not_driven"
+                }
+            ]
+        }
+    ],
+    "source": "board_carrier.kicad_sch"
+}

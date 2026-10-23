@@ -1,0 +1,38 @@
+{
+ "date": "2026-10-23",
+ "git_head": "7ce6b4e",
+ "results": [
+  {
+   "name": "DRC module (errors)",
+   "status": "fail",
+   "summary": "DRC 11 errors: solder_mask_bridge 10, clearance 1 (report checks/out/wideband_controller-drc.json)",
+   "files": {
+    "upstream/hardware/board_module/wideband_controller.kicad_pcb": "0179d031bc63"
+   }
+  },
+  {
+   "name": "ERC module (errors)",
+   "status": "pass",
+   "summary": "ERC 0 errors (report checks/out/wideband_controller-erc.json)",
+   "files": {
+    "upstream/hardware/board_module/wideband_controller.kicad_sch": "e54843a1e6ef"
+   }
+  },
+  {
+   "name": "DRC carrier (errors)",
+   "status": "fail",
+   "summary": "DRC 29 errors: courtyards_overlap 14, clearance 8, malformed_courtyard 3, starved_thermal 2 (report checks/out/board_carrier-drc.json)",
+   "files": {
+    "upstream/hardware/board_carrier/board_carrier.kicad_pcb": "71d343b660c5"
+   }
+  },
+  {
+   "name": "ERC carrier (errors)",
+   "status": "fail",
+   "summary": "ERC 8 errors: pin_not_driven 3, power_pin_not_driven 3, pin_not_connected 2 (report checks/out/board_carrier-erc.json)",
+   "files": {
+    "upstream/hardware/board_carrier/board_carrier.kicad_sch": "1c4a6695af9a"
+   }
+  }
+ ]
+}

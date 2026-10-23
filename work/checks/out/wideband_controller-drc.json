@@ -1,0 +1,293 @@
+{
+    "$schema": "https://schemas.kicad.org/drc.v1.json",
+    "coordinate_units": "mm",
+    "date": "2026-10-23T12:10:05",
+    "ignored_checks": [
+        {
+            "description": "Footprint has no courtyard defined",
+            "key": "missing_courtyard"
+        },
+        {
+            "description": "Track endpoint not centered on via",
+            "key": "track_not_centered_on_via"
+        },
+        {
+            "description": "Tuning profile track geometries",
+            "key": "tuning_profile_track_geometries"
+        },
+        {
+            "description": "Footprint doesn't match symbol's footprint filters",
+            "key": "footprint_filters_mismatch"
+        },
+        {
+            "description": "PTH inside courtyard",
+            "key": "pth_inside_courtyard"
+        },
+        {
+            "description": "NPTH inside courtyard",
+            "key": "npth_inside_courtyard"
+        }
+    ],
+    "included_severities": [
+        "error"
+    ],
+    "kicad_version": "10.0.7",
+    "schematic_parity": [],
+    "source": "wideband_controller.kicad_pcb",
+    "unconnected_items": [],
+    "violations": [
+        {
+            "description": "Front solder mask aperture bridges items with different nets",
+            "items": [
+                {
+                    "description": "Pad 1 [Net-(C3-Pad1)] of U1 on F.Cu",
+                    "pos": {
+                        "x": 97.38,
+                        "y": 86.95
+                    },
+                    "uuid": "502deaaa-b962-4ee6-9d00-74c442690fa7"
+                },
+                {
+                    "description": "Pad 2 [Net-(U1A--)] of U1 on F.Cu",
+                    "pos": {
+                        "x": 97.38,
+                        "y": 87.6
+                    },
+                    "uuid": "66e5da77-f6fc-4cc8-9ee5-b0f0584dc5df"
+                }
+            ],
+            "severity": "error",
+            "type": "solder_mask_bridge"
+        },
+        {
+            "description": "Front solder mask aperture bridges items with different nets",
+            "items": [
+                {
+                    "description": "Pad 2 [Net-(U1A--)] of U1 on F.Cu",
+                    "pos": {
+                        "x": 97.38,
+                        "y": 87.6
+                    },
+                    "uuid": "66e5da77-f6fc-4cc8-9ee5-b0f0584dc5df"
+                },
+                {
+                    "description": "Pad 3 [Net-(U1A-+)] of U1 on F.Cu",
+                    "pos": {
+                        "x": 97.38,
+                        "y": 88.25
+                    },
+                    "uuid": "df87067a-8436-45da-a5a3-c2dd683ae608"
+                }
+            ],
+            "severity": "error",
+            "type": "solder_mask_bridge"
+        },
+        {
+            "description": "Front solder mask aperture bridges items with different nets",
+            "items": [
+                {
+                    "description": "Pad 3 [Net-(U1A-+)] of U1 on F.Cu",
+                    "pos": {
+                        "x": 97.38,
+                        "y": 88.25
+                    },
+                    "uuid": "df87067a-8436-45da-a5a3-c2dd683ae608"
+                },
+                {
+                    "description": "Pad 4 [+3V3] of U1 on F.Cu",
+                    "pos": {
+                        "x": 97.38,
+                        "y": 88.9
+                    },
+                    "uuid": "6338a181-02a6-4935-a5f5-fce28cf9934f"
+                }
+            ],
+            "severity": "error",
+            "type": "solder_mask_bridge"
+        },
+        {
+            "description": "Front solder mask aperture bridges items with different nets",
+            "items": [
+                {
+                    "description": "Pad 4 [+3V3] of U1 on F.Cu",
+                    "pos": {
+                        "x": 97.38,
+                        "y": 88.9
+                    },
+                    "uuid": "6338a181-02a6-4935-a5f5-fce28cf9934f"
+                },
+                {
+                    "description": "Pad 5 [Net-(U1B-+)] of U1 on F.Cu",
+                    "pos": {
+                        "x": 97.38,
+                        "y": 89.55
+                    },
+                    "uuid": "9b69c4b4-e1df-4b6e-90c7-c3e9d3494cc5"
+                }
+            ],
+            "severity": "error",
+            "type": "solder_mask_bridge"
+        },
+        {
+            "description": "Front solder mask aperture bridges items with different nets",
+            "items": [
+                {
+                    "description": "Pad 5 [Net-(U1B-+)] of U1 on F.Cu",
+                    "pos": {
+                        "x": 97.38,
+                        "y": 89.55
+                    },
+                    "uuid": "9b69c4b4-e1df-4b6e-90c7-c3e9d3494cc5"
+                },
+                {
+                    "description": "Pad 6 [Net-(U1B--)] of U1 on F.Cu",
+                    "pos": {
+                        "x": 97.38,
+                        "y": 90.2
+                    },
+                    "uuid": "3c83c323-c1b4-4d86-bffa-0a999c2ccce9"
+                }
+            ],
+            "severity": "error",
+            "type": "solder_mask_bridge"
+        },
+        {
+            "description": "Front solder mask aperture bridges items with different nets",
+            "items": [
+                {
+                    "description": "Pad 6 [Net-(U1B--)] of U1 on F.Cu",
+                    "pos": {
+                        "x": 97.38,
+                        "y": 90.2
+                    },
+                    "uuid": "3c83c323-c1b4-4d86-bffa-0a999c2ccce9"
+                },
+                {
+                    "description": "Pad 7 [/Un_sense] of U1 on F.Cu",
+                    "pos": {
+                        "x": 97.38,
+                        "y": 90.85
+                    },
+                    "uuid": "03508b85-f0e4-4d9d-9edb-debc52eb1d19"
+                }
+            ],
+            "severity": "error",
+            "type": "solder_mask_bridge"
+        },
+        {
+            "description": "Front solder mask aperture bridges items with different nets",
+            "items": [
+                {
+                    "description": "Pad 9 [/LSU_Un_sense] of U1 on F.Cu",
+                    "pos": {
+                        "x": 103.28,
+                        "y": 90.2
+                    },
+                    "uuid": "e59562fd-bdd6-49b6-8465-661727538f76"
+                },
+                {
+                    "description": "Pad 10 [/LSU_Un] of U1 on F.Cu",
+                    "pos": {
+                        "x": 103.28,
+                        "y": 89.55
+                    },
+                    "uuid": "d6d4a142-5911-465b-bd5c-678a062f0707"
+                }
+            ],
+            "severity": "error",
+            "type": "solder_mask_bridge"
+        },
+        {
+            "description": "Front solder mask aperture bridges items with different nets",
+            "items": [
+                {
+                    "description": "Pad 10 [/LSU_Un] of U1 on F.Cu",
+                    "pos": {
+                        "x": 103.28,
+                        "y": 89.55
+                    },
+                    "uuid": "d6d4a142-5911-465b-bd5c-678a062f0707"
+                },
+                {
+                    "description": "Pad 11 [GND] of U1 on F.Cu",
+                    "pos": {
+                        "x": 103.28,
+                        "y": 88.9
+                    },
+                    "uuid": "6402253a-9025-42fa-a531-5ea737861b1b"
+                }
+            ],
+            "severity": "error",
+            "type": "solder_mask_bridge"
+        },
+        {
+            "description": "Front solder mask aperture bridges items with different nets",
+            "items": [
+                {
+                    "description": "Pad 11 [GND] of U1 on F.Cu",
+                    "pos": {
+                        "x": 103.28,
+                        "y": 88.9
+                    },
+                    "uuid": "6402253a-9025-42fa-a531-5ea737861b1b"
+                },
+                {
+                    "description": "Pad 12 [Net-(U1D-+)] of U1 on F.Cu",
+                    "pos": {
+                        "x": 103.28,
+                        "y": 88.25
+                    },
+                    "uuid": "32221eaf-8358-4d34-bd67-b9cd31400fb4"
+                }
+            ],
+            "severity": "error",
+            "type": "solder_mask_bridge"
+        },
+        {
+            "description": "Front solder mask aperture bridges items with different nets",
+            "items": [
+                {
+                    "description": "Pad 12 [Net-(U1D-+)] of U1 on F.Cu",
+                    "pos": {
+                        "x": 103.28,
+                        "y": 88.25
+                    },
+                    "uuid": "32221eaf-8358-4d34-bd67-b9cd31400fb4"
+                },
+                {
+                    "description": "Pad 13 [/Vm] of U1 on F.Cu",
+                    "pos": {
+                        "x": 103.28,
+                        "y": 87.6
+                    },
+                    "uuid": "fc25a69a-fa4a-482c-89a6-85e8d614eb4b"
+                }
+            ],
+            "severity": "error",
+            "type": "solder_mask_bridge"
+        },
+        {
+            "description": "Clearance violation (zone clearance 0.2000 mm; actual 0.1999 mm)",
+            "items": [
+                {
+                    "description": "Zone [Net-(J1-Pin_1)] on F.Cu, priority 1",
+                    "pos": {
+                        "x": 109.982,
+                        "y": 78.232
+                    },
+                    "uuid": "00000000-0000-0000-0000-000060a5badd"
+                },
+                {
+                    "description": "Zone [Net-(J1-Pin_3)] on F.Cu, priority 0",
+                    "pos": {
+                        "x": 109.982,
+                        "y": 83.566
+                    },
+                    "uuid": "8a4064b5-1118-474b-926d-0ef1858ef786"
+                }
+            ],
+            "severity": "error",
+            "type": "clearance"
+        }
+    ]
+}

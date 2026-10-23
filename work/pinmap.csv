@@ -1,0 +1,2 @@
+signal,mcu_pin,fw_pin,net,terminal,label,direction,level,notes
+# one row per MCU pin in use; the schematic generator and firmware headers both read this file
