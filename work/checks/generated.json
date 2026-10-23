@@ -1,3 +1,4 @@
 {
- "../hardware/board_carrier/board_carrier.kicad_sch": "cba379bb549823dd930393d80a937136e08b12453a9c12e76221114b7a56be07"
+ "../hardware/board_carrier/board_carrier.kicad_sch": "cba379bb549823dd930393d80a937136e08b12453a9c12e76221114b7a56be07",
+ "../hardware/board_carrier/board_carrier.kicad_pcb": "a793e0b5fe41b41ce5f3e05af1513daaea118a0d02b6f32f52fee453b18dff43"
 }
