@@ -1,6 +1,6 @@
 {
  "date": "2026-10-23",
- "git_head": "2748da2",
+ "git_head": "de74a86",
  "results": [
   {
    "name": "DRC module (errors)",
@@ -21,9 +21,9 @@
   {
    "name": "DRC carrier (errors)",
    "status": "fail",
-   "summary": "DRC 29 errors: courtyards_overlap 14, clearance 8, malformed_courtyard 3, starved_thermal 2 (report checks/out/board_carrier-drc.json)",
+   "summary": "DRC 32 errors: courtyards_overlap 14, unconnected_items 7, starved_thermal 4, copper_edge_clearance 3 (report checks/out/board_carrier-drc.json)",
    "files": {
-    "../hardware/board_carrier/board_carrier.kicad_pcb": "71d343b660c5"
+    "../hardware/board_carrier/board_carrier.kicad_pcb": "a793e0b5fe41"
    }
   },
   {
