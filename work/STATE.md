@@ -41,13 +41,14 @@ Mark a stage done only when its exit condition is true. Strike through, don't de
 | --- | --- | --- | --- | --- |
 | DRC module (errors) | FAIL | DRC 11 errors: solder_mask_bridge 10, clearance 1 (report checks/out/wideband_controller-drc.json) | 2026-10-23 | `wideband_controller.kicad_pcb` 0179d031bc63 |
 | ERC module (errors) | PASS | ERC 0 errors (report checks/out/wideband_controller-erc.json) | 2026-10-23 | `wideband_controller.kicad_sch` e54843a1e6ef |
-| DRC carrier (errors) | FAIL | DRC 26 errors: courtyards_overlap 14, copper_edge_clearance 3, malformed_courtyard 3, unconnected_items 3 (report checks/out/board_carrier-drc.json) | 2026-10-23 | `board_carrier.kicad_pcb` bc5fd8b65e39 |
-| Carrier DRC vs upstream baseline (new violations, unconnected) | FAIL | DRC vs upstream: 0 new violations, 3 unconnected | 2026-10-23 | `board_carrier.kicad_pcb` bc5fd8b65e39 |
+| DRC carrier (errors) | FAIL | DRC 24 errors: courtyards_overlap 14, copper_edge_clearance 3, malformed_courtyard 3, starved_thermal 2 (report checks/out/board_carrier-drc.json) | 2026-10-23 | `board_carrier.kicad_pcb` 9e22758bb791 |
+| Carrier DRC vs upstream baseline (new violations, unconnected) | FAIL | DRC vs upstream: 0 new violations, 1 unconnected | 2026-10-23 | `board_carrier.kicad_pcb` 9e22758bb791 |
+| Carrier: no new vias in SMD pads | PASS | 17:14:49: Debug: Adding duplicate image handler for 'XPM file' | 2026-10-23 | `board_carrier.kicad_pcb` 9e22758bb791 |
 | ERC carrier (errors) | PASS | ERC 0 errors (report checks/out/board_carrier-erc.json) | 2026-10-23 | `board_carrier.kicad_sch` fc67b216fcd9 |
 | Carrier netlist self-check (generator table) | PASS | netlist self-check: 17 nets, 0 problems | 2026-10-23 | `board_carrier.kicad_sch` fc67b216fcd9, `gen_carrier_sch.py` cebbd7036f4f |
 | No hand edits waiting | PASS | no drift | 2026-10-23 |  |
 
-Written by `checks/run_all.py` at commit abbf007. Don't edit by hand.
+Written by `checks/run_all.py` at commit f89ea78. Don't edit by hand.
 <!-- checks:end -->
 
 ## Bring-up results

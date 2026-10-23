@@ -46,6 +46,16 @@
     ]
   },
   {
+    "name": "Carrier: no new vias in SMD pads",
+    "cmd": [
+      "python3",
+      "checks/via_in_pad.py"
+    ],
+    "files": [
+      "../hardware/board_carrier/board_carrier.kicad_pcb"
+    ]
+  },
+  {
     "name": "ERC carrier (errors)",
     "cmd": [
       "python3",

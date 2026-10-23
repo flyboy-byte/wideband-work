@@ -15,6 +15,8 @@ G = 0.1           # grid, mm
 W = 0.25          # track width, mm
 CLEAR = 0.25      # copper clearance: board rule 0.2 + 0.05 for grid rounding and diagonal corners, mm
 EDGE = 0.5        # copper to edge (board rule), mm
+GND_RING = 0.5    # extra free ring around SMD GND pads for the pour, mm
+HOLE = 0.3        # copper to hole edge: board rule 0.25 + margin, mm
 VIA, DRILL = 0.6, 0.3
 VIA_COST = 2.0    # mm of track a via is worth
 LAYERS = (pcbnew.F_Cu, pcbnew.B_Cu)
@@ -74,16 +76,34 @@ class Grid:
         items = [p for f in self.board.GetFootprints() for p in f.Pads() if p.IsOnCopperLayer()]
         items += list(self.board.GetTracks())
         for it in items:
-            if it.GetNetname() == net and net:
+            # vias stay out of every SMD pad, own net included (solder wicks down a via in a pad)
+            own_smd_for_via = r >= VIA / 2 and it.Type() == pcbnew.PCB_PAD_T and it.GetAttribute() == pcbnew.PAD_ATTRIB_SMD
+            if it.GetNetname() == net and net and not own_smd_for_via:
                 continue
             for l in LAYERS:
                 if not it.IsOnLayer(l):
                     continue
-                for i, j in self.cells_near(it.GetBoundingBox(), r + CLEAR):
-                    if (i, j) not in out[l] and it.HitTest(self.pt(i, j), mm(r + CLEAR)):
+                # a top-side SMD GND pad keeps a wider ring free so the pour can still reach it (new tracks cut C2 and C6
+                # off the top GND pour on r20)
+                gap = r + CLEAR
+                if l == pcbnew.F_Cu and net != 'GND' and it.GetNetname() == 'GND' and it.Type() == pcbnew.PCB_PAD_T and \
+                        it.GetAttribute() == pcbnew.PAD_ATTRIB_SMD:
+                    gap += GND_RING
+                for i, j in self.cells_near(it.GetBoundingBox(), gap):
+                    if (i, j) not in out[l] and it.HitTest(self.pt(i, j), mm(gap)):
                         out[l].add((i, j))
-        # board edge and cutout: every cell closer than EDGE + r to an Edge.Cuts line, or outside the board
+        # holes (mounting holes, unplated connector pegs) block both layers: hole clearance HOLE from the drill edge
         edge_cells = set()
+        for f in self.board.GetFootprints():
+            for p in f.Pads():
+                if p.GetDrillSize().x <= 0 or (p.GetNetname() == net and net):
+                    continue
+                c, rad = p.GetPosition(), T(p.GetDrillSize().x) / 2 + HOLE + r
+                for i, j in self.cells_near(p.GetBoundingBox(), HOLE + r):
+                    q = self.pt(i, j)
+                    if math.hypot(T(q.x - c.x), T(q.y - c.y)) < rad:
+                        edge_cells.add((i, j))
+        # board edge and cutout: every cell closer than EDGE + r to an Edge.Cuts line, or outside the board
         for d in self.edges:
             for i, j in self.cells_near(d.GetBoundingBox(), r + EDGE):
                 if d.HitTest(self.pt(i, j), mm(r + EDGE)):
@@ -170,7 +190,7 @@ def astar(grid, start, goal, block_track, block_via):
     return None
 
 
-def add_path(board, grid, net, path):
+def add_path(board, grid, net, path, lock=False):
     """Track segments (collinear runs merged) and vias along a grid path."""
     n = board.FindNet(net)
     added = 0
@@ -181,7 +201,7 @@ def add_path(board, grid, net, path):
             return 0
         t = pcbnew.PCB_TRACK(board)
         t.SetStart(grid.pt(run[0][1], run[0][2])); t.SetEnd(grid.pt(run[-1][1], run[-1][2]))
-        t.SetWidth(mm(W)); t.SetLayer(run[0][0]); t.SetNet(n)
+        t.SetWidth(mm(W)); t.SetLayer(run[0][0]); t.SetNet(n); t.SetLocked(lock)
         board.Add(t)
         return 1
 
@@ -189,7 +209,7 @@ def add_path(board, grid, net, path):
         if a[0] != b[0]:
             added += flush(run)
             v = pcbnew.PCB_VIA(board)
-            v.SetPosition(grid.pt(a[1], a[2])); v.SetWidth(mm(VIA)); v.SetDrill(mm(DRILL)); v.SetNet(n)
+            v.SetPosition(grid.pt(a[1], a[2])); v.SetWidth(mm(VIA)); v.SetDrill(mm(DRILL)); v.SetNet(n); v.SetLocked(lock)
             board.Add(v)
             run = [b]
             continue
@@ -203,8 +223,11 @@ def add_path(board, grid, net, path):
     return added
 
 
-def finish(board, pcb_path):
+def finish(board, pcb_path, only=None, lock=False):
+    """Route open pairs; `only` limits it to those nets (in that order), `lock` locks the result (pre-routing)."""
     pairs = open_connections(pcb_path)
+    if only:
+        pairs = sorted((p for p in pairs if p[0] in only), key=lambda p: only.index(p[0]))
     if not pairs:
         print('finisher: nothing open')
         return 0
@@ -225,8 +248,213 @@ def finish(board, pcb_path):
         if not path:
             print(f'finisher: {net}: no path')
             continue
-        segs = add_path(board, grid, net, path)
+        segs = add_path(board, grid, net, path, lock)
         vias = sum(1 for p, q in zip(path, path[1:]) if p[0] != q[0])
         print(f'finisher: {net}: {segs} segments, {vias} vias, {len(path) * G:.1f} mm')
         done += 1
     return done
+
+
+# ---------------------------------------------------------------------------------------------------------------
+# Negotiated routing (PathFinder) for a group of nets: route all of them, let them share space at a cost that grows
+# each round (present + history), rip up and repeat until no two nets are too close. One-at-a-time routing of the
+# analog stage's nets moved the failure from net to net with every ordering (r17-r19, 2026-10-23).
+# ---------------------------------------------------------------------------------------------------------------
+def _disc(r):
+    n = int(math.ceil(r / G))
+    import numpy as np
+    y, x = np.mgrid[-n:n + 1, -n:n + 1]
+    return (x * x + y * y) * G * G < r * r
+
+
+def _terminals(board, grid, net, box=None):
+    """Cell sets (layer index, i, j) of every copper item already on `net`: pads and existing tracks/vias; only
+    those whose centre lies in `box` (x0, y0, x1, y1 mm) when given."""
+    items = [p for f in board.GetFootprints() for p in f.Pads() if p.GetNetname() == net and p.IsOnCopperLayer()]
+    items += [t for t in board.GetTracks() if t.GetNetname() == net]
+    out = []
+    for it in items:
+        if box:
+            c = it.GetBoundingBox().GetCenter()
+            if not (box[0] <= T(c.x) <= box[2] and box[1] <= T(c.y) <= box[3]):
+                continue
+        cells = set()
+        for k, l in enumerate(LAYERS):
+            if it.IsOnLayer(l):
+                for i, j in grid.cells_near(it.GetBoundingBox(), 0):
+                    if it.HitTest(grid.pt(i, j), 0):
+                        cells.add((k, i, j))
+        if cells:
+            out.append(cells)
+    return out
+
+
+def negotiate(board, nets, rounds=80, local=None):
+    """`local`: {net: box} routes only that net's copper inside the box (a big net's local branch)."""
+    local = local or {}
+    import numpy as np
+    from scipy.ndimage import binary_dilation
+    grid = Grid(board)
+    shape = (2, grid.nx, grid.ny)
+    keep_t, keep_v = grid.rule_area_cells('track'), grid.rule_area_cells('via')
+    static = {}
+    for n in nets:
+        bt, bv = np.zeros(shape, bool), np.zeros(shape, bool)
+        blk_t, blk_v = grid.blocked(n, W / 2), grid.blocked(n, VIA / 2)
+        for k, l in enumerate(LAYERS):
+            for (i, j) in blk_t[l] | keep_t[l]:
+                bt[k, i, j] = True
+            for (i, j) in blk_v[l] | keep_v[l]:
+                bv[k, i, j] = True
+        static[n] = (bt, bv[0] | bv[1])
+    terms = {n: _terminals(board, grid, n, local.get(n)) for n in nets}
+    # conflict distances between centrelines: track-track W+CLEAR, track-via VIA/2+CLEAR+W/2, via-via VIA+CLEAR
+    d_tt, d_tv, d_vv = W + CLEAR, VIA / 2 + CLEAR + W / 2, VIA + CLEAR
+    disc = {k: _disc(v) for k, v in (('tt', d_tt), ('tv', d_tv), ('vv', d_vv))}
+    hist = np.zeros(shape)
+    cov_t = {n: np.zeros(shape, np.int8) for n in nets}   # where this net's copper keeps other tracks out
+    cov_v = {n: np.zeros(shape[1:], np.int8) for n in nets}   # ... keeps other vias out (both layers)
+    paths = {}
+
+    def footprint(path):
+        tr, vi = np.zeros(shape, bool), np.zeros(shape[1:], bool)
+        for a, b in zip(path, path[1:]):
+            if a[0] != b[0]:
+                vi[a[1], a[2]] = True
+        for c in path:
+            tr[c] = True
+        ct = np.zeros(shape, bool)
+        for k in range(2):
+            ct[k] = binary_dilation(tr[k], disc['tt']) | binary_dilation(vi, disc['tv'])
+        cv = binary_dilation(tr[0] | tr[1], disc['tv']) | binary_dilation(vi, disc['vv'])
+        return ct, cv, tr, vi
+
+    def route(n, pres):
+        bt, bv = static[n]
+        others_t = sum(cov_t[o] for o in nets if o != n and o in paths)
+        others_v = sum(cov_v[o] for o in nets if o != n and o in paths)
+        if not isinstance(others_t, np.ndarray):
+            others_t, others_v = np.zeros(shape), np.zeros(shape[1:])
+        cost_t = (1 + hist) * (1 + pres * others_t)
+        cost_v = (1 + hist[0] + hist[1]) * (1 + pres * others_v)
+        ts = [t for t in terms[n]]
+        if len(ts) < 2:
+            return []
+        tree = set(ts[0])
+        rest = ts[1:]
+        full = []
+
+        def absorb():
+            # pieces touching the tree (existing copper already joined to it) become part of it, transitively
+            nonlocal rest
+            grown = True
+            while grown:
+                grown = False
+                for t in list(rest):
+                    if t & tree:
+                        tree.update(t)
+                        rest.remove(t)
+                        grown = True
+        absorb()
+        while rest:
+            goal = set().union(*rest)
+            p = _astar_cost(grid, tree, goal, bt, bv, cost_t, cost_v)
+            if p is None:
+                return None
+            full += p
+            tree.update(p)
+            absorb()
+        return full
+
+    pres = 0.5
+    for rnd in range(rounds):
+        for n in nets:
+            paths.pop(n, None)
+            p = route(n, pres)
+            if p is None:
+                continue
+            paths[n] = p
+            ct, cv, _, _ = footprint(p)
+            cov_t[n], cov_v[n] = ct.astype(np.int8), cv.astype(np.int8)
+        # conflicts: a net's own centreline cells inside another net's keep-out
+        bad = set()
+        over = np.zeros(shape)
+        for n, p in paths.items():
+            _, _, tr, vi = footprint(p)
+            ot = sum(cov_t[o] for o in paths if o != n)
+            ov = sum(cov_v[o] for o in paths if o != n)
+            if isinstance(ot, np.ndarray) and ((tr & (ot > 0)).any() or (vi & (ov > 0)).any()):
+                bad.add(n)
+                over += tr * (ot > 0)
+        unrouted = [n for n in nets if n not in paths and len(terms[n]) > 1]
+        print(f'negotiate round {rnd}: {len(bad)} nets in conflict, {len(unrouted)} unroutable')
+        if not bad and not unrouted:
+            break
+        hist += 0.8 * (over > 0)
+        pres *= 1.6
+    good = [n for n in paths if n not in bad]
+    for n in good:
+        p = paths[n]
+        if not p:
+            continue
+        # split the concatenated tree segments where consecutive cells are not neighbours
+        seg = [p[0]]
+        for c in p[1:]:
+            last = seg[-1]
+            if abs(c[1] - last[1]) > 1 or abs(c[2] - last[2]) > 1:
+                _commit(board, grid, n, seg)
+                seg = [c]
+            else:
+                seg.append(c)
+        _commit(board, grid, n, seg)
+    print(f'negotiate: committed {len(good)} of {len(nets)} nets (locked); left to the router: {sorted(set(nets) - set(good))}')
+    return good
+
+
+def _commit(board, grid, net, cells):
+    if len(cells) < 2:
+        return
+    add_path(board, grid, net, [(LAYERS[c[0]], c[1], c[2]) for c in cells], lock=True)
+
+
+def _astar_cost(grid, start, goal, bt, bv, cost_t, cost_v):
+    gl = list(goal)
+    gx = sum(c[1] for c in gl) / len(gl)
+    gy = sum(c[2] for c in gl) / len(gl)
+    dist, prev, pq = {}, {}, []
+    for c in start:
+        dist[c] = 0.0
+        heapq.heappush(pq, (0.0, 0.0, c))
+    steps = [(1, 0, G), (-1, 0, G), (0, 1, G), (0, -1, G),
+             (1, 1, G * 1.4142), (1, -1, G * 1.4142), (-1, 1, G * 1.4142), (-1, -1, G * 1.4142)]
+    nx, ny = grid.nx, grid.ny
+    while pq:
+        f, d, c = heapq.heappop(pq)
+        if d > dist.get(c, 1e18):
+            continue
+        if c in goal:
+            path = [c]
+            while path[-1] in prev:
+                path.append(prev[path[-1]])
+            return path[::-1]
+        k, i, j = c
+        for di, dj, step in steps:
+            ni, nj = i + di, j + dj
+            if not (0 <= ni < nx and 0 <= nj < ny):
+                continue
+            n = (k, ni, nj)
+            if bt[k, ni, nj] and n not in goal:
+                continue
+            nd = d + step * cost_t[k, ni, nj]
+            if nd < dist.get(n, 1e18):
+                dist[n] = nd
+                prev[n] = c
+                heapq.heappush(pq, (nd + math.hypot(ni - gx, nj - gy) * G * 0.5, nd, n))
+        if not bv[i, j]:
+            n = (1 - k, i, j)
+            nd = d + VIA_COST * cost_v[i, j]
+            if nd < dist.get(n, 1e18):
+                dist[n] = nd
+                prev[n] = c
+                heapq.heappush(pq, (nd + math.hypot(i - gx, j - gy) * G * 0.5, nd, n))
+    return None

@@ -1,6 +1,6 @@
 {
  "date": "2026-10-23",
- "git_head": "abbf007",
+ "git_head": "f89ea78",
  "results": [
   {
    "name": "DRC module (errors)",
@@ -21,17 +21,25 @@
   {
    "name": "DRC carrier (errors)",
    "status": "fail",
-   "summary": "DRC 26 errors: courtyards_overlap 14, copper_edge_clearance 3, malformed_courtyard 3, unconnected_items 3 (report checks/out/board_carrier-drc.json)",
+   "summary": "DRC 24 errors: courtyards_overlap 14, copper_edge_clearance 3, malformed_courtyard 3, starved_thermal 2 (report checks/out/board_carrier-drc.json)",
    "files": {
-    "../hardware/board_carrier/board_carrier.kicad_pcb": "bc5fd8b65e39"
+    "../hardware/board_carrier/board_carrier.kicad_pcb": "9e22758bb791"
    }
   },
   {
    "name": "Carrier DRC vs upstream baseline (new violations, unconnected)",
    "status": "fail",
-   "summary": "DRC vs upstream: 0 new violations, 3 unconnected",
+   "summary": "DRC vs upstream: 0 new violations, 1 unconnected",
    "files": {
-    "../hardware/board_carrier/board_carrier.kicad_pcb": "bc5fd8b65e39"
+    "../hardware/board_carrier/board_carrier.kicad_pcb": "9e22758bb791"
+   }
+  },
+  {
+   "name": "Carrier: no new vias in SMD pads",
+   "status": "pass",
+   "summary": "17:14:49: Debug: Adding duplicate image handler for 'XPM file'",
+   "files": {
+    "../hardware/board_carrier/board_carrier.kicad_pcb": "9e22758bb791"
    }
   },
   {
