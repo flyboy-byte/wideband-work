@@ -13,7 +13,7 @@ carrier, then adapt it, starting with an analog 0-5 V output (`docs/analog-out.m
 
 | Path | What |
 | --- | --- |
-| `firmware/`, `hardware/`, ... | Upstream `mck1117/wideband` code. Our changes are on branch `analog-out`; `master` stays equal to upstream; never push to remote `upstream` |
+| `firmware/`, `hardware/`, ... | Upstream `mck1117/wideband` code. Our changes are on branch `analog-out`; `master` stays equal to upstream. Remote `origin` = the public fork `flyboy-byte/wideband-work` (push there when the owner says); remote `upstream` has its push URL disabled |
 | `work/` | Our pcb-design files; the rows below are inside it |
 | `STATE.md` | Current stage, decisions already made (don't re-ask), open items. Read first |
 | `REQUIREMENTS.md` | Owner's answers and the bring-up tests that define "working" |

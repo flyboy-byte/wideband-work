@@ -6,7 +6,8 @@ half-finished threads. Replace it (don't append forever) at the next handoff; du
 
 ## Verify first, don't assume
 - `git -C ~/projects/wideband-work status` / `git log --oneline -15` (branch `analog-out`; `master` == upstream
-  mck1117/wideband at 2bb80d2; remote is named `upstream`; never push).
+  mck1117/wideband at 2bb80d2; remote `upstream` (push disabled); remote `origin` = public fork
+  github.com/flyboy-byte/wideband-work, default branch analog-out; push there only when the owner says).
 - `cd work && python3 checks/run_all.py`: expected now: module DRC 11 (upstream), module ERC 0, carrier DRC 26 (all
   upstream's), **`drc_vs_upstream` 0 new / 1 unconnected**, `via_in_pad` 0 new, carrier ERC 0, self-check 17/17, drift clean.
   `python3 checks/drc_vs_upstream.py -v` lists the open pairs.
