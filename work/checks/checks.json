@@ -36,6 +36,16 @@
     ]
   },
   {
+    "name": "Carrier DRC vs upstream baseline (new violations, unconnected)",
+    "cmd": [
+      "python3",
+      "checks/drc_vs_upstream.py"
+    ],
+    "files": [
+      "../hardware/board_carrier/board_carrier.kicad_pcb"
+    ]
+  },
+  {
     "name": "ERC carrier (errors)",
     "cmd": [
       "python3",

@@ -22,28 +22,32 @@ NS = uuid.UUID('6f1c3a52-2f1e-4d55-9a0b-7a1f3c1d2e01')
 # ---------------------------------------------------------------------------------------------------------------
 R0603 = 'Resistor_SMD:R_0603_1608Metric'
 C0603 = 'Capacitor_SMD:C_0603_1608Metric'
+# 0402 where it fits the rating: the bottom-side area was too crowded to route with all-0603 (PCB runs r1-r12,
+# 2026-10-23). Kept 0603: R6 (68k is Extended in 0402), R8 and R9 (fault/surge current), C17 (18 V rail).
+R0402 = 'Resistor_SMD:R_0402_1005Metric'
+C0402 = 'Capacitor_SMD:C_0402_1005Metric'
 PARTS = {
-    'R3':  ('Device', 'R', '100k', R0603, 'C25803', (215.9, 40.64), 'pull-down: output at 0 V while the MCU boots'),
+    'R3':  ('Device', 'R', '100k', R0402, 'C25741', (215.9, 40.64), 'pull-down: output at 0 V while the MCU boots'),
     'U5':  ('Reference_Voltage', 'REF3030', 'REF3030', 'Package_TO_SOT_SMD:SOT-23', 'C38423', (254, 40.64),
             '3.000 V, the full-scale reference for the buffer'),
-    'C11': ('Device', 'C', '100n', C0603, 'C14663', (292.1, 40.64), 'REF3030 input bypass'),
-    'C12': ('Device', 'C', '100n', C0603, 'C14663', (317.5, 40.64),
+    'C11': ('Device', 'C', '100n', C0402, 'C1525', (292.1, 40.64), 'REF3030 input bypass'),
+    'C12': ('Device', 'C', '100n', C0402, 'C1525', (317.5, 40.64),
             'REF3030 output cap (stable range 0.1-10 uF, TI SBVS032J) and buffer decoupling'),
     'U4':  ('74xGxx', '74LVC1G125', '74LVC1G125', 'Package_TO_SOT_SMD:SOT-353_SC-70-5', 'C12519', (241.3, 86.36),
             'buffer powered from 3.000 V: PWM amplitude = the reference, not the MCU LDO'),
-    'R4':  ('Device', 'R', '3.3k', R0603, 'C22978', (215.9, 129.54), 'first RC stage (lambda-x2 values)'),
-    'C13': ('Device', 'C', '100n', C0603, 'C14663', (241.3, 129.54), 'first RC stage'),
-    'R5':  ('Device', 'R', '3.3k', R0603, 'C22978', (266.7, 129.54), 'second RC stage'),
-    'C14': ('Device', 'C', '100n', C0603, 'C14663', (292.1, 129.54), 'second RC stage'),
+    'R4':  ('Device', 'R', '3.3k', R0402, 'C25890', (215.9, 129.54), 'first RC stage (lambda-x2 values)'),
+    'C13': ('Device', 'C', '100n', C0402, 'C1525', (241.3, 129.54), 'first RC stage'),
+    'R5':  ('Device', 'R', '3.3k', R0402, 'C25890', (266.7, 129.54), 'second RC stage'),
+    'C14': ('Device', 'C', '100n', C0402, 'C1525', (292.1, 129.54), 'second RC stage'),
     'U6':  ('Amplifier_Operational', 'LM2904', 'LM2904', 'Package_SO:SOIC-8_3.9x4.9mm_P1.27mm', 'C7934', None,
             'x1.68 to 5.04 V full scale; -40 C rated; on the clamped 12 V'),
     'R6':  ('Device', 'R', '68k', R0603, 'C23231', (279.4, 172.72), 'DC feedback from after R8 (no load error)'),
-    'R7':  ('Device', 'R', '100k', R0603, 'C25803', (304.8, 172.72), 'gain 1 + 68k/100k = 1.68'),
-    'C15': ('Device', 'C', '1n', C0603, 'C1588', (330.2, 172.72),
+    'R7':  ('Device', 'R', '100k', R0402, 'C25741', (304.8, 172.72), 'gain 1 + 68k/100k = 1.68'),
+    'C15': ('Device', 'C', '1n', C0402, 'C1523', (330.2, 172.72),
             'AC feedback from the op-amp output: no oscillation with cable C (work/sim/stability.sh)'),
     'R8':  ('Device', 'R', '330', R0603, 'C23138', (355.6, 172.72), 'series output resistor, limits clamp current'),
-    'D3':  ('Diode', '1N4148W', '1N4148W', 'Diode_SMD:D_SOD-123', 'C81598', (330.2, 213.36), 'clamp output to +5V'),
-    'D4':  ('Diode', '1N4148W', '1N4148W', 'Diode_SMD:D_SOD-123', 'C81598', (355.6, 213.36), 'clamp output to GND'),
+    'D3':  ('Diode', '1N4148WS', '1N4148WS', 'Diode_SMD:D_SOD-323', 'C2128', (330.2, 213.36), 'clamp output to +5V'),
+    'D4':  ('Diode', '1N4148WS', '1N4148WS', 'Diode_SMD:D_SOD-323', 'C2128', (355.6, 213.36), 'clamp output to GND'),
     'R9':  ('Device', 'R', '1k', R0603, 'C21190', (215.9, 213.36), 'op-amp supply feed from the protected 12 V'),
     'D5':  ('Device', 'D_Zener', '18V', 'Diode_SMD:D_SOD-123', 'C173425', (241.3, 213.36),
             'clamps op-amp supply: TVS D1 (SMCJ30CA) lets the rail reach about 35-48 V, LM2904 is rated 32 V'),
@@ -51,7 +55,7 @@ PARTS = {
     'C17': ('Device', 'C', '100n', C0603, 'C14663', (292.1, 213.36), 'op-amp bypass'),
     'JP1': ('Jumper', 'SolderJumper_2_Open', 'TEST', 'Jumper:SolderJumper-2_P1.3mm_Open_RoundedPad1.0x1.5mm', '',
             (215.9, 243.84), 'SEL_2 to GND at power-up = analog-out test mode (bench test A1)'),
-    'R10': ('Device', 'R', '120', R0603, 'C22787', (254, 243.84), 'optional CAN termination'),
+    'R10': ('Device', 'R', '120', R0402, 'C25079', (254, 243.84), 'optional CAN termination'),
     'JP2': ('Jumper', 'SolderJumper_2_Open', 'CAN_TERM', 'Jumper:SolderJumper-2_P1.3mm_Open_RoundedPad1.0x1.5mm', '',
             (279.4, 243.84), 'close for a bus with no other 120 R terminator'),
 }

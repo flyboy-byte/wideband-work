@@ -2797,7 +2797,7 @@
 			)
 			(embedded_fonts no)
 		)
-		(symbol "Diode:1N4148W"
+		(symbol "Diode:1N4148WS"
 			(pin_numbers
 				(hide yes)
 			)
@@ -2819,7 +2819,7 @@
 					)
 				)
 			)
-			(property "Value" "1N4148W"
+			(property "Value" "1N4148WS"
 				(at 0 -2.54 0)
 				(show_name no)
 				(do_not_autoplace no)
@@ -2829,7 +2829,7 @@
 					)
 				)
 			)
-			(property "Footprint" "Diode_SMD:D_SOD-123"
+			(property "Footprint" "Diode_SMD:D_SOD-323"
 				(at 0 -4.445 0)
 				(show_name no)
 				(do_not_autoplace no)
@@ -2840,7 +2840,7 @@
 					)
 				)
 			)
-			(property "Datasheet" "https://www.vishay.com/docs/85748/1n4148w.pdf"
+			(property "Datasheet" "https://www.vishay.com/docs/85751/1n4148ws.pdf"
 				(at 0 0 0)
 				(show_name no)
 				(do_not_autoplace no)
@@ -2851,7 +2851,7 @@
 					)
 				)
 			)
-			(property "Description" "75V 0.15A Fast Switching Diode, SOD-123"
+			(property "Description" "75V 0.15A Fast switching Diode, SOD-323"
 				(at 0 0 0)
 				(show_name no)
 				(do_not_autoplace no)
@@ -2895,7 +2895,7 @@
 					)
 				)
 			)
-			(property "ki_fp_filters" "D*SOD?123*"
+			(property "ki_fp_filters" "D*SOD?323*"
 				(at 0 0 0)
 				(show_name no)
 				(do_not_autoplace no)
@@ -2906,7 +2906,7 @@
 					)
 				)
 			)
-			(symbol "1N4148W_0_1"
+			(symbol "1N4148WS_0_1"
 				(polyline
 					(pts
 						(xy -1.27 1.27)
@@ -2949,7 +2949,7 @@
 					)
 				)
 			)
-			(symbol "1N4148W_1_1"
+			(symbol "1N4148WS_1_1"
 				(pin passive line
 					(at -3.81 0 0)
 					(length 2.54)
@@ -7491,7 +7491,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
+		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
 			(at 215.9 40.64 0)
 			(hide yes)
 			(effects
@@ -7521,7 +7521,7 @@
 				(justify left)
 			)
 		)
-		(property "LCSC" "C25803"
+		(property "LCSC" "C25741"
 			(at 215.9 40.64 0)
 			(hide yes)
 			(effects
@@ -7646,7 +7646,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
+		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric"
 			(at 292.1 40.64 0)
 			(hide yes)
 			(effects
@@ -7676,7 +7676,7 @@
 				(justify left)
 			)
 		)
-		(property "LCSC" "C14663"
+		(property "LCSC" "C1525"
 			(at 292.1 40.64 0)
 			(hide yes)
 			(effects
@@ -7722,7 +7722,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
+		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric"
 			(at 317.5 40.64 0)
 			(hide yes)
 			(effects
@@ -7752,7 +7752,7 @@
 				(justify left)
 			)
 		)
-		(property "LCSC" "C14663"
+		(property "LCSC" "C1525"
 			(at 317.5 40.64 0)
 			(hide yes)
 			(effects
@@ -7883,7 +7883,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
+		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
 			(at 215.9 129.54 0)
 			(hide yes)
 			(effects
@@ -7913,7 +7913,7 @@
 				(justify left)
 			)
 		)
-		(property "LCSC" "C22978"
+		(property "LCSC" "C25890"
 			(at 215.9 129.54 0)
 			(hide yes)
 			(effects
@@ -7959,7 +7959,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
+		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric"
 			(at 241.3 129.54 0)
 			(hide yes)
 			(effects
@@ -7989,7 +7989,7 @@
 				(justify left)
 			)
 		)
-		(property "LCSC" "C14663"
+		(property "LCSC" "C1525"
 			(at 241.3 129.54 0)
 			(hide yes)
 			(effects
@@ -8035,7 +8035,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
+		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
 			(at 266.7 129.54 0)
 			(hide yes)
 			(effects
@@ -8065,7 +8065,7 @@
 				(justify left)
 			)
 		)
-		(property "LCSC" "C22978"
+		(property "LCSC" "C25890"
 			(at 266.7 129.54 0)
 			(hide yes)
 			(effects
@@ -8111,7 +8111,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
+		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric"
 			(at 292.1 129.54 0)
 			(hide yes)
 			(effects
@@ -8141,7 +8141,7 @@
 				(justify left)
 			)
 		)
-		(property "LCSC" "C14663"
+		(property "LCSC" "C1525"
 			(at 292.1 129.54 0)
 			(hide yes)
 			(effects
@@ -8497,7 +8497,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
+		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
 			(at 304.8 172.72 0)
 			(hide yes)
 			(effects
@@ -8527,7 +8527,7 @@
 				(justify left)
 			)
 		)
-		(property "LCSC" "C25803"
+		(property "LCSC" "C25741"
 			(at 304.8 172.72 0)
 			(hide yes)
 			(effects
@@ -8573,7 +8573,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
+		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric"
 			(at 330.2 172.72 0)
 			(hide yes)
 			(effects
@@ -8603,7 +8603,7 @@
 				(justify left)
 			)
 		)
-		(property "LCSC" "C1588"
+		(property "LCSC" "C1523"
 			(at 330.2 172.72 0)
 			(hide yes)
 			(effects
@@ -8697,7 +8697,7 @@
 		)
 	)
 	(symbol
-		(lib_id "Diode:1N4148W")
+		(lib_id "Diode:1N4148WS")
 		(at 330.2 213.36 0)
 		(unit 1)
 		(body_style 1)
@@ -8716,7 +8716,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "1N4148W"
+		(property "Value" "1N4148WS"
 			(at 334.01 214.63 0)
 			(effects
 				(font
@@ -8725,7 +8725,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Diode_SMD:D_SOD-123"
+		(property "Footprint" "Diode_SMD:D_SOD-323"
 			(at 330.2 213.36 0)
 			(hide yes)
 			(effects
@@ -8755,7 +8755,7 @@
 				(justify left)
 			)
 		)
-		(property "LCSC" "C81598"
+		(property "LCSC" "C2128"
 			(at 330.2 213.36 0)
 			(hide yes)
 			(effects
@@ -8773,7 +8773,7 @@
 		)
 	)
 	(symbol
-		(lib_id "Diode:1N4148W")
+		(lib_id "Diode:1N4148WS")
 		(at 355.6 213.36 0)
 		(unit 1)
 		(body_style 1)
@@ -8792,7 +8792,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "1N4148W"
+		(property "Value" "1N4148WS"
 			(at 359.41 214.63 0)
 			(effects
 				(font
@@ -8801,7 +8801,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Diode_SMD:D_SOD-123"
+		(property "Footprint" "Diode_SMD:D_SOD-323"
 			(at 355.6 213.36 0)
 			(hide yes)
 			(effects
@@ -8831,7 +8831,7 @@
 				(justify left)
 			)
 		)
-		(property "LCSC" "C81598"
+		(property "LCSC" "C2128"
 			(at 355.6 213.36 0)
 			(hide yes)
 			(effects
@@ -9247,7 +9247,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
+		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
 			(at 254 243.84 0)
 			(hide yes)
 			(effects
@@ -9277,7 +9277,7 @@
 				(justify left)
 			)
 		)
-		(property "LCSC" "C22787"
+		(property "LCSC" "C25079"
 			(at 254 243.84 0)
 			(hide yes)
 			(effects

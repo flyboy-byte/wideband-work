@@ -10,7 +10,7 @@ board can't grow (case/case.STL is 47.5 x 44 mm outside around this 40 x 36.5 mm
 leaves about 6 mm under the board (INFERRED from the STL's horizontal faces, work/docs/carrier.md).
 Upstream's tracks and vias are locked before routing, so Freerouting only adds the new connections.
 """
-import os, re, shutil, subprocess, sys, tempfile, xml.etree.ElementTree as ET
+import json, math, os, re, shutil, subprocess, sys, tempfile, xml.etree.ElementTree as ET
 
 import pcbnew
 
@@ -57,9 +57,11 @@ AREA = (48.8, 67.3, 71.2, 90.5)   # bottom placement area: between the module he
 # the battery-sense branch to module pad 7 (0.2 mm) and the module's +5V feed (0.5 mm, about 50 mA).
 # The 0.5 mm LSU_Heater+ bottom path (J3-4 to the regulator side) is a parallel supply path and stays.
 REROUTE = [('/LSU_Heater+', (47.0, 78.0, 56.0, 87.0)), ('+5V', (45.5, 84.0, 61.0, 91.0))]
+# (keeping the +5V feed instead left no room to place everything, r9)
 CUTOUT = (48.41, 72.49, 57.11, 78.65)   # module cutout 48.76-56.76 x 72.84-78.30, grown 0.35 mm
 # (0.5 mm would cover upstream's own top tracks, which pass about 0.4 mm from the cutout)
 EDGE_KEEP = 0.6                          # mm strip inside the board edge with no new tracks or vias (rule: 0.5)
+TOP_NO_TRACKS = json.loads(os.environ['TOP_NO_TRACKS']) if 'TOP_NO_TRACKS' in os.environ else [(57.5, 77.0, 71.0, 90.0)]   # top area around C1/C2/C3/C6/U1 where new tracks cut the GND pour (r6)
 KEEP_THERMAL_VIAS_X = 66.9   # GND vias right of this (under the TVS and regulator) are thermal: never removed
 
 
@@ -145,6 +147,157 @@ def find_spot(fp, tx, ty, obstacles, placed):
     return None
 
 
+CROSS_MM = 2.0    # placement cost of one crossing of an upstream bottom track, in mm of net length
+# The op-amp's feedback loop (output, Cf, inverting input) and its filtered input weigh more: a small loop is better
+# for stability, and a loose C15 left the output unrouted on r13
+NET_WEIGHT = {'/AOUT_OA': 3.0, '/AOUT_INN': 3.0, '/AOUT_F2': 2.0}
+
+
+def anneal(board, nets, obstacles, seed=1, iters=200000):
+    """Improve the greedy placement: move the new parts among legal spots (0.2 mm grid, rotation 0/90/180/270) to
+    shorten their nets. Cost per net = half-perimeter of its new pads + distance from them to the nearest copper the
+    net already has (upstream pads and tracks). GND is left out: the pour and fan-out vias connect it. The greedy
+    spots from TARGETS are the starting point, so the result is never worse than that by this measure."""
+    import numpy as np, random
+    rnd = random.Random(seed)
+    T = pcbnew.ToMM
+    refs = [r for r, _ in TARGETS]
+    fps = {f.GetReference(): f for f in board.GetFootprints() if f.GetReference() in refs}
+    rots = (0, 90, 180, 270)
+    G = 0.2
+    nx, ny = int((AREA[2] - AREA[0]) / G) + 1, int((AREA[3] - AREA[1]) / G) + 1
+    X, Y = np.meshgrid(AREA[0] + np.arange(nx) * G, AREA[1] + np.arange(ny) * G, indexing='ij')
+    boxes, circles, edge = obstacles
+    cb = np.array(boxes) if boxes else np.zeros((0, 4))
+    cc = np.array(circles) if circles else np.zeros((0, 3))
+
+    # Per part and rotation: courtyard box and pad offsets relative to the footprint position, and the legal mask
+    box, pads, legal_mask, start = {}, {}, {}, {}
+    for r in refs:
+        fp = fps[r]
+        p0, rot0 = fp.GetPosition(), fp.GetOrientationDegrees()
+        start[r] = (rots.index(int(round(rot0)) % 360), int(round((T(p0.x) - AREA[0]) / G)), int(round((T(p0.y) - AREA[1]) / G)))
+        for k, rot in enumerate(rots):
+            fp.SetOrientationDegrees(rot)
+            fp.SetPosition(pcbnew.VECTOR2I(0, 0))
+            box[r, k] = courtyard_box(fp)
+            pads[r, k] = {p.GetNumber(): (T(p.GetPosition().x), T(p.GetPosition().y)) for p in fp.Pads() if p.GetNumber()}
+            bx0, by0, bx1, by1 = box[r, k]
+            x0, y0, x1, y1 = X + bx0, Y + by0, X + bx1, Y + by1
+            m = (x0 >= edge[0]) & (y0 >= edge[1]) & (x1 <= edge[2]) & (y1 <= edge[3])
+            for ob in cb:
+                m &= ~((x0 < ob[2]) & (ob[0] < x1) & (y0 < ob[3]) & (ob[1] < y1))
+            for cx, cy, rad in cc:
+                dx = np.clip(cx, x0, x1) - cx
+                dy = np.clip(cy, y0, y1) - cy
+                m &= dx * dx + dy * dy >= rad * rad
+            legal_mask[r, k] = m
+        fp.SetOrientationDegrees(rot0)
+        fp.SetPosition(p0)
+        k, i, j = start[r]
+        legal_mask[r, k][i, j] = True     # the greedy spot passed the same test; keep it reachable despite rounding
+
+    # Nets of the new parts, with anchors (existing copper on that net outside the new parts)
+    netpads, anchors = {}, {}
+    for (ref, pad), name in nets.items():
+        if ref in refs and name != 'GND':
+            netpads.setdefault(name, []).append((ref, pad))
+    for name in netpads:
+        pts = [(T(p.GetPosition().x), T(p.GetPosition().y)) for f in board.GetFootprints() if f.GetReference() not in refs
+               for p in f.Pads() if p.GetNetname() == name]
+        for t in board.GetTracks():
+            if t.GetNetname() == name and t.Type() == pcbnew.PCB_TRACE_T:
+                (ax, ay), (bx, by) = (T(t.GetStart().x), T(t.GetStart().y)), (T(t.GetEnd().x), T(t.GetEnd().y))
+                n = max(1, int(math.hypot(bx - ax, by - ay) / 0.5))
+                pts += [(ax + (bx - ax) * s / n, ay + (by - ay) * s / n) for s in range(n + 1)]
+        anchors[name] = np.array(pts) if pts else None
+    part_nets = {r: [n for n, ps in netpads.items() if any(q[0] == r for q in ps)] for r in refs}
+    # Upstream bottom tracks: a straight pad-to-pad connection that crosses one needs a via pair or a long detour
+    # (seed 7 of r13 left the op-amp output unrouted with C15 and R8 on opposite sides of two sensor tracks)
+    segs = np.array([(T(t.GetStart().x), T(t.GetStart().y), T(t.GetEnd().x), T(t.GetEnd().y))
+                     for t in board.GetTracks() if t.Type() == pcbnew.PCB_TRACE_T and t.GetLayer() == pcbnew.B_Cu])
+
+    def crossings(x0, y0, x1, y1):
+        if not len(segs):
+            return 0
+        ax, ay, bx, by = segs[:, 0], segs[:, 1], segs[:, 2], segs[:, 3]
+        d1 = (bx - ax) * (y0 - ay) - (by - ay) * (x0 - ax)
+        d2 = (bx - ax) * (y1 - ay) - (by - ay) * (x1 - ax)
+        d3 = (x1 - x0) * (ay - y0) - (y1 - y0) * (ax - x0)
+        d4 = (x1 - x0) * (by - y0) - (y1 - y0) * (bx - x0)
+        return int(np.count_nonzero((d1 * d2 < 0) & (d3 * d4 < 0)))
+
+    state = dict(start)
+
+    def where(r, pad):
+        k, i, j = state[r]
+        ox, oy = pads[r, k][pad]
+        return AREA[0] + i * G + ox, AREA[1] + j * G + oy
+
+    def net_cost(name):
+        pts = [where(r, p) for r, p in netpads[name]]
+        xs, ys = [p[0] for p in pts], [p[1] for p in pts]
+        c = max(xs) - min(xs) + max(ys) - min(ys)
+        # chain the pads nearest-first and charge CROSS_MM per upstream track each link crosses
+        rest, cur = pts[1:], pts[0]
+        while rest:
+            nxt = min(rest, key=lambda q: abs(q[0] - cur[0]) + abs(q[1] - cur[1]))
+            c += CROSS_MM * crossings(cur[0], cur[1], nxt[0], nxt[1])
+            rest.remove(nxt); cur = nxt
+        a = anchors[name]
+        if a is not None:
+            c += min(float(np.min(np.abs(a[:, 0] - x) + np.abs(a[:, 1] - y))) for x, y in pts)
+        return c * NET_WEIGHT.get(name, 1.0)
+
+    def abs_box(r):
+        k, i, j = state[r]
+        b = box[r, k]
+        return (AREA[0] + i * G + b[0], AREA[1] + j * G + b[1], AREA[0] + i * G + b[2], AREA[1] + j * G + b[3])
+
+    def overlaps(r):
+        a = abs_box(r)
+        for o in refs:
+            if o != r:
+                b = abs_box(o)
+                if a[0] < b[2] and b[0] < a[2] and a[1] < b[3] and b[1] < a[3]:
+                    return True
+        return False
+
+    cost = {n: net_cost(n) for n in netpads}
+    total = sum(cost.values())
+    first = total
+    t0, t1 = 2.0, 0.02
+    for it in range(iters):
+        temp = t0 * (t1 / t0) ** (it / iters)
+        r = rnd.choice(refs)
+        old = state[r]
+        k, i, j = old
+        reach = max(1, int(temp * 8))
+        if rnd.random() < 0.15:
+            k = rnd.randrange(4)
+        i += rnd.randint(-reach, reach)
+        j += rnd.randint(-reach, reach)
+        if not (0 <= i < nx and 0 <= j < ny) or not legal_mask[r, k][i, j]:
+            continue
+        state[r] = (k, i, j)
+        if overlaps(r):
+            state[r] = old
+            continue
+        new = {n: net_cost(n) for n in part_nets[r]}
+        delta = sum(new.values()) - sum(cost[n] for n in part_nets[r])
+        if delta <= 0 or rnd.random() < math.exp(-delta / temp):
+            cost.update(new)
+            total += delta
+        else:
+            state[r] = old
+    print(f'placement: net length {first:.1f} -> {total:.1f} mm')
+    for r in refs:
+        k, i, j = state[r]
+        fps[r].SetOrientationDegrees(rots[k])
+        fps[r].SetPosition(pcbnew.VECTOR2I(mm(AREA[0] + i * G), mm(AREA[1] + j * G)))
+        print(f'  {r:4s} at {AREA[0] + i * G:.1f},{AREA[1] + j * G:.1f} rot {rots[k]}')
+
+
 def main(route=True):
     nets, comps = netlist()
     td = tempfile.mkdtemp()
@@ -217,6 +370,7 @@ def main(route=True):
                 missing.append(key)
     if missing:
         print('pads with no schematic net:', missing)
+    anneal(board, nets, obstacles, seed=int(os.environ.get('SEED', '4')))
 
     # Stray GND stitching vias under new parts: remove (they joined the top GND pour to a bottom with no copper)
     new_boxes = []
@@ -238,6 +392,9 @@ def main(route=True):
         if fp.GetReference() in dict(TARGETS):
             for pad in fp.Pads():
                 pad.SetLocalZoneConnection(pcbnew.ZONE_CONNECTION_FULL)
+
+    fanout_gnd(board)
+    tap_top_track(board, '+5V', ['U5', 'C11', 'D3'])
 
     # Keep tracks and vias 0.5 mm off the module cutout (the router doesn't treat that inner Edge.Cuts as an edge)
     x0, y0, x1, y1 = CUTOUT
@@ -274,24 +431,27 @@ def main(route=True):
             o.Append(mm(x), mm(y))
         z.SetZoneName(f'edge_keepout_{i}')
         board.Add(z)
-    # No new top-side tracks over upstream's 12V_RAW pour (one cut it in two on an earlier run; bottom-only routing
-    # left connections unfinished). Vias are still allowed: a via only punches a hole in a pour.
-    z = pcbnew.ZONE(board)
-    z.SetIsRuleArea(True)
-    z.SetDoNotAllowTracks(True)
-    z.SetDoNotAllowVias(False)
-    z.SetDoNotAllowZoneFills(False)
-    z.SetDoNotAllowPads(False)
-    z.SetDoNotAllowFootprints(False)
-    z.SetLayer(pcbnew.F_Cu)
-    o = z.Outline(); o.NewOutline()
+    # No new top-side tracks over upstream's 12V_RAW pour (one cut it in two on r3) or among the regulator and
+    # transceiver caps (they cut the top GND pour there on r6; bottom-only routing left 7-10 connections open on r4
+    # and r7). Vias are still allowed: a via only punches a hole in a pour.
     v12 = [q for q in board.Zones() if not q.GetIsRuleArea() and q.GetNetname() == '12V_RAW'][0].GetBoundingBox()
     v12.Inflate(mm(0.5))
-    for x, y in [(v12.GetX(), v12.GetY()), (v12.GetRight(), v12.GetY()), (v12.GetRight(), v12.GetBottom()),
-                 (v12.GetX(), v12.GetBottom())]:
-        o.Append(x, y)
-    z.SetZoneName('top_no_new_tracks')
-    board.Add(z)
+    T = pcbnew.ToMM
+    for n, (a0, b0, a1, b1) in enumerate([(T(v12.GetX()), T(v12.GetY()), T(v12.GetRight()), T(v12.GetBottom()))] +
+                                         TOP_NO_TRACKS):
+        z = pcbnew.ZONE(board)
+        z.SetIsRuleArea(True)
+        z.SetDoNotAllowTracks(True)
+        z.SetDoNotAllowVias(False)
+        z.SetDoNotAllowZoneFills(False)
+        z.SetDoNotAllowPads(False)
+        z.SetDoNotAllowFootprints(False)
+        z.SetLayer(pcbnew.F_Cu)
+        o = z.Outline(); o.NewOutline()
+        for x, y in [(a0, b0), (a1, b0), (a1, b1), (a0, b1)]:
+            o.Append(mm(x), mm(y))
+        z.SetZoneName(f'top_no_new_tracks_{n}')
+        board.Add(z)
 
     # Design rules for the new routing: 0.25 mm default track (was 0.2, the board minimum, and the router went
     # under it); solder mask minimum web 0.1 mm (was 0.25, which flags every 0.65 mm-pitch part such as the SC-70
@@ -314,6 +474,13 @@ def main(route=True):
     if route:
         route_board(board, base, td)
         board = pcbnew.LoadBoard(base)
+        # Freerouting leaves 1-3 connections open here; the finisher routes them (keep-out aids still in place)
+        sys.path.insert(0, os.path.dirname(__file__))
+        import finish_routes
+        for _ in range(3):
+            if not finish_routes.finish(board, base):
+                break
+            board.Save(base)
     # The rule areas above only steer the router; DRC's own edge and clearance rules judge the result
     for z in [z for z in board.Zones() if z.GetIsRuleArea() and z.GetZoneName() in AIDS]:
         board.Delete(z)
@@ -325,7 +492,103 @@ def main(route=True):
     print('wrote', os.path.relpath(OUT, REPO))
 
 
-AIDS = {'cutout_keepout', 'top_no_new_tracks'} | {f'edge_keepout_{i}' for i in range(4)}
+AIDS = {'cutout_keepout'} | {f'edge_keepout_{i}' for i in range(4)} | {f'top_no_new_tracks_{i}' for i in range(8)}
+
+
+def tap_top_track(board, netname, refs):
+    """For each listed part's pad on `netname`, put a locked via on the nearest point of an upstream top-side track of
+    that net that clears other copper on both layers (0.3 mm pad + 0.3 mm). The bottom pads then need only a short hop
+    instead of a route across the crowded bottom (r5-r9 left +5V unconnected)."""
+    T, net = pcbnew.ToMM, board.FindNet(netname)
+    others = [p for f in board.GetFootprints() for p in f.Pads() if p.GetNetname() != netname and p.IsOnCopperLayer()]
+    copper = [t for t in board.GetTracks() if t.GetNetname() != netname]
+    pts = []
+    for t in board.GetTracks():
+        if t.GetNetname() == netname and t.Type() == pcbnew.PCB_TRACE_T and t.GetLayer() == pcbnew.F_Cu:
+            (ax, ay), (bx, by) = (T(t.GetStart().x), T(t.GetStart().y)), (T(t.GetEnd().x), T(t.GetEnd().y))
+            n = max(1, int(math.hypot(bx - ax, by - ay) / 0.1))
+            pts += [(ax + (bx - ax) * s / n, ay + (by - ay) * s / n) for s in range(n + 1)]
+    ok = [(x, y) for x, y in pts if not any(p.HitTest(pcbnew.VECTOR2I(mm(x), mm(y)), mm(0.6)) for p in others)
+          and not any(c.HitTest(pcbnew.VECTOR2I(mm(x), mm(y)), mm(0.6)) for c in copper)]
+    placed = []
+    for fp in board.GetFootprints():
+        if fp.GetReference() not in refs:
+            continue
+        for pad in fp.Pads():
+            if pad.GetNetname() != netname or not ok:
+                continue
+            px, py = T(pad.GetPosition().x), T(pad.GetPosition().y)
+            x, y = min(ok, key=lambda q: math.hypot(q[0] - px, q[1] - py))
+            if any(math.hypot(x - a, y - b) < 1.5 for a, b in placed):
+                continue
+            v = pcbnew.PCB_VIA(board)
+            v.SetPosition(pcbnew.VECTOR2I(mm(x), mm(y))); v.SetWidth(mm(0.6)); v.SetDrill(mm(0.3))
+            v.SetNet(net); v.SetLocked(True)
+            board.Add(v)
+            placed.append((x, y))
+            print(f'  {netname} tap via at {x:.2f},{y:.2f} for {fp.GetReference()}-{pad.GetNumber()}')
+    if not ok:
+        print(f'  no clear spot on a top {netname} track')
+
+
+def fanout_gnd(board):
+    """Give every new bottom GND pad its own via to the top GND pour (short 0.3 mm stub, via 0.6/0.3), placed before
+    routing and locked, so the bottom pour's islands don't depend on where the router leaves gaps. A spot is used
+    only if the via clears other nets' copper by 0.2 mm, sits inside the top GND fill and off the edge and cutout."""
+    T, net = pcbnew.ToMM, board.FindNet('GND')
+    pcbnew.ZONE_FILLER(board).Fill(board.Zones())
+    gnd = [z for z in board.Zones() if not z.GetIsRuleArea() and z.GetNetname() == 'GND'][0]
+    top = gnd.GetFilledPolysList(pcbnew.F_Cu)
+    e = board.GetBoardEdgesBoundingBox()
+    ex0, ey0, ex1, ey1 = (T(v) for v in (e.GetX(), e.GetY(), e.GetRight(), e.GetBottom()))
+    others = [p for f in board.GetFootprints() for p in f.Pads() if p.GetNetname() != 'GND' and p.IsOnCopperLayer()]
+    copper = [t for t in board.GetTracks() if t.GetNetname() != 'GND']
+
+    def clear(pt, r):
+        return not any(p.HitTest(pt, mm(r)) for p in others) and not any(t.HitTest(pt, mm(r)) for t in copper)
+
+    added = 0
+    for fp in board.GetFootprints():
+        if fp.GetReference() not in dict(TARGETS):
+            continue
+        for pad in fp.Pads():
+            if pad.GetNetname() != 'GND':
+                continue
+            px, py = T(pad.GetPosition().x), T(pad.GetPosition().y)
+            best = None
+            for d in (0.9, 1.1, 1.3, 1.6, 2.0):
+                for k in range(16):
+                    a = k * 3.14159265 / 8
+                    x, y = px + d * math.cos(a), py + d * math.sin(a)
+                    if not (ex0 + 0.9 < x < ex1 - 0.9 and ey0 + 0.9 < y < ey1 - 0.9):
+                        continue
+                    if CUTOUT[0] - 0.3 < x < CUTOUT[2] + 0.3 and CUTOUT[1] - 0.3 < y < CUTOUT[3] + 0.3:
+                        continue
+                    pt = pcbnew.VECTOR2I(mm(x), mm(y))
+                    ring = [pcbnew.VECTOR2I(mm(x + 0.4 * math.cos(b * math.pi / 4)), mm(y + 0.4 * math.sin(b * math.pi / 4)))
+                            for b in range(8)] + [pt]
+                    if not all(top.Contains(q) for q in ring) or not clear(pt, 0.3 + 0.3):
+                        continue
+                    # the stub (0.3 mm wide) from pad to via must clear other copper too
+                    if not all(clear(pcbnew.VECTOR2I(mm(px + (x - px) * s / 6), mm(py + (y - py) * s / 6)), 0.15 + 0.22)
+                               for s in range(1, 6)):
+                        continue
+                    best = pt
+                    break
+                if best:
+                    break
+            if not best:
+                print(f'  no GND fan-out spot for {fp.GetReference()}-{pad.GetNumber()}')
+                continue
+            v = pcbnew.PCB_VIA(board)
+            v.SetPosition(best); v.SetWidth(mm(0.6)); v.SetDrill(mm(0.3)); v.SetNet(net); v.SetLocked(True)
+            board.Add(v)
+            t = pcbnew.PCB_TRACK(board)
+            t.SetStart(pad.GetPosition()); t.SetEnd(best); t.SetWidth(mm(0.3)); t.SetLayer(pcbnew.B_Cu)
+            t.SetNet(net); t.SetLocked(True)
+            board.Add(t)
+            added += 1
+    print(f'GND fan-out: {added} vias')
 
 
 def stitch_islands(board):
@@ -363,9 +626,15 @@ def stitch_islands(board):
 
 def route_board(board, path, td):
     dsn, ses = os.path.join(td, 'b.dsn'), os.path.join(td, 'b.ses')
+    # Route with 0.25 mm clearance so that widening necked tracks afterwards (below) still clears 0.2 mm
+    nc = board.GetDesignSettings().m_NetSettings.GetDefaultNetclass()
+    clearance = nc.GetClearance()
+    nc.SetClearance(mm(float(os.environ.get('ROUTE_CLEARANCE', '0.25'))))
     pcbnew.ExportSpecctraDSN(board, dsn)
-    r = subprocess.run(['java', '-Djava.awt.headless=true', '-jar', FREEROUTING, '-de', dsn, '-do', ses, '-mp', '40',
-                        '--gui.enabled=false'], capture_output=True, text=True, timeout=1200)
+    nc.SetClearance(clearance)
+    r = subprocess.run(['java', '-Djava.awt.headless=true', '-jar', FREEROUTING, '-de', dsn, '-do', ses, '-mp', os.environ.get('PASSES', '40'),
+                        '--gui.enabled=false', '--router.automatic_neckdown=false'], capture_output=True, text=True, timeout=1200)
+    open(os.path.join(REPO, 'work/gen/freerouting.log'), 'w').write(r.stdout + r.stderr)
     tail = '\n'.join((r.stdout + r.stderr).splitlines()[-6:])
     print('freerouting:', tail)
     if not os.path.exists(ses) or os.path.getsize(ses) < 100:

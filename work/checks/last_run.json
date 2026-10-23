@@ -1,6 +1,6 @@
 {
  "date": "2026-10-23",
- "git_head": "de74a86",
+ "git_head": "abbf007",
  "results": [
   {
    "name": "DRC module (errors)",
@@ -21,9 +21,17 @@
   {
    "name": "DRC carrier (errors)",
    "status": "fail",
-   "summary": "DRC 32 errors: courtyards_overlap 14, unconnected_items 7, starved_thermal 4, copper_edge_clearance 3 (report checks/out/board_carrier-drc.json)",
+   "summary": "DRC 26 errors: courtyards_overlap 14, copper_edge_clearance 3, malformed_courtyard 3, unconnected_items 3 (report checks/out/board_carrier-drc.json)",
    "files": {
-    "../hardware/board_carrier/board_carrier.kicad_pcb": "a793e0b5fe41"
+    "../hardware/board_carrier/board_carrier.kicad_pcb": "bc5fd8b65e39"
+   }
+  },
+  {
+   "name": "Carrier DRC vs upstream baseline (new violations, unconnected)",
+   "status": "fail",
+   "summary": "DRC vs upstream: 0 new violations, 3 unconnected",
+   "files": {
+    "../hardware/board_carrier/board_carrier.kicad_pcb": "bc5fd8b65e39"
    }
   },
   {
@@ -31,7 +39,7 @@
    "status": "pass",
    "summary": "ERC 0 errors (report checks/out/board_carrier-erc.json)",
    "files": {
-    "../hardware/board_carrier/board_carrier.kicad_sch": "cba379bb5498"
+    "../hardware/board_carrier/board_carrier.kicad_sch": "fc67b216fcd9"
    }
   },
   {
@@ -39,8 +47,8 @@
    "status": "pass",
    "summary": "netlist self-check: 17 nets, 0 problems",
    "files": {
-    "../hardware/board_carrier/board_carrier.kicad_sch": "cba379bb5498",
-    "gen/gen_carrier_sch.py": "bfb73db4c799"
+    "../hardware/board_carrier/board_carrier.kicad_sch": "fc67b216fcd9",
+    "gen/gen_carrier_sch.py": "cebbd7036f4f"
    }
   },
   {
