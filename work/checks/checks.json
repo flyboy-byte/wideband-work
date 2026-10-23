@@ -5,10 +5,10 @@
       "python3",
       "checks/kicad_check.py",
       "drc",
-      "upstream/hardware/board_module/wideband_controller.kicad_pcb"
+      "../hardware/board_module/wideband_controller.kicad_pcb"
     ],
     "files": [
-      "upstream/hardware/board_module/wideband_controller.kicad_pcb"
+      "../hardware/board_module/wideband_controller.kicad_pcb"
     ]
   },
   {
@@ -17,10 +17,10 @@
       "python3",
       "checks/kicad_check.py",
       "erc",
-      "upstream/hardware/board_module/wideband_controller.kicad_sch"
+      "../hardware/board_module/wideband_controller.kicad_sch"
     ],
     "files": [
-      "upstream/hardware/board_module/wideband_controller.kicad_sch"
+      "../hardware/board_module/wideband_controller.kicad_sch"
     ]
   },
   {
@@ -29,10 +29,10 @@
       "python3",
       "checks/kicad_check.py",
       "drc",
-      "upstream/hardware/board_carrier/board_carrier.kicad_pcb"
+      "../hardware/board_carrier/board_carrier.kicad_pcb"
     ],
     "files": [
-      "upstream/hardware/board_carrier/board_carrier.kicad_pcb"
+      "../hardware/board_carrier/board_carrier.kicad_pcb"
     ]
   },
   {
@@ -41,10 +41,10 @@
       "python3",
       "checks/kicad_check.py",
       "erc",
-      "upstream/hardware/board_carrier/board_carrier.kicad_sch"
+      "../hardware/board_carrier/board_carrier.kicad_sch"
     ],
     "files": [
-      "upstream/hardware/board_carrier/board_carrier.kicad_sch"
+      "../hardware/board_carrier/board_carrier.kicad_sch"
     ]
   }
 ]

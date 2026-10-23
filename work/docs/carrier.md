@@ -5,7 +5,7 @@ Evidence tags as in `AGENTS.md`.
 
 ## Upstream carrier as it is
 
-From the carrier netlist (`kicad-cli sch export netlist`, `upstream/hardware/board_carrier/board_carrier.kicad_sch`)
+From the carrier netlist (`kicad-cli sch export netlist`, `hardware/board_carrier/board_carrier.kicad_sch`)
 and `export/carrier_bom.csv` [DOCUMENTED]:
 
 | Connector J3 (MX120G-12, 2x6) | Net |
@@ -33,7 +33,7 @@ and `export/carrier_bom.csv` [DOCUMENTED]:
 
 | Receiver | Input | Tag | Source |
 | --- | --- | --- | --- |
-| rusEFI | CAN, rusEFI wideband format | DOCUMENTED | `upstream/firmware/can.cpp` |
+| rusEFI | CAN, rusEFI wideband format | DOCUMENTED | `firmware/can.cpp` |
 | Speeduino | 0-5 V on the O2 input, curve set in TunerStudio; analog ground to signal ground | REPORTED | forum guides, no Speeduino doc found ([stangnet](https://stangnet.com/mustang-forums/threads/wiring-wideband-into-pnp.912251/)) |
 | Hondata FlashPro | Analog only: "a wideband meter which has an analog output, preferably 0-5V with a linear relationship between voltage and lambda"; set by two voltage/lambda pairs ("more than two... cannot be used"); no CAN or serial input | DOCUMENTED | [Hondata help: wideband lambda interface](https://www.hondata.com/help/flashpro/wideband_lambda_interface.htm) |
 | FlashPro standard scaling | PLX, later AEM and Innovate (when programmed) all output 0 V = 10:1, 5 V = 20:1 | DOCUMENTED | same page |
@@ -68,7 +68,7 @@ error (0.1 V) is 0.2 AFR, which is why the reference buffer matters [INFERRED].
 - PB1 to TIM3_CH4 (confirmed in the KiCad STM32F042K symbol's alternate list; the AF number still to check in
   ST DS10152), sharing TIM3 with the pump DAC; drop the SEL_1 strap read.
 - The config struct already has `auxOutBins/auxOutValues/auxOutputSource` and pads to 256 bytes in a 1 KB flash page
-  (`upstream/firmware/boards/port.h`, `boards/f0_module/wideband_layout.ld:11`) [DOCUMENTED]. f0 has no
+  (`firmware/boards/port.h`, `boards/f0_module/wideband_layout.ld:11`) [DOCUMENTED]. f0 has no
   `LoadDefaults()`, and there is no TunerStudio link to edit the curve, so the curve must be compiled in (presets,
   maybe chosen by the SEL_2 three-state strap) [INFERRED].
 - A test mode that holds the output at fixed voltages (1.00, 2.50, 4.00 V) for the multimeter, and a gain/offset trim.

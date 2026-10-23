@@ -26,7 +26,7 @@ Mark a stage done only when its exit condition is true. Strike through, don't de
 - 2026-10-23 No simulated-narrowband output. FlashPro use is datalogging over the 0-5 V input; stock ECU closed loop stays on its narrowband sensor — owner.
 - 2026-10-23 Base stays the f0 module + a new carrier; lambda-x2 is not forked (its analog out is the same circuit). Copy its output stage, add a reference buffer and trim — owner ("keep going").
 - 2026-10-23 `AGENTS.md` is the authoritative guide for all models; Codex audits follow its "Cross-model audits" section — owner asked for documentation for us, subagents and Codex.
-- 2026-10-23 Work in a separate repo (`wideband-work`), upstream clone `../wideband` stays untouched — owner's choice.
+- ~~2026-10-23 Work in a separate repo, upstream clone stays untouched~~ — replaced the same day: one repo `~/projects/wideband-work` = upstream clone + branch `analog-out` + our files in `work/`; the separate notes repo and the `rusefi-hardware` clone were deleted — owner ("combine and delete").
 - 2026-10-23 Intent: build and order the upstream design as is, then adapt it — owner ("both").
 - 2026-10-23 Upstream's `hardware/*/export/` files are upstream releases, not evidence of anything the owner ordered.
 
@@ -43,7 +43,7 @@ Mark a stage done only when its exit condition is true. Strike through, don't de
 | DRC carrier (errors) | FAIL | DRC 29 errors: courtyards_overlap 14, clearance 8, malformed_courtyard 3, starved_thermal 2 (report checks/out/board_carrier-drc.json) | 2026-10-23 | `board_carrier.kicad_pcb` 71d343b660c5 |
 | ERC carrier (errors) | FAIL | ERC 8 errors: pin_not_driven 3, power_pin_not_driven 3, pin_not_connected 2 (report checks/out/board_carrier-erc.json) | 2026-10-23 | `board_carrier.kicad_sch` 1c4a6695af9a |
 
-Written by `checks/run_all.py` at commit 7ce6b4e. Don't edit by hand.
+Written by `checks/run_all.py` at commit cc50242. Don't edit by hand.
 <!-- checks:end -->
 
 ## Bring-up results

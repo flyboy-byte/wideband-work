@@ -16,12 +16,12 @@ FROM MEMORY = model recall, must be checked; UNKNOWN = not found.
 
 | # | Fact | Tag | Source |
 | --- | --- | --- | --- |
-| F1 | MCU is STM32F042K6T (U2), 32-pin | DOCUMENTED | module netlist (`kicad-cli sch export netlist`, `upstream/hardware/board_module/wideband_controller.kicad_sch`) |
+| F1 | MCU is STM32F042K6T (U2), 32-pin | DOCUMENTED | module netlist (`kicad-cli sch export netlist`, `hardware/board_module/wideband_controller.kicad_sch`) |
 | F2 | Module has two 8-pin edge connectors, J1 (sensor side) and J3 (power, CAN, straps); 16 pads, not 14 | DOCUMENTED | module netlist. The 14-pin `wideband_module.kicad_sym` is the carrier-side symbol |
 | F3 | J3-3 `SEL_1` = PB1 (pin 15), J3-4 `SEL_2` = PA8 (pin 18), no resistors on either net on the module | DOCUMENTED | module netlist |
-| F4 | SEL_1/SEL_2 are **used**: a three-state CAN-index strap (high/low/floating each), read on every `GetConfiguration()` call; both floating = no override | DOCUMENTED | `upstream/firmware/boards/f0_module/port.cpp:134-150`, `io/io_pins.h` |
+| F4 | SEL_1/SEL_2 are **used**: a three-state CAN-index strap (high/low/floating each), read on every `GetConfiguration()` call; both floating = no override | DOCUMENTED | `firmware/boards/f0_module/port.cpp:134-150`, `io/io_pins.h` |
 | F5 | PB1 and PA8 have internal pull-ups enabled in the GPIO setup | DOCUMENTED | `boards/f0_module/board.h:238,335` |
-| F6 | CAN index can also be set over CAN and is saved to flash | DOCUMENTED | `upstream/firmware/can.cpp:148`, `port.cpp` `SetConfiguration()` |
+| F6 | CAN index can also be set over CAN and is saved to flash | DOCUMENTED | `firmware/can.cpp:148`, `port.cpp` `SetConfiguration()` |
 | F7 | Heater PWM = TIM1 channel 1 (`PWMD1`, ch 0) on PA7; 400 kHz counter / 1024 = 390 Hz | DOCUMENTED | `io/io_pins.h`, `heater_thread.cpp:12-13` |
 | F8 | PA7 runs as alternate function 2 | DOCUMENTED | `board.h` GPIOA comment |
 | F9 | Pump DAC = TIM3 channel 1 (`PWMD3`, ch 0) on PA6; SYSCLK / 1024 = 46.9 kHz at 48 MHz; config enables all four TIM3 channels active-high | DOCUMENTED | `io/io_pins.h`, `pump_dac.cpp:10-30` |
@@ -71,11 +71,11 @@ signal-ground terminal next to the analog output.
 
 ## Comparison with lambda-x2 (2026-10-23)
 
-From the lambda-x2 netlist (`../rusefi-hardware/lambda-x2/lambda-x2.kicad_sch`, KiCad 10 export) [DOCUMENTED]:
+From the lambda-x2 netlist (`rusefi/rusefi-hardware` `lambda-x2/lambda-x2.kicad_sch` (not kept locally), KiCad 10 export) [DOCUMENTED]:
 - Analog out is the same idea as A3: MCU PWM (PC6, PC8) -> two RC stages (3.3k/100n, twice) -> MCP6002 (U7)
   non-inverting, feedback 82k/160k (gain 1.51) -> 330R and ESD5V0D9B -> connector. Its 3.3 V is also an XC6206
   with a REF3033 for the ADC, so it has the same supply-tied accuracy.
-- It also uses a hardware CAN-ID strap (`ID_SEL1` on PC13 in `upstream/firmware/boards/f1_dual*/io/io_pins.h`).
+- It also uses a hardware CAN-ID strap (`ID_SEL1` on PC13 in `firmware/boards/f1_dual*/io/io_pins.h`).
 - 291 parts, STM32F103RCT6, JDY-33 Bluetooth, two EGT chips, 24-pin automotive connector.
 
 So switching boards gives the same analog circuit already routed, not a better one. Decision proposed: keep the f0

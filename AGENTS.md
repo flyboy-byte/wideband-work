@@ -13,8 +13,8 @@ carrier, then adapt it, starting with an analog 0-5 V output (`docs/analog-out.m
 
 | Path | What |
 | --- | --- |
-| `upstream/` | Symlink to the upstream clone `../wideband`. **Read only.** Never edit or commit there |
-| `../rusefi-hardware` | Clone of `rusefi/rusefi-hardware` (lambda-x2, wideband-F103). Read only, reference |
+| `firmware/`, `hardware/`, ... | Upstream `mck1117/wideband` code. Our changes are on branch `analog-out`; `master` stays equal to upstream; never push to remote `upstream` |
+| `work/` | Our pcb-design files; the rows below are inside it |
 | `STATE.md` | Current stage, decisions already made (don't re-ask), open items. Read first |
 | `REQUIREMENTS.md` | Owner's answers and the bring-up tests that define "working" |
 | `parts_research.md` | Part and option facts, each tagged and sourced |
@@ -28,8 +28,8 @@ carrier, then adapt it, starting with an analog 0-5 V output (`docs/analog-out.m
 1. **Tag every claim** by evidence: DOCUMENTED (read in a named file, line or datasheet), REPORTED (someone
    else's claim, e.g. a forum or retailer), INFERRED (reasoned from documented facts; say from what), FROM MEMORY
    (model recall; must be checked before anything depends on it), UNKNOWN. Never upgrade a tag without a source.
-2. **Name the source** with a path and line (`upstream/firmware/boards/f0_module/port.cpp:134`) or a URL.
-3. **Upstream files are not orders.** `upstream/hardware/*/export/` are upstream releases; nothing has been ordered
+2. **Name the source** with a path and line (`firmware/boards/f0_module/port.cpp:134`) or a URL.
+3. **Upstream files are not orders.** `hardware/*/export/` are upstream releases; nothing has been ordered
    by the owner. Facts about a built board come only from `fab/<rev>/` or the board itself.
 4. **Don't quote a search you cut short.** If output was truncated (`head`, a limit), say so; absence of a match in
    truncated output is not evidence. (This caused a wrong claim on 2026-10-23, see `LESSONS.md`.)

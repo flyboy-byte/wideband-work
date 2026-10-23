@@ -4,21 +4,24 @@ This is a custom PCB project set up with the `pcb-design` skill (KiCad, Freerout
 The procedure lives in that skill; this file only says where the state lives.
 
 `AGENTS.md` is the authoritative, model-agnostic guide (evidence tags, subagents, Codex audits) and wins over
-this file. Design notes are in `docs/`.
+this file.
 
-## Where the board files are
-The board is the upstream project `mck1117/wideband` (MIT), cloned at `../wideband` and linked here as `upstream/`.
-Do not edit or commit inside it; `git pull` there to update. Boards: `upstream/hardware/board_module/` (LSU 4.2/4.9/ADV
-controller module) and `upstream/hardware/board_carrier/` (standalone carrier: 5 V regulator, CAN). Upstream's
-`hardware/*/export/` folders are its published releases, not orders placed by the owner. This repo holds only our
-state, checks, notes and any changes we make as copies.
+## Repo layout
+This repo is a clone of `mck1117/wideband` (MIT) with our work on top. Remote `upstream` = mck1117/wideband; never
+push to it. `master` tracks upstream unchanged; our work is on branch `analog-out` (`git diff master` = our changes).
+- Upstream code: `firmware/` (STM32 firmware; `f0_module` is our board), `hardware/board_module/` (LSU controller
+  module), `hardware/board_carrier/` (standalone carrier: 5 V regulator, CAN). Upstream's `hardware/*/export/`
+  folders are its published releases, not orders placed by the owner.
+- Our pcb-design files: `work/` (`STATE.md`, `REQUIREMENTS.md`, `docs/`, `checks/`, ...). Run checks from there:
+  `cd work && python3 checks/run_all.py`. Paths in the file table below are relative to `work/`.
+- Firmware build: see `work/docs/firmware.md`.
 
 ## Start every session here
 0. **Load the `pcb-design` skill** (Skill tool) before any work in this folder, and again whenever
    the task is part choice, schematic, placement, routing, checks, renders, fab files, audit,
    ordering or bring-up. If a file listed below is missing, run the skill's "Scaffold the project
    first" steps for the missing files only. If the skill is not installed, say so and stop.
-1. Read `STATE.md` (stage, revision, decisions already made, what is open). If it lists a review page, read its
+1. Read `work/STATE.md` (stage, revision, decisions already made, what is open). If it lists a review page, read its
    answered questions (`ArtifactData list questions`) and file them before anything else.
 2. Work the current stage only. A stage is done when its exit condition in `STATE.md` is met, not
    when more docs exist.
