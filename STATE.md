@@ -23,6 +23,7 @@ Mark a stage done only when its exit condition is true. Strike through, don't de
 | 11 | Bring-up | Bring-up tests from `REQUIREMENTS.md` run and recorded below; RISK items checked; lessons in `LESSONS.md` | |
 
 ## Decisions already made (do not re-ask)
+- 2026-10-23 Base stays the f0 module + a new carrier; lambda-x2 is not forked (its analog out is the same circuit). Copy its output stage, add a reference buffer and trim — owner ("keep going").
 - 2026-10-23 `AGENTS.md` is the authoritative guide for all models; Codex audits follow its "Cross-model audits" section — owner asked for documentation for us, subagents and Codex.
 - 2026-10-23 Work in a separate repo (`wideband-work`), upstream clone `../wideband` stays untouched — owner's choice.
 - 2026-10-23 Intent: build and order the upstream design as is, then adapt it — owner ("both").
@@ -53,5 +54,5 @@ Written by `checks/run_all.py` at commit 7ce6b4e. Don't edit by hand.
 | --- | --- | --- |
 
 ## Open
-- Analog output: see `docs/analog-out.md`. Re-checked 2026-10-23: the SEL pads are a CAN-ID strap (not unused) and PA8 shares the heater's timer channel, so the earlier SEL_2 idea is rejected. Current proposal: SEL_1 (PB1) as TIM3_CH4 PWM, filter and scale on a new carrier; module unchanged. Open: confirm PB1 alternate function in the datasheet, f0 config room for the aux curve, Speeduino/FlashPro scaling, carrier op-amp supply.
+- Analog output: `docs/analog-out.md` (pin and timer, verified facts, attempt log) and `docs/carrier.md` (our carrier: spare connector pins J3-5/J3-7, analog stage, receivers, firmware changes, draft bring-up tests A1-A3). Decided with owner 2026-10-23: stay on the f0 module, copy lambda-x2's output stage onto our carrier, add a reference buffer and trim. Open: PB1 AF number, flash headroom (needs a firmware build: where does our firmware fork live?), op-amp choice, K20Z3 ECU pin, CAN termination jumper, owner to confirm tests A1-A3.
 - Baseline checks on upstream at its HEAD (2026-10-23, error level): module DRC 11 / ERC 0; carrier DRC 29 / ERC 8. Not yet judged as real or harmless.

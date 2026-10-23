@@ -26,12 +26,12 @@ FROM MEMORY = model recall, must be checked; UNKNOWN = not found.
 | F8 | PA7 runs as alternate function 2 | DOCUMENTED | `board.h` GPIOA comment |
 | F9 | Pump DAC = TIM3 channel 1 (`PWMD3`, ch 0) on PA6; SYSCLK / 1024 = 46.9 kHz at 48 MHz; config enables all four TIM3 channels active-high | DOCUMENTED | `io/io_pins.h`, `pump_dac.cpp:10-30` |
 | F10 | TIM14 is the system tick | DOCUMENTED | `mcuconf.h:143` (`STM32_ST_USE_TIMER 14`), upstream commit `2bb80d2` |
-| F11 | PA7 AF2 = TIM1_CH1N, PA8 AF2 = TIM1_CH1, PB1 AF1 = TIM3_CH4 | FROM MEMORY | check STM32F042x4/x6 datasheet (DS10152) alternate-function table |
+| F11 | PA7 has TIM1_CH1N, PA8 has TIM1_CH1, PB1 has TIM3_CH4 (and TIM14_CH1, TIM1_CH3N) | DOCUMENTED | KiCad 10 library `MCU_ST_STM32F0.kicad_sym`, symbol `STM32F042K_4-6_Tx` alternates. AF numbers (AF1 for PB1/TIM3) still FROM MEMORY: check DS10152 |
 | F12 | Unrouted MCU pins on the module: PA4, PA5, PA9, PA10, PA15, PF0, PF1 | DOCUMENTED | module netlist (`unconnected-(U2-...)` nets) |
 | F13 | Sensor type is fixed to LSU 4.9 in f0 firmware; ESR drive on PB7 through 22k (R6); 4.2 (PB3, 6.8k) and ADV (PB4, 47k) drives are separate pins, so no lambda-x2-style crosstalk | DOCUMENTED | `port.cpp` `GetSensorType()`, module netlist |
 | F14 | F1 boards scale their aux output by (82+160)/160 = 1.51, so 3.3 V full scale is about 5.0 V | INFERRED | constant `AUXOUT_GAIN` in `boards/f1_rev3/wideband_board_config.h:47`; resistor values not read from a schematic |
 | F15 | The analog-output code (`auxout.cpp`, 8-point curve per output) is only built for boards that define `AUXOUT_DAC_PWM_DEVICE` (F1 boards); f0 does not | DOCUMENTED | `grep AUXOUT_DAC_PWM_DEVICE boards/*/*` |
-| F16 | Whether f0's `Configuration` struct has room and fields for the aux curve | UNKNOWN | read `boards/port.h` next |
+| F16 | f0 shares the `Configuration` struct that already holds the aux curves (256 bytes, 1 KB flash page); f0 has no UART/TunerStudio and no `LoadDefaults()`, so the curve must be compiled in | DOCUMENTED / INFERRED | `boards/port.h`, `boards/f0_module/wideband_layout.ld:11`, `halconf.h` |
 
 ## Attempt log
 
@@ -90,8 +90,8 @@ module and copy lambda-x2's output stage onto our carrier, plus the reference bu
 
 ## Open questions
 
-1. Confirm F11 in the datasheet.
-2. F16: does f0 have the config fields and flash room for the aux curve?
+1. AF number for PB1/TIM3_CH4 (DS10152).
+2. Flash headroom on the 32 KB F042 (build it).
 3. What 0-5 V scaling do Speeduino and FlashPro expect, and is 10-bit at 46.9 kHz plus filtering fast enough (lambda
    updates around 100 Hz)?
-4. Carrier supply: what rails exist on the carrier, and which op-amp?
+4. Carrier design: see `docs/carrier.md`.
