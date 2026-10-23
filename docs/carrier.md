@@ -35,17 +35,24 @@ and `export/carrier_bom.csv` [DOCUMENTED]:
 | --- | --- | --- | --- |
 | rusEFI | CAN, rusEFI wideband format | DOCUMENTED | `upstream/firmware/can.cpp` |
 | Speeduino | 0-5 V on the O2 input, curve set in TunerStudio; analog ground to signal ground | REPORTED | forum guides, no Speeduino doc found ([stangnet](https://stangnet.com/mustang-forums/threads/wiring-wideband-into-pnp.912251/)) |
-| Hondata FlashPro (K20Z3) | 0-5 V into a spare ECU input; one S2000 install used 0 V = 10:1, 5 V = 20:1; Hondata says reference the ECU ground point, don't splice into it | REPORTED | [hondata forum](https://www.hondata.mobi/forum/viewtopic.php?p=51503), [hondata forum](https://hondata.mobi/forum/viewtopic.php?p=42579) |
-| K20Z3 ECU pin for the wideband | not found | UNKNOWN | check the K20Z3 ECU wiring diagram / Hondata support |
+| Hondata FlashPro | Analog only: "a wideband meter which has an analog output, preferably 0-5V with a linear relationship between voltage and lambda"; set by two voltage/lambda pairs ("more than two... cannot be used"); no CAN or serial input | DOCUMENTED | [Hondata help: wideband lambda interface](https://www.hondata.com/help/flashpro/wideband_lambda_interface.htm) |
+| FlashPro standard scaling | PLX, later AEM and Innovate (when programmed) all output 0 V = 10:1, 5 V = 20:1 | DOCUMENTED | same page |
+| 2006-2011 Civic Si ECU pin | B29 (EGRL, EGR lift input) "Wideband input", "Normally unused"; A23 (ELD) and A33 (ECT2) need that sensor disabled and the factory pin removed; C27 (SO2) not recommended, the ECU limits its voltage | DOCUMENTED (model-column mapping read from extracted text; check the rendered table) | [Hondata help: ECU connectors](https://www.hondata.com/help/flashpro/ecu_connectors.htm); forums agree on B29 ([8thcivic](https://www.8thcivic.com/threads/wideband-into-flashpro.187850/)) |
+| Grounding (FlashPro, K-series) | "the lambda meter uses the same ground as the ECU, for both the power and analog output sections"; K-series point is G101 on the intake manifold; don't share the meter's ground wire; needing an offset "means you have a ground problem" | DOCUMENTED | wideband lambda interface page |
+| Closed loop on an aftermarket wideband | One user says datalog only, no closed-loop fuel; Hondata puts the wideband settings under "Closed loop parameters". Conflict, unresolved | REPORTED vs DOCUMENTED | [8thcivic](https://www.8thcivic.com/threads/wideband-into-flashpro.187850/page-5) |
+| ECU pin terminal | Hondata reportedly sent free direct-fit pins on request | REPORTED | 8thcivic forum |
 | Carb gauge or dash | 0-5 V or CAN depending on the unit | INFERRED | pick the unit later |
 
 So: one linear 0-5 V output with a configurable curve, plus a separate signal-ground wire, covers every receiver on
-the list. Default curve proposal: 0 V = 10.0 AFR, 5 V = 20.0 AFR (matches the reported FlashPro setup) [INFERRED].
+the list. Default curve: 0 V = 10.0 AFR, 5 V = 20.0 AFR, linear. Hondata names this the standard output of PLX, later AEM and
+Innovate [DOCUMENTED], so it is the curve to ship. That scale is 2 AFR per volt: 0.1 AFR = 0.05 V, and a 2% full-scale
+error (0.1 V) is 0.2 AFR, which is why the reference buffer matters [INFERRED].
 
 ## Proposed changes
 
 1. **Use the spare connector pins**: J3-5 = analog out, J3-7 = signal ground (tied to GND at one point near the
-   output stage). Same connector, no new terminal.
+   output stage). Same connector, no new terminal. Wiring note for FlashPro installs: Hondata wants the meter's power
+   ground and analog ground both at the ECU's ground point (G101 on K-series), on wires not shared with anything else.
 2. **Analog stage**, after lambda-x2 (`docs/analog-out.md`), with our improvement:
    module SEL_1 (PB1 PWM) -> small CMOS buffer powered from a precision reference (full scale no longer follows the
    module's 3.3 V LDO) -> two RC stages (lambda-x2: 3.3k/100n twice) -> non-inverting op-amp with gain set so the
