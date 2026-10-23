@@ -19,10 +19,13 @@ for the firmware build. Unit tests (`test/`) not run yet.
 
 | | Stock `2bb80d2` | `analog-out` | Limit |
 | --- | --- | --- | --- |
-| App flash (vectors + xtors + text + rodata + data) | 20,316 B | 20,756 B | 25,596 B (32k - 6k bootloader - 1k config - 4 CRC, `build_wideband.sh`) |
-| RAM left (`.heap`) | 16 B | 8 B | 5,888 B ram0 total; 2 KB is the two stacks |
+| App flash (vectors + xtors + text + rodata + data) | 20,316 B | 20,900 B | 25,596 B (32k - 6k bootloader - 1k config - 4 CRC, `build_wideband.sh`) |
+| RAM left (`.heap`) | 16 B | **0 B** | 5,888 B ram0 total; 2 KB is the two stacks |
 
-RAM, not flash, is the constraint: there is no room for another thread. That is why our change has none.
+RAM, not flash, is the constraint: there is no room for another thread, which is why our change has none. RAM is now
+full to the byte. That is safe because nothing allocates at runtime (`CH_CFG_USE_HEAP`, `CH_CFG_USE_MEMCORE`,
+`CH_CFG_USE_MEMPOOLS` are FALSE in `boards/f0_module/chconf.h`), but any further RAM must come out of something else
+(the largest are the CAN RX/TX thread areas, 680 B each, and the two 1 KB stacks).
 
 ## The change (`git diff master -- firmware`)
 
@@ -40,6 +43,10 @@ All behind `AUXOUT_SEL1_PWM_CHANNEL`, defined only in `boards/f0_module/wideband
   is `AUXOUT_INVALID_VOLTS` (0.0 V).
 - **Strap:** SEL_1 is never read as a strap (its pad mode is never changed back to input); it counts as floating.
   SEL_2 still straps: low = CAN index 4, floating = no override, high = index 1. CAN-set index still works.
+- **Test mode:** SEL_2 tied low at power-up makes the output step 1.00 -> 2.50 -> 4.00 V, 10 s each, repeating,
+  instead of the AFR (bench test A1). SEL_2 low also sets CAN index 4 through the strap; harmless on the bench.
+- **Trim:** `AUXOUT_TRIM_GAIN` and `AUXOUT_TRIM_OFFSET_VOLTS` in `wideband_board_config.h`, from the A1 readings:
+  fit measured = gain x wanted + offset over the three levels, enter both, rebuild and reflash.
 - **Scale:** `AUXOUT_FULL_SCALE_VOLTS` = 3.0 x 1.68 = 5.04 V at 100% duty, matching the proposed carrier stage
   (REF3030 buffer, gain 1 + 68k/100k, `carrier.md`). A trim step comes with bring-up.
 
@@ -49,4 +56,5 @@ All behind `AUXOUT_SEL1_PWM_CHANNEL`, defined only in `boards/f0_module/wideband
 - CAN TX thread stack (512 B) now also runs `UpdateAuxOut()`. ChibiOS stack checking is on (`chconf.h`), so an
   overflow halts rather than corrupts, but the margin is unmeasured.
 - The 0 V invalid output reads as 10 AFR on a receiver. Owner to decide if another value is better.
-- The test mode for fixed voltages (1.00/2.50/4.00 V) and the trim are not written yet.
+- Trim needs a reflash per board, so how the owner flashes the module (SWD probe on the Tag-Connect pads, or rusEFI
+  over CAN) is an open question.

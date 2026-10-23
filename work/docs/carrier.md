@@ -114,7 +114,8 @@ error (0.1 V) is 0.2 AFR, which is why the reference buffer matters [INFERRED].
    Passives: 0603 1% from JLC's Basic list, LCSC numbers to be confirmed when the BOM is generated. Open: does REF3030
    need or tolerate an output capacitor next to the buffer (check the TI datasheet); whether JLC's API marks Basic
    parts differently (every result above said Extended, including parts expected to be Basic).
-3. **CAN termination**: decide whether to add an optional 120 ohm (solder jumper) for a bus with no other terminator.
+3. **TEST jumper**: a solder jumper from module SEL_2 to GND, open by default, for bench test A1.
+4. **CAN termination**: decide whether to add an optional 120 ohm (solder jumper) for a bus with no other terminator.
 
 ## Firmware changes (our fork; f0 has no UART or TunerStudio, `halconf.h` HAL_USE_UART/SERIAL FALSE)
 
@@ -131,6 +132,6 @@ error (0.1 V) is 0.2 AFR, which is why the reference buffer matters [INFERRED].
 
 | # | Do | Measure | Pass |
 | --- | --- | --- | --- |
-| A1 | Test mode 1.00 / 2.50 / 4.00 V, meter J3-5 to J3-7 | DC volts | within ±0.02 V after trim |
+| A1 | Close the TEST jumper (module SEL_2 to GND), power up; output steps 1.00 / 2.50 / 4.00 V, 10 s each. Meter J3-5 to J3-7 | DC volts at each step | before trim: within ±0.10 V; after trim and reflash: within ±0.02 V |
 | A2 | Sensor in free air, warmed up | DC volts at J3-5 vs AFR the firmware reports over CAN | volts match the curve within ±0.05 V |
 | A3 | Short J3-5 to GND briefly through the meter's current range | current | limited by the series resistor (value TBD), board survives |

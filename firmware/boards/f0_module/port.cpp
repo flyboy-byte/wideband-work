@@ -111,6 +111,13 @@ static uint8_t readSelPin(ioportid_t port, iopadid_t pad)
     }
 }
 
+#ifdef AUXOUT_TEST_MODE_ON_SEL2_LOW
+bool IsSel2StrappedLow()
+{
+    return readSelPin(ID_SEL2_PORT, ID_SEL2_PIN) == 0;
+}
+#endif
+
 extern Configuration __configflash__start__;
 
 int InitConfiguration()

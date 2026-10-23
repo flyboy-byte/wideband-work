@@ -28,3 +28,9 @@
 #define AUXOUT_FULL_SCALE_VOLTS (3.0f * (1.0f + 68.0f / 100.0f))
 // Output while the sensor is warming up or lambda is invalid
 #define AUXOUT_INVALID_VOLTS (0.0f)
+// Per-board trim from bring-up test A1 (measured = gain * wanted + offset, so we send (wanted - offset) / gain)
+#define AUXOUT_TRIM_GAIN (1.0f)
+#define AUXOUT_TRIM_OFFSET_VOLTS (0.0f)
+// SEL_2 held low at power-up: output steps through these, AUXOUT_TEST_STEP_MS each, instead of the AFR
+#define AUXOUT_TEST_MODE_ON_SEL2_LOW
+#define AUXOUT_TEST_STEP_MS 10000

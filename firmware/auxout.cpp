@@ -123,6 +123,8 @@ void SetAuxDac(int channel, float voltage)
         return;
     }
 
+    voltage = (voltage - AUXOUT_TRIM_OFFSET_VOLTS) / AUXOUT_TRIM_GAIN;
+
     auto duty = voltage / AUXOUT_FULL_SCALE_VOLTS;
     duty = clampF(0, duty, 1);
 
@@ -164,12 +166,30 @@ static bool IsLambdaValid(int ch)
 }
 #endif
 
+#ifdef AUXOUT_TEST_MODE_ON_SEL2_LOW
+// boards/f0_module/port.cpp
+bool IsSel2StrappedLow();
+
+static bool auxTestMode;
+#endif
+
 void UpdateAuxOut()
 {
     if (!auxCfg)
     {
         return;
     }
+
+#ifdef AUXOUT_TEST_MODE_ON_SEL2_LOW
+    if (auxTestMode)
+    {
+        // Bench test A1: fixed voltages to read with a multimeter
+        static const float levels[] = {1.00f, 2.50f, 4.00f};
+        auto step = (TIME_I2MS(chVTGetSystemTime()) / AUXOUT_TEST_STEP_MS) % 3;
+        SetAuxDac(0, levels[step]);
+        return;
+    }
+#endif
 
     for (int ch = 0; ch < AFR_CHANNELS; ch++)
     {
@@ -225,6 +245,9 @@ void InitAuxDac()
     // No RAM for another thread here: the CAN TX thread calls UpdateAuxOut().
     SetAuxDac(0, 0.0);
     palSetPadMode(GPIOB, 1, PAL_MODE_ALTERNATE(1));
+#ifdef AUXOUT_TEST_MODE_ON_SEL2_LOW
+    auxTestMode = IsSel2StrappedLow();
+#endif
 #else
     chThdCreateStatic(waAuxOutThread, sizeof(waAuxOutThread), NORMALPRIO, AuxOutThread, nullptr);
 #endif
