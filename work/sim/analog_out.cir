@@ -7,7 +7,7 @@ R1 pwm f1 3.3k
 C1 f1 0 100n
 R2 f1 f2 3.3k
 C2 f2 0 100n
-* feedback taken at "out" (after the series resistor) would remove the load error; this model has it outside the loop
+* this model has the 330R outside the loop (topology A); the design uses a dual loop, see stability.sh
 B1 oa 0 V = min(max(1.68*v(f2),0),10.5)
 R3 oa out 330
 R4 out 0 100k

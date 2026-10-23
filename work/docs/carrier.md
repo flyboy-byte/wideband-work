@@ -61,7 +61,8 @@ error (0.1 V) is 0.2 AFR, which is why the reference buffer matters [INFERRED].
      -> 74LVC1G125 buffer, VCC = 3.000 V from REF3030, OE tied low   (full scale = the reference, not the LDO)
      -> 3.3k / 100n -> 3.3k / 100n                                   (lambda-x2's values)
      -> LM2904 non-inverting, gain 1 + 68k/100k = 1.68 -> full scale 5.04 V
-        feedback taken AFTER the 330R series resistor, so the ECU's input load causes no error
+        dual loop: DC feedback (68k) from AFTER the 330R, so the ECU's input load causes no error;
+        AC feedback Cf = 1 nF (C0G) from the op-amp output to IN-, so cable capacitance can't make it oscillate
      -> 330R -> BAT54S clamp to +5V and GND -> J3-5
    LM2904 supply: protected 12 V (LSU_Heater+ net) through 100R + 10u
    ```
@@ -71,8 +72,8 @@ error (0.1 V) is 0.2 AFR, which is why the reference buffer matters [INFERRED].
      the MCU's 3.3 V, a wide margin. At 4.096 V it would be 2.87 V, too thin.
    - LM2904 on 12 V: reaches 5.04 V with headroom (output high is about V+ - 1.5 V); inputs work down to 0 V; rated
      -40 C (automotive LM358 family). It cannot swing to exactly 0 V, which only matters below about 10.0 AFR.
-   - Feedback after the 330R: the simulation with feedback before it read 0.31% low into 100k (0.016 AFR at
-     mid-scale). Stability with a cable load on the feedback node is to be checked with a real op-amp model.
+   - Dual loop: feedback taken plainly before the 330R reads 0.31% low into 100k (0.016 AFR at mid-scale); taken
+     plainly after it, the stage oscillates with cable capacitance (stability table below). The 1 nF Cf fixes both.
    - BAT54S clamp to +5V: if the op-amp fails high, the output is held near 5.3 V and the 330R limits the current to
      about 15 mA. Schottky leakage at 5.0 V is small, unlike a 5.1 V zener's soft knee.
 
@@ -82,6 +83,19 @@ error (0.1 V) is 0.2 AFR, which is why the reference buffer matters [INFERRED].
    | --- | --- | --- | --- |
    | 50% | 2.5122 V (ideal 2.520) | 0.68 mV (0.0014 AFR) | 4.1 ms |
    | 80% | 4.0192 V (ideal 4.032) | 0.44 mV | 4.1 ms |
+
+   Stability with TI's LM2904 model (`work/sim/stability.sh`, model `LMX58_LM2904` Rev B from TI SNOM268, 12 V
+   supply, 100 mV input step = 168 mV output step, 100k ECU load) [DOCUMENTED run, 2026-10-23]:
+
+   | Feedback | Cable C | Overshoot | Still oscillating at 0.6 ms | Settles to 1% |
+   | --- | --- | --- | --- | --- |
+   | A: before 330R | 1 pF / 1 nF / 10 nF / 47 nF | 24% / 28% / 0% / 0% | no | 2-70 us |
+   | B: after 330R | 1 pF / 1 nF / 10 nF / 47 nF | 24% / 72% / 106% / 86% | **yes at 10 nF (55 mV p-p) and 47 nF (16 mV)** | up to 795 us |
+   | C: dual loop, Cf 100 pF | 1 pF / 1 nF / 10 nF / 47 nF | 0% / 0% / 11% / 39% | no | 9-161 us |
+   | **C: dual loop, Cf 1 nF** | 1 pF / 1 nF / 10 nF / 47 nF | **0% at every load** | no | 145-254 us |
+
+   Final value with C: 1.8503 V against 1.848 V ideal (the difference is the model's input offset). Not simulated:
+   the clamp diodes, the 100k pull-down, temperature, and cable inductance.
 
    Resolution: 1024 PWM steps over 5.04 V = 4.9 mV = 0.0098 AFR. Accuracy budget: REF3030 ±0.2% initial and
    75 ppm/C (about ±0.45% over -40..+85 C), resistor tolerance (1%: about ±0.8% gain worst case; 0.1% parts or the
