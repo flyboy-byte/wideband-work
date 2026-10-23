@@ -55,6 +55,20 @@ FROM MEMORY = model recall, must be checked; UNKNOWN = not found.
   either a rail-to-rail part on a supply above 5 V or a stated lower full scale. Values not chosen yet.
 - **No module change.** The proven module stays as upstream built it.
 
+## Weak points of A3 (2026-10-23)
+
+| Risk | Assessment | Tag |
+| --- | --- | --- |
+| PWM couples into analog on the module | SEL_1 trace is 6.0 mm on F.Cu; nearest same-layer nets are GND and `Net-(U2-PB0)` (battery-sense ADC, 100k/10k divider with 1 uF C6) at about 0.72 mm (centerline estimate). No pump/Nernst nets nearby. Low risk; inner layers not checked | DOCUMENTED (module `.kicad_pcb` parse) / INFERRED (risk) |
+| Output accuracy follows the MCU's 3.3 V LDO (XC6206, U9), not the 3.0 V reference (REF3033, U3) | A PWM DAC's full scale is its supply. LDO tolerance (about 2%, FROM MEMORY) on a 10-20 AFR / 0-5 V scale is about 0.2 AFR | INFERRED |
+| Ground offset between the wideband and the receiving ECU | Heater current returns through ground; a single-ended 0-5 V input sees the offset. Every analog wideband has this; needs a signal-ground wire to the ECU's sensor ground | INFERRED |
+| Shares TIM3 with the pump DAC | Same period, independent duty per channel; pump loop untouched if TIM3 is started once | INFERRED from F9 |
+| Running upstream firmware on the new carrier | PB1's pull-up into the carrier filter reads as a strap and changes the CAN index. Our firmware must be flashed first | INFERRED from F4, F5 |
+
+Mitigations to adopt: on the carrier, square the PWM with a small CMOS buffer powered from a precision reference so full
+scale no longer depends on the LDO; add a firmware gain/offset trim checked with a multimeter at bring-up; bring out a
+signal-ground terminal next to the analog output.
+
 ## Alternatives kept on record
 
 - **Module revision:** route PA9 or PA10 (unrouted, F12) to a new pad. These are TIM1 channels [FROM MEMORY], so they
