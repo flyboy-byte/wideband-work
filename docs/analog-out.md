@@ -69,6 +69,18 @@ Mitigations to adopt: on the carrier, square the PWM with a small CMOS buffer po
 scale no longer depends on the LDO; add a firmware gain/offset trim checked with a multimeter at bring-up; bring out a
 signal-ground terminal next to the analog output.
 
+## Comparison with lambda-x2 (2026-10-23)
+
+From the lambda-x2 netlist (`../rusefi-hardware/lambda-x2/lambda-x2.kicad_sch`, KiCad 10 export) [DOCUMENTED]:
+- Analog out is the same idea as A3: MCU PWM (PC6, PC8) -> two RC stages (3.3k/100n, twice) -> MCP6002 (U7)
+  non-inverting, feedback 82k/160k (gain 1.51) -> 330R and ESD5V0D9B -> connector. Its 3.3 V is also an XC6206
+  with a REF3033 for the ADC, so it has the same supply-tied accuracy.
+- It also uses a hardware CAN-ID strap (`ID_SEL1` on PC13 in `upstream/firmware/boards/f1_dual*/io/io_pins.h`).
+- 291 parts, STM32F103RCT6, JDY-33 Bluetooth, two EGT chips, 24-pin automotive connector.
+
+So switching boards gives the same analog circuit already routed, not a better one. Decision proposed: keep the f0
+module and copy lambda-x2's output stage onto our carrier, plus the reference buffer and trim above.
+
 ## Alternatives kept on record
 
 - **Module revision:** route PA9 or PA10 (unrouted, F12) to a new pad. These are TIM1 channels [FROM MEMORY], so they
