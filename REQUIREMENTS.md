@@ -1,10 +1,10 @@
-# Requirements — <board name>
+# Requirements — rusEFI wideband (module + carrier)
 
-Answered by <owner> on <YYYY-MM-DD>. Ask one question at a time with a recommended option.
+Answered by the owner from 2026-10-23. Ask one question at a time with a recommended option.
 
 | Requirement | Answer | Notes |
 | --- | --- | --- |
-| What the board does | | |
+| What the board does | Wideband O2 (air-fuel) controller for a Bosch LSU sensor; module plus standalone carrier (from upstream README) | Intent: build and order as is first, then adapt it (owner, 2026-10-23) |
 | Is a breakout board or perfboard enough? | | If yes, stop here |
 | Size target, and which edge is the hard limit | | mm and inches |
 | Wire edge (all field wires, battery, plugs leave one edge) | | |
@@ -20,7 +20,12 @@ Answered by <owner> on <YYYY-MM-DD>. Ask one question at a time with a recommend
 
 ## Risk probes asked
 Functions this board has, and the probes they triggered (`reference/intent-capture.md`):
-- <function> -> <probe>: <answer>
+Plan (answers empty until asked):
+- runs from a vehicle's 12 V -> load dump/TVS, reverse polarity, ignition-switched feed, -40..+85 C parts, connector, fuse:
+- drives a sensor heater (switched load, high current) -> heater current and MOSFET thermal, what stops it driving a cold sensor:
+- reads a precision analog sensor (pump cell) -> calibration method, noise, what the owner can verify without a scope:
+- CAN bus -> termination, which ECU/bus it joins, ID/protocol (`wideband-can.dbc`):
+- ships to others? (not stated) -> case, label:
 
 ## What working means (bring-up tests, decided before layout)
 Checkable with the owner's bench. Changing one later needs a dated reason in `STATE.md`.

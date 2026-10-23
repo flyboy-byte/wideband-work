@@ -24,6 +24,7 @@ Mark a stage done only when its exit condition is true. Strike through, don't de
 
 ## Decisions already made (do not re-ask)
 - 2026-10-23 Work in a separate repo (`wideband-work`), upstream clone `../wideband` stays untouched — owner's choice.
+- 2026-10-23 Intent: build and order the upstream design as is, then adapt it — owner ("both").
 - 2026-10-23 Upstream's `hardware/*/export/` files are upstream releases, not evidence of anything the owner ordered.
 
 ## Checks
@@ -47,5 +48,4 @@ Written by `checks/run_all.py` at commit no-git. Don't edit by hand.
 | --- | --- | --- |
 
 ## Open
-- What does the owner want to do with this board: build and order as is, adapt it, or learn from it? (owner)
 - Baseline checks on upstream at its HEAD (2026-10-23, error level): module DRC 11 / ERC 0; carrier DRC 29 / ERC 8. Not yet judged as real or harmless.
