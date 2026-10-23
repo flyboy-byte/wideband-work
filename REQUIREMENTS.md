@@ -21,6 +21,12 @@ Answered by the owner from 2026-10-23. Ask one question at a time with a recomme
 ## Risk probes asked
 Functions this board has, and the probes they triggered (`reference/intent-capture.md`):
 Plan (answers empty until asked):
+Answers so far (2026-10-23):
+- Sensor: aftermarket LSU 4.9 is fine (owner). Plan: free-air calibrate it, treat early readings as approximate.
+- Receivers wanted: rusEFI (CAN), Speeduino, Honda K20Z3 + Hondata FlashPro, carburetor tuning with a dash or gauge, "generally compatible with anything" (owner).
+- Finding (upstream files, not an order): module+carrier firmware (`f0_module`) sends only the rusEFI CAN format, defines no AUXOUT analog output, and the module exposes 14 pads with no analog-out or spare pin (`wideband_module.kicad_sym`). Analog output exists only on the F1 boards (`f1_rev2/rev3/dual`, hardware in rusefi/rusefi-hardware, not cloned).
+
+Probe plan:
 - runs from a vehicle's 12 V -> load dump/TVS, reverse polarity, ignition-switched feed, -40..+85 C parts, connector, fuse:
 - drives a sensor heater (switched load, high current) -> heater current and MOSFET thermal, what stops it driving a cold sensor:
 - reads a precision analog sensor (pump cell) -> calibration method, noise, what the owner can verify without a scope:

@@ -27,6 +27,8 @@ Mark a stage done only when its exit condition is true. Strike through, don't de
 - 2026-10-23 Intent: build and order the upstream design as is, then adapt it — owner ("both").
 - 2026-10-23 Upstream's `hardware/*/export/` files are upstream releases, not evidence of anything the owner ordered.
 
+- 2026-10-23 Aftermarket LSU 4.9 accepted; receivers wanted: rusEFI, Speeduino, K20Z3/FlashPro, carb tuning with a dash or gauge — owner.
+
 ## Checks
 <!-- checks:start -->
 | Check | Result | Summary | Date | Files (sha256/12) |
@@ -48,4 +50,5 @@ Written by `checks/run_all.py` at commit no-git. Don't edit by hand.
 | --- | --- | --- |
 
 ## Open
+- Upstream module+carrier is CAN-only (rusEFI format); analog output (needed for Speeduino, FlashPro, gauges) needs a design change. Which route? (owner)
 - Baseline checks on upstream at its HEAD (2026-10-23, error level): module DRC 11 / ERC 0; carrier DRC 29 / ERC 8. Not yet judged as real or harmless.
