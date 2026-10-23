@@ -52,5 +52,5 @@ Written by `checks/run_all.py` at commit no-git. Don't edit by hand.
 | --- | --- | --- |
 
 ## Open
-- Upstream module+carrier is CAN-only; analog output needs a design change. Working hypothesis (unverified): repurpose a module pad (SEL_1/SEL_2 look unused by f0_module firmware) for a PWM analog output, filter and scale on the carrier like the F1 boards. Check the module schematic and pad-to-MCU map first.
+- Upstream module+carrier is CAN-only; analog output needs a design change. Netlist of `upstream/hardware/board_module` (KiCad 10 export, upstream files not an order): MCU is STM32F042K6T (U2); module pad J3-3 `SEL_1` = PB1 (TIM3_CH4), J3-4 `SEL_2` = PA8 (TIM1_CH1). `f0_module` firmware never reads SEL_1/SEL_2 (CAN index is set over CAN), and the carrier schematic has no SEL labels. So an analog output may need no module change: PWM out on a SEL pad, filter and scale on a new carrier. Still to check: firmware config for aux tables on f0, timer use, carrier 5 V headroom, whether TIM1 is already used.
 - Baseline checks on upstream at its HEAD (2026-10-23, error level): module DRC 11 / ERC 0; carrier DRC 29 / ERC 8. Not yet judged as real or harmless.
