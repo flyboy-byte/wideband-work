@@ -1,0 +1,25 @@
+* wideband-work analog output stage, behavioral (filter and scaling only; op-amp is ideal and clamped)
+* Run: ngspice -b analog_out.cir   (change D for other duties)
+* REF3030 (3.0 V) -> 74LVC1G125 buffer -> 2x RC 3.3k/100n -> non-inverting x(1+68k/100k)=1.68 -> 330R -> ECU input
+.param T={1/46875} D=0.5
+V1 pwm 0 PULSE(0 3.0 0 2n 2n {D*T} {T})
+R1 pwm f1 3.3k
+C1 f1 0 100n
+R2 f1 f2 3.3k
+C2 f2 0 100n
+* feedback taken at "out" (after the series resistor) would remove the load error; this model has it outside the loop
+B1 oa 0 V = min(max(1.68*v(f2),0),10.5)
+R3 oa out 330
+R4 out 0 100k
+C3 out 0 1n
+.tran 0.2u 12m 0 0.2u
+.control
+run
+meas tran vavg AVG v(out) from=10m to=12m
+meas tran vmax MAX v(out) from=10m to=12m
+meas tran vmin MIN v(out) from=10m to=12m
+let target = vavg
+meas tran tsettle WHEN v(out)=$&target*0.99 CROSS=1
+quit
+.endc
+.end

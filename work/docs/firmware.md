@@ -40,8 +40,8 @@ All behind `AUXOUT_SEL1_PWM_CHANNEL`, defined only in `boards/f0_module/wideband
   is `AUXOUT_INVALID_VOLTS` (0.0 V).
 - **Strap:** SEL_1 is never read as a strap (its pad mode is never changed back to input); it counts as floating.
   SEL_2 still straps: low = CAN index 4, floating = no override, high = index 1. CAN-set index still works.
-- **Scale:** `AUXOUT_FULL_SCALE_VOLTS` (5.0) = output at 100% duty. Must match the carrier's reference and gain once
-  chosen; a trim step comes with bring-up.
+- **Scale:** `AUXOUT_FULL_SCALE_VOLTS` = 3.0 x 1.68 = 5.04 V at 100% duty, matching the proposed carrier stage
+  (REF3030 buffer, gain 1 + 68k/100k, `carrier.md`). A trim step comes with bring-up.
 
 ## Not verified yet
 

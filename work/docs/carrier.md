@@ -53,15 +53,54 @@ error (0.1 V) is 0.2 AFR, which is why the reference buffer matters [INFERRED].
 1. **Use the spare connector pins**: J3-5 = analog out, J3-7 = signal ground (tied to GND at one point near the
    output stage). Same connector, no new terminal. Wiring note for FlashPro installs: Hondata wants the meter's power
    ground and analog ground both at the ECU's ground point (G101 on K-series), on wires not shared with anything else.
-2. **Analog stage**, after lambda-x2 (`docs/analog-out.md`), with our improvement:
-   module SEL_1 (PB1 PWM) -> small CMOS buffer powered from a precision reference (full scale no longer follows the
-   module's 3.3 V LDO) -> two RC stages (lambda-x2: 3.3k/100n twice) -> non-inverting op-amp with gain set so the
-   reference maps to 5.0 V -> series resistor and clamp -> J3-5.
-3. **Op-amp supply**: the carrier has only 5 V and 12 V. A 5 V-supplied rail-to-rail op-amp (lambda-x2's MCP6002)
-   cannot quite reach 5.0 V; one on the protected 12 V rail can, but then the output needs a clamp so a fault can't put
-   12 V into an ECU input. Recommendation: 12 V-capable rail-to-rail-output op-amp with a 5.1 V clamp and series
-   resistor [INFERRED; part not chosen].
-4. **CAN termination**: decide whether to add an optional 120 ohm (solder jumper) for a bus with no other terminator.
+2. **Analog stage** (proposed 2026-10-23), after lambda-x2 (`docs/analog-out.md`) with a reference-powered buffer:
+
+   ```
+   module SEL_1 (PB1, 3.3 V PWM, 46.9 kHz)
+     -> 100k pull-down (output 0 V while the MCU boots)
+     -> 74LVC1G125 buffer, VCC = 3.000 V from REF3030, OE tied low   (full scale = the reference, not the LDO)
+     -> 3.3k / 100n -> 3.3k / 100n                                   (lambda-x2's values)
+     -> LM2904 non-inverting, gain 1 + 68k/100k = 1.68 -> full scale 5.04 V
+        feedback taken AFTER the 330R series resistor, so the ECU's input load causes no error
+     -> 330R -> BAT54S clamp to +5V and GND -> J3-5
+   LM2904 supply: protected 12 V (LSU_Heater+ net) through 100R + 10u
+   ```
+
+   Why each choice [INFERRED unless tagged]:
+   - 3.0 V reference, not 4.096 V: the buffer's input-high threshold is 0.7 x VCC; at 3.0 V that is 2.1 V against
+     the MCU's 3.3 V, a wide margin. At 4.096 V it would be 2.87 V, too thin.
+   - LM2904 on 12 V: reaches 5.04 V with headroom (output high is about V+ - 1.5 V); inputs work down to 0 V; rated
+     -40 C (automotive LM358 family). It cannot swing to exactly 0 V, which only matters below about 10.0 AFR.
+   - Feedback after the 330R: the simulation with feedback before it read 0.31% low into 100k (0.016 AFR at
+     mid-scale). Stability with a cable load on the feedback node is to be checked with a real op-amp model.
+   - BAT54S clamp to +5V: if the op-amp fails high, the output is held near 5.3 V and the 330R limits the current to
+     about 15 mA. Schottky leakage at 5.0 V is small, unlike a 5.1 V zener's soft knee.
+
+   Simulation (`work/sim/analog_out.cir`, ngspice 47, behavioral op-amp, feedback outside the 330R) [DOCUMENTED run]:
+
+   | Duty | Output (mean) | Ripple p-p | Settles to 1% |
+   | --- | --- | --- | --- |
+   | 50% | 2.5122 V (ideal 2.520) | 0.68 mV (0.0014 AFR) | 4.1 ms |
+   | 80% | 4.0192 V (ideal 4.032) | 0.44 mV | 4.1 ms |
+
+   Resolution: 1024 PWM steps over 5.04 V = 4.9 mV = 0.0098 AFR. Accuracy budget: REF3030 ±0.2% initial and
+   75 ppm/C (about ±0.45% over -40..+85 C), resistor tolerance (1%: about ±0.8% gain worst case; 0.1% parts or the
+   trim fix it), LM2904 offset up to 3 mV [DOCUMENTED: JLC listings below] [budget INFERRED]. Trim at bring-up covers
+   initial errors; drift stays.
+
+   Parts (JLC/LCSC search 2026-10-23, all listed as Extended) [DOCUMENTED: JLC API listings]:
+
+   | Part | LCSC | Package | Key specs from the listing | Stock |
+   | --- | --- | --- | --- | --- |
+   | REF3030AIDBZR | C38423 | SOT-23 | 3.0 V, ±0.2%, 75 ppm/C, 25 mA, Vin 3.05-5.5 V, -40..+125 C | 43,373 |
+   | 74LVC1G125GW,125 | C12519 | SOT-353 | 1.65-5.5 V, 32 mA, -40..+125 C | 50,292 |
+   | LM2904DR (TI) | C7934 | SOIC-8 | 3-32 V, 3 mV offset, -40..+125 C | 219,267 |
+   | BAT54S,215 | C47546 | SOT-23 | 30 V, 200 mA, series pair | 290,694 |
+
+   Passives: 0603 1% from JLC's Basic list, LCSC numbers to be confirmed when the BOM is generated. Open: does REF3030
+   need or tolerate an output capacitor next to the buffer (check the TI datasheet); whether JLC's API marks Basic
+   parts differently (every result above said Extended, including parts expected to be Basic).
+3. **CAN termination**: decide whether to add an optional 120 ohm (solder jumper) for a bus with no other terminator.
 
 ## Firmware changes (our fork; f0 has no UART or TunerStudio, `halconf.h` HAL_USE_UART/SERIAL FALSE)
 
