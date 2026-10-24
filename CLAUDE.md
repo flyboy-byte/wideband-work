@@ -67,6 +67,9 @@ git submodule update --init test/googletest        # not checked out by default
 B=$(mktemp -d) && mkdir -p $B/obj $B/lst && (cd test && make -j8 BUILDDIR=$B) && ASAN_OPTIONS=detect_stack_use_after_return=1 $B/wideband_test
 $B/wideband_test --gtest_filter='BootloaderBounds*' # single test / suite
 python3 work/checks/audit_bootloader_bounds.py     # bootloader DATA guard, real source + stub flash (52 cases)
+python3 work/checks/fw_package.py build|check F    # stage the flash package into work/fw-build/<commit>/ / validate one
+python3 work/checks/test_fw_package.py             # package checker on good and bad images (21 cases)
+python3 work/checks/test_fault_entry_m0.py         # HardFault entry on a Cortex-M0 (QEMU microbit)
 ```
 
 Test-build quirk: with the default relative `build/`, the test Makefile's search path finds `firmware/build/obj/*.o` (ARM

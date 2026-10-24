@@ -58,6 +58,26 @@ The f0 CAN bootloader accepted DATA writes up to 26 KiB into a 25 KiB app partit
 Fixed with `bootloader/bootloader_bounds.h`, bounds from the linker script; details and evidence in
 `flashing-and-test-plan.md`. Upstream's bug, not ours; a candidate to report upstream (owner's call).
 
+## Fault handler on the Cortex-M0 (F9, fixed 2026-10-23)
+
+Found while writing the F2 vector check. `main_hardfault_asm.S` was assembled for `cortex-m3` (`.cpu` directive), so the
+f0 build's HardFault entry was `tst.w lr, #4` / `ite eq` / `mrseq` / `mrsne` / `b.w` [DOCUMENTED: objdump of
+`firmware/build/wideband.elf`; `arm-none-eabi-as` refuses the same file for cortex-m0: "cannot honor width suffix",
+"selected processor does not support `ite EQ'"]. The STM32F042's core is a Cortex-M0 (`stm32f042x6.h` lists only NMI,
+HardFault, SVCall, PendSV, SysTick as core exceptions). On QEMU's Cortex-M0 (`microbit`), a forced HardFault through that
+entry ends in "Lockup: can't escalate 3 to HardFault" and the C handler never runs [DOCUMENTED run,
+`checks/test_fault_entry_m0.py`; an M0 core model, not this chip]. The C handler's `bkpt()` does the same when no debugger
+is attached (QEMU run; BKPT escalating to HardFault without a debugger is REPORTED in ST/Nordic forum threads, and M0
+software can't read DHCSR to check, also REPORTED). Upstream intended: fault -> save context -> breakpoint for a debugger
+-> `NVIC_SystemReset()`. On f0 it was: fault -> lockup, with the heater's hardware timer PWM still running at its last
+duty and no watchdog (`HAL_USE_WDG FALSE`) [INFERRED: a timer keeps running while the core is stalled; not tested here].
+Fix: the entry uses ARMv6-M instructions only (`.cpu cortex-m0`, also valid on the f1 boards' M3, which build), and
+`bkpt()` is empty on the M0 and checks `DHCSR.C_DEBUGEN` on the M3. Test: current entry reaches the C handler; upstream's
+entry and a BKPT inside the handler both lock up; the f0 build has 0 Thumb-2-only instructions in its fault entries.
+Not tested: the real chip; what the STM32F042 does on lockup. Upstream's bug, a candidate to report (owner's call).
+Still open (owner decision D10 in `RELEASE_ASSESSMENT.md`): no watchdog, so a hang that is not a fault leaves the heater
+PWM at its last duty.
+
 ## Not verified yet
 
 - On hardware: nothing. Needs the module, a carrier with the filter, and a meter (draft tests A1-A3 in `carrier.md`).

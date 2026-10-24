@@ -1,6 +1,6 @@
 {
  "date": "2026-10-23",
- "git_head": "f2a437c",
+ "git_head": "783a885",
  "results": [
   {
    "name": "DRC module (errors)",
@@ -112,6 +112,15 @@
     "checks/fw_package.py": "34a1c5eb78dd",
     "../for_rusefi/wideband_image.h": "1ee39ace5944",
     "../firmware/boards/f0_module/bootloader/bootloader.cpp": "21cbac0cd469"
+   }
+  },
+  {
+   "name": "Firmware: HardFault entry reaches the C handler on a Cortex-M0 (F9, QEMU microbit)",
+   "status": "pass",
+   "summary": "fault entry on Cortex-M0: as expected",
+   "files": {
+    "../firmware/main_hardfault_asm.S": "d32262764759",
+    "../firmware/main.cpp": "f1c2e96ebf08"
    }
   }
  ]

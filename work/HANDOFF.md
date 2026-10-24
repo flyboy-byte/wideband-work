@@ -1,5 +1,13 @@
 # HANDOFF — dense session context (read after STATE.md)
 
+## F2 and F9 done — 2026-10-23 (Claude Opus 5.5)
+
+F2: `checks/fw_package.py build|check`, `checks/test_fw_package.py` (21 cases). Staged packages in `work/fw-build/<commit>/`
+(gitignored). F9 (new, found writing F2): the f0 HardFault entry was Thumb-2, so a fault locked the M0 up instead of
+resetting; fixed, proven on QEMU microbit (`checks/test_fault_entry_m0.py`, includes upstream's entry as a must-fail).
+In-tree f0 builds need `boards/f0_module/bootloader/build_bootloader.sh` first (the app links its .o). Next: F3-F6
+(aux-output host tests), then circuit C1-C3, C7. Owner decision D10 (watchdog).
+
 ## F1 done — 2026-10-23 (Claude Opus 5.5, after Codex)
 
 Bootloader DATA guard fixed (`bootloader_bounds.h`); `audit_bootloader_bounds.py` updated to the new call site, now also

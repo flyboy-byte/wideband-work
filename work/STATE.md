@@ -1,6 +1,6 @@
 # STATE — rusEFI wideband (module + carrier)
 
-Status: 2026-10-23 — F1 bootloader bounds bug fixed (host 51/51, harness 0 unsafe); Codex round 3 plus follow-up; board unchanged (r36, 40.0 x 51.5 mm). DRC delta 0 new / 0 open, no drift. Small-signal and four ramped full-scale model runs complete. Layout checker repaired and regression-tested; now flags PWM return component 6.8 mm. Suite: 8 pass / 3 fail (two inherited DRC checks plus PWM review). Open: fault back-feed/sink behavior, full-scale load/tolerance, receiver grounding, PWM return review. See AUDIT.md and docs/codex-audit-2026-10-23.md; historical confidence percentages are not evidence.
+Status: 2026-10-23 — F1 bootloader bounds, F2 package checker, F9 Cortex-M0 fault handler done (all upstream bugs, not ours); D10 watchdog for the owner; Codex round 3 plus follow-up; board unchanged (r36, 40.0 x 51.5 mm). DRC delta 0 new / 0 open, no drift. Small-signal and four ramped full-scale model runs complete. Layout checker repaired and regression-tested; now flags PWM return component 6.8 mm. Suite: 8 pass / 3 fail (two inherited DRC checks plus PWM review). Open: fault back-feed/sink behavior, full-scale load/tolerance, receiver grounding, PWM return review. See AUDIT.md and docs/codex-audit-2026-10-23.md; historical confidence percentages are not evidence.
 Revision in progress: none yet   Revisions used (never reused): none by the owner. Upstream module exports are rev A, B, C (upstream's own scheme, not ours).
 <If the project already names revisions its own way (v1.0.0), keep its scheme.>
 Review pages: status report https://claude.ai/artifact/YRsjXKGZKG5AFbwkcMuYZ4 (private; rebuilt by `checks/report.py`)  fit check <link>  audit <link>
@@ -53,8 +53,9 @@ Mark a stage done only when its exit condition is true. Strike through, don't de
 | No hand edits waiting | PASS | no drift | 2026-10-23 |  |
 | Firmware: bootloader DATA writes stay inside the app partition (F1) | PASS | 52 guard cases; 0 unsafe accepted writes, 0 valid writes refused (stub only) | 2026-10-23 | `bootloader.cpp` 21cbac0cd469, `bootloader_bounds.h` 72e216e2e7bc |
 | Firmware: package checker accepts good images, rejects bad ones (F2) | PASS | 21 package cases, 0 wrong verdict(s) | 2026-10-23 | `fw_package.py` 34a1c5eb78dd, `wideband_image.h` 1ee39ace5944, `bootloader.cpp` 21cbac0cd469 |
+| Firmware: HardFault entry reaches the C handler on a Cortex-M0 (F9, QEMU microbit) | PASS | fault entry on Cortex-M0: as expected | 2026-10-23 | `main_hardfault_asm.S` d32262764759, `main.cpp` f1c2e96ebf08 |
 
-Written by `checks/run_all.py` at commit f2a437c. Don't edit by hand.
+Written by `checks/run_all.py` at commit 783a885. Don't edit by hand.
 <!-- checks:end -->
 
 ## Bring-up results

@@ -146,5 +146,16 @@
       "../for_rusefi/wideband_image.h",
       "../firmware/boards/f0_module/bootloader/bootloader.cpp"
     ]
+  },
+  {
+    "name": "Firmware: HardFault entry reaches the C handler on a Cortex-M0 (F9, QEMU microbit)",
+    "cmd": [
+      "python3",
+      "checks/test_fault_entry_m0.py"
+    ],
+    "files": [
+      "../firmware/main_hardfault_asm.S",
+      "../firmware/main.cpp"
+    ]
   }
 ]

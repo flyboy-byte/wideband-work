@@ -91,6 +91,7 @@ move it to what a built board can tell us.
 | D6 | ~~Series resistor at J3-5~~ | **Done r36** (owner agreed): R11 470R 1206, C4502 | 0.46 % low into 100k, trimmed |
 | D7 | Separate analog ground for J3-7 on the board? | No board change; wiring instruction + bring-up test A4 measures the real offset first (`docs/carrier.md`, "Grounding and the output") | a net-tie and re-route; would not stop heater current sharing the J3-7 wire |
 | D8 | Mounting holes in the new bottom corners (only the two upstream holes at the connector end exist) | None added | two holes for your enclosure; say where |
+| D10 | Independent watchdog (IWDG) so a firmware hang can't leave the heater PWM at its last duty (F9 fixed the fault path only; `docs/firmware.md`) | None (upstream has none on any board) | small code, a kick from the heater loop, its own host and bench tests; changes upstream behaviour |
 | D9 | Move the analog stage to the top of the strip (one-sided JLC assembly, cheaper; R10/JP2 too) | Bottom (as routed) | generator side switch, a new run; saves the two-sided assembly fee (price unchecked) |
 
 ## 6. What "ready to order" still needs (in order)

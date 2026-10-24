@@ -103,7 +103,14 @@ typedef enum
     UsageFault = 6,
 } FaultType;
 
-#define bkpt() __asm volatile("BKPT #0\n")
+// Stop in the debugger, if one is attached. With none, BKPT escalates to HardFault, and inside these handlers that locks
+// the core up instead of reaching the reset below (shown on a Cortex-M0 in QEMU, work/docs/firmware.md F9)
+#if (__CORTEX_M > 0)
+#define bkpt() do { if (CoreDebug->DHCSR & CoreDebug_DHCSR_C_DEBUGEN_Msk) __asm volatile("BKPT #0\n"); } while (0)
+#else
+// Cortex-M0 software can't read DHCSR to tell whether a debugger is attached: no breakpoint, just the reset
+#define bkpt() do { } while (0)
+#endif
 
 extern "C" void HardFault_Handler_C(void* sp)
 {

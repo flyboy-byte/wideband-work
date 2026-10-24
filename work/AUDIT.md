@@ -100,6 +100,13 @@ Full evidence: `docs/codex-audit-2026-10-23.md`. Raw outputs: `audit/codex-2026-
 | C7 | RISK | PWM ground-return corridor | DOCUMENTED repaired checker: 6.8 mm uncovered component vs existing 5 mm review trigger; not an impedance measurement | inspect corridor before routing change | open; board unchanged |
 | F1 | BUG | f0 CAN bootloader DATA guard | DOCUMENTED source-extraction/stub test: 48 cases, 10 unsafe accepted writes (5 ordinary <=8-byte payloads, 5 synthetic length-10 cases); 26 KiB bound exceeds 25 KiB app partition; offset+length unchecked | linker-derived bounds, payload validation and production-path regressions | fixed (Claude Opus 5.5, commit that adds this text): `bootloader_bounds.h` `IsAppWriteAllowed()`, size from `__appflash_size__` (25600 in the built ELF); harness 52 cases / 0 unsafe / 0 valid refused, mutant of the old bound caught; 8 gtest cases; next auditor to re-confirm |
 
+
+#### Follow-through — 2026-10-23, Claude Opus 5.5 (firmware; the next auditor re-checks these)
+| ID | Severity | Location | Evidence (numbers) | Smallest fix | Status |
+| --- | --- | --- | --- | --- | --- |
+| F2 | NOTE | firmware package | `fw_package.py` stages and checks upstream's format; 21 good/bad package cases right; two builds byte-identical | n/a (new tooling) | done |
+| F9 | BUG | `firmware/main_hardfault_asm.S`, `main.cpp` bkpt() | f0 fault entry was Thumb-2 (objdump); QEMU Cortex-M0: upstream entry and BKPT-in-handler both lock up, fixed entry reaches the C handler; no watchdog on f0 | ARMv6-M entry; no BKPT on M0, DHCSR-guarded on M3 | fixed (commit that adds this text); watchdog is owner decision D10 |
+
 Follow-up circuit tests: ramped full-scale TI-model runs completed at protected inputs 12 V and 7.5 V:
 about 5.019 V into 100k, 4.816 V into 10k. C2 remains open; typical-model headroom is adequate in these cases.
 Raw results: `audit/codex-2026-10-23/full-scale-ramped.jsonl`. Conditions and resistance/fault-current tradeoff in the report.
