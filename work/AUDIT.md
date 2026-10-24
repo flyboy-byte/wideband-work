@@ -1,4 +1,4 @@
-# Audit — <board name>
+# Audit — rusEFI wideband carrier (0-5 V analog output)
 
 ## Hand-off (give this to each auditor with a read-only copy; not your conclusions)
 - Board: carrier PCB for the rusEFI wideband module (LSU 4.9 controller) adding a 0-5 V analog output (AFR 10 = 0 V, 20 = 5 V)
@@ -6,7 +6,7 @@
   -> LM2904 x1.68 (dual-loop feedback) -> 330R -> 1N4148WS clamps -> J3-5. Firmware: branch `analog-out`.
 - Commit and files: the commit that adds this text (see `git log -1 -- work/AUDIT.md`); `hardware/board_carrier/board_carrier.kicad_{sch,pcb}`,
   `firmware/` diff (`git diff master -- firmware`), `work/docs/{analog-out,carrier,firmware}.md`, `work/sim/`.
-- Changed since last audit: no audit has happened yet (this is round 1). Newest change (2026-10-23, run r32): the last open
+- Changed since last audit: no independent audit has happened yet; round 1 below is the author's own self-audit (also read `RELEASE_ASSESSMENT.md`). Since then: `firmware/can_helper.cpp` drops a CAN frame instead of waiting 100 ms on this board. Earlier change (2026-10-23, run r32): the last open
   connection was closed by `gen/gen_carrier_pcb.py: close_d3_link` (D3 +5V -> U2 pin 3 on the top layer, 0.25 mm; GND via at 66.00,79.35
   tied to C1 pin 2 by 0.2 mm; C2 pin 2 given a solid pour connection).
 - Check, in priority order (owner: effort goes to circuits, power, heater drive, control loops, firmware):
