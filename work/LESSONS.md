@@ -66,3 +66,8 @@ that would help any board as a line for the `pcb-design` skill (see its "Lessons
 - 2026-10-24 Upstream's exported BOM/CPL were older than its board (different TVS and Schottky, missing caps, old
   positions). Caught by: comparing the board's LCSC fields with the export, then `git log` on both. Never take fab
   data from an export without checking its date against the design files.
+- 2026-10-24 A fresh clone is not the working copy: it has no local `master` (four checks did `git show master:`), no
+  fab candidate (`work/out/` is ignored), no bootloader object (the app links it), and `.gitignore` had dropped every
+  reviewer's raw output with the packs (`work/audit/`). Caught by: cloning into a scratch folder and running every
+  check before asking an outside reviewer. Fix: `checks/upstream_ref.py`, setup steps in `REVIEW.md`, only packs
+  ignored. Do the clone test before every outside review.

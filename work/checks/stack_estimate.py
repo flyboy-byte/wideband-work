@@ -36,6 +36,9 @@ def main():
         if not re.search(r'THD_WORKING_AREA\(\w+,\s*%d\)' % n, text):
             problems.append(f'{src}: no THD_WORKING_AREA(..., {n}) any more for {name}: update THREADS')
 
+    if not ELF.exists():
+        print(f'no {ELF}: build the bootloader, then the app (REVIEW.md, Setup)')
+        return 1
     syms = {}
     other = {}
     for line in run('arm-none-eabi-nm', '-C', '-S', '--defined-only', str(ELF)).splitlines():

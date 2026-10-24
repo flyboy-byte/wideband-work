@@ -41,6 +41,9 @@ PASS    Firmware: static worst-case stack per thread fits (F8 estimate, f0 build
 ```
 
 ## Where things stand (2026-10-24)
+- **External review ready** (later 2026-10-24): `REVIEW.md` at the root (fresh-clone setup, blind pack via
+  `sh checks/review_pack.sh` or full repo, report format, where raw output goes); verified by a scratch clone running
+  all 20 checks. Needs the local commits pushed (owner). Skill lessons in dotfiles commit 70aa5e9 (not pushed).
 - **Board r41**: 40.0 x 51.5 mm; analog stage on the TOP (one-sided JLC Economic assembly); DC feedback from J3-5 after
   R11 (load-independent, `sim/load_accuracy.sh`, `sim/stability.sh` topology E); R9 1206; M3 holes H1/H2 with 3.6 mm
   copper keep-out; overlapping-via merge; silkscreen pass (TEST/120R jumper labels). Renders `renders/carrier-f/`

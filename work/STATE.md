@@ -1,6 +1,6 @@
 # STATE — rusEFI wideband (module + carrier)
 
-Status: 2026-10-24 — board r41 (r37 + overlapping-via fix, stricter DRC delta, silkscreen, screw keep-outs); fab candidate exported to work/out/carrier (BOM 25 lines, CPL 38 parts with EasyEDA-measured rotations; D2 would have been reversed by number pairing); checks 20: 0 failed, 2 advisory. analog stage on the TOP (one-sided assembly, D9), DC feedback from J3-5 after R11 (C2 build-around, simulated), R9 1206 (D1), M3 holes (D8); 0 new DRC / 0 open / 0 via-in-pad / layout review 0 triggers (C7 cleared, 4.1 mm). Checks 18: 0 failed, 2 advisory (raw upstream DRC, D2). Owner answers C1-C3, D1-D11 recorded below. D10 watchdog done (0 B RAM, host 69 tests, bench test W1 drafted). Silkscreen done r39-r40; fab candidate exported. Next: audit round 4 (independent) on the candidate, then the JLC quote (owner approves money: upload the candidate, read the placement preview for every IC and diode), BOM/CPL, JLC quote (owner approves money), audit round 4, release.py. Firmware: F1-F9 done (host 64 + aux 21). Nothing ordered, flashed or pushed.
+Status: 2026-10-24 — board r41, fab candidate in work/out/carrier (rebuild with gen/export_fab.py), 20 checks: 0 failed, 2 advisory (raw upstream DRC, D2). **Ready for external review** (round 4): `REVIEW.md` at the repo root (fresh-clone setup verified the same day, blind pack or full repo, report format); pack `audit/carrier-f-2026-10-24/` from `sh checks/review_pack.sh`. Reviewers need the 41+ local commits pushed first (owner's call). Then JLC quote (owner, money), release.py. Firmware: watchdog D10 done, host 69 + aux 21. Nothing ordered, flashed or pushed.
 Revision in progress: none yet   Revisions used (never reused): none by the owner. Upstream module exports are rev A, B, C (upstream's own scheme, not ours).
 <If the project already names revisions its own way (v1.0.0), keep its scheme.>
 Review pages: status report https://claude.ai/artifact/YRsjXKGZKG5AFbwkcMuYZ4 (private; rebuilt by `checks/report.py`)  fit check <link>  audit <link>
@@ -71,7 +71,7 @@ Mark a stage done only when its exit condition is true. Strike through, don't de
 | Firmware: analog output host tests, production auxout/pump_dac/can_helper on the f0 config (F3-F6) | PASS | [  PASSED  ] 21 tests. | 2026-10-24 | `auxout.cpp` 417044786829, `pump_dac.cpp` ac1d4bf351de, `can_helper.cpp` dc0ba8d660e6, `aux_curve.h` bb88ea23e570, `wideband_board_config.h` 7c5b76b0011c |
 | Firmware: static worst-case stack per thread fits (F8 estimate, f0 build) | PASS | stack estimate: ok, smallest margin 80 B | 2026-10-24 | `auxout.cpp` 417044786829, `can.cpp` 65a7078908bf, `heater_thread.cpp` 1c61085261f8, `pump_control.cpp` 6449053857fe, `sampling_thread.cpp` 65d58bbf0b52 |
 
-Written by `checks/run_all.py` at commit 106bd38. Don't edit by hand.
+Written by `checks/run_all.py` at commit 0bebc0c. Don't edit by hand.
 <!-- checks:end -->
 
 ## Bring-up results
@@ -83,8 +83,9 @@ Written by `checks/run_all.py` at commit 106bd38. Don't edit by hand.
 | --- | --- | --- |
 
 ## Open register (2026-10-24, end of session)
+- 2026-10-24 External-review prep done: `REVIEW.md`; checks use `origin/master` when a clone has no local `master` (`checks/upstream_ref.py`); reviewers' raw output under `audit/<reviewer>-<date>/` is now tracked (packs are not); a fresh clone ran all 20 checks after building bootloader + app (stack check needs the ELF). pcb-design skill lessons added (pad pairing by pin function, fab warnings in the DRC gate, BOM from the board, independent fab-file check, outside reviewers, SPICE memory): dotfiles commit 70aa5e9, not pushed.
 - Owner (do not re-ask): engine-bay heat is not a design driver for this prototype.
-- **Board/fab**: audit round 4 (Codex): rebuild the pack first (board is r41, pack built at r40). JLC quote (owner): Gerbers in JLC's viewer, placement preview (D2 first), stock C13585/C14663/C15849/C7934, edge rails (C11 1.85 mm from edge), Basic 470R 1206 for R11. TODO `docs/ordering.md` (quote steps, options, APIs, substitution rule: change LCSC in the generator, regenerate, re-export, rerun `jlc_rotation.py`).
+- **Board/fab**: audit round 4 (Codex, plus an outside Opus reviewer via `REVIEW.md`): ~~rebuild the pack first~~ done 2026-10-24 at r41 (`checks/review_pack.sh`). **Push needed before an outside reviewer can clone** (owner). JLC quote (owner): Gerbers in JLC's viewer, placement preview (D2 first), stock C13585/C14663/C15849/C7934, edge rails (C11 1.85 mm from edge), Basic 470R 1206 for R11. TODO `docs/ordering.md` (quote steps, options, APIs, substitution rule: change LCSC in the generator, regenerate, re-export, rerun `jlc_rotation.py`).
 - **Module board (not prepared)**: upstream rev C exports current (2026-03-22); 4 layers, 29.0 x 20.9 mm, 60 parts; J1/J3 headers bottom (owner solders), J2 Tag-Connect pads. Run our rotation/fab checks on it.
 - **Firmware**: never run on hardware; first-flash hardware unchosen (D4, money); trim needs reflash per board; watchdog heater loop only (W1); stack high-water on hardware; RAM 0 B free; F1/F9 not reported upstream (owner).
 - **Deeper tests not done**: R9/D5 surge (Codex C6); 12 V on J3-5 as built (C1 accepted); supply corners: 5 V into 100k holds from 7.5 V battery up (4.34 V at 6 V); 4.7k and 7 V runs gave no result, redo; drift budget INFERRED: 60 C swing worst 40 mV at 5 V.

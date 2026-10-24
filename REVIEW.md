@@ -40,7 +40,10 @@ Tools, with the versions we used (2026-10-24, Arch Linux). Older versions may wo
 Freerouting and Java are only needed to regenerate the board, and a review doesn't need to regenerate it.
 
 ```sh
+(cd firmware/boards/f0_module/bootloader && ./build_bootloader.sh)   # the app links the bootloader object
+make -C firmware -j8 BOARD=f0_module                                  # 21.5 kB app; RAM full to the byte by design
 cd work
+python3 checks/fw_package.py build # bootloader + app image into work/fw-build/<commit>/ (adds 5 package-check cases)
 python3 gen/export_fab.py          # writes the fab candidate to work/out/carrier/ (gitignored, so a clone lacks it)
 python3 checks/run_all.py          # expect: 20 checks, 0 failed, 2 advisory failed (upstream's own raw DRC, owner decision D2)
 ```
