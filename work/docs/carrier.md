@@ -185,6 +185,38 @@ from the REF3030 [DOCUMENTED: measured on the board file].
   without receiver-specific approval. Use receiver-approved power/output grounding; exact wiring remains unresolved.
   A4's high-impedance voltage measurement does not qualify a sensor-ground wire for heater current. D7 remains open.
 
+## Receiver load and the feedback point (2026-10-24, C2 build-around)
+
+The owner can't measure the K20Z3/FlashPro input resistance, so the stage has to be right into an unknown input.
+REPORTED (hondata.mobi forum): the usable wideband input on Honda ECUs is the EGR-lift pin, not the O2 input; an ELD input
+reads about 4.8 V open (an internal pull-up), and users see the wideband read about 0.5 AFR lean. A pull-up pushes current
+back through R11, which is outside the feedback loop as built, so the reading comes out high.
+
+`sim/load_accuracy.sh` (TI LM2904 model, 12 V supply, ramped input; DOCUMENTED by the run, typical model only):
+
+| Target | Load | As built (D, feedback before R11) | E: feedback at J3-5, after R11 |
+| --- | --- | --- | --- |
+| 5.00 V | 100k / 10k / 4.7k to GND | 4.979 / 4.778 / 4.548 | 5.002 / 5.002 / 5.002 |
+| 2.50 V | 100k / 10k / 4.7k to GND | 2.491 / 2.390 / 2.275 | 2.502 / 2.502 / 2.502 |
+| 2.50 V | 47k / 10k / 4.7k to 5 V | 2.527 / 2.615 / 2.730 | 2.502 / 2.502 / 2.502 |
+| 1.00 V | 47k / 10k / 4.7k to 5 V | 1.042 / 1.182 / 1.366 | 1.002 / 1.002 / 1.331 |
+| 0.10 V | 10k / 47k to 5 V | 0.974 / 0.634 | 0.971 / 0.629 |
+
+- E holds every point from 1 V to 5 V within 3 mV into every load tried except a 4.7k pull-up at 1 V. That covers 12-20 AFR
+  for any receiver, with no trim for the load (trim then only corrects parts tolerance).
+- Below about 1 V (rich of 12 AFR) into a pull-up, both versions read high: the LM2904 sinks little current near ground
+  (FROM MEMORY, datasheet: tens of uA at 200 mV out). Odd model result, UNKNOWN whether real: a 4.7k pull-down also floors
+  at about 0.52 V, and a pull-down at the op-amp output made it worse (0.63 V floor) and stopped some runs converging. Not a
+  fix; treat the bottom 1 V into a pull-up input as unverified until the bench.
+- Stability, step through the output (TI model, `stability.sh` method): E with Cf 1 nF: no overshoot up to 10 nF on the
+  cable, 9.4 % at 47 nF, 28 % at 100 nF (still settles); D: 0.5 % and 2.5 %. Cf 2.2 nF or 4.7 nF is worse (does not settle at
+  some loads). Cable capacitance is about 100 pF per metre (FROM MEMORY), so a few nF at most: E with Cf 1 nF it is.
+- Fault (C1, accepted risk): with 12 V on J3-5 the feedback now sees 12 V and drives the op-amp low; D did the same through
+  the clamp node. R8 then carries about 5.6 V / 330R = 17 mA, about 95 mW in an 0603 rated 100 mW (INFERRED).
+
+**Decision (2026-10-24, owner: "build around it"):** E, the 68k feedback resistor's top end moves from the 330R/R11 node to
+J3-5 (net AOUT_J). One schematic connection, folded into the next board run with D1, D8 and D9. Firmware unchanged.
+
 ## Firmware changes (our fork; f0 has no UART or TunerStudio, `halconf.h` HAL_USE_UART/SERIAL FALSE)
 
 - Done on branch `analog-out`, builds; details and budget in `firmware.md`. PB1 = TIM3_CH4 (AF1, confirmed in ST's
