@@ -1,0 +1,47 @@
+{
+ "headline": "Carrier PCB routing is complete: 0 new DRC violations and 0 open connections against upstream's own baseline. Nothing is ordered or built, and the audit has not happened yet.",
+ "tests": [
+  {
+   "id": "T1",
+   "what": "Route D3's +5V via straight to U2 pin 3 on the top layer (3 shapes of the path: square, diagonal, 0.2 mm wide).",
+   "state": "done",
+   "result": "Closes the connection in all three, but the new track cuts the top ground pour: C1 pin 2 floats (1 open) and C2 pin 2 is thermally starved."
+  },
+  {
+   "id": "T2",
+   "what": "Grid of ground via positions around C1 pin 2, each with a 0.2 mm tie to the pad (31 of 42 run; I stopped it once a winner was clear).",
+   "state": "done",
+   "result": "5 positions left only C2 pin 2 (1 new violation, x 65.3-66.1, y 79.35-79.5). The rest gave 2 to 11. I used 66.00, 79.35."
+  },
+  {
+   "id": "T3",
+   "what": "Give C2 pin 2 a solid pour connection (no thermal spokes) on top of T2's best via.",
+   "state": "done",
+   "result": "0 new violations, 0 open on the scratch copy. Recorded as FIX_D3."
+  },
+  {
+   "id": "T4",
+   "what": "Put FIX_D3 in the generator and regenerate the whole carrier with seed 7.",
+   "state": "done",
+   "result": "Same result on the regenerated board: 0 new, 0 open, 0 new vias in pads, no drift."
+  },
+  {
+   "id": "T5",
+   "what": "Look at the render of the changed area.",
+   "state": "done",
+   "result": "Track runs via to U2 pin 3; C2 pin 2 merged into the pour; C1 via sits clear of both U2 pin 3 and C1 pin 1."
+  },
+  {
+   "id": "T6",
+   "what": "Second-model audit of the fix: C1 (heater supply bypass) now returns to ground through one 0.5 mm via and a 0.2 mm tie.",
+   "state": "todo",
+   "result": "Listed under 'check first' in AUDIT.md. Reasoned, not simulated."
+  },
+  {
+   "id": "T7",
+   "what": "Fallback if T6 objects: move D3 beside U2 pin 3 in the generator, or clamp to C11's +5V pad. 4 min per run.",
+   "state": "todo",
+   "result": "Not needed now. Both written up in HANDOFF.md."
+  }
+ ]
+}

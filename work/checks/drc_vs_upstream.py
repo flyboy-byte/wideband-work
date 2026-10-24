@@ -3,6 +3,7 @@
 
     python3 checks/drc_vs_upstream.py            (from work/)
     python3 checks/drc_vs_upstream.py -v         also list each new violation and unconnected pair
+    python3 checks/drc_vs_upstream.py --pcb FILE score another board file (what-if copies) instead of the repo's
 
 Upstream's carrier (git `master`, upgraded to KiCad 10) already has courtyard and edge errors of its own; this
 subtracts them by (type, sorted item descriptions). Exit 0 only when there are no new violations and nothing is
@@ -33,7 +34,8 @@ def main():
                                              text=True, check=True).stdout)
         subprocess.run(['kicad-cli', 'pcb', 'upgrade', base], capture_output=True, check=True)
         b = [key(v) for v in drc(base, False, os.path.join(td, 'base.json'))['violations']]
-        cur = drc(os.path.join(REPO, PCB), True, os.path.join(td, 'cur.json'))
+        target = sys.argv[sys.argv.index('--pcb') + 1] if '--pcb' in sys.argv else os.path.join(REPO, PCB)
+        cur = drc(target, True, os.path.join(td, 'cur.json'))
     new = []
     for v in cur['violations']:
         k = key(v)

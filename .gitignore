@@ -67,3 +67,6 @@ build/
 
 # cortex-debug vscode extension local state
 .vscode/.cortex-debug*state.json
+
+# audit packs are generated
+work/audit/

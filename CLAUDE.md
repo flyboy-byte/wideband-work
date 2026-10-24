@@ -2,7 +2,7 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-Last updated 2026-10-23. `AGENTS.md` is the authoritative, model-agnostic guide (evidence tags, subagents, Codex
+Last updated 2026-10-23 (routing closed, r32). `AGENTS.md` is the authoritative, model-agnostic guide (evidence tags, subagents, Codex
 audits) and wins over this file. Where this file and `work/STATE.md` / `work/HANDOFF.md` disagree, those win: they
 hold the current state; this file holds orientation.
 
@@ -40,9 +40,9 @@ It's a learning project: build and test it ourselves, don't buy a ready-made uni
   strapped low: 1.00/2.50/4.00 V steps) and trim constants. RAM is full to the byte, which is safe because nothing is
   allocated at runtime. Untested on hardware.
 - **Carrier schematic**: generated, ERC 0, netlist self-check 17/17.
-- **Carrier PCB**: generated and routed. **0 new DRC violations beyond upstream's baseline, 1 connection open** (clamp
-  diode D3 to +5V), no vias in pads. Next: close D3, pull C17 to U6 pin 8, fix silkscreen overlaps, then renders →
-  review page → BOM/CPL → JLC two-sided quote → audit (Codex round) → `release.py`.
+- **Carrier PCB**: generated and routed. **0 new DRC violations and 0 open connections** beyond upstream's baseline (r32), no vias
+  in pads. Next: C17 to U6 pin 8, silkscreen overlaps, then audit (pack in `work/audit/`, Codex round) → BOM/CPL → JLC
+  two-sided quote → `release.py`.
 - **Module board**: upstream's, unchanged (DRC 11 upstream errors, judged harmless or not yet: open).
 
 ## Commands
@@ -51,13 +51,24 @@ It's a learning project: build and test it ourselves, don't buy a ready-made uni
 cd work && python3 checks/run_all.py              # every check; writes the table in STATE.md
 python3 checks/drc_vs_upstream.py -v               # carrier DRC minus upstream's own errors, lists open pairs
 python3 checks/via_in_pad.py                       # new vias in SMD pads
+python3 checks/whatif_route.py [NAME] [--keep]     # candidate tracks on a scratch copy, scored by drc_vs_upstream (10 s each)
+REV=carrier-d python3 checks/report.py             # rebuild work/report/index.html (status page), then publish it with Artifact
 python3 gen/gen_carrier_sch.py [--check]           # regenerate the carrier schematic / netlist self-check
 python3 gen/gen_carrier_pcb.py [--no-route]        # place + route the carrier (~4 min); env SEED (default 7)
 python3 checks/drift.py check                      # owner's KiCad edits since the last generation (run before regenerating)
 python3 checks/drift.py record ../hardware/board_carrier/board_carrier.kicad_pcb ../hardware/board_carrier/board_carrier.kicad_sch
 sim/stability.sh                                   # LM2904 stability vs cable capacitance (needs TI model in sim/models/, gitignored)
 cd firmware && make -j12 BOARD=f0_module           # firmware; also `BOARD=f1_dual` must still build
+
+# upstream gtest suite (host build; CI runs it under ASAN, then valgrind with SANITIZE=no). 43 tests pass (2026-10-23)
+git submodule update --init test/googletest        # not checked out by default
+cd test && mkdir -p build/obj build/lst && make -j4 && ASAN_OPTIONS=detect_stack_use_after_return=1 build/wideband_test
+build/wideband_test --gtest_filter='*Heater*'      # single test / suite
 ```
+
+Test-build quirk: the test Makefile's search path resolves `build/obj/*.o` to `firmware/build/obj/` (ARM objects), so the
+link fails with "cannot find build/obj/pid.o" while a firmware build exists. Move `firmware/build` aside for the test
+build, then put it back. The `mkdir -p` is also needed (the dir rule isn't a prerequisite of the object rules).
 
 ## How the carrier PCB is generated (`work/gen/gen_carrier_pcb.py`)
 
@@ -122,6 +133,7 @@ and stop for money, deletion, overwriting his edits or publishing.
 | Path | What |
 | --- | --- |
 | `firmware/`, `hardware/`, `case/` | Upstream code; ours differs on `analog-out` (`git diff master`) |
+| `test/` | Upstream gtest suite for the firmware logic (PID, heater, sampling), unchanged |
 | `work/STATE.md`, `HANDOFF.md` | Current state; dense hand-off |
 | `work/REQUIREMENTS.md`, `parts_research.md` | Owner's answers and bring-up tests; sourced part facts |
 | `work/docs/` | `analog-out.md` (facts F1-F16, attempts), `carrier.md` (design, stability, tests A1-A3), `firmware.md` |

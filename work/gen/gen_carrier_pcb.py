@@ -504,6 +504,7 @@ def main(route=True):
     for z in board.Zones():
         if not z.GetIsRuleArea() and z.GetNetname() == 'GND':
             z.SetIslandRemovalMode(pcbnew.ISLAND_REMOVAL_MODE_ALWAYS)
+    close_d3_link(board)
     pcbnew.ZONE_FILLER(board).Fill(board.Zones())
     if stitch_islands(board):
         pcbnew.ZONE_FILLER(board).Fill(board.Zones())
@@ -512,6 +513,19 @@ def main(route=True):
     board.Save(OUT)
     shutil.rmtree(td)
     print('wrote', os.path.relpath(OUT, REPO))
+
+
+def close_d3_link(board):
+    """D3's +5V pad ends up an island (r30 left it 1 open). A fixed top-side link, found with checks/whatif_route.py; it only
+    applies when D3 sits where the seed-7 placement put it (the coordinates belong to that layout)."""
+    d3 = board.FindFootprintByReference('D3').FindPadByNumber('1').GetPosition()
+    if abs(d3.x / 1e6 - 59.20) > 0.05 or abs(d3.y / 1e6 - 78.15) > 0.05:
+        print('close_d3_link: D3 is not at the seed-7 spot, skipped')
+        return
+    sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'checks'))
+    import whatif_route
+    whatif_route.apply(board, whatif_route.CANDIDATES['FIX_D3'])
+    print('close_d3_link: D3 +5V linked to U2 pin 3 (top), C1 pin 2 GND via, C2 pin 2 solid')
 
 
 AIDS = {'cutout_keepout'} | {f'edge_keepout_{i}' for i in range(4)} | {f'top_no_new_tracks_{i}' for i in range(8)}

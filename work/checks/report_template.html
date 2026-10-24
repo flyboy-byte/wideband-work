@@ -1,0 +1,69 @@
+<title>Wideband Carrier Status</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600&family=JetBrains+Mono:wght@400;500&family=Source+Sans+3:wght@400;600&display=swap">
+<style>
+/* Layout: one column, silkscreen-style condensed headings, evidence first (checks, pictures), then the one open item and its tests. */
+:root{
+  --bg:#f3f5f2; --panel:#ffffff; --fg:#1b2420; --muted:#58655e; --rule:#cdd5cf;
+  --mask:#17402f;          /* solder-mask green: headings, links */
+  --copper:#b8651b;        /* copper: the thing that needs attention */
+  --ok:#1f7a45; --bad:#b3261e; --run:#8a6d00; --ok-bg:#e1f1e6; --bad-bg:#f8e0dd; --run-bg:#f5ecc8; --todo-bg:#e6eaee;
+  --display:'Barlow Condensed','Arial Narrow',sans-serif; --body:'Source Sans 3',system-ui,sans-serif; --mono:'JetBrains Mono',ui-monospace,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#101714; --panel:#18211d; --fg:#e4ebe6; --muted:#9bab9f; --rule:#2c3a33; --mask:#7fd1a6; --copper:#f0a15a;
+  --ok:#6fd49a; --bad:#ff8f86; --run:#e8c95a; --ok-bg:#1c3a29; --bad-bg:#40201d; --run-bg:#3a3414; --todo-bg:#25302b; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#101714; --panel:#18211d; --fg:#e4ebe6; --muted:#9bab9f; --rule:#2c3a33; --mask:#7fd1a6; --copper:#f0a15a;
+  --ok:#6fd49a; --bad:#ff8f86; --run:#e8c95a; --ok-bg:#1c3a29; --bad-bg:#40201d; --run-bg:#3a3414; --todo-bg:#25302b; color-scheme:dark}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:16px;line-height:1.5;
+  padding-block:24px 56px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+main{max-width:880px;margin:0 auto;display:flex;flex-direction:column;gap:32px}
+h1,h2{font-family:var(--display);font-weight:600;color:var(--mask);text-wrap:balance;margin:0;letter-spacing:.01em}
+h1{font-size:2.6rem;line-height:1.05}
+h2{font-size:1.5rem;text-transform:uppercase;letter-spacing:.06em;border-bottom:1px solid var(--rule);padding-bottom:6px}
+p{margin:0;max-width:65ch}
+.meta{font-family:var(--mono);font-size:.78rem;color:var(--muted)}
+.lead{font-size:1.15rem}
+section{display:flex;flex-direction:column;gap:14px;min-width:0}
+.scroll{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:.92rem}
+th{font-family:var(--mono);font-size:.7rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);text-align:left;font-weight:500}
+th,td{padding:8px 10px 8px 0;border-bottom:1px solid var(--rule);vertical-align:top}
+td.sum{color:var(--muted)} td.id{font-family:var(--mono);color:var(--copper);white-space:nowrap}
+.pill{font-family:var(--mono);font-size:.68rem;font-weight:500;padding:2px 7px;border-radius:3px;letter-spacing:.05em;white-space:nowrap}
+.pill.pass,.pill.done{background:var(--ok-bg);color:var(--ok)} .pill.fail,.pill.blocked{background:var(--bad-bg);color:var(--bad)}
+.pill.skipped,.pill.running{background:var(--run-bg);color:var(--run)} .pill.todo{background:var(--todo-bg);color:var(--muted)}
+.pics{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:16px}
+figure{margin:0;display:flex;flex-direction:column;gap:6px;min-width:0}
+img{border-radius:6px;border:1px solid var(--rule);display:block;width:100%;height:auto}
+figcaption{font-size:.84rem;color:var(--muted)}
+.callout{background:var(--panel);border:1px solid var(--rule);border-left:4px solid var(--copper);padding:12px 14px;border-radius:4px}
+code{font-family:var(--mono);font-size:.84em;background:var(--todo-bg);padding:1px 5px;border-radius:3px}
+</style>
+<main>
+  <header>
+    <div class="meta">rusEFI wideband + 0-5 V analog out · carrier board · {{DATE}} · commit {{HEAD}} · branch analog-out</div>
+    <h1>Wideband Carrier Status</h1>
+    <p class="lead">{{HEADLINE}}</p>
+  </header>
+
+  <section>
+    <h2>Checks</h2>
+    <div class="scroll"><table><thead><tr><th>Result</th><th>Check</th><th>Detail</th></tr></thead><tbody>{{CHECKS}}</tbody></table></div>
+    <p class="meta">Module DRC (11) and carrier DRC (24) are upstream's own errors. "vs upstream" counts only what we added.</p>
+  </section>
+
+  <section>
+    <h2>The board now</h2>
+    <div class="pics">{{TOP}}{{BOTTOM}}</div>
+  </section>
+
+  <section>
+    <h2>The open connection</h2>
+    <div class="callout"><p>D3 is the clamp diode that stops the output rising above +5 V. Its +5V pad and a via beside it were an island, 4.2 mm from the +5V net. Every other connection was already routed. The fix below is in the generator and the board is regenerated.</p></div>
+    <div class="pics">{{ZOOM_CUR}}{{ZOOM_WHATIF}}</div>
+    <p>Each test below was a script run on a scratch copy of the board (about 10 s each, <code>checks/whatif_route.py</code>), scored by the same DRC-against-upstream count the release gate uses. Pass means 0 new violations and 0 open connections.</p>
+    <div class="scroll"><table><thead><tr><th>Test</th><th>What it tries</th><th>State</th><th>Result</th></tr></thead><tbody>{{TESTS}}</tbody></table></div>
+  </section>
+</main>
