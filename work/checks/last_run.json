@@ -1,6 +1,6 @@
 {
  "date": "2026-10-23",
- "git_head": "ebbaf34",
+ "git_head": "da28268",
  "results": [
   {
    "name": "DRC module (errors)",
@@ -21,9 +21,9 @@
   {
    "name": "DRC carrier (errors)",
    "status": "fail",
-   "summary": "DRC 22 errors: courtyards_overlap 14, copper_edge_clearance 3, malformed_courtyard 3, starved_thermal 1 (report checks/out/board_carrier-drc.json)",
+   "summary": "DRC 23 errors: courtyards_overlap 14, copper_edge_clearance 3, malformed_courtyard 3, starved_thermal 2 (report checks/out/board_carrier-drc.json)",
    "files": {
-    "../hardware/board_carrier/board_carrier.kicad_pcb": "705213560ef6"
+    "../hardware/board_carrier/board_carrier.kicad_pcb": "8db07cd11e6b"
    }
   },
   {
@@ -31,7 +31,7 @@
    "status": "pass",
    "summary": "DRC vs upstream: 0 new violations, 0 unconnected",
    "files": {
-    "../hardware/board_carrier/board_carrier.kicad_pcb": "705213560ef6"
+    "../hardware/board_carrier/board_carrier.kicad_pcb": "8db07cd11e6b"
    }
   },
   {
@@ -39,7 +39,15 @@
    "status": "pass",
    "summary": "via in pad: 0 new, 0 upstream",
    "files": {
-    "../hardware/board_carrier/board_carrier.kicad_pcb": "705213560ef6"
+    "../hardware/board_carrier/board_carrier.kicad_pcb": "8db07cd11e6b"
+   }
+  },
+  {
+   "name": "Carrier layout review (coupling, return paths, GND; no review triggers)",
+   "status": "pass",
+   "summary": "review triggers: 0",
+   "files": {
+    "../hardware/board_carrier/board_carrier.kicad_pcb": "8db07cd11e6b"
    }
   },
   {
@@ -47,16 +55,16 @@
    "status": "pass",
    "summary": "ERC 0 errors (report checks/out/board_carrier-erc.json)",
    "files": {
-    "../hardware/board_carrier/board_carrier.kicad_sch": "fc67b216fcd9"
+    "../hardware/board_carrier/board_carrier.kicad_sch": "c2190cd03e68"
    }
   },
   {
    "name": "Carrier netlist self-check (generator table)",
    "status": "pass",
-   "summary": "netlist self-check: 17 nets, 0 problems",
+   "summary": "netlist self-check: 18 nets, 0 problems",
    "files": {
-    "../hardware/board_carrier/board_carrier.kicad_sch": "fc67b216fcd9",
-    "gen/gen_carrier_sch.py": "cebbd7036f4f"
+    "../hardware/board_carrier/board_carrier.kicad_sch": "c2190cd03e68",
+    "gen/gen_carrier_sch.py": "ae5a44d3abf4"
    }
   },
   {

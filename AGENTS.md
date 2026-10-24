@@ -39,6 +39,15 @@ carrier, then adapt it, starting with an analog 0-5 V output (`docs/analog-out.m
 5. **Record dead ends.** Wrong or rejected ideas stay in the attempt log with why; strike through, don't delete.
 6. **Absolute dates.** Owner's bench: multimeter and soldering iron only (no scope, no bench supply), so bring-up
    tests must be doable with those.
+7. **No assumed engineering decisions** (owner, 2026-10-23). Every design choice (a part value, a rating, a size limit,
+   a placement or routing rule, a grounding scheme) needs one of: a datasheet or reference design, a simulation, a
+   written calculation from documented numbers, or the owner's answer. A choice with none of these is an open question
+   in `STATE.md` with the default in use, not a constraint. Before adding or keeping a limit, say where it came from.
+   (Caught: the case-size limit was never the owner's, and a fault analysis had the current path wrong: `AUDIT.md` round 2.)
+8. **A layout change is re-checked for its side effects, by measurement** (`docs/carrier.md`, "Layout review checklist"):
+   ground pour continuity and stitching, return paths under signal tracks, spacing between noisy nets (heater drive,
+   the PWM) and the sensor's microamp nets, and the output's ground reference. Run `work/checks/layout_review.py`;
+   don't argue a layout is fine from how it looks.
 
 ## Subagents
 

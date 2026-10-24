@@ -56,6 +56,16 @@
     ]
   },
   {
+    "name": "Carrier layout review (coupling, return paths, GND; no review triggers)",
+    "cmd": [
+      "python3",
+      "checks/layout_review.py"
+    ],
+    "files": [
+      "../hardware/board_carrier/board_carrier.kicad_pcb"
+    ]
+  },
+  {
     "name": "ERC carrier (errors)",
     "cmd": [
       "python3",

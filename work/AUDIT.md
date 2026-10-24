@@ -64,7 +64,7 @@ J3-5 reaches the +5V rail through D3. Everything else in round 1 checks out or i
 
 | ID | Severity | Location | Evidence (numbers) | Smallest fix | Status |
 | --- | --- | --- | --- | --- | --- |
-| O1 | RISK (high consequence) | D3, `/AOUT` = J3-5, +5V rail | board file: R8 is op-amp side, D3/D4 clamp J3-5 directly. 12 V on J3-5 -> D3 -> +5V (TJA1051, REF3030, module) with no current limit; rail toward 11 V. Condition: a wiring fault, J3-6 is 12V_RAW in the same connector (INFERRED) | series resistor (e.g. 470R 1206) between the clamp node and J3-5, outside the feedback | open (owner D6); replaces round-1 R1 |
+| O1 | RISK (high consequence) | D3, `/AOUT` = J3-5, +5V rail | board file: R8 is op-amp side, D3/D4 clamp J3-5 directly. 12 V on J3-5 -> D3 -> +5V (TJA1051, REF3030, module) with no current limit; rail toward 11 V. Condition: a wiring fault, J3-6 is 12V_RAW in the same connector (INFERRED) | series resistor (e.g. 470R 1206) between the clamp node and J3-5, outside the feedback | fixed r36 (R11 470R 1206 at J3-5); replaces round-1 R1 |
 | O2 | NOTE | round-1 R1, GND short | DC loop drives the op-amp high, R9 1k limits its supply: about 9 mA, R8 27 mW (round 1 said 15 mA / 76 mW) | none | fixed (text) |
 | O3 | NOTE | round-1 R4 rate | `SendRusefiFormat` sends 2 frames (StandardData, DiagData), 100 ms each: about 5 Hz, not 9 Hz | none, fix already in | fixed (text) |
 | O4 | NOTE | `checks/run_all.py` | summary is the last output line, which is KiCad's "Debug: Adding duplicate image handler" for via_in_pad (STATE table) | skip `: Debug: ` lines | fixed (this commit) |
@@ -74,3 +74,9 @@ Checked and found correct: the `can_helper.cpp` change (macro is live: flash +32
 stays in its mailbox, so with no node all 3 fill and every later send would time out); clamp diode orientation (D3 cathode +5V,
 D4 cathode `/AOUT`); R2 surge arithmetic; r33 revert left the board at bf13162 (0/0); D2 (release gate vs upstream's DRC errors) is
 a real conflict in `release.py`. Not checked: anything needing hardware or a SPICE run of the fault cases.
+
+### Design change after round 2 — r36, 2026-10-23 (not an audit round; the next auditor checks these)
+Board grown 15 mm, stage moved to the new strip, R11 added. Status of earlier findings: O1/R1 fixed (R11); R3 fixed (C17
+2.1 mm from U6 pin 8); R6 gone (close_d3_link no longer applies; C1 pad 2 back to upstream's own pour connection, whose
+1-spoke thermal is in upstream's DRC too); R7 open (silkscreen). New for the auditor: `docs/carrier.md` "Layout review
+checklist" and "Grounding and the output" (D7); `checks/layout_review.py` output; sim topology D.

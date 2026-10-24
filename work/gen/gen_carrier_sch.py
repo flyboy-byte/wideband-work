@@ -48,6 +48,11 @@ PARTS = {
     'R8':  ('Device', 'R', '330', R0603, 'C23138', (355.6, 172.72), 'series output resistor, limits clamp current'),
     'D3':  ('Diode', '1N4148WS', '1N4148WS', 'Diode_SMD:D_SOD-323', 'C2128', (330.2, 213.36), 'clamp output to +5V'),
     'D4':  ('Diode', '1N4148WS', '1N4148WS', 'Diode_SMD:D_SOD-323', 'C2128', (355.6, 213.36), 'clamp output to GND'),
+    # J3-5 sits between J3-6 (12V_RAW) and J3-4 (LSU_Heater+). Without R11, 12 V on J3-5 reaches +5V through D3 unlimited
+    # (AUDIT.md round 2, O1); with it, (12 - 5.6) / 470 = 14 mA, 0.09 W. Outside the feedback: 0.46 % low into 100k
+    # (sim/stability.sh D), removed by the trim. C4502: 470R 1206 1 % 250 mW [REPORTED, LCSC datasheet listing]
+    'R11': ('Device', 'R', '470', 'Resistor_SMD:R_1206_3216Metric', 'C4502', (381.0, 213.36),
+            'series resistor at J3-5: a 12 V wiring fault cannot back-feed +5V through D3'),
     'R9':  ('Device', 'R', '1k', R0603, 'C21190', (215.9, 213.36), 'op-amp supply feed from the protected 12 V'),
     'D5':  ('Device', 'D_Zener', '18V', 'Diode_SMD:D_SOD-123', 'C173425', (241.3, 213.36),
             'clamps op-amp supply: TVS D1 (SMCJ30CA) lets the rail reach about 35-48 V, LM2904 is rated 32 V'),
@@ -75,7 +80,8 @@ NETS = {
     'AOUT_F2':    [('R5', '2'), ('C14', '1'), ('U6', '3')],
     'AOUT_INN':   [('U6', '2'), ('R6', '2'), ('R7', '1'), ('C15', '2')],
     'AOUT_OA':    [('U6', '1'), ('C15', '1'), ('R8', '1')],
-    'AOUT':       [('R8', '2'), ('R6', '1'), ('D3', '2'), ('D4', '1'), ('J3', '5')],
+    'AOUT':       [('R8', '2'), ('R6', '1'), ('D3', '2'), ('D4', '1'), ('R11', '1')],
+    'AOUT_J':     [('R11', '2'), ('J3', '5')],
     'LSU_Heater+': [('R9', '1')],
     'VOP12':      [('R9', '2'), ('D5', '1'), ('C16', '1'), ('C17', '1'), ('U6', '8')],
     'U6B_FB':     [('U6', '6'), ('U6', '7')],

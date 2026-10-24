@@ -50,8 +50,9 @@ error (0.1 V) is 0.2 AFR, which is why the reference buffer matters [INFERRED].
 
 ## Proposed changes
 
-1. **Use the spare connector pins**: J3-5 = analog out, J3-7 = signal ground (tied to GND at one point near the
-   output stage). Same connector, no new terminal. Wiring note for FlashPro installs: Hondata wants the meter's power
+1. **Use the spare connector pins**: J3-5 = analog out, J3-7 = signal ground. (This said "tied to GND at one
+   point near the output stage"; the board never did that: J3-7 sits on the ground pour beside J3-1. Corrected
+   2026-10-23, see "Grounding and the output" below.) Same connector, no new terminal. Wiring note for FlashPro installs: Hondata wants the meter's power
    ground and analog ground both at the ECU's ground point (G101 on K-series), on wires not shared with anything else.
 2. **Analog stage** (proposed 2026-10-23), after lambda-x2 (`docs/analog-out.md`) with a reference-powered buffer:
 
@@ -63,7 +64,7 @@ error (0.1 V) is 0.2 AFR, which is why the reference buffer matters [INFERRED].
      -> LM2904 non-inverting, gain 1 + 68k/100k = 1.68 -> full scale 5.04 V
         dual loop: DC feedback (68k) from AFTER the 330R, so the ECU's input load causes no error;
         AC feedback Cf = 1 nF (C0G) from the op-amp output to IN-, so cable capacitance can't make it oscillate
-     -> 330R -> 1N4148W clamps to +5V and GND -> J3-5
+     -> 330R -> 1N4148W clamps to +5V and GND -> 470R (R11, 1206) -> J3-5
    LM2904 supply: protected 12 V (LSU_Heater+ net) through 1k, 18 V zener, 10u 50 V + 100n
    ```
 
@@ -77,6 +78,11 @@ error (0.1 V) is 0.2 AFR, which is why the reference buffer matters [INFERRED].
    - 1N4148W clamps (Basic part, replaced the Extended BAT54S): if the op-amp fails high, the output is held near
      5.7 V and the 330R limits the current to about 15 mA. Their leakage sits inside the DC feedback loop (taken after
      the 330R), so it is corrected.
+   - R11 470R between the clamps and J3-5 (added 2026-10-23, AUDIT.md round 2 O1): J3-5 sits between J3-6 (12V_RAW)
+     and J3-4 (LSU_Heater+) [DOCUMENTED: J3 footprint pads]. Without it, 12 V on J3-5 reaches +5V through D3 with no
+     limit (TJA1051, REF3030, module on that rail). With it: (12 - 5.6) / 470 = 14 mA into +5V, 0.09 W in R11 (1206,
+     250 mW) [INFERRED, calculation]. Outside the feedback, so it reads 0.46 % low into 100k (sim D below); the trim
+     removes that for the receiver it was trimmed on; into a 10k gauge it would be about 4.5 % low.
    - Op-amp supply clamp: upstream's input TVS is an SMCJ30CA (C133648: 30 V standoff, 35.1 V breakdown per the JLC
      listing), so the protected 12 V rail can reach about 35-48 V in a surge; the LM2904 is rated 32 V. 1k + 18 V zener
      (BZT52C18, C173425) holds it below that; the op-amp draws about 1 mA, so the 1k costs about 1 V of headroom
@@ -100,6 +106,10 @@ error (0.1 V) is 0.2 AFR, which is why the reference buffer matters [INFERRED].
    | B: after 330R | 1 pF / 1 nF / 10 nF / 47 nF | 24% / 72% / 106% / 86% | **yes at 10 nF (55 mV p-p) and 47 nF (16 mV)** | up to 795 us |
    | C: dual loop, Cf 100 pF | 1 pF / 1 nF / 10 nF / 47 nF | 0% / 0% / 11% / 39% | no | 9-161 us |
    | **C: dual loop, Cf 1 nF** | 1 pF / 1 nF / 10 nF / 47 nF | **0% at every load** | no | 145-254 us |
+   | **D: C plus R11 470R to the connector** | 1 pF / 1 nF / 10 nF / 47 nF | **0% / 0% / 0% / 0.5%** | no | 175-254 us |
+
+   D's final value: 1.8417 V against C's 1.8503 V, 0.46 % low into the 100k load (R11 outside the loop) [DOCUMENTED run,
+   2026-10-23].
 
    Final value with C: 1.8503 V against 1.848 V ideal (the difference is the model's input offset). Not simulated:
    the clamp diodes, the 100k pull-down, temperature, and cable inductance.
@@ -126,6 +136,48 @@ error (0.1 V) is 0.2 AFR, which is why the reference buffer matters [INFERRED].
 3. **TEST jumper**: a solder jumper from module SEL_2 to GND, open by default, for bench test A1.
 4. **CAN termination**: decide whether to add an optional 120 ohm (solder jumper) for a bus with no other terminator.
 
+## Layout (r36, 2026-10-23)
+
+The board is upstream's 40.0 x 36.5 mm grown 15 mm at the bottom edge, away from the connector: **40.0 x 51.5 mm (1.57 x
+2.03 in)**. The owner designs his own enclosure, so `case/case.STL` is no limit (STATE.md decision). The whole analog
+stage sits in the new strip, on the bottom side, below the module's left pad column (pads 3 PWM, 4 TEST, 7 supply). The
+right column (heater drive 11-12, sensor 13-16) is 3 mm or more above the strip and no new track runs beside its nets.
+Upstream's tracks are all kept (r1-r33 deleted two to make room). Renders: `work/renders/carrier-e/`.
+Bypass and feedback parts: C17 2.1 mm from U6 pin 8 (was 4.5 mm), C15 2.3 mm from pins 1-2, C11/C12 under 2.1 mm
+from the REF3030 [DOCUMENTED: measured on the board file].
+
+## Layout review checklist (any outline, placement or routing change; AGENTS.md rule 8)
+
+| # | Item | How it is checked | r36 result |
+| --- | --- | --- | --- |
+| L1 | Every connection made, nothing new in DRC | `checks/drc_vs_upstream.py` | 0 new, 0 open |
+| L2 | No vias in SMD pads | `checks/via_in_pad.py` | 0 |
+| L3 | Noisy nets (PWM, heater drive, CAN) kept off sensitive ones (sensor, filter, reference, output) | `checks/layout_review.py` part 1 | nothing within 1 mm (r34 had CAN_L 0.3 mm beside the output for 6.8 mm; fixed by moving the CAN terminator) |
+| L4 | Return path under every new signal track (GND on the other layer, or on both sides on its own layer) | `layout_review.py` part 2 | longest stretch without: 3.8 mm (PWM), 1.2 mm (output) |
+| L5 | GND pour joined, stitched in new copper | DRC unconnected (pour islands count) + `layout_review.py` part 3 | joined; 16 GND vias in the strip, farthest pour point 10.7 mm from one |
+| L6 | Bypass caps at their pins | measured distances (above) | all under 2.4 mm |
+| L7 | Output's ground reference vs the heater's return current | calculation below | about 1-2 mV on the board; the wiring matters more |
+| L8 | Edge clearance on the new outline | DRC | no new violations |
+
+## Grounding and the output
+
+- **On the board.** The heater's return current (up to about 0-4 A, REPORTED for wideband heaters in general) flows from
+  the module's GND pads 9-10 (x 72.7, y 71-73.5) through the pour to J3-1 (68.75, 66) [DOCUMENTED: pad positions]. The
+  output stage's ground is the pour 20 mm away in the strip, a dead end with no heater current; J3-7 sits beside J3-1.
+  Copper sheet: 1.68e-8 ohm m / 35 um = 0.48 mOhm per square per layer; the drop across that corner is of order
+  1 mOhm x heater amps, and the strip sees about half of it: **about 1-2 mV = 0.002-0.004 AFR** [INFERRED, calculation].
+- **In the car, the bigger one.** The receiver reads J3-5 against its own ground. Any voltage between the controller's
+  ground and the receiver's ground adds 1:1 (10 mV = 0.02 AFR). J3-1 and J3-7 are joined on the board, so if both wires
+  go to the vehicle, heater current splits between them and the J3-7 wire carries part of it: for example 1 A x 20 mOhm
+  of wire = 20 mV = 0.04 AFR [INFERRED, example numbers]. Commercial controllers give the heater its own ground wire and
+  tell the installer to tie the controller's ground to the receiver's ground source (Innovate LC-1/LC-2 wiring, REPORTED
+  via forum and wiki posts; Hondata says the same for FlashPro: same ground as the ECU for power and analog, line 41
+  above). This is upstream's grounding, not something the carrier changed.
+- **What we do now:** wiring instruction (J3-1 heavy and short to the ECU's ground point, J3-7 to the receiver's sensor
+  ground), bring-up test A4 measures the real offset, and the trim can take out a steady part. Board change (a separate
+  analog-ground net for J3-7) is owner decision D7 in `RELEASE_ASSESSMENT.md`; it would not stop the wire sharing
+  (any on-board tie keeps the two wires in parallel), so it is not recommended without A4 data [INFERRED].
+
 ## Firmware changes (our fork; f0 has no UART or TunerStudio, `halconf.h` HAL_USE_UART/SERIAL FALSE)
 
 - Done on branch `analog-out`, builds; details and budget in `firmware.md`. PB1 = TIM3_CH4 (AF1, confirmed in ST's
@@ -143,4 +195,5 @@ error (0.1 V) is 0.2 AFR, which is why the reference buffer matters [INFERRED].
 | --- | --- | --- | --- |
 | A1 | Close the TEST jumper (module SEL_2 to GND), power up; output steps 1.00 / 2.50 / 4.00 V, 10 s each. Meter J3-5 to J3-7 | DC volts at each step | before trim: within ±0.10 V; after trim and reflash: within ±0.02 V |
 | A2 | Sensor in free air, warmed up | DC volts at J3-5 vs AFR the firmware reports over CAN | volts match the curve within ±0.05 V |
-| A3 | Short J3-5 to GND briefly through the meter's current range | current | limited by the series resistor (value TBD), board survives |
+| A3 | Short J3-5 to GND briefly through the meter's current range | current | about 9 mA (R9 1k starves the op-amp supply, AUDIT round 2 O2); board survives |
+| A4 | In the car, engine running, sensor hot: meter (mV range) between J3-7 at the controller and the receiver's sensor-ground pin | DC mV | under 20 mV (= 0.04 AFR at 0.5 V per AFR); more means a ground offset in the wiring (see "Grounding and the output") |

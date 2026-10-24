@@ -5,11 +5,19 @@ Opus 5.5 (AUDIT.md round 2: R1 rewritten, R4 rate corrected, R8 added). For Loga
 DOCUMENTED (a file or run I can point to), REPORTED (someone else's number), INFERRED (my reasoning, not measured), UNKNOWN.
 Nothing here is ordered, pushed or published beyond the private status page.
 
+## 0. Update, r36 (2026-10-23 evening, Opus 5.5)
+The board grew 15 mm (40.0 x 51.5 mm, 1.57 x 2.03 in; owner: no case limit, function first). The analog stage moved into
+the new strip, R11 470R went in at J3-5 (D6 done), C17 and C15 sit at their pins (R3 done), the C1 ground workaround
+is gone (R6 done: C1 is back to upstream's own connection). Routing closed on the first run. A new measurement script
+(`checks/layout_review.py`) covers coupling, return paths and the ground pour; it found one coupling problem (r34), fixed
+in r35. New owner question D7 (output ground in the car). Sections below are the earlier assessment with statuses
+updated; `docs/carrier.md` "Layout" and "Grounding and the output" have the detail.
+
 ## 1. The concept in one paragraph
 The rusEFI wideband module (upstream, unchanged) sits on a carrier board that adds a 0-5 V output at connector pin J3-5
 (AFR 10 = 0 V … 20 = 5 V, 0 V while the sensor is not valid). The module's spare pin SEL_1 makes a PWM at 46.9 kHz; a
 74LVC1G125 on a 3.000 V reference squares it up; two RC filters smooth it; an LM2904 scales it ×1.68 to 5.04 V; a 330 Ω
-resistor and two clamp diodes protect the output. rusEFI CAN keeps working as before. Receivers: Speeduino, FlashPro
+resistor, two clamp diodes and a 470 Ω series resistor at the pin protect the output. rusEFI CAN keeps working as before. Receivers: Speeduino, FlashPro
 (datalogging), a carb gauge.
 
 ## 2. The audit path (what has been checked, by what, how independent)
@@ -31,7 +39,7 @@ resistor and two clamp diodes protect the output. rusEFI CAN keeps working as be
 | The module and heater behave exactly as upstream | 85 % | carrier adds nothing to the heater path; one touched thing is C1's ground return (0.5 mm via + 0.2 mm tie), INFERRED fine |
 | The 0-5 V output works and trims to ±0.05 V | 80 % | simulated stable; firmware never run; the PWM path shares a timer with the pump DAC |
 | It survives the output shorted to GND | 90 % | the 1k op-amp supply resistor R9 limits it to about 9 mA (R1) |
-| It survives J3-5 shorted to 12 V (a wiring fault) | 20 % | D3 feeds the 12 V straight onto the +5V rail: CAN transceiver, REF3030 and the module see about 11 V (R1) |
+| It survives J3-5 shorted to 12 V (a wiring fault) | 85 % | R11 limits it to 14 mA into +5V, absorbed by the module's load (calculation, not simulated) |
 | **First board works as a datalogging output with no smoke, wired correctly** | **about 75 %** | |
 
 To reach about 80 %: decide R1 (D6), run the Codex round, fix or accept R2, BOM/CPL checks, and add the JLC quote. Bench tests A1-A3 then
@@ -71,12 +79,15 @@ move it to what a built board can tell us.
 ## 5. Decisions for you (defaults in use if you say nothing)
 | # | Decision | Default I'm using | Cost of the other way |
 | --- | --- | --- | --- |
-| D1 | R9 → 1206? (R8 needs no change: fine in a GND short, and the 12 V short is fixed by D6, not by a bigger R8) | Keep 0603 and accept R2 as RISK until the audit | Parts move; the placer and router must run again (about 4 min each, but `close_d3_link` may stop applying) |
+| D1 | R9 → 1206? (still open; room exists now) (R8 needs no change: fine in a GND short, and the 12 V short is fixed by D6, not by a bigger R8) | Keep 0603 and accept R2 as RISK until the audit | Parts move; the placer and router must run again (about 4 min each, but `close_d3_link` may stop applying) |
 | D2 | Release gate: the two raw DRC checks (module 11, carrier 22, all upstream's) always FAIL, so `release.py` can never pass | Not changed | Swap them in `checks.json` for the "vs upstream" check: **loosens your money gate, so your call** |
 | D3 | Output value while the sensor is invalid | 0 V | A mid value would look like a real AFR to a tune |
 | D4 | How the module gets flashed | Tag-Connect pads kept reachable | none yet |
-| D5 | Hand-fix C17 and the silkscreen, or ship as is | Ship as is, note it | one more regeneration + re-check |
-| D6 | Series resistor at J3-5 so a 12 V wiring fault can't reach +5V (R1) | Not done; recommend yes before ordering | one part, a regeneration, the D3 link redone |
+| D5 | ~~C17~~ done (r36, 2.1 mm); silkscreen overlaps remain (cosmetic) | Ship as is | a label pass |
+| D6 | ~~Series resistor at J3-5~~ | **Done r36** (owner agreed): R11 470R 1206, C4502 | 0.46 % low into 100k, trimmed |
+| D7 | Separate analog ground for J3-7 on the board? | No board change; wiring instruction + bring-up test A4 measures the real offset first (`docs/carrier.md`, "Grounding and the output") | a net-tie and re-route; would not stop heater current sharing the J3-7 wire |
+| D8 | Mounting holes in the new bottom corners (only the two upstream holes at the connector end exist) | None added | two holes for your enclosure; say where |
+| D9 | Move the analog stage to the top of the strip (one-sided JLC assembly, cheaper; R10/JP2 too) | Bottom (as routed) | generator side switch, a new run; saves the two-sided assembly fee (price unchecked) |
 
 ## 6. What "ready to order" still needs (in order)
 1. Codex audit round on the pack, raw output kept under `work/audit/`, findings into `AUDIT.md`.

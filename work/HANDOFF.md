@@ -1,33 +1,41 @@
 # HANDOFF — dense session context (read after STATE.md)
 
-Written 2026-10-23, end of the session that closed the last routing connection (Sonnet 5.5). Replaces the earlier handoff of
-the same day; its run table r17-r31 is kept below. This is the "halfway tier": more than memory, less than the transcript.
-Replace it (don't append forever) at the next handoff; durable facts belong in STATE/docs.
+Written 2026-10-23 late, after r36 (board grown, R11 added; Opus 5.5 reviewing and continuing Sonnet 5.5's session). Replaces
+the earlier handoffs of the day; the r17-r32 run table is kept below. Replace it at the next handoff.
 
 ## Verify first, don't assume
 - `git status`, `git log --oneline -10` (branch `analog-out`; `master` == upstream mck1117/wideband at 2bb80d2; `upstream`
   push disabled; `origin` = public fork github.com/flyboy-byte/wideband-work, push only when the owner says).
-- `cd work && python3 checks/run_all.py`. Expected: module DRC 11 (upstream), module ERC 0, carrier DRC 22 (all upstream's),
-  **`drc_vs_upstream` 0 new / 0 unconnected**, `via_in_pad` 0 new, carrier ERC 0, self-check 17/17, drift clean.
-- `cd firmware && make -j12 BOARD=f0_module` (builds; untested on hardware). Host tests: see "Tests" in `CLAUDE.md`
-  (43 gtest cases pass; `test/googletest` submodule must be initialised; move `firmware/build` aside first).
-- Report page: `cd work && python3 checks/report.py` then publish `work/report/index.html` with the Artifact tool, same path
-  = same URL (https://claude.ai/artifact/YRsjXKGZKG5AFbwkcMuYZ4, private, owner's account).
+- `cd work && python3 checks/run_all.py`. Expected (r36): module DRC 11 and carrier DRC 23 (all upstream's), **drc_vs_upstream
+  0 new / 0 unconnected**, via_in_pad 0, **layout_review 0 triggers**, carrier ERC 0, self-check 18/18, no drift.
+- `cd firmware && make clean && make -j12 BOARD=f0_module` (make clean when switching BOARD). Host tests: `CLAUDE.md`.
+- Report page: `REV=carrier-e python3 checks/report.py`, publish `work/report/index.html` with the Artifact tool (same path =
+  same URL https://claude.ai/artifact/YRsjXKGZKG5AFbwkcMuYZ4, private).
 
-## Later the same day (self-audit by Sonnet 5.5, reviewed by Opus 5.5 in AUDIT.md round 2)
-- **Open first: D6** (round 2, O1): J3-5 has no resistor between the connector and the D3 clamp to +5V; a 12 V wiring fault back-feeds +5V.
-  Recommended fix (owner to approve): 470R 1206 in series at J3-5, outside the feedback; needs schematic + regeneration + a new D3 link.
-- `RELEASE_ASSESSMENT.md` (new, read it first): concept, audit path, confidence (about 75 %), findings R1-R7, owner decisions D1-D5.
-- `AUDIT.md` round 1 = self-audit (low independence). Codex round still to do on `work/audit/carrier-d-2026-10-23/`
-  (give Codex `work/audit/carrier-g-2026-10-23/` (includes round 2); carrier-d/-e/-f are older, ignore).
-- Firmware: `firmware/can_helper.cpp` drops the CAN frame instead of waiting 100 ms when `AUXOUT_SEL1_PWM_CHANNEL` is set (no node on
-  the bus would slow the analog output to about 9 Hz). f0_module and f1_dual build clean; +32 B flash, RAM unchanged.
-- r33: `NET_WEIGHT['/VOP12'] = 2.5` to pull C17 toward U6 pin 8 moved the placement: 6 open connections, `close_d3_link` skipped. Reverted
-  (generator and board back to bf13162; verified 0/0). C17 stays at 4.5 mm (accepted RISK R3).
-- `release.py` cannot pass while the two raw DRC checks fail on upstream's own errors: owner decision D2.
-- Build quirk: after switching `BOARD=` run `make clean`, else the link fails with stale objects (`EFLD1` undefined on f1_dual).
+## This session, in order (read `RELEASE_ASSESSMENT.md` section 0 first)
+1. Sonnet self-audit (AUDIT round 1), firmware fix in `can_helper.cpp` (drop CAN frame, don't wait 100 ms, on this board).
+2. Opus review (AUDIT round 2): the 12 V-on-J3-5 fault path through D3 (O1), numbers corrected.
+3. Owner: no case limit, function first, no assumed engineering decisions (AGENTS.md rules 7-8; memory feedback-function-first).
+4. r34-r36: board grown 15 mm at the bottom (`GROW` in `gen/gen_carrier_pcb.py`, `grow_board()`), stage in the new strip,
+   R11 470R 1206 (C4502) at J3-5 (schematic net `AOUT_J`), `REROUTE = []`, PREROUTE only the stage's own nets, bypass
+   pseudo-nets (`BYPASS`, weight 8). `close_d3_link` no longer applies (prints "skipped"; dead, kept guarded).
+5. New `checks/layout_review.py` (coupling, return path incl. coplanar GND, pour/stitching), in `checks.json`.
+6. `sim/stability.sh` topology D (R11): 0-0.5 % overshoot, 0.46 % low into 100k.
+7. Grounding analysis and D7 (`docs/carrier.md`), bring-up test A4 proposed.
 
-## What changed this session (r32)
+| Run | Change | Result |
+| --- | --- | --- |
+| r36 | C17/C15 start targets on the correct (mirrored) side, bypass weight 8 | **0 new / 0 open / 0 via-in-pad / 0 review triggers**; C17 2.1 mm, C15 2.3 mm |
+| r35 | CAN terminator to the strip's left end, output group under the corridor right of the cutout | 0/0; coupling clean; C17 6.1 mm (stuck above the chip) |
+| r34 | board +15 mm, stage in the strip, R11, upstream tracks kept | 0/0 first try; CAN_L 0.3 mm beside the output for 6.8 mm (layout_review) |
+| r33 | `/VOP12` weight on the small board | 6 open: reverted |
+
+## Next, in order
+1. Owner decisions: D7 (analog ground), D8 (mounting holes), D9 (stage on top = one-sided assembly), D1 (R9 1206), D2 (release gate).
+2. Codex audit on a fresh pack (`checks/audit_pack.py carrier-h ...`, same file list as carrier-g plus `checks/layout_review.py` output).
+3. Silkscreen pass (overlapping refs in the strip), BOM/CPL, JLC quote (owner approves money), `release.py`.
+
+## Earlier: r32 (small board, superseded by r34-r36)
 The one open connection (D3 clamp diode +5V pad, an island 4.2 mm from the +5V net) is closed, and the board regenerated:
 `gen/gen_carrier_pcb.py: close_d3_link()` applies `checks/whatif_route.py: CANDIDATES['FIX_D3']` before the final pour fill:
 1. +5V, F.Cu, 0.25 mm: via (60.10,78.15) -> (64.35,78.15) -> (64.35,80.50) -> (64.90,80.50), ends inside U2 pin 3 (+5V pad).
@@ -64,7 +72,7 @@ C2 pin 2; T2 grid of GND via spots (31 run; 5 reach 1 violation); T3 C2 pin 2 so
 | r17-r19 | one-at-a-time pre-routing, various orders | walls in a different net each time |
 Runs r1-r16 are in this file's git history.
 
-## Next, in order
+## Next steps as of r32 (superseded, kept for history)
 1. **Audit** (nothing has been audited): pack is `work/audit/carrier-d-2026-10-23/` (gitignored, read-only; paste `PROMPT.md`
    first; `firmware.diff` is `git diff master -- firmware`). Hand-off text is in `AUDIT.md`. Give it to Codex, keep its raw output
    under `work/audit/`, add a round to `AUDIT.md` naming the auditor and commit. Check first: analog stage, power (R8/R9 0603,
@@ -80,7 +88,7 @@ Runs r1-r16 are in this file's git history.
   CAN TX thread; curve 10 AFR = 0 V … 20 AFR = 5 V; invalid lambda -> 0 V (owner may change).
 - Stage: 100k pull-down -> 74LVC1G125 on REF3030 3.000 V -> 2x 3.3k/100n -> LM2904 x1.68, dual-loop feedback (DC after 330R + 1 nF
   from op-amp out) -> 330R -> 1N4148WS clamps -> J3-5; J3-7 signal ground. LM2904 supply: LSU_Heater+ -> 1k -> 18 V zener.
-- Board can't grow (case.STL); analog stage on the BOTTOM; module cutout x48.76-56.76 y72.84-78.30. Passives 0402 except
+- (Until r33 the board was held inside case.STL; since r34 it is 40.0 x 51.5 mm.) Analog stage on the BOTTOM, in the strip; module cutout x48.76-56.76 y72.84-78.30. Passives 0402 except
   R6, R8/R9 (flagged), C16/C17.
 - U2 pin 3 is a +5V pad (x 64.52-65.72, y 79.80-82.00); C1 = LSU_Heater+ / GND bypass; C2 = +5V / GND. The top corridor
   between C10 and U2 is 0.55 mm: a track through it kills the pour on both sides, which is what T1 showed.
@@ -103,7 +111,7 @@ and iron only. Reviews from his phone (hence the report page). JLC places SMD; h
 
 ## Do not re-raise
 Buying a ready-made controller; forking lambda-x2 / wideband-F103; narrowband simulation output; the Honda side; CAN-ID strap
-trade-off; separate repos; keeping the deleted LSU_Heater+/+5V bottom tracks; negotiating the whole +5V branch.
+trade-off; separate repos; ~~keeping the deleted LSU_Heater+/+5V bottom tracks~~ (superseded r34: all upstream tracks kept); negotiating the whole +5V branch.
 
 ## Open questions (owner), with the default in use
 Output while sensor invalid: 0 V. Flashing method: keep Tag-Connect pads reachable. Bring-up tests A1-A3 in docs/carrier.md:

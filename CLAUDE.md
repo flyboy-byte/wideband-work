@@ -39,11 +39,11 @@ It's a learning project: build and test it ourselves, don't buy a ready-made uni
   timer, 46.9 kHz). Compiled-in curve 10 AFR = 0 V … 20 AFR = 5 V, 0 V while lambda is invalid. Bench test mode (SEL_2
   strapped low: 1.00/2.50/4.00 V steps) and trim constants. RAM is full to the byte, which is safe because nothing is
   allocated at runtime. Untested on hardware.
-- **Carrier schematic**: generated, ERC 0, netlist self-check 17/17.
-- **Carrier PCB**: generated and routed. **0 new DRC violations and 0 open connections** beyond upstream's baseline (r32), no vias
-  in pads. Next: C17 to U6 pin 8, silkscreen overlaps, then audit (pack in `work/audit/`, Codex round) → BOM/CPL → JLC
-  two-sided quote → `release.py`.
-- **Assessment**: `work/RELEASE_ASSESSMENT.md` (concept, audit path, confidence, caveats, owner decisions) and `work/AUDIT.md` round 1 (self-audit).
+- **Carrier schematic**: generated, ERC 0, netlist self-check 18/18 (R11 added r34).
+- **Carrier PCB**: grown to 40.0 x 51.5 mm (r36); the analog stage sits in the new strip. **0 new DRC violations, 0 open,
+  0 vias in pads, 0 layout-review triggers.** Next: owner decisions D7-D9 and D1-D2 (`work/RELEASE_ASSESSMENT.md`), Codex
+  audit on a fresh pack, silkscreen pass → BOM/CPL → JLC quote → `release.py`.
+- **Assessment**: `work/RELEASE_ASSESSMENT.md` (concept, audit path, confidence, caveats, owner decisions) and `work/AUDIT.md` rounds 1 (Sonnet self-audit) and 2 (Opus review); no outside audit yet.
 - **Module board**: upstream's, unchanged (DRC 11 upstream errors, judged harmless or not yet: open).
 
 ## Commands
@@ -52,6 +52,7 @@ It's a learning project: build and test it ourselves, don't buy a ready-made uni
 cd work && python3 checks/run_all.py              # every check; writes the table in STATE.md
 python3 checks/drc_vs_upstream.py -v               # carrier DRC minus upstream's own errors, lists open pairs
 python3 checks/via_in_pad.py                       # new vias in SMD pads
+python3 checks/layout_review.py [-v]               # coupling, return paths, GND pour: numbers DRC doesn't judge (AGENTS.md rule 8)
 python3 checks/whatif_route.py [NAME] [--keep]     # candidate tracks on a scratch copy, scored by drc_vs_upstream (10 s each)
 REV=carrier-d python3 checks/report.py             # rebuild work/report/index.html (status page), then publish it with Artifact
 python3 gen/gen_carrier_sch.py [--check]           # regenerate the carrier schematic / netlist self-check
@@ -75,8 +76,9 @@ build, then put it back. The `mkdir -p` is also needed (the dir rule isn't a pre
 
 The base is upstream's board from `master`, upgraded to KiCad 10, with every upstream track locked. New parts go on the
 **bottom**: the top is full. (`case/case.STL` was treated as a size limit until 2026-10-23; the owner designs his own enclosure, so the board may now grow: see `work/STATE.md`.) The steps:
+0. Grow the outline and pours by `GROW` mm at the bottom edge (the strip the stage goes in).
 1. Greedy placement to targets.
-2. **Annealing placement** by net length plus distance to existing copper.
+2. **Annealing placement** by net length plus distance to existing copper, plus bypass caps tied to their pins (`BYPASS`).
 3. Pad nets from the schematic netlist.
 4. GND fan-out vias; +5V tap vias on upstream's top track.
 5. Keep-out aids for the cutout, the edge and the 12V pour.
@@ -95,10 +97,11 @@ Module pad SEL_1 carries the PWM. On the carrier:
 - 2× RC 3.3k/100n
 - LM2904 ×1.68 (68k/100k) with a dual-loop feedback: DC feedback after the 330R, plus 1 nF from the op-amp output. TI's
   model shows feedback after the resistor alone oscillates into cable capacitance.
-- 330R → 1N4148WS clamps to +5V and GND → connector J3-5, with J3-7 as signal ground
+- 330R → 1N4148WS clamps to +5V and GND → 470R (R11, so a 12 V wiring fault can't reach +5V) → connector J3-5, with J3-7
+  as signal ground (on the pour beside J3-1; see `work/docs/carrier.md` "Grounding and the output")
 - LM2904 supply: 12 V → 1k → 18 V zener, because the input TVS lets the rail reach about 35-48 V
 
-Passives are 0402 except R6, R8, R9, C16 and C17.
+Passives are 0402 except R6, R8, R9, R11, C16 and C17.
 
 ## Rules
 
@@ -126,7 +129,7 @@ and stop for money, deletion, overwriting his edits or publishing.
 - the Honda side (settled: datalogging over the 0-5 V input; stock closed loop stays on the narrowband)
 - the CAN-ID strap trade-off
 - separate repos or folders
-- keeping the deleted LSU_Heater+/+5V bottom tracks (worse, r9/r27)
+- ~~keeping the deleted LSU_Heater+/+5V bottom tracks (worse, r9/r27)~~ superseded r34: on the grown board all upstream tracks stay
 - negotiating the whole +5V branch (deadlock, r24-r25)
 
 ## Layout

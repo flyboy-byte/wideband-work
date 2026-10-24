@@ -5,9 +5,9 @@
   python3 work/gen/gen_carrier_pcb.py --no-route place only (to look at placement)
 
 Base = upstream's board at `master`, upgraded to KiCad 10. Every pad's net is set from the generated schematic's
-netlist (work/gen/gen_carrier_sch.py writes it), so board and schematic match. New parts go on the BOTTOM side: the
-board can't grow (case/case.STL is 47.5 x 44 mm outside around this 40 x 36.5 mm board) and the top is full; the case
-leaves about 6 mm under the board (INFERRED from the STL's horizontal faces, work/docs/carrier.md).
+netlist (work/gen/gen_carrier_sch.py writes it), so board and schematic match. The board is upstream's
+40 x 36.5 mm grown by GROW mm at the bottom edge, away from the connector (the owner designs his own enclosure, so
+case/case.STL is no limit, 2026-10-23). New parts go in that strip, on the BOTTOM side.
 Upstream's tracks and vias are locked before routing, so Freerouting only adds the new connections.
 """
 import json, math, os, re, shutil, subprocess, sys, tempfile, xml.etree.ElementTree as ET
@@ -26,37 +26,47 @@ FREEROUTING = os.path.expanduser('~/.local/share/freerouting/freerouting-2.5.0.j
 # and parts already placed. Floorplan: op-amp and output right of the cutout, next to the connector (short run to
 # J3-5); buffer, reference and RC chain below the cutout, fed from module pad 3; op-amp supply parts lower left, fed
 # from module pad 7 (VBatt_Sense, the same protected 12 V net as LSU_Heater+). Placed in this order.
+GROW = 15.0   # mm added at the bottom edge (y 91.25 -> 106.25)
+# Floorplan in the strip (bottom side, coordinates seen from the top): the stage sits below the module's LEFT pad column
+# (pads 3 SEL_1 PWM, 4 SEL_2, 7 LSU_Heater+), away from the right column (heater drive pads 11-12, sensor pads 13-16).
+# PWM in at the left, filter left to right, op-amp in the middle, its supply right of it. The output (R8, clamps, R11)
+# sits under the free corridor right of the module cutout, the straight way up to J3-5 (r34 put R11 at the far left; its
+# 53 mm track then ran 7 mm beside CAN_L at 0.3 mm, layout_review.py). The CAN terminator goes to the left end, where
+# CAN_H/L already run down the left side (r34 had it on the output's corridor). The annealer moves them from here.
 TARGETS = [
-    ('U6',  (67.6, 76.8)),   # LM2904, right of the cutout
-    ('C15', (64.4, 75.8)),   # Cf, next to its pins
-    ('R6',  (64.4, 77.8)),
-    ('R7',  (64.4, 79.8)),
-    ('R8',  (60.2, 72.0)),   # output side, toward J3-5
-    ('D3',  (60.2, 74.6)),
-    ('D4',  (60.2, 77.2)),
-    ('C17', (70.0, 80.6)),   # op-amp bypass, at pin 8
-    ('JP1', (50.2, 80.6)),   # TEST jumper, next to U3-4
-    ('R3',  (52.6, 80.6)),   # pull-down on the buffer input
-    ('U4',  (55.4, 81.2)),   # buffer
-    ('U5',  (58.8, 81.2)),   # REF3030
-    ('C12', (61.4, 81.2)),   # VREF3 cap
-    ('C11', (63.4, 81.2)),   # REF input cap
-    ('R4',  (55.4, 84.2)),   # RC chain
-    ('C13', (57.4, 84.2)),
-    ('R5',  (59.4, 84.2)),
-    ('C14', (61.4, 84.2)),
-    ('R9',  (50.4, 88.0)),   # supply from module pad 7
-    ('D5',  (53.6, 88.4)),
-    ('C16', (57.6, 88.4)),   # 1206
-    ('R10', (52.4, 68.6)),   # CAN terminator, near the CAN pins
-    ('JP2', (56.0, 68.6)),
+    ('U6',  (61.0, 97.6)),   # LM2904
+    ('C15', (56.4, 98.8)),   # Cf, beside pins 1-2 (lower left on the bottom side)
+    ('R6',  (56.6, 97.0)),
+    ('R7',  (56.6, 101.0)),
+    ('C17', (64.0, 101.6)),  # op-amp bypass, at pin 8 (bottom side, rotation 0: pin 8 is lower right; r35 started it
+                             # above the chip and the annealer could not get it round, 6.1 mm)
+    ('R9',  (67.0, 94.0)),   # op-amp supply
+    ('D5',  (67.0, 97.0)),
+    ('C16', (67.0, 100.0)),  # 1206
+    ('R8',  (57.6, 94.6)),   # output side
+    ('D3',  (57.0, 92.6)),
+    ('D4',  (54.4, 92.6)),
+    ('R11', (60.2, 92.8)),   # 1206, last before J3-5
+    ('JP1', (42.6, 100.6)),  # TEST jumper
+    ('R3',  (46.6, 96.6)),   # pull-down on the buffer input
+    ('U4',  (49.0, 97.0)),   # buffer
+    ('U5',  (49.0, 101.4)),  # REF3030
+    ('C12', (46.6, 101.4)),  # VREF3 cap
+    ('C11', (51.6, 101.4)),  # REF input cap
+    ('R4',  (51.6, 97.0)),   # RC chain
+    ('C13', (51.6, 99.0)),
+    ('R5',  (54.0, 97.0)),
+    ('C14', (54.0, 99.0)),
+    ('R10', (42.6, 93.0)),   # CAN terminator
+    ('JP2', (42.6, 96.4)),
 ]
 CLEAR = 0.25                 # mm between a courtyard and any obstacle
-AREA = (48.8, 67.3, 71.2, 90.5)   # bottom placement area: between the module header rows, keeps the pin labels clear
+AREA = (41.0, 91.8, 79.0, 91.25 + GROW - 0.8)   # bottom placement area: the new strip, inside the edge keep-out
 # Upstream bottom tracks that cross the free area and carry little current; deleted so the router can redo them:
 # the battery-sense branch to module pad 7 (0.2 mm) and the module's +5V feed (0.5 mm, about 50 mA).
 # The 0.5 mm LSU_Heater+ bottom path (J3-4 to the regulator side) is a parallel supply path and stays.
-REROUTE = [('/LSU_Heater+', (47.0, 78.0, 56.0, 87.0)), ('+5V', (45.5, 84.0, 61.0, 91.0))]
+REROUTE = []   # with the strip there is room: upstream's tracks all stay (r1-r33 deleted two to make room)
+# REROUTE_r33 = [('/LSU_Heater+', (47.0, 78.0, 56.0, 87.0)), ('+5V', (45.5, 84.0, 61.0, 91.0))]
 # (keeping the LSU_Heater+ branch changes the obstacles and so the placement; it did worse on r27)
 # (keeping the +5V feed instead left no room to place everything, r9)
 CUTOUT = (48.41, 72.49, 57.11, 78.65)   # module cutout 48.76-56.76 x 72.84-78.30, grown 0.35 mm
@@ -151,7 +161,9 @@ def find_spot(fp, tx, ty, obstacles, placed):
 # Finisher before Freerouting, locked: every net local to the new stage, tightest first. Freerouting then only joins the
 # stage to upstream copper (+5V, LSU_Heater+, CAN, the module pads)
 PREROUTE = ['/AOUT_OA', '/AOUT', '/AOUT_INN', '/AOUT_F2', '/VREF3', '/AOUT_F1', '/AOUT_BUF', '/U6B_FB', '/VOP12',
-            '/CAN_TERM', '/AOUT_PWM', '/TEST_SEL2', '/LSU_Heater+', '/CAN_H', '/CAN_L', '+5V']
+            '/CAN_TERM']
+# (r1-r33 also pre-routed AOUT_PWM, TEST_SEL2 and local branches of LSU_Heater+, CAN_H/L, +5V on the crowded board;
+# in the strip those are long runs to upstream copper, left to Freerouting)
 # (+5V's local branch here made the rest fail: r24-r25.) LSU_Heater+: only the corner around module pad 7 and R9, where
 # the deleted battery-sense branch was
 LOCAL_BOX = {'/LSU_Heater+': (46.0, 79.0, 54.5, 89.5),
@@ -160,7 +172,15 @@ LOCAL_BOX = {'/LSU_Heater+': (46.0, 79.0, 54.5, 89.5),
 CROSS_MM = 2.0    # placement cost of one crossing of an upstream bottom track, in mm of net length
 # The op-amp's feedback loop (output, Cf, inverting input) and its filtered input weigh more: a small loop is better
 # for stability, and a loose C15 left the output unrouted on r13
-NET_WEIGHT = {'/AOUT_OA': 3.0, '/AOUT_INN': 3.0, '/AOUT_F2': 2.0}
+NET_WEIGHT = {'/AOUT_OA': 3.0, '/AOUT_INN': 3.0, '/AOUT_F2': 2.0, '/VOP12': 2.0, '/AOUT_PWM': 2.0, '/AOUT_J': 2.0}
+BYPASS = {'~C17': [('C17', '1'), ('U6', '8')],    # op-amp supply pin
+          '~C11': [('C11', '1'), ('U5', '1')],    # REF3030 input
+          '~C12': [('C12', '1'), ('U5', '2')],    # REF3030 output
+          '~C15a': [('C15', '1'), ('U6', '1')],   # Cf across the op-amp: a short AC feedback loop
+          '~C15b': [('C15', '2'), ('U6', '2')]}
+NET_WEIGHT.update({n: 8.0 for n in BYPASS})   # 4.0 left C17 6.1 mm and C15 6.6 mm from their pins (r35)
+# VOP12: C17 at pin 8 (r33 weighted it on the crowded board and broke routing; the strip has room). AOUT_PWM: keep the
+# 46.9 kHz edges short
 
 
 def anneal(board, nets, obstacles, seed=1, iters=200000):
@@ -221,6 +241,9 @@ def anneal(board, nets, obstacles, seed=1, iters=200000):
                 n = max(1, int(math.hypot(bx - ax, by - ay) / 0.5))
                 pts += [(ax + (bx - ax) * s / n, ay + (by - ay) * s / n) for s in range(n + 1)]
         anchors[name] = np.array(pts) if pts else None
+    # Bypass caps: a net's half-perimeter doesn't care where a cap sits inside it, so each cap is also tied to its IC pin
+    for name, pair in BYPASS.items():
+        netpads[name], anchors[name] = list(pair), None
     part_nets = {r: [n for n, ps in netpads.items() if any(q[0] == r for q in ps)] for r in refs}
     # Upstream bottom tracks: a straight pad-to-pad connection that crosses one needs a via pair or a long detour
     # (seed 7 of r13 left the op-amp output unrouted with C15 and R8 on opposite sides of two sensor tracks)
@@ -316,6 +339,7 @@ def main(route=True):
                                          capture_output=True, text=True, check=True).stdout)
     subprocess.run(['kicad-cli', 'pcb', 'upgrade', base], capture_output=True, check=True)
     board = pcbnew.LoadBoard(base)
+    grow_board(board, GROW)
 
     def net(name):
         n = board.FindNet(name)
@@ -513,6 +537,31 @@ def main(route=True):
     board.Save(OUT)
     shutil.rmtree(td)
     print('wrote', os.path.relpath(OUT, REPO))
+
+
+def grow_board(board, dy):
+    """Move the bottom edge of the outline (and of every copper pour that reaches it) down by dy mm."""
+    T, D = pcbnew.ToMM, pcbnew.FromMM(dy)
+    y_cut = 87.0   # below this: the bottom corner arcs and the bottom edge line
+    for d in board.GetDrawings():
+        if d.GetLayer() != pcbnew.Edge_Cuts:
+            continue
+        a, b = d.GetStart(), d.GetEnd()
+        if T(d.GetBoundingBox().GetY()) > y_cut:
+            d.Move(pcbnew.VECTOR2I(0, D))                      # bottom arcs and line: shift
+        elif d.GetShape() == pcbnew.SHAPE_T_SEGMENT and abs(T(a.x) - T(b.x)) < 0.1:
+            if T(a.y) > T(b.y):                                # side lines: stretch the lower end
+                d.SetStart(pcbnew.VECTOR2I(a.x, a.y + D))
+            else:
+                d.SetEnd(pcbnew.VECTOR2I(b.x, b.y + D))
+    for z in board.Zones():
+        o = z.Outline()
+        for i in range(o.TotalVertices()):
+            v = o.CVertex(i)
+            if T(v.y) > y_cut:
+                o.SetVertex(i, pcbnew.VECTOR2I(v.x, v.y + D))
+    e = board.GetBoardEdgesBoundingBox()
+    print(f'board grown by {dy} mm: {T(e.GetWidth()):.1f} x {T(e.GetHeight()):.1f} mm')
 
 
 def close_d3_link(board):

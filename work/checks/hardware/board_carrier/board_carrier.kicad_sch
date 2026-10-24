@@ -8850,6 +8850,82 @@
 	)
 	(symbol
 		(lib_id "Device:R")
+		(at 381 213.36 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "01f89466-1600-5b23-9a2c-b38d2b829a45")
+		(property "Reference" "R11"
+			(at 384.81 212.09 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "470"
+			(at 384.81 214.63 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_1206_3216Metric"
+			(at 381 213.36 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Datasheet" ""
+			(at 381 213.36 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Description" ""
+			(at 381 213.36 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "LCSC" "C4502"
+			(at 381 213.36 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(pin "1"
+			(uuid "ba12b5e5-7e09-5c00-a0f6-dce28764d948")
+		)
+		(pin "2"
+			(uuid "f4488225-1736-55b8-8505-a56414fcd116")
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
 		(at 215.9 213.36 0)
 		(unit 1)
 		(body_style 1)
@@ -10911,6 +10987,26 @@
 		(uuid "484d5223-314e-5cc8-8c45-ee49a9896122")
 	)
 	(label "AOUT"
+		(at 381 209.55 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "7205468d-9eb4-530f-b68d-17993ad076e7")
+	)
+	(label "AOUT_J"
+		(at 381 217.17 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "6d20bce7-58a8-59b8-aecb-1c82bada2579")
+	)
+	(label "AOUT_J"
 		(at 135.255 137.16 0)
 		(effects
 			(font
@@ -10918,7 +11014,7 @@
 			)
 			(justify left bottom)
 		)
-		(uuid "a3df6550-acd0-534a-9eee-b22a70168b02")
+		(uuid "e945b663-6ab1-5d1b-86e8-014a8acc8582")
 	)
 	(label "LSU_Heater+"
 		(at 215.9 209.55 0)
