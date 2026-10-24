@@ -131,3 +131,15 @@ Raw results: `audit/codex-2026-10-23/full-scale-ramped.jsonl`. Conditions and re
 
 Checked: DRC delta still 0 new/0 open; no drift before audit; small-signal stability independently reproduced.
 Not checked: hardware, fault survival, BOM availability/rotation, complete firmware runtime behavior. Prior host-test result was not rerun.
+
+### Round 4 follow-through, part 1 — 2026-10-24, Claude Opus 5.5 (designer), local only
+Codex's round 4 (board r41, reviewed `fad8032`) is on its PR branch `codex/r41-independent-review` (fork PR #1), **not merged**:
+the owner holds pushing and merging until the outside reviewer (the owner's cousin, his own Opus) has audited
+(owner, 2026-10-24). This answers its findings on `analog-out` locally; the round's table lives on that branch.
+
+| ID | Verified | Follow-through | Status |
+| --- | --- | --- | --- |
+| R41-CX1 (BUG, stack checker) | Yes: Codex's reproducer reports 8 of 256 B, exit 0, for a 408 B nested use | `checks/stack_estimate.py` reads candidate targets from `.text` literal pools too, fails an indirect call with no candidate, and excludes thread entries by their demangled names (the old exclusion compared `CanTxThread` with `CanTxThread(void*)` and never matched). Regression `checks/test_stack_estimate.py` (3 cases; the old checker gets all 3 wrong). Production f0: 22 targets, smallest margin 64 B (was 80 B), 15 loops through indirect calls still cut (listed with `-v`) | fixed locally |
+| R41-CX2 (BUG, sim wrappers) | Yes: `load_accuracy.sh` printed an empty value and exited 0; `stability.sh` printed missing values as 0 | Both wrappers keep ngspice's output, require exit 0 **and** every voltage numeric, print `FAILED` per case and exit 1. A missing settling crossing prints "not found" (topology A at 10 nF, not built, had been printing 0 us). Regression `checks/test_sim_failures.py` (fake ngspice: exits 1, exits 0 without a value, partial, answers). Real runs: stability 25 cases and load accuracy 48 cases all valid, exit 0, numbers as before | fixed locally |
+| Second pass (unfinished, uncommitted on Codex's branch): heater duty when the sensor runs hot | Yes, by reading upstream's code: `heater_control.cpp:187` voltage = 7.5 - PID(ESR); kP 0.3 per ohm, so about 20 C above target the voltage goes negative; `:228-230` duty = (V / Vbatt)^2 squares it back to a large positive duty; nothing clamps V at 0. Codex's run: 806 C -> 65 % duty, 840 C -> 100 % (clipped), where 0 is wanted. Bounded by the overheat stop (target + 100 C for 0.5 s -> Stopped, latched): the reading is lost, the sensor is protected (INFERRED) | Upstream code, not ours. Fix and test prepared on local branch `heater-clamp` (clamp V at 0, a host test that fails without it); **owner decides** whether it goes into our firmware and whether to report it upstream | open: owner |
+| Second pass: four retried full-scale corners (10k, 4.7k at 7 V and 9 V, pull-up mid-scale) | Codex's decks (supply feed, clamp diodes, ideal 5 V) failed to converge or timed out; our `load_accuracy.sh` (fixed 12 V, no clamps) gives all 48 cases | Corners with the real supply feed and clamps remain unresolved; not interpolated | open |

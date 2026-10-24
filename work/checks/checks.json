@@ -235,5 +235,26 @@
       "../firmware/pump_control.cpp",
       "../firmware/sampling_thread.cpp"
     ]
+  },
+  {
+    "name": "Stack checker: known-answer Cortex-M0 cases incl. a pointer in a literal pool (Codex R41-CX1)",
+    "cmd": [
+      "python3",
+      "checks/test_stack_estimate.py"
+    ],
+    "files": [
+      "checks/stack_estimate.py"
+    ]
+  },
+  {
+    "name": "Sim wrappers fail when ngspice gives no valid result (Codex R41-CX2)",
+    "cmd": [
+      "python3",
+      "checks/test_sim_failures.py"
+    ],
+    "files": [
+      "sim/stability.sh",
+      "sim/load_accuracy.sh"
+    ]
   }
 ]

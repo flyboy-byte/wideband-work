@@ -5,8 +5,8 @@
 
 Static estimate, not a measurement. From the disassembly: each function's frame is its pushes plus `sub sp, #n`; edges are
 direct calls (`bl`) and tail branches into another function. An indirect call (`blx rN`: virtual calls, function
-pointers) is charged the deepest function whose address appears in flash data (vtables, pointer tables), so the result
-can only overestimate there. Recursion is reported, not followed. ChibiOS reserves the exception frame and interrupt
+pointers) is charged the deepest function whose address appears anywhere in the image (vtables, pointer tables, and
+literal pools in .text), so the result can only overestimate there; an indirect call with no candidate fails. Recursion is reported, not followed. ChibiOS reserves the exception frame and interrupt
 headroom outside the n of THD_WORKING_AREA(wa, n) (PORT_WA_SIZE), so each thread's depth is compared with n.
 Exit 1 if any thread's estimate exceeds its stack, or the analysis meets something it can't bound.
 """
@@ -79,9 +79,12 @@ def main():
         elif re.match(r'blx\s+r\d+', ins):
             indirect[cur] += 1
 
-    # Functions whose address is stored in flash data: the possible targets of an indirect call
+    # Functions whose address is stored anywhere in the image: the possible targets of an indirect call. That includes
+    # .text, where Thumb code keeps constants in literal pools after each function: a pointer loaded from there and
+    # called with blx was missed when only .rodata/.data were read (Codex R41-CX1, 2026-10-24). Instruction words that
+    # happen to look like a function address only add targets, so the estimate can only grow.
     words = set()
-    for sec in ('.rodata', '.data'):
+    for sec in ('.text', '.rodata', '.data'):
         try:
             dump = run('arm-none-eabi-objdump', '-s', '-j', sec, str(ELF))
         except subprocess.CalledProcessError:
@@ -91,7 +94,11 @@ def main():
             if m:
                 for w in m.group(2).split():
                     words.add(int.from_bytes(bytes.fromhex(w), 'little'))
-    targets = {starts[w & ~1] for w in words if w & 1 and (w & ~1) in starts} - set(THREADS) - {'main'}
+    # Thread entries are started by ChibiOS on their own stacks, never called from another thread's code (their addresses
+    # sit in literal pools as chThdCreateStatic arguments); names are demangled, e.g. 'CanTxThread(void*)'
+    entry = lambda n: n == 'main' or n.split('(')[0] in THREADS
+    targets = {starts[w & ~1] for w in words if w & 1 and (w & ~1) in starts and not entry(starts[w & ~1])}
+    unbounded = [f for f, n in indirect.items() if n] if not targets else []
 
     memo, stack, kinds = {}, [], []
     recursion, cut = set(), set()
@@ -126,7 +133,7 @@ def main():
         return ' > '.join(out)
 
     print(f'{ELF.relative_to(REPO) if ELF.is_relative_to(REPO) else ELF}: {len(frame)} functions, '
-          f'{len(targets)} indirect-call targets (address in flash data)')
+          f'{len(targets)} indirect-call targets (address stored in the image)')
     worst_margin = None
     entries = {}
     for name, (n, src) in THREADS.items():
@@ -177,6 +184,8 @@ def main():
         if VERBOSE:
             for c in sorted(cut):
                 print(f'       {c}')
+    for f in unbounded:
+        problems.append(f'{f}: indirect call with no possible target found, not bounded')
     for r in sorted(recursion):
         problems.append(f'recursion, not bounded: {r}')
     for p in problems:

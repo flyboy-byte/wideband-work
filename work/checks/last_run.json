@@ -1,6 +1,6 @@
 {
  "date": "2026-10-24",
- "git_head": "0bebc0c",
+ "git_head": "fad8032",
  "results": [
   {
    "name": "DRC module (errors)",
@@ -177,13 +177,30 @@
   {
    "name": "Firmware: static worst-case stack per thread fits (F8 estimate, f0 build)",
    "status": "pass",
-   "summary": "stack estimate: ok, smallest margin 80 B",
+   "summary": "stack estimate: ok, smallest margin 64 B",
    "files": {
     "../firmware/auxout.cpp": "417044786829",
     "../firmware/can.cpp": "65a7078908bf",
     "../firmware/heater_thread.cpp": "1c61085261f8",
     "../firmware/pump_control.cpp": "6449053857fe",
     "../firmware/sampling_thread.cpp": "65d58bbf0b52"
+   }
+  },
+  {
+   "name": "Stack checker: known-answer Cortex-M0 cases incl. a pointer in a literal pool (Codex R41-CX1)",
+   "status": "pass",
+   "summary": "stack checker cases: 3, 0 wrong verdict(s)",
+   "files": {
+    "checks/stack_estimate.py": "4a8fc8d65248"
+   }
+  },
+  {
+   "name": "Sim wrappers fail when ngspice gives no valid result (Codex R41-CX2)",
+   "status": "pass",
+   "summary": "sim wrappers: 0 wrong verdict(s)",
+   "files": {
+    "sim/stability.sh": "34e48e6b3d5a",
+    "sim/load_accuracy.sh": "c9a8b3e9ea4e"
    }
   }
  ]

@@ -69,9 +69,11 @@ Mark a stage done only when its exit condition is true. Strike through, don't de
 | Firmware: HardFault entry reaches the C handler on a Cortex-M0 (F9, QEMU microbit) | PASS | fault entry on Cortex-M0: as expected | 2026-10-24 | `main_hardfault_asm.S` d32262764759, `main.cpp` f1c2e96ebf08 |
 | Firmware: host gtest suite (sampler, heater, F7, F1 bounds, D10 watchdog) | PASS | [  PASSED  ] 69 tests. | 2026-10-24 | `heater_control.cpp` c4a69cba915d, `sampling.cpp` 8a229de01887, `watchdog.h` 3c55e521fda5, `bootloader_bounds.h` 72e216e2e7bc |
 | Firmware: analog output host tests, production auxout/pump_dac/can_helper on the f0 config (F3-F6) | PASS | [  PASSED  ] 21 tests. | 2026-10-24 | `auxout.cpp` 417044786829, `pump_dac.cpp` ac1d4bf351de, `can_helper.cpp` dc0ba8d660e6, `aux_curve.h` bb88ea23e570, `wideband_board_config.h` 7c5b76b0011c |
-| Firmware: static worst-case stack per thread fits (F8 estimate, f0 build) | PASS | stack estimate: ok, smallest margin 80 B | 2026-10-24 | `auxout.cpp` 417044786829, `can.cpp` 65a7078908bf, `heater_thread.cpp` 1c61085261f8, `pump_control.cpp` 6449053857fe, `sampling_thread.cpp` 65d58bbf0b52 |
+| Firmware: static worst-case stack per thread fits (F8 estimate, f0 build) | PASS | stack estimate: ok, smallest margin 64 B | 2026-10-24 | `auxout.cpp` 417044786829, `can.cpp` 65a7078908bf, `heater_thread.cpp` 1c61085261f8, `pump_control.cpp` 6449053857fe, `sampling_thread.cpp` 65d58bbf0b52 |
+| Stack checker: known-answer Cortex-M0 cases incl. a pointer in a literal pool (Codex R41-CX1) | PASS | stack checker cases: 3, 0 wrong verdict(s) | 2026-10-24 | `stack_estimate.py` 4a8fc8d65248 |
+| Sim wrappers fail when ngspice gives no valid result (Codex R41-CX2) | PASS | sim wrappers: 0 wrong verdict(s) | 2026-10-24 | `stability.sh` 34e48e6b3d5a, `load_accuracy.sh` c9a8b3e9ea4e |
 
-Written by `checks/run_all.py` at commit 0bebc0c. Don't edit by hand.
+Written by `checks/run_all.py` at commit fad8032. Don't edit by hand.
 <!-- checks:end -->
 
 ## Bring-up results
@@ -85,6 +87,8 @@ Written by `checks/run_all.py` at commit 0bebc0c. Don't edit by hand.
 ## Open register (2026-10-24, end of session)
 - 2026-10-24 External-review prep done: `REVIEW.md`; checks use `origin/master` when a clone has no local `master` (`checks/upstream_ref.py`); reviewers' raw output under `audit/<reviewer>-<date>/` is now tracked (packs are not); a fresh clone ran all 20 checks after building bootloader + app (stack check needs the ELF). pcb-design skill lessons added (pad pairing by pin function, fab warnings in the DRC gate, BOM from the board, independent fab-file check, outside reviewers, SPICE memory): dotfiles commit 70aa5e9, pushed 2026-10-24.
 - Owner (do not re-ask): engine-bay heat is not a design driver for this prototype.
+- Owner (2026-10-24, do not re-ask): no pushing or merging until the outside reviewer (his cousin's Opus) has audited; keep working locally. Upstream's own analog output (PR #352, merged 2026-10-24) is not used: we use our design (`docs/analog-out.md`).
+- 2026-10-24 Codex round 4 on fork PR #1 (not merged). CX1 stack checker and CX2 sim wrappers fixed locally (`AUDIT.md`, follow-through part 1). Upstream heater bug (negative voltage squared to full duty when the sensor runs hot): fix prepared on local branch `heater-clamp`, owner decides.
 - **Board/fab**: audit round 4 (Codex, plus an outside Opus reviewer via `REVIEW.md`): ~~rebuild the pack first~~ done 2026-10-24 at r41 (`checks/review_pack.sh`). ~~Push needed before an outside reviewer can clone~~ pushed 2026-10-24. JLC quote (owner): Gerbers in JLC's viewer, placement preview (D2 first), stock C13585/C14663/C15849/C7934, edge rails (C11 1.85 mm from edge), Basic 470R 1206 for R11. TODO `docs/ordering.md` (quote steps, options, APIs, substitution rule: change LCSC in the generator, regenerate, re-export, rerun `jlc_rotation.py`).
 - **Module board (not prepared)**: upstream rev C exports current (2026-03-22); 4 layers, 29.0 x 20.9 mm, 60 parts; J1/J3 headers bottom (owner solders), J2 Tag-Connect pads. Run our rotation/fab checks on it.
 - **Firmware**: never run on hardware; first-flash hardware unchosen (D4, money); trim needs reflash per board; watchdog heater loop only (W1); stack high-water on hardware; RAM 0 B free; F1/F9 not reported upstream (owner).

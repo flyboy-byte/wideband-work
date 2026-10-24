@@ -139,6 +139,7 @@ and stop for money, deletion, overwriting his edits or publishing.
 - separate repos or folders
 - ~~keeping the deleted LSU_Heater+/+5V bottom tracks (worse, r9/r27)~~ superseded r34: on the grown board all upstream tracks stay
 - negotiating the whole +5V branch (deadlock, r24-r25)
+- using upstream's own analog output (rusEFI PR #352, merged 2026-10-24): we use our own design (owner, 2026-10-24); facts in `work/docs/analog-out.md`
 
 ## Layout
 

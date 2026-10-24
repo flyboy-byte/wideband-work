@@ -48,14 +48,28 @@ quit
 .endc
 .end
 CIR
-  local r; r=$(ngspice -b "$f" 2>/dev/null | grep '^RES' | cut -d' ' -f2-)
+  local out rc r; out=$(ngspice -b "$f" 2>&1); rc=$?
   rm -f "$f"
+  r=$(grep '^RES' <<< "$out" | head -1 | cut -d' ' -f2-)
   read -r v0 vf vpk os late ts <<< "$r"
-  printf '%s  Cload=%-4s Cf=%-4s  before %.4f V  after %.4f V  peak %.4f V  overshoot %6.1f %%  ripple at end %6.2f mV  settles (1%%) %5.0f us\n' \
-    "$1" "$2" "$3" "$v0" "$vf" "$vpk" "$os" "$late" "$ts"
+  local num='^-?[0-9]+(\.[0-9]+)?([eE][-+]?[0-9]+)?$' x
+  # the settling time is a WHEN crossing that may not exist (a stage that never settles into the 1 % band):
+  # print it as not found; every voltage must be there
+  [[ $ts =~ $num ]] || ts=nan
+  for x in "$v0" "$vf" "$vpk" "$os" "$late"; do
+    if [ $rc -ne 0 ] || ! [[ $x =~ $num ]]; then
+      # a missing measurement used to print as 0 (Codex R41-CX2): report it and fail the sweep
+      printf '%s  Cload=%-4s Cf=%-4s  FAILED (ngspice exit %s, measurements: %s)\n' "$1" "$2" "$3" "$rc" "${r:-none}"
+      FAILED=$((FAILED + 1)); return
+    fi
+  done
+  printf '%s  Cload=%-4s Cf=%-4s  before %.4f V  after %.4f V  peak %.4f V  overshoot %6.1f %%  ripple at end %6.2f mV  settles (1%%) %5s us\n' \
+    "$1" "$2" "$3" "$v0" "$vf" "$vpk" "$os" "$late" "$( [ "$ts" = nan ] && echo 'not found' || printf '%.0f' "$ts")"
 }
+FAILED=0
 for c in 1p 1n 10n 47n; do run A $c -; done
 for c in 1p 1n 10n 47n; do run B $c -; done
 for cf in 100p 1n; do for c in 1p 1n 10n 47n; do run C $c $cf; done; done
 for c in 1p 1n 10n 47n; do run D $c 1n 470; done
 for c in 1p 1n 10n 47n 100n; do run E $c 1n 470; done
+[ "$FAILED" -eq 0 ] || { echo "$FAILED case(s) FAILED: no valid result; not a pass"; exit 1; }

@@ -33,6 +33,27 @@ FROM MEMORY = model recall, must be checked; UNKNOWN = not found.
 | F15 | The analog-output code (`auxout.cpp`, 8-point curve per output) is only built for boards that define `AUXOUT_DAC_PWM_DEVICE` (F1 boards); f0 does not | DOCUMENTED | `grep AUXOUT_DAC_PWM_DEVICE boards/*/*` |
 | F16 | f0 shares the `Configuration` struct that already holds the aux curves (256 bytes, 1 KB flash page); f0 has no UART/TunerStudio and no `LoadDefaults()`, so the curve must be compiled in | DOCUMENTED / INFERRED | `boards/port.h`, `boards/f0_module/wideband_layout.ld:11`, `halconf.h` |
 
+## Upstream's own analog output (rusEFI PR #352, merged 2026-10-24; read, not built)
+
+Upstream merged an f0 analog output on 2026-10-24: PR #352 by dynfer ("for dumb stuff like gauges or simple ADC
+screens"), merged by mck1117, then four tidy-up commits up to `b2b098d` (DOCUMENTED: `gh pr view 352 -R mck1117/wideband`,
+`git log master..upstream/master`). It is **not** in this fork: our `master` is `2bb80d2`.
+
+| # | What | Tag | Source |
+| --- | --- | --- | --- |
+| U1 | `analog.cpp`: lambda clamped to 0.68-1.36, duty = (lambda - 0.68) / 0.68, so 0-100 % = AFR 10-20, our curve; set on every sample from the sampling thread; no invalid-lambda value, no trim, no test mode | DOCUMENTED | `upstream/master:firmware/analog.cpp`, `sampling_thread.cpp` |
+| U2 | Output device `ANALOG_PWM_DEVICE PWMD3`, `ANALOG_PWM_CHANNEL 0`, own `PWMConfig` (SYSCLK, period 4096) started before `InitPumpDac()` | DOCUMENTED | `upstream/master:firmware/boards/f0_module/wideband_board_config.h`, `analog.cpp`, `main.cpp` |
+| U3 | The pump DAC is also `PWMD3` channel 0 (PA6, F9), period 1024, started after it | DOCUMENTED | `upstream/master:firmware/boards/f0_module/io/io_pins.h`, `pump_dac.cpp` |
+| U4 | So the analog output writes the pump DAC's own timer channel on every sample, and the pump DAC's later `Start` replaces the analog config: the pump current would be disturbed | INFERRED (from U2 + U3; not built, not run) | |
+| U5 | PA15 is switched to AF2 (TIM2_CH1 on the F042, FROM MEMORY), pull-up, high speed; the code never drives TIM2 | DOCUMENTED (board.h diff) / FROM MEMORY (AF table) | `git diff master upstream/master -- firmware/boards/f0_module/board.h` |
+| U6 | PA15 is not routed on the module (F12), so the module has no pad for it | DOCUMENTED | F12 |
+| U7 | Raw 3.3 V PWM: a 0-5 V output still needs a filter and gain off the module (our carrier stage) | INFERRED | U1 |
+
+What it means here: our hardware does not change (SEL_1 = PB1 is a pad that exists, TIM3_CH4 at the pump DAC's
+config, F9-F11). Merging upstream later conflicts with our firmware (both change `can.cpp`, `main.cpp`, the f0 config and
+the sampling thread). Whether to tell upstream about U4/U6, or offer ours, is the owner's call; held until the outside
+audit is done (owner, 2026-10-24: no pushing or merging until then).
+
 ## Attempt log
 
 | # | Proposal | By | Result |

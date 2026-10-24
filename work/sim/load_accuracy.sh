@@ -32,9 +32,18 @@ quit
 .endc
 .end
 CIR
-  local r; r=$(timeout 300 nice -n 19 ngspice -b "$f" 2>/dev/null | grep '^RES'); rm -f "$f"
-  printf '%s  target %.3f V  %-16s -> %s V\n' "$1" "$(echo "$2 * 1.68" | bc -l)" "${3#RL }" "${r#RES }"
+  local out rc r; out=$(timeout 300 nice -n 19 ngspice -b "$f" 2>&1); rc=$?; rm -f "$f"
+  r=$(grep '^RES' <<< "$out" | head -1); r=${r#RES }; r=${r// /}
+  if [ $rc -ne 0 ] || ! [[ $r =~ ^-?[0-9]+(\.[0-9]+)?([eE][-+]?[0-9]+)?$ ]]; then
+    # ngspice can exit 0 after a failed operating point and print no value (Codex R41-CX2): count it as a failure
+    printf '%s  target %.3f V  %-16s -> FAILED (ngspice exit %s, %s)\n' "$1" "$(echo "$2 * 1.68" | bc -l)" "${3#RL }" \
+      "$rc" "$(grep -m1 -i 'error\|fail\|singular\|timestep' <<< "$out" || echo 'no measurement')"
+    FAILED=$((FAILED + 1)); return
+  fi
+  printf '%s  target %.3f V  %-16s -> %s V\n' "$1" "$(echo "$2 * 1.68" | bc -l)" "${3#RL }" "$r"
 }
+FAILED=0
 for t in D E; do for v in 0.05952 0.5952 1.4881 2.9762; do
   for l in "RL conn 0 100k" "RL conn 0 10k" "RL conn 0 4.7k" "RL conn v5 47k" "RL conn v5 10k" "RL conn v5 4.7k"; do run $t $v "$l"; done
 done; done
+[ "$FAILED" -eq 0 ] || { echo "$FAILED case(s) FAILED: no valid result; not a pass"; exit 1; }
