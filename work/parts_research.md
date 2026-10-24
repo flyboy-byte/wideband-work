@@ -20,3 +20,13 @@ use the maker drawing and note it. Every value has a source URL; mark scaled val
 - AEM X-Series: closed, 0-5 V analog plus CAN, about 20 ms [REPORTED, one retailer review].
 - Speeduino and Hondata FlashPro wideband input compatibility: UNKNOWN, not found in sources; check their docs.
 - Conflict to resolve: a rusEFI wiki snippet says AEM X-Series CAN protocol is supported; mck1117 `firmware/can.cpp` only sends the rusEFI format. Check the dron0gus fork used by lambda-x2.
+
+## JLC part class and stock for the r40 BOM (2026-10-24)
+REPORTED: EasyEDA component data fetched 2026-10-24 (`checks/easyeda/<LCSC>.json`, fields "JLCPCB Part Class", `lcsc.stock`).
+`lcsc.stock` is LCSC's warehouse, not JLC's assembly stock; the JLC quote page is the final word on both.
+- 25 BOM lines, 7 Extended (a setup fee each): D1 C151279 SMCJ24CA, D5 C173425 BZT52C18, R11 C4502 470R 1206,
+  U1 C38695 TJA1051T/3, U4 C12519 74LVC1G125GW, U5 C38423 REF3030, U6 C7934 LM2904DR. R11 is the one a Basic 470R 1206
+  could probably replace: C17969 checked 2026-10-24, it is 47R and Extended, so no; look in the JLC parts search at quote time.
+- Low or zero LCSC stock: C13585 10u 1206 (x5 per board) 0; C14663 100n 0603 (C17) 0; C15849 1u 0603 (x3) 50;
+  C7934 LM2904DR 112. Check these on the quote; a substitute must keep the voltage rating (C16 and C17 sit on the
+  18 V op-amp rail: 25 V or more; C7-C10 are upstream's).
