@@ -31,7 +31,7 @@ Probe plan:
 - drives a sensor heater (switched load, high current) -> heater current and MOSFET thermal, what stops it driving a cold sensor:
 - reads a precision analog sensor (pump cell) -> calibration method, noise, what the owner can verify without a scope:
 - CAN bus -> termination, which ECU/bus it joins, ID/protocol (`wideband-can.dbc`):
-- ships to others? (not stated) -> case, label:
+- ships to others? (not stated) -> case, label: owner designs his own enclosure in CAD (2026-10-23); upstream's case.STL is not a limit
 
 ## What working means (bring-up tests, decided before layout)
 Checkable with the owner's bench. Changing one later needs a dated reason in `STATE.md`.

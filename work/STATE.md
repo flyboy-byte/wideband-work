@@ -23,6 +23,7 @@ Mark a stage done only when its exit condition is true. Strike through, don't de
 | 11 | Bring-up | Bring-up tests from `REQUIREMENTS.md` run and recorded below; RISK items checked; lessons in `LESSONS.md` | |
 
 ## Decisions already made (do not re-ask)
+- 2026-10-23 No size limit from upstream's `case/case.STL`: the owner designs his own enclosure in CAD ("what case. i do cad"). The carrier may grow; not going upstream, so no compatibility to keep. Next: fit check for a larger outline (about 40 x 52 mm), analog stage to the top if it fits, D6 series resistor — owner.
 - 2026-10-23 Test and audit effort goes to the big things: circuits (analog stage, power), the heater drive, the control loops (heater, pump) and firmware. Lighter checks for routine parts and docs — owner.
 - 2026-10-23 No simulated-narrowband output. FlashPro use is datalogging over the 0-5 V input; stock ECU closed loop stays on its narrowband sensor — owner.
 - 2026-10-23 Base stays the f0 module + a new carrier; lambda-x2 is not forked (its analog out is the same circuit). Copy its output stage, add a reference buffer and trim — owner ("keep going").
