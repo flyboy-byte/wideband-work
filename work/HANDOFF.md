@@ -1,5 +1,11 @@
 # HANDOFF — dense session context (read after STATE.md)
 
+## F7 done — 2026-10-23 (Claude Opus 5.5)
+
+13 heater `Update()` tests (host suite 64/64). Standalone f0 assumes 13 V supply: D11 (module PB0 has the divider; RAM 0 B).
+Remaining from Codex's plan: F6 thread cadence; circuit C1-C3, C7 (need owner answers: receiver load, endpoint tolerance,
+fault survival requirement, grounding policy); owner decisions D1, D2, D7-D11.
+
 ## F8 estimate done — 2026-10-23 (Claude Opus 5.5)
 
 `checks/stack_estimate.py`: all threads fit, smallest margin 80 B (pump), CAN TX 312/512. Needs an f0 build in

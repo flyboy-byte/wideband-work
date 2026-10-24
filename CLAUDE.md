@@ -62,7 +62,7 @@ python3 checks/drift.py record ../hardware/board_carrier/board_carrier.kicad_pcb
 sim/stability.sh                                   # LM2904 stability vs cable capacitance (needs TI model in sim/models/, gitignored)
 cd firmware && make -j12 BOARD=f0_module           # firmware; also `BOARD=f1_dual` must still build
 
-# upstream gtest suite + ours (host build; CI runs it under ASAN, then valgrind with SANITIZE=no). 51 pass (2026-10-23)
+# upstream gtest suite + ours (host build; CI runs it under ASAN, then valgrind with SANITIZE=no). 64 pass (2026-10-23)
 git submodule update --init test/googletest        # not checked out by default
 B=$(mktemp -d) && mkdir -p $B/obj $B/lst && (cd test && make -j8 BUILDDIR=$B) && ASAN_OPTIONS=detect_stack_use_after_return=1 $B/wideband_test
 $B/wideband_test --gtest_filter='BootloaderBounds*' # single test / suite

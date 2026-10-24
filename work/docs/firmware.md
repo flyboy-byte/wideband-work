@@ -58,6 +58,24 @@ The f0 CAN bootloader accepted DATA writes up to 26 KiB into a 25 KiB app partit
 Fixed with `bootloader/bootloader_bounds.h`, bounds from the linker script; details and evidence in
 `flashing-and-test-plan.md`. Upstream's bug, not ours; a candidate to report upstream (owner's call).
 
+## Heater control tests (F7, 2026-10-23)
+
+`test/tests/test_heater_update.cpp` (13 tests, in the upstream suite, now 64/64): the whole `HeaterControllerBase::Update()`
+path every 50 ms with the board's preheat/warmup times, not just `GetNextState()`. Covered: duty = (V_eff/V_supply)^2;
+preheat 2 V; supply below 3 V taken as 12 V; heater off at >= 23 V; ramp from 7 V at 0.4 V/s capped at 12 V; standalone
+start without CAN (ramp at about 5.6 s with 13 V, about 10.5 s on f0 where the sampler reports 0 V for the first 5 s);
+warmup timeout -> Stopped, duty 0; sensor disconnect (reads 0 C) in closed loop stops within 0.5 s and stays stopped;
+exact boundaries (closed loop above 750 C, over/underheat beyond 880/680 C for > 0.5 s); CAN "no heat" holds preheat.
+Mutants (23 -> 24 V cut-off; > -> >= on closed-loop entry) each fail a test.
+
+Recorded, not changed (upstream's design): **without CAN the f0 assumes a 13 V supply** (`Sampler::GetInternalHeaterVoltage()`
+returns 13 after 5 s; `port.cpp` sets the measured value to 0, "TODO"). At 14.4 V running the open-loop phases get about
+11 % more effective voltage than intended (preheat about 2.2 V against the 2 V condensation limit in the code's comment;
+ramp end about 13.3 V); closed loop corrects through ESR [INFERRED, calculation]. The module already has the hardware:
+VBatt_Sense (module pad 7, our protected 12 V) -> R20 100k / R21 10k, C6 1 uF -> MCU PB0 [DOCUMENTED: module PCB nets].
+Reading it costs one ADC channel in the sample buffer (about 48 B RAM at 24 samples, INFERRED) with 0 B free: owner
+decision D11.
+
 ## Analog output host tests (F3-F6) and the test-mode bug they found (2026-10-23)
 
 `test/aux_out/` builds the production `auxout.cpp`, `pump_dac.cpp` and `can_helper.cpp` against the real f0_module board

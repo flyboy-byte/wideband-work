@@ -29,6 +29,11 @@ board image showing pad 1 and cable orientation, and verify the exact probe's co
 generic cable color chart. Target-voltage sense is not permission to power the heater from the programmer. Select and
 verify one power arrangement, common ground and target voltage first; avoid back-powering from simultaneous sources.
 
+### F7 heater coverage — DONE, 2026-10-23 (Claude Opus 5.5)
+
+`test/tests/test_heater_update.cpp`, 13 tests through `Update()`; two mutants caught; host suite 64/64. Found no bug; found
+that f0 without CAN assumes 13 V (owner decision D11). Details in `firmware.md`. No real sensor was heated.
+
 ### F8 static stack estimate — DONE as an estimate, 2026-10-23 (Claude Opus 5.5)
 
 `python3 work/checks/stack_estimate.py [ELF] [-v]` (in `run_all.py`): per-thread worst case from the f0 ELF's disassembly;
