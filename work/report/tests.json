@@ -1,47 +1,59 @@
 {
- "headline": "Carrier PCB routing is complete: 0 new DRC violations and 0 open connections against upstream's own baseline. Nothing is ordered or built, and the audit has not happened yet.",
+ "headline": "Board grown to 40.0 x 51.5 mm with a 12 V-fault resistor (R11) at the output; routed clean on the first run (0 new DRC, 0 open, 0 layout-review flags). Nothing ordered or built; no outside audit yet.",
  "tests": [
   {
-   "id": "T1",
-   "what": "Route D3's +5V via straight to U2 pin 3 on the top layer (3 shapes of the path: square, diagonal, 0.2 mm wide).",
+   "id": "r33",
+   "what": "Pull C17 toward the op-amp on the old small board (placement weight).",
    "state": "done",
-   "result": "Closes the connection in all three, but the new track cuts the top ground pour: C1 pin 2 floats (1 open) and C2 pin 2 is thermally starved."
+   "result": "6 open connections: reverted. Showed the small board was the limit."
   },
   {
-   "id": "T2",
-   "what": "Grid of ground via positions around C1 pin 2, each with a 0.2 mm tie to the pad (31 of 42 run; I stopped it once a winner was clear).",
+   "id": "r34",
+   "what": "Grow 15 mm, stage into the strip, add R11, keep all upstream tracks.",
    "state": "done",
-   "result": "5 positions left only C2 pin 2 (1 new violation, x 65.3-66.1, y 79.35-79.5). The rest gave 2 to 11. I used 66.00, 79.35."
+   "result": "0 new / 0 open first try. Layout review: CAN_L ran 0.3 mm beside the output for 6.8 mm."
   },
   {
-   "id": "T3",
-   "what": "Give C2 pin 2 a solid pour connection (no thermal spokes) on top of T2's best via.",
+   "id": "r35",
+   "what": "Move the CAN terminator off the output's corridor.",
    "state": "done",
-   "result": "0 new violations, 0 open on the scratch copy. Recorded as FIX_D3."
+   "result": "Coupling clean (nothing within 1 mm). C17 still 6.1 mm from its pin."
   },
   {
-   "id": "T4",
-   "what": "Put FIX_D3 in the generator and regenerate the whole carrier with seed 7.",
+   "id": "r36",
+   "what": "Start C17/C15 on the right side of the chip; tie caps to their pins.",
    "state": "done",
-   "result": "Same result on the regenerated board: 0 new, 0 open, 0 new vias in pads, no drift."
+   "result": "0/0/0, no review flags; C17 2.1 mm, C15 2.3 mm. Current board."
   },
   {
-   "id": "T5",
-   "what": "Look at the render of the changed area.",
-   "state": "done",
-   "result": "Track runs via to U2 pin 3; C2 pin 2 merged into the pour; C1 via sits clear of both U2 pin 3 and C1 pin 1."
-  },
-  {
-   "id": "T6",
-   "what": "Second-model audit of the fix: C1 (heater supply bypass) now returns to ground through one 0.5 mm via and a 0.2 mm tie.",
+   "id": "D7",
+   "what": "Separate analog ground for J3-7 on the board (heater current shares the ground wires).",
    "state": "todo",
-   "result": "Listed under 'check first' in AUDIT.md. Reasoned, not simulated."
+   "result": "Default: no board change. Measure the real offset first with bring-up test A4 (mV between J3-7 and the ECU sensor ground, engine running)."
   },
   {
-   "id": "T7",
-   "what": "Fallback if T6 objects: move D3 beside U2 pin 3 in the generator, or clamp to C11's +5V pad. 4 min per run.",
+   "id": "D8",
+   "what": "Mounting holes in the new bottom corners for your enclosure.",
    "state": "todo",
-   "result": "Not needed now. Both written up in HANDOFF.md."
+   "result": "Default: none added. Say if you want them and where."
+  },
+  {
+   "id": "D9",
+   "what": "Put the analog stage on the top of the strip for one-sided (cheaper) JLC assembly.",
+   "state": "todo",
+   "result": "Default: bottom, as routed. Price difference unchecked."
+  },
+  {
+   "id": "D1",
+   "what": "R9 (op-amp supply resistor) 0603 to 1206 for long surges.",
+   "state": "todo",
+   "result": "Default: 0603. Room exists now."
+  },
+  {
+   "id": "Audit",
+   "what": "Codex (outside model) audit of the grown board.",
+   "state": "todo",
+   "result": "Self-audit and Opus review done (AUDIT.md rounds 1-2); fresh pack to build."
   }
  ]
 }

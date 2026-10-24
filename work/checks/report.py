@@ -10,7 +10,7 @@ import base64, html, json, os, subprocess, sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 WORK = os.path.join(HERE, '..')
-REV = os.environ.get('REV', 'carrier-d')
+REV = os.environ.get('REV', 'carrier-e')
 
 
 def img(name, width=1100):
@@ -38,10 +38,10 @@ def main():
     tpl = open(os.path.join(HERE, 'report_template.html')).read()
     out = (tpl.replace('{{DATE}}', run['date']).replace('{{HEAD}}', run['git_head']).replace('{{CHECKS}}', rows)
            .replace('{{TESTS}}', trows).replace('{{HEADLINE}}', html.escape(tests['headline']))
-           .replace('{{TOP}}', fig('top.png', 'Top view, 3D render (KiCad 10). Upstream carrier plus our parts on the bottom.', 1000))
-           .replace('{{BOTTOM}}', fig('bottom.png', 'Bottom view: the analog output stage (U6 op-amp, D3/D4 clamps, R8 output resistor).', 1000))
-           .replace('{{ZOOM_CUR}}', fig('zoom-top-before.png', 'Before: D3 pin 1 reaches only a +5V via (blue). Nothing links it to the +5V net 4.2 mm away.', 800))
-           .replace('{{ZOOM_WHATIF}}', fig('zoom-top-fixed.png', 'After: a 0.25 mm track to U2 pin 3, a ground via for C1 pin 2 (lower right), C2 pin 2 solid in the pour.', 800)))
+           .replace('{{TOP}}', fig('top.png', 'Top view, 3D render (KiCad 10): upstream carrier, grown 15 mm at the bottom (40.0 x 51.5 mm, 1.57 x 2.03 in).', 1000))
+           .replace('{{BOTTOM}}', fig('bottom.png', 'Bottom view (mirrored): the analog stage in the new strip. U6 op-amp, R8/R11 output resistors, D3/D4 clamps.', 1000))
+           .replace('{{ZOOM_CUR}}', fig('../carrier-d/bottom.png', 'Before (r32, 40 x 36.5 mm): new parts squeezed between the module pin rows.', 800))
+           .replace('{{ZOOM_WHATIF}}', fig('bottom.png', 'After (r36, 40 x 51.5 mm): the stage in the strip, caps at their pins, R11 at the output.', 800)))
     os.makedirs(os.path.join(WORK, 'report'), exist_ok=True)
     open(os.path.join(WORK, 'report', 'index.html'), 'w').write(out)
     print('report/index.html', len(out) // 1024, 'KB')
