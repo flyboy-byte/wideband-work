@@ -94,7 +94,7 @@ Written by `checks/run_all.py` at commit fad8032. Don't edit by hand.
 - **Firmware**: never run on hardware; first-flash hardware unchosen (D4, money); trim needs reflash per board; watchdog heater loop only (W1); stack high-water on hardware; RAM 0 B free; F1/F9 not reported upstream (owner).
 - **Deeper tests not done**: R9/D5 surge (Codex C6); 12 V on J3-5 as built (C1 accepted); supply corners: 5 V into 100k holds from 7.5 V battery up (4.34 V at 6 V); 4.7k and 7 V runs gave no result, redo; drift budget INFERRED: 60 C swing worst 40 mV at 5 V.
 - **Bench**: T1, A1-A4 (A3 about 6 mA), W1, H1-H6.
-- More 3D views asked for: `kicad-cli pcb render --rotate/--perspective`, next session. Status page v3 current.
+- ~~More 3D views~~ done 2026-10-24: `renders/carrier-f/iso-{front,back,bottom}.png` (kicad-cli `--perspective --rotate`), on the status page v4.
 
 ## Open (older notes, 2026-10-23)
 - 2026-10-23 Flashing/testing scoped in `docs/flashing-and-test-plan.md`: recommend SWD first-flash/recovery, exact probe/cable/power unchosen. Fresh native build passes 43 tests (leak check disabled due environment), not aux-output coverage. F1: bootloader DATA guard permits config-page writes; reproduced with actual guard + flash stub. Next: fix/test F1, validate image packaging, add aux-output host tests. No hardware flashing or purchases.
