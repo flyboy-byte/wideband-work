@@ -556,6 +556,9 @@ def main(route=True):
         pcbnew.ZONE_FILLER(board).Fill(board.Zones())
     if join_gnd_pieces(board):
         pcbnew.ZONE_FILLER(board).Fill(board.Zones())
+    # Silkscreen last, when every pad, via and track is where it stays (gen/silk.py)
+    import silk
+    silk.place_labels(board)
     board.Save(OUT)
     shutil.rmtree(td)
     print('wrote', os.path.relpath(OUT, REPO))
