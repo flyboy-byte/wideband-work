@@ -241,5 +241,5 @@ J3-5 (net AOUT_J). One schematic connection, folded into the next board run with
 | --- | --- | --- | --- |
 | A1 | Close the TEST jumper (module SEL_2 to GND), power up; output steps 1.00 / 2.50 / 4.00 V, 10 s each (firmware before 2026-10-23 stayed at 1.00 V: fixed, `firmware.md` F5). Meter J3-5 to J3-7 | DC volts at each step | before trim: within ±0.10 V; after trim and reflash: within ±0.02 V |
 | A2 | Sensor in free air, warmed up | DC volts at J3-5 vs AFR the firmware reports over CAN | volts match the curve within ±0.05 V |
-| A3 | Short J3-5 to GND briefly through the meter's current range | current | about 9 mA (R9 1k starves the op-amp supply, AUDIT round 2 O2); board survives |
+| A3 | Short J3-5 to GND briefly through the meter's current range | current | about 6 mA since r37 (feedback now sees the short, so the op-amp drives high into R8 + R11 = 800R while R9 1k starves its supply: (12 - V)/1k = (V - 1.5)/800 gives V about 6.2 V, I about 5.8 mA; INFERRED, LM2904 high-side drop 1.5 V FROM MEMORY; was about 9 mA before r37); board survives |
 | A4 | In the car, engine running, sensor hot: meter (mV range) between J3-7 at the controller and the receiver's sensor-ground pin | DC mV | under 20 mV (= 0.04 AFR at 0.5 V per AFR); more means a ground offset in the wiring (see "Grounding and the output") |

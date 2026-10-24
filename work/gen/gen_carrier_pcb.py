@@ -38,6 +38,12 @@ CRT = pcbnew.F_CrtYd if SIDE == 'top' else pcbnew.B_CrtYd
 # M3 mounting holes in the strip's corners (owner decision D8, 2026-10-23), centres 3.5 mm in from both edges.
 # MountingHole_3.2mm_M3: plain NPTH, no copper, courtyard about 3.45 mm radius
 HOLES = [('H1', (39.975 + 3.5, 106.275 - 3.5)), ('H2', (80.025 - 3.5, 106.275 - 3.5))]
+# No copper (tracks, vias, pour) under a screw head and washer, both sides: an M3 washer is about 7 mm across [FROM
+# MEMORY, DIN 125], so 3.6 mm radius. The holes stay isolated: a metal screw into a grounded case must not tie board GND
+# to it (the output's ground is the ECU sensor ground, owner answer C3). Default 2026-10-24 (r41: r37-r40 had GND pour
+# 0.3 mm from the hole and a +5V track 3.0 mm from H1's centre); grounding the case through a plated hole is the
+# owner's call.
+HOLE_KEEPOUT = 3.6
 # Floorplan in the strip (bottom side, coordinates seen from the top): the stage sits below the module's LEFT pad column
 # (pads 3 SEL_1 PWM, 4 SEL_2, 7 LSU_Heater+), away from the right column (heater drive pads 11-12, sensor pads 13-16).
 # PWM in at the left, filter left to right, op-amp in the middle, its supply right of it. The output (R8, clamps, R11)
@@ -388,6 +394,21 @@ def main(route=True):
         h.SetPosition(pcbnew.VECTOR2I(mm(hx), mm(hy)))
         h.SetLocked(True)
         board.Add(h)
+        ko = pcbnew.ZONE(board)
+        ko.SetIsRuleArea(True)
+        ko.SetDoNotAllowTracks(True)
+        ko.SetDoNotAllowVias(True)
+        ko.SetDoNotAllowZoneFills(True)
+        ko.SetDoNotAllowPads(False)
+        ko.SetDoNotAllowFootprints(False)
+        kls = pcbnew.LSET(); kls.AddLayer(pcbnew.F_Cu); kls.AddLayer(pcbnew.B_Cu)
+        ko.SetLayerSet(kls)
+        o = ko.Outline(); o.NewOutline()
+        for k in range(36):
+            a = k * math.pi / 18
+            o.Append(mm(hx + HOLE_KEEPOUT * math.cos(a)), mm(hy + HOLE_KEEPOUT * math.sin(a)))
+        ko.SetZoneName(f'{ref}_screw_keepout')   # permanent (not in AIDS): the pour stays out after the refill
+        board.Add(ko)
     # New footprints on SIDE, placed one by one at the nearest legal spot to their target
     obstacles = obstacle_shapes(board)
     placed = []
