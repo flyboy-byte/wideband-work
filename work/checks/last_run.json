@@ -1,6 +1,6 @@
 {
  "date": "2026-10-23",
- "git_head": "783a885",
+ "git_head": "8e9fa1c",
  "results": [
   {
    "name": "DRC module (errors)",
@@ -121,6 +121,18 @@
    "files": {
     "../firmware/main_hardfault_asm.S": "d32262764759",
     "../firmware/main.cpp": "f1c2e96ebf08"
+   }
+  },
+  {
+   "name": "Firmware: analog output host tests, production auxout/pump_dac/can_helper on the f0 config (F3-F6)",
+   "status": "pass",
+   "summary": "[  PASSED  ] 16 tests.",
+   "files": {
+    "../firmware/auxout.cpp": "417044786829",
+    "../firmware/pump_dac.cpp": "ac1d4bf351de",
+    "../firmware/can_helper.cpp": "dc0ba8d660e6",
+    "../firmware/boards/f0_module/aux_curve.h": "bb88ea23e570",
+    "../firmware/boards/f0_module/wideband_board_config.h": "b96f53982d27"
    }
   }
  ]

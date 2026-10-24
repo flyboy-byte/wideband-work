@@ -105,6 +105,7 @@ Full evidence: `docs/codex-audit-2026-10-23.md`. Raw outputs: `audit/codex-2026-
 | ID | Severity | Location | Evidence (numbers) | Smallest fix | Status |
 | --- | --- | --- | --- | --- | --- |
 | F2 | NOTE | firmware package | `fw_package.py` stages and checks upstream's format; 21 good/bad package cases right; two builds byte-identical | n/a (new tooling) | done |
+| F5 | BUG | `firmware/auxout.cpp` test mode | step from `TIME_I2MS(chVTGetSystemTime())`: f0 systime is 16 bits at 10 kHz, wraps at 6.55 s, step always 0 (1.00 V only); host test fails on the old code at every 2.50/4.00 V point | 64-bit `chVTGetTimeStamp()` | fixed (commit that adds this text); 16 host tests in `test/aux_out` |
 | F9 | BUG | `firmware/main_hardfault_asm.S`, `main.cpp` bkpt() | f0 fault entry was Thumb-2 (objdump); QEMU Cortex-M0: upstream entry and BKPT-in-handler both lock up, fixed entry reaches the C handler; no watchdog on f0 | ARMv6-M entry; no BKPT on M0, DHCSR-guarded on M3 | fixed (commit that adds this text); watchdog is owner decision D10 |
 
 Follow-up circuit tests: ramped full-scale TI-model runs completed at protected inputs 12 V and 7.5 V:

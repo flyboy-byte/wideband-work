@@ -115,6 +115,11 @@ void SetAuxDac(int channel, float voltage)
 
 #ifdef AUXOUT_SEL1_PWM_CHANNEL
 
+// A trim corrects resistor and reference tolerance, about 1-2 % (work/docs/carrier.md accuracy budget); anything far
+// outside that is a typo in a -D, not a trim
+static_assert(AUXOUT_TRIM_GAIN > 0.8f && AUXOUT_TRIM_GAIN < 1.2f, "AUXOUT_TRIM_GAIN outside 0.8-1.2");
+static_assert(AUXOUT_TRIM_OFFSET_VOLTS > -0.5f && AUXOUT_TRIM_OFFSET_VOLTS < 0.5f, "AUXOUT_TRIM_OFFSET_VOLTS outside +-0.5 V");
+
 // No timer of its own: the output is a spare channel on the pump DAC timer (TIM3 CH4 on PB1)
 void SetAuxDac(int channel, float voltage)
 {
@@ -183,9 +188,12 @@ void UpdateAuxOut()
 #ifdef AUXOUT_TEST_MODE_ON_SEL2_LOW
     if (auxTestMode)
     {
-        // Bench test A1: fixed voltages to read with a multimeter
+        // Bench test A1: fixed voltages to read with a multimeter. Time from the 64-bit tick count since boot: on the f0
+        // the system time is 16 bits at 10 kHz and wraps every 6.55 s, so TIME_I2MS(chVTGetSystemTime()) never reached
+        // the 10 s step and the output stayed at 1.00 V (test/aux_out, F5)
         static const float levels[] = {1.00f, 2.50f, 4.00f};
-        auto step = (TIME_I2MS(chVTGetSystemTime()) / AUXOUT_TEST_STEP_MS) % 3;
+        auto ms = chVTGetTimeStamp() * 1000 / CH_CFG_ST_FREQUENCY;
+        auto step = (ms / AUXOUT_TEST_STEP_MS) % 3;
         SetAuxDac(0, levels[step]);
         return;
     }

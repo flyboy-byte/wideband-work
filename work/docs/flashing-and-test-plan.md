@@ -29,6 +29,14 @@ board image showing pad 1 and cable orientation, and verify the exact probe's co
 generic cable color chart. Target-voltage sense is not permission to power the heater from the programmer. Select and
 verify one power arrangement, common ground and target voltage first; avoid back-powering from simultaneous sources.
 
+### F3-F6 aux-output host tests — DONE except the F6 thread loop, 2026-10-23 (Claude Opus 5.5)
+
+`test/aux_out/` (16 tests, production code on the f0 config, fakes record every PWM/GPIO/CAN call); details in
+`firmware.md`. F5 found a real bug: test mode stayed at 1.00 V (16-bit system time wraps at 6.55 s); fixed and shown by
+running the same tests against the old `auxout.cpp` (fails exactly at the 2.50/4.00 V points). Trim configuration is
+rejected at compile time outside 0.8-1.2 gain / +-0.5 V offset. Not done: F6 "analog update every scheduled cycle"
+(the CAN TX thread loop), F7 heater coverage, F8 stack high-water marks.
+
 ### F2 package build and validator — DONE 2026-10-23 (Claude Opus 5.5)
 
 `python3 work/checks/fw_package.py build [OUT]` builds the bootloader and app into a fresh directory (default

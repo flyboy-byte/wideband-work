@@ -58,6 +58,31 @@ The f0 CAN bootloader accepted DATA writes up to 26 KiB into a 25 KiB app partit
 Fixed with `bootloader/bootloader_bounds.h`, bounds from the linker script; details and evidence in
 `flashing-and-test-plan.md`. Upstream's bug, not ours; a candidate to report upstream (owner's call).
 
+## Analog output host tests (F3-F6) and the test-mode bug they found (2026-10-23)
+
+`test/aux_out/` builds the production `auxout.cpp`, `pump_dac.cpp` and `can_helper.cpp` against the real f0_module board
+config, with fake ChibiOS headers (`shim/hal.h`; system time typed from the board's own `chconf.h`) and recording fakes
+for the Pwm wrapper, GPIO, CAN and the sensor/heater/config functions. `make -C test/aux_out run`; in `run_all.py`.
+16 tests, expected values from the design, not the code: volts to duty against 5.04 V full scale, clamping, channel 1
+ignored, only TIM3 channel index 3 written (pump channel and the one TIM3 start untouched), zero duty before PB1 goes to
+AF1; the curve (AFR 10 = 0 V ... 20 = 5 V, clamped); validity (heater not closed loop, Nernst window strict at 0.35/0.55 V,
+NaN lambda -> 0 V); test mode; CAN frames sent with TIME_IMMEDIATE.
+
+**Bug found (F5): test mode never left 1.00 V.** The step was `TIME_I2MS(chVTGetSystemTime()) / 10000 % 3`. On the f0,
+`CH_CFG_ST_RESOLUTION` is 16 and `CH_CFG_ST_FREQUENCY` 10000 (`boards/f0_module/chconf.h`), so `systime_t` is 16 bits and
+wraps every 6.55 s: the millisecond value never reaches 10000 and the step is always 0 [DOCUMENTED: ChibiOS `chtime.h`
+typedefs; the host test fails against the old code at 10, 13.2, 20, 29.9, 40, 50 and 3599 s and passes in the first
+10 s]. Bench test A1 would have shown 1.00 V only. Fixed: the step comes from `chVTGetTimeStamp()` (64-bit ticks since
+boot, what `util/timer.cpp` already uses): no RAM, +544 B flash (64-bit division), 4,108 B flash left.
+Other changes for testability, no behaviour change: the compiled-in curve moved to `boards/f0_module/aux_curve.h`
+(`port.cpp` and the tests both call it); `AUXOUT_TRIM_GAIN` / `AUXOUT_TRIM_OFFSET_VOLTS` can be set per build
+(`make BOARD=f0_module UDEFS='-DAUXOUT_TRIM_GAIN=1.012f'`, after `touch auxout.cpp`: make doesn't rebuild on flag
+changes) and a `static_assert` refuses a gain outside 0.8-1.2 or an offset beyond +-0.5 V (a trim corrects 1-2 %).
+Recorded, not changed: `SetAuxDac(NaN)` gives full scale (`clampF`; nothing passes NaN today); a +infinite lambda passes
+the validity test and reads 5 V; closing the TEST jumper also moves the CAN ID offset to 4 (`GetConfiguration()` reads
+SEL_2 as a CAN strap), harmless on the bench. Not covered by host tests: that the CAN TX thread calls `UpdateAuxOut()`
+every cycle (the thread loop isn't separable without a refactor), real timer/pin behaviour, stack use (F8).
+
 ## Fault handler on the Cortex-M0 (F9, fixed 2026-10-23)
 
 Found while writing the F2 vector check. `main_hardfault_asm.S` was assembled for `cortex-m3` (`.cpu` directive), so the

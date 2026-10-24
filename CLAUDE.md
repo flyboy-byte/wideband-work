@@ -70,6 +70,7 @@ python3 work/checks/audit_bootloader_bounds.py     # bootloader DATA guard, real
 python3 work/checks/fw_package.py build|check F    # stage the flash package into work/fw-build/<commit>/ / validate one
 python3 work/checks/test_fw_package.py             # package checker on good and bad images (21 cases)
 python3 work/checks/test_fault_entry_m0.py         # HardFault entry on a Cortex-M0 (QEMU microbit)
+make -C test/aux_out run                           # analog output host tests: production auxout/pump_dac/can_helper, f0 config (16)
 ```
 
 Test-build quirk: with the default relative `build/`, the test Makefile's search path finds `firmware/build/obj/*.o` (ARM

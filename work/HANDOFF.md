@@ -1,5 +1,12 @@
 # HANDOFF — dense session context (read after STATE.md)
 
+## F3-F6 done — 2026-10-23 (Claude Opus 5.5)
+
+`test/aux_out/` (16 tests; `make -C test/aux_out run`, or `AUXOUT_SRC=` to test another version). Found and fixed F5:
+test mode never stepped (16-bit system time). Curve moved to `aux_curve.h`; trim macros overridable with a static_assert.
+Next: F7 heater coverage, F8 stack marks (needs hardware or a careful static estimate), F6 thread-loop cadence; circuit
+C1-C3, C7. Owner decisions D1, D2, D7-D10.
+
 ## F2 and F9 done — 2026-10-23 (Claude Opus 5.5)
 
 F2: `checks/fw_package.py build|check`, `checks/test_fw_package.py` (21 cases). Staged packages in `work/fw-build/<commit>/`

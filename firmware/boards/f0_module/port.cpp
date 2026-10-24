@@ -2,6 +2,7 @@
 #include "shared/flash.h"
 
 #include "wideband_config.h"
+#include "aux_curve.h"
 
 #include "ch.hpp"
 #include "hal.h"
@@ -138,13 +139,8 @@ Configuration* GetConfiguration()
     }
 
 #ifdef AUXOUT_SEL1_PWM_CHANNEL
-    // No way to edit the curve on this board (no UART/TunerStudio), so it is compiled in:
-    // AFR 10.0 -> 0 V ... AFR 20.0 -> 5 V, linear (the 0 V = 10:1, 5 V = 20:1 standard)
-    for (int i = 0; i < 8; i++) {
-        config.auxOutBins[0][i] = 10.0f + (20.0f - 10.0f) / 7 * i;
-        config.auxOutValues[0][i] = 0.0f + (5.0f - 0.0f) / 7 * i;
-    }
-    config.auxOutputSource[0] = AuxOutputMode::Afr0;
+    // No way to edit the curve on this board (no UART/TunerStudio), so it is compiled in (aux_curve.h)
+    SetCompiledAuxCurve(config);
 
     // SEL_1 is the analog output, not a strap: never touch its pad mode here. Treat it as floating.
     uint8_t sel1 = 1;

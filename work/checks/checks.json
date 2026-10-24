@@ -157,5 +157,22 @@
       "../firmware/main_hardfault_asm.S",
       "../firmware/main.cpp"
     ]
+  },
+  {
+    "name": "Firmware: analog output host tests, production auxout/pump_dac/can_helper on the f0 config (F3-F6)",
+    "cmd": [
+      "make",
+      "-s",
+      "-C",
+      "../test/aux_out",
+      "run"
+    ],
+    "files": [
+      "../firmware/auxout.cpp",
+      "../firmware/pump_dac.cpp",
+      "../firmware/can_helper.cpp",
+      "../firmware/boards/f0_module/aux_curve.h",
+      "../firmware/boards/f0_module/wideband_board_config.h"
+    ]
   }
 ]
