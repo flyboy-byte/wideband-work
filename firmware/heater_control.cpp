@@ -219,6 +219,13 @@ void HeaterControllerBase::Update(const ISampler& sampler, HeaterAllow heaterAll
         heaterVoltage = 12;
     }
 
+    // A sensor hotter than target drives the closed-loop voltage below 0, and the squaring below would turn that back
+    // into a large duty: no heat is the most it can ask for
+    if (heaterVoltage < 0)
+    {
+        heaterVoltage = 0;
+    }
+
     // Very low supply voltage -> avoid divide by zero or very high duty
     if (heaterSupplyVoltage < 3)
     {
