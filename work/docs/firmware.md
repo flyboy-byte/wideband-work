@@ -13,7 +13,8 @@ arm-none-eabi-size -A build/wideband.elf
 
 `boards/f0_module/build_wideband.sh` does both and packages images, but it also overwrites the tracked files in
 `for_rusefi/`; don't commit those unless we mean to. `cmsis-svd`, `kicad-libraries` and `test/googletest` aren't needed
-for the firmware build. Unit tests (`test/`) not run yet.
+for the firmware build. Update 2026-10-23: fresh host build passes 43 tests with leak checking disabled due the execution
+environment; these do not compile the added aux-output code. See `flashing-and-test-plan.md` for coverage and first-flash planning.
 
 ## Budget on the STM32F042K6 (measured with `arm-none-eabi-size -A`)
 
@@ -23,8 +24,9 @@ for the firmware build. Unit tests (`test/`) not run yet.
 | RAM left (`.heap`) | 16 B | **0 B** | 5,888 B ram0 total; 2 KB is the two stacks |
 
 RAM, not flash, is the constraint: there is no room for another thread, which is why our change has none. RAM is now
-full to the byte. That is safe because nothing allocates at runtime (`CH_CFG_USE_HEAP`, `CH_CFG_USE_MEMCORE`,
-`CH_CFG_USE_MEMPOOLS` are FALSE in `boards/f0_module/chconf.h`), but any further RAM must come out of something else
+full to the byte. No dynamic allocation (`CH_CFG_USE_HEAP`, `CH_CFG_USE_MEMCORE`,
+`CH_CFG_USE_MEMPOOLS` are FALSE in `boards/f0_module/chconf.h`) avoids heap growth, but does not establish stack safety;
+stack high-water measurement remains required. Any further RAM must come out of something else
 (the largest are the CAN RX/TX thread areas, 680 B each, and the two 1 KB stacks).
 
 ## The change (`git diff master -- firmware`)

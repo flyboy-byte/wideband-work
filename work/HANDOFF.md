@@ -2,6 +2,12 @@
 
 ## Codex audit addendum — 2026-10-23
 
+Flashing, host tests, emulator feasibility and meter-only bring-up: `docs/flashing-and-test-plan.md`.
+Fresh native build: 43/43 pass with leak checking disabled (environment limitation). Absolute temporary BUILDDIR avoids
+moving ARM build output. New `checks/audit_bootloader_bounds.py` reproduces F1 using actual source + recording flash stub:
+48 cases / 10 unsafe accepts, no hardware access. Next: F1 fix, safe image packaging/validation, actual aux-output tests.
+Plan contains Claude's bounded handoff; nothing was sent externally.
+
 Read `docs/codex-audit-2026-10-23.md` and `AUDIT.md` round 3 first. Audited 34cd49d; no PCB/schematic/firmware changes.
 New bounded reproducers: `checks/audit_analog.py` and `checks/audit_layout_order.py`.
 Follow-up: order regression now PASSES; repaired checker flags a 6.8 mm PWM uncovered component (C7).
