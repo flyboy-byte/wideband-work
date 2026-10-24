@@ -1,6 +1,6 @@
 # STATE — rusEFI wideband (module + carrier)
 
-Status: 2026-10-24 — board r37: analog stage on the TOP (one-sided assembly, D9), DC feedback from J3-5 after R11 (C2 build-around, simulated), R9 1206 (D1), M3 holes (D8); 0 new DRC / 0 open / 0 via-in-pad / layout review 0 triggers (C7 cleared, 4.1 mm). Checks 17: 0 failed, 2 advisory (raw upstream DRC, D2). Owner answers C1-C3, D1-D11 recorded below. Next: D10 watchdog firmware, silkscreen pass, BOM/CPL, JLC quote (owner approves money), audit round 4, release.py. Firmware: F1-F9 done (host 64 + aux 21). Nothing ordered, flashed or pushed.
+Status: 2026-10-24 — board r37: analog stage on the TOP (one-sided assembly, D9), DC feedback from J3-5 after R11 (C2 build-around, simulated), R9 1206 (D1), M3 holes (D8); 0 new DRC / 0 open / 0 via-in-pad / layout review 0 triggers (C7 cleared, 4.1 mm). Checks 18: 0 failed, 2 advisory (raw upstream DRC, D2). Owner answers C1-C3, D1-D11 recorded below. D10 watchdog done (0 B RAM, host 69 tests, bench test W1 drafted). Next: silkscreen pass, BOM/CPL, JLC quote (owner approves money), audit round 4, release.py. Firmware: F1-F9 done (host 64 + aux 21). Nothing ordered, flashed or pushed.
 Revision in progress: none yet   Revisions used (never reused): none by the owner. Upstream module exports are rev A, B, C (upstream's own scheme, not ours).
 <If the project already names revisions its own way (v1.0.0), keep its scheme.>
 Review pages: status report https://claude.ai/artifact/YRsjXKGZKG5AFbwkcMuYZ4 (private; rebuilt by `checks/report.py`)  fit check <link>  audit <link>
@@ -62,10 +62,11 @@ Mark a stage done only when its exit condition is true. Strike through, don't de
 | Firmware: bootloader DATA writes stay inside the app partition (F1) | PASS | 52 guard cases; 0 unsafe accepted writes, 0 valid writes refused (stub only) | 2026-10-24 | `bootloader.cpp` 21cbac0cd469, `bootloader_bounds.h` 72e216e2e7bc |
 | Firmware: package checker accepts good images, rejects bad ones (F2) | PASS | 21 package cases, 0 wrong verdict(s) | 2026-10-24 | `fw_package.py` 34a1c5eb78dd, `wideband_image.h` 1ee39ace5944, `bootloader.cpp` 21cbac0cd469 |
 | Firmware: HardFault entry reaches the C handler on a Cortex-M0 (F9, QEMU microbit) | PASS | fault entry on Cortex-M0: as expected | 2026-10-24 | `main_hardfault_asm.S` d32262764759, `main.cpp` f1c2e96ebf08 |
-| Firmware: analog output host tests, production auxout/pump_dac/can_helper on the f0 config (F3-F6) | PASS | [  PASSED  ] 21 tests. | 2026-10-24 | `auxout.cpp` 417044786829, `pump_dac.cpp` ac1d4bf351de, `can_helper.cpp` dc0ba8d660e6, `aux_curve.h` bb88ea23e570, `wideband_board_config.h` b96f53982d27 |
-| Firmware: static worst-case stack per thread fits (F8 estimate, f0 build) | PASS | stack estimate: ok, smallest margin 80 B | 2026-10-24 | `auxout.cpp` 417044786829, `can.cpp` 65a7078908bf, `heater_thread.cpp` f524458f2290, `pump_control.cpp` 6449053857fe, `sampling_thread.cpp` 65d58bbf0b52 |
+| Firmware: host gtest suite (sampler, heater, F7, F1 bounds, D10 watchdog) | PASS | [  PASSED  ] 69 tests. | 2026-10-24 | `heater_control.cpp` c4a69cba915d, `sampling.cpp` 8a229de01887, `watchdog.h` 3c55e521fda5, `bootloader_bounds.h` 72e216e2e7bc |
+| Firmware: analog output host tests, production auxout/pump_dac/can_helper on the f0 config (F3-F6) | PASS | [  PASSED  ] 21 tests. | 2026-10-24 | `auxout.cpp` 417044786829, `pump_dac.cpp` ac1d4bf351de, `can_helper.cpp` dc0ba8d660e6, `aux_curve.h` bb88ea23e570, `wideband_board_config.h` 7c5b76b0011c |
+| Firmware: static worst-case stack per thread fits (F8 estimate, f0 build) | PASS | stack estimate: ok, smallest margin 80 B | 2026-10-24 | `auxout.cpp` 417044786829, `can.cpp` 65a7078908bf, `heater_thread.cpp` 1c61085261f8, `pump_control.cpp` 6449053857fe, `sampling_thread.cpp` 65d58bbf0b52 |
 
-Written by `checks/run_all.py` at commit 9d862aa. Don't edit by hand.
+Written by `checks/run_all.py` at commit 38346b5. Don't edit by hand.
 <!-- checks:end -->
 
 ## Bring-up results

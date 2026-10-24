@@ -32,6 +32,7 @@ CPPSRC += \
 	tests/test_heater.cpp \
 	tests/test_bootloader_bounds.cpp \
 	tests/test_heater_update.cpp \
+	tests/test_watchdog.cpp \
 
 INCDIR += \
 	$(PROJECT_DIR)/googletest/googlemock/ \

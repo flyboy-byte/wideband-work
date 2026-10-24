@@ -38,12 +38,12 @@ It's a learning project: build and test it ourselves, don't buy a ready-made uni
 - **Firmware** (branch `analog-out`): builds. Analog output on module pad SEL_1 = PB1 = TIM3_CH4 (shares the pump-DAC
   timer, 46.9 kHz). Compiled-in curve 10 AFR = 0 V … 20 AFR = 5 V, 0 V while lambda is invalid. Bench test mode (SEL_2
   strapped low: 1.00/2.50/4.00 V steps) and trim constants. RAM is full to the byte, which is safe because nothing is
-  allocated at runtime. Untested on hardware. Host-tested 2026-10-23 (64 + 21 tests); upstream bugs fixed in the bootloader
+  allocated at runtime. Untested on hardware. Host-tested 2026-10-24 (69 + 21 tests); watchdog (D10) refreshed by the heater loop; upstream bugs fixed in the bootloader
   bounds (F1) and the Cortex-M0 fault handler (F9), our test-mode bug fixed (F5): `work/docs/firmware.md`.
 - **Carrier schematic**: generated, ERC 0, netlist self-check 18/18 (R11 added r34).
 - **Carrier PCB**: 40.0 x 51.5 mm, r37 (2026-10-24): analog stage on the TOP of the grown strip, feedback after R11, R9 1206,
   M3 holes. **0 new DRC, 0 open, 0 vias in pads, layout review 0 triggers.** Owner answers C1-C3 and D1-D11 recorded
-  (`work/STATE.md`). Next: D10 watchdog firmware, silkscreen → BOM/CPL → JLC quote → `release.py`.
+  (`work/STATE.md`). Next: silkscreen → BOM/CPL → JLC quote → `release.py`.
 - **Assessment**: `work/RELEASE_ASSESSMENT.md` (concept, audit path, confidence, caveats, owner decisions) and `work/AUDIT.md` rounds 1 (Sonnet self-audit), 2 (Opus review), 3 (Codex, independent: `work/docs/codex-audit-2026-10-23.md`).
 - **Module board**: upstream's, unchanged (DRC 11 upstream errors, judged harmless or not yet: open).
 
@@ -63,7 +63,7 @@ python3 checks/drift.py record ../hardware/board_carrier/board_carrier.kicad_pcb
 sim/stability.sh                                   # LM2904 stability vs cable capacitance (needs TI model in sim/models/, gitignored)
 cd firmware && make -j12 BOARD=f0_module           # firmware; also `BOARD=f1_dual` must still build
 
-# upstream gtest suite + ours (host build; CI runs it under ASAN, then valgrind with SANITIZE=no). 64 pass (2026-10-23)
+# upstream gtest suite + ours (host build; CI runs it under ASAN, then valgrind with SANITIZE=no). 69 pass (2026-10-24); also python3 work/checks/host_tests.py
 git submodule update --init test/googletest        # not checked out by default
 B=$(mktemp -d) && mkdir -p $B/obj $B/lst && (cd test && make -j8 BUILDDIR=$B) && ASAN_OPTIONS=detect_stack_use_after_return=1 $B/wideband_test
 $B/wideband_test --gtest_filter='BootloaderBounds*' # single test / suite

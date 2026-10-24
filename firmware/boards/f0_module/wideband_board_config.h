@@ -39,3 +39,7 @@
 // SEL_2 held low at power-up: output steps through these, AUXOUT_TEST_STEP_MS each, instead of the AFR
 #define AUXOUT_TEST_MODE_ON_SEL2_LOW
 #define AUXOUT_TEST_STEP_MS 10000
+
+// Independent watchdog, refreshed by the heater loop: a hang resets the chip with the heater off (firmware/watchdog.h,
+// owner decision D10)
+#define WB_WATCHDOG

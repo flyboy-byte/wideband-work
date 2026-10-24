@@ -160,6 +160,8 @@ H2: sensor and receiver disconnected, verified current-limited supply; measure r
 H3: identify/read/verify programmed MCU and reset into application, still without sensor/heater load.
 H4: approved test-strap wiring; measure each 10-second output plateau, first high-impedance meter only, then known
 resistive loads. Record actual resistor values, meter accuracy, rails, output and temperature; endpoint budget must be set first.
+H4b (W1, D10 watchdog): flash the `WB_WATCHDOG_SELFTEST` test build (`docs/firmware.md` "Watchdog"); the module must restart
+about every 21 s (LED start-up pattern). Then reflash the release image.
 H5: reset/no-CAN/reconnect tests; record visible sequence continuity. A meter is not a PWM timing instrument.
 H6: only after heater/sensor wiring, power and current limits are reviewed, connect the LSU sensor for controlled bring-up.
 No ECU connection, deliberately opened live heater ground, or output-to-battery short in this first test series.

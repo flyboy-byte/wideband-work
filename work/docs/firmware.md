@@ -120,8 +120,30 @@ Fix: the entry uses ARMv6-M instructions only (`.cpu cortex-m0`, also valid on t
 `bkpt()` is empty on the M0 and checks `DHCSR.C_DEBUGEN` on the M3. Test: current entry reaches the C handler; upstream's
 entry and a BKPT inside the handler both lock up; the f0 build has 0 Thumb-2-only instructions in its fault entries.
 Not tested: the real chip; what the STM32F042 does on lockup. Upstream's bug, a candidate to report (owner's call).
-Still open (owner decision D10 in `RELEASE_ASSESSMENT.md`): no watchdog, so a hang that is not a fault leaves the heater
-PWM at its last duty.
+~~Still open: no watchdog~~ added 2026-10-24 (D10, next section).
+
+## Watchdog (D10, added 2026-10-24)
+
+Owner decision D10: a hang that is not a fault must not leave the heater PWM at its last duty. `firmware/watchdog.h`
+starts the independent watchdog (IWDG) from the heater thread, after its 1 s settle, and the heater loop refreshes it every
+50 ms (`heater_thread.cpp`, under `WB_WATCHDOG`, defined only in the f0 board config). Registers only: 0 B RAM (heap still
+0 B, `__heap_base__` = `__heap_end__`), +44 B flash (21,532 B), heater thread stack estimate unchanged (176 of 256 B).
+- Timeout LSI/32 x 625: 400 ms at 50 kHz, 500 ms at 40 kHz, 666 ms at 30 kHz (LSI 30-50 kHz FROM MEMORY, F042 datasheet).
+  `static_assert`s keep it at least 300 ms (8 heater periods, room for a flash page erase stall) and at most 1 s.
+- Halted debugger: the IWDG is frozen while the core is halted (`DBGMCU_APB1_FZ_DBG_IWDG_STOP`), so SWD sessions work.
+- Bootloader: a software-started IWDG stops at any reset, including the `NVIC_SystemReset()` that enters the bootloader
+  [REPORTED, ST training deck], so flashing over CAN is not interrupted. Assumes option byte WDG_SW at its factory default
+  (software watchdog) [FROM MEMORY]: a chip with the hardware-watchdog option set would reset the bootloader too.
+- What it catches: the heater loop not running (any hang or busy loop at equal or higher priority, ChibiOS `chSysHalt()`).
+  What it doesn't: a thread that blocks forever while the heater loop keeps running (for example the sampler stalling, so
+  the heater acts on stale readings). Catching that needs a check-in per thread, which needs RAM: none is free.
+- Evidence: disassembly of the f0 ELF: IWDG base 0x40003000, keys 0xCCCC/0x5555/0xAAAA in `HeaterThread`, the 0xAAAA
+  store between `Update()` and the 50 ms sleep in the loop. Host tests `test/tests/test_watchdog.cpp` (5): register
+  sequence, wait for SR, kick, timeout range, limits. Mutants: no SR wait and values-before-unlock each fail 2 tests;
+  a 1.3 s timeout fails to compile. `BOARD=f1_dual` still builds (no watchdog there).
+- Bench test W1 (needs the module, LED only): build with `make BOARD=f0_module UDEFS=-DWB_WATCHDOG_SELFTEST`; the heater loop
+  stops refreshing 20 s after boot, so the module must restart about every 20.4-20.7 s (LED back to the start-up pattern).
+  The release image never has that flag. Not tested on hardware.
 
 ## Not verified yet
 

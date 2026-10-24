@@ -13,7 +13,7 @@ replaces all earlier handoffs; they are in its git history (`git log -p -- work/
   `cd firmware/boards/f0_module/bootloader && bash build_bootloader.sh` first; then `cd firmware && make -j12 BOARD=f0_module`.
   `make clean` when switching BOARD (stale objects fail the f1_dual link with `EFLD1` undefined). Staged, reproducible
   package instead: `python3 work/checks/fw_package.py build` -> `work/fw-build/<commit>/` (gitignored).
-- Host tests: `B=$(mktemp -d) && mkdir -p $B/obj $B/lst && (cd test && make -j8 BUILDDIR=$B) && $B/wideband_test` -> 64/64
+- Host tests: `B=$(mktemp -d) && mkdir -p $B/obj $B/lst && (cd test && make -j8 BUILDDIR=$B) && $B/wideband_test` -> 69/69 (or `python3 work/checks/host_tests.py`, also in run_all)
   (absolute BUILDDIR: no more moving `firmware/build` aside). `make -C test/aux_out run` -> 21/21.
 - `checks/stack_estimate.py` reads `firmware/build/wideband.elf` and fails on a non-f0 build: rebuild f0 last.
 
@@ -53,6 +53,7 @@ PASS    F8 stack estimate: ok, smallest margin 80 B
 | F3-F5 | `test/aux_out/`: production auxout/pump_dac/can_helper on the real f0 config + fake ChibiOS | 16 tests; **found F5: test mode stuck at 1.00 V** (16-bit systime wraps 6.55 s); fixed with 64-bit `chVTGetTimeStamp()`; old code fails exactly at 2.50/4.00 V points | 1c8f942 |
 | F6 | the production CAN TX loop run for N windows in `test/aux_out` (fake `chThdSleepUntilWindowed` throws to stop it) | 5 tests: one update per 10 ms cycle with and without bus ACK, across the tick wrap, test mode end to end; blocking-send mutant fails 3, no-update mutant fails 5 | this commit |
 | F8 | `stack_estimate.py`: static worst case per thread from the ELF | all fit, smallest margin 80 B (pump), CAN TX 312/512 | 5f966bf |
+| D10 | IWDG watchdog refreshed by the heater loop (`firmware/watchdog.h`), 0 B RAM, +44 B flash, debug-freeze, bench self-test flag `WB_WATCHDOG_SELFTEST` | disassembly; 5 host tests; 3 mutants caught; f1_dual builds | 2026-10-24 |
 | F7 | `test/tests/test_heater_update.cpp`: whole `Update()` path | 13 tests; 2 mutants caught; host 64/64 | 2c5e445 |
 
 Also: curve moved to `boards/f0_module/aux_curve.h`; `AUXOUT_TRIM_GAIN/OFFSET` overridable per build with a static_assert

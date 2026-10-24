@@ -6,6 +6,10 @@
 #include "port.h"
 #include "sampling.h"
 
+#ifdef WB_WATCHDOG
+#include "watchdog.h"
+#endif
+
 // 400khz / 1024 = 390hz PWM
 static Pwm heaterPwm(HEATER_PWM_DEVICE);
 static const PWMConfig heaterPwmConfig = {
@@ -81,6 +85,16 @@ static void HeaterThread(void*)
         }
     }
 
+#ifdef WB_WATCHDOG
+    // Started here, after the 1 s settle above, and refreshed once per loop below (watchdog.h)
+#if defined(DBGMCU_APB1_FZ_DBG_IWDG_STOP)
+    // Hold it while a debugger has the core halted, or SWD sessions reset under the probe
+    RCC->APB2ENR |= RCC_APB2ENR_DBGMCUEN;
+    DBGMCU->APB1FZ |= DBGMCU_APB1_FZ_DBG_IWDG_STOP;
+#endif
+    watchdog::Start(*IWDG);
+#endif
+
     while (true)
     {
         auto heaterAllowState = GetHeaterAllowed();
@@ -92,6 +106,15 @@ static void HeaterThread(void*)
 
             heater.Update(sampler, heaterAllowState);
         }
+
+#ifdef WB_WATCHDOG
+#ifdef WB_WATCHDOG_SELFTEST
+        // Bench test W1 only (never in a release image): stop refreshing 20 s after boot, so the module must reset
+        // about every 21 s (work/docs/firmware.md)
+        if (chVTGetTimeStamp() < TIME_S2I(20))
+#endif
+        watchdog::Kick(*IWDG);
+#endif
 
         // Loop at ~20hz
         chThdSleepMilliseconds(HEATER_CONTROL_PERIOD);

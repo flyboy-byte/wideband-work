@@ -169,6 +169,19 @@
     ]
   },
   {
+    "name": "Firmware: host gtest suite (sampler, heater, F7, F1 bounds, D10 watchdog)",
+    "cmd": [
+      "python3",
+      "checks/host_tests.py"
+    ],
+    "files": [
+      "../firmware/heater_control.cpp",
+      "../firmware/sampling.cpp",
+      "../firmware/watchdog.h",
+      "../firmware/boards/f0_module/bootloader/bootloader_bounds.h"
+    ]
+  },
+  {
     "name": "Firmware: analog output host tests, production auxout/pump_dac/can_helper on the f0 config (F3-F6)",
     "cmd": [
       "make",
