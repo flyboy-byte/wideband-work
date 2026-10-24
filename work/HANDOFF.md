@@ -59,18 +59,17 @@ PASS    F8 stack estimate: ok, smallest margin 80 B
 Also: curve moved to `boards/f0_module/aux_curve.h`; `AUXOUT_TRIM_GAIN/OFFSET` overridable per build with a static_assert
 (0.8-1.2, +-0.5 V); app flash 21,488 B used, 4,108 B free; RAM unchanged (0 B free).
 
-## Next, in order
-1. **Owner answers that block circuit work** (Codex C1-C3): receiver input resistance and endpoint tolerance (decides R11 value
-   and gain headroom, C2); must the board survive J3-5 at 12-16 V powered and unpowered (C1: R11 limits, doesn't block,
-   back-feed into +5V); car grounding policy (C3: J3-7 can carry heater current). Don't change components before these.
-2. **Owner decisions** in `RELEASE_ASSESSMENT.md`: D10 watchdog (a hang, not a fault, leaves heater PWM at last duty);
-   D11 read battery on PB0 instead of assuming 13 V without CAN (about 48 B RAM, 0 free); D7 analog ground; D8 mounting
-   holes; D9 stage on top (one-sided assembly); D1 R9 1206; D2 release gate vs upstream's DRC errors and the C7 layout-review fail.
-3. ~~C7~~ inspected (commit 1ecef63: JP2's pour opening + the PWM's own layer swap; accept recommended, folded into D2;
-   trigger not retuned). ~~F6~~ done (5 loop tests). Not blocked: republish the status page with the firmware results (`REV=carrier-e python3 checks/report.py`; update
-   `report/tests.json` first, it still lists r33-r36 only).
-4. Then: fresh audit pack for the next independent round (`checks/audit_pack.py`), silkscreen pass, BOM/CPL, JLC quote
-   (owner approves money), `release.py`.
+## Next, in order (updated 2026-10-24)
+1. **Audit round 4** on the fab candidate: pack `audit/carrier-f-2026-10-24/` (PROMPT.md first). Owner runs Codex or
+   another model on it; bring findings back as a round in `AUDIT.md`. `release.py` needs that round, naming the commit,
+   with no open BLOCKER or BUG.
+2. **JLC quote** (owner, money): upload `work/out/carrier/` (rebuild with `python3 gen/export_fab.py` first). In the
+   placement preview look at every IC and diode, D2 above all (EasyEDA numbers its anode 1); the rotation sense is
+   INFERRED. Check stock on C13585, C14663, C15849, C7934 (`parts_research.md`), and look for a Basic 470R 1206 for R11.
+3. Then `checks/release.py <rev> work/out/carrier/*` (the owner picks the revision letter), commit `fab/<rev>/` the day
+   the order is placed, row in `ORDERS.md`.
+4. Open but not blocking: republish the status page (`report/tests.json` still lists r33-r36); bench test W1 (watchdog)
+   and A1-A4 once hardware exists; the hidden labels are on `renders/carrier-f/assembly-top.svg`.
 
 ## Board run history (generator `gen/gen_carrier_pcb.py`, seed 7)
 | Run | Change | Result |
