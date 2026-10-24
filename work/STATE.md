@@ -1,6 +1,6 @@
 # STATE — rusEFI wideband (module + carrier)
 
-Status: 2026-10-24 — board r37: analog stage on the TOP (one-sided assembly, D9), DC feedback from J3-5 after R11 (C2 build-around, simulated), R9 1206 (D1), M3 holes (D8); 0 new DRC / 0 open / 0 via-in-pad / layout review 0 triggers (C7 cleared, 4.1 mm). Checks 18: 0 failed, 2 advisory (raw upstream DRC, D2). Owner answers C1-C3, D1-D11 recorded below. D10 watchdog done (0 B RAM, host 69 tests, bench test W1 drafted). Next: silkscreen pass, BOM/CPL, JLC quote (owner approves money), audit round 4, release.py. Firmware: F1-F9 done (host 64 + aux 21). Nothing ordered, flashed or pushed.
+Status: 2026-10-24 — board r38 (r37 + overlapping-via fix, stricter DRC delta): analog stage on the TOP (one-sided assembly, D9), DC feedback from J3-5 after R11 (C2 build-around, simulated), R9 1206 (D1), M3 holes (D8); 0 new DRC / 0 open / 0 via-in-pad / layout review 0 triggers (C7 cleared, 4.1 mm). Checks 18: 0 failed, 2 advisory (raw upstream DRC, D2). Owner answers C1-C3, D1-D11 recorded below. D10 watchdog done (0 B RAM, host 69 tests, bench test W1 drafted). Next: silkscreen pass, BOM/CPL, JLC quote (owner approves money), audit round 4, release.py. Firmware: F1-F9 done (host 64 + aux 21). Nothing ordered, flashed or pushed.
 Revision in progress: none yet   Revisions used (never reused): none by the owner. Upstream module exports are rev A, B, C (upstream's own scheme, not ours).
 <If the project already names revisions its own way (v1.0.0), keep its scheme.>
 Review pages: status report https://claude.ai/artifact/YRsjXKGZKG5AFbwkcMuYZ4 (private; rebuilt by `checks/report.py`)  fit check <link>  audit <link>
@@ -50,12 +50,12 @@ Mark a stage done only when its exit condition is true. Strike through, don't de
 | DRC module (errors) | FAIL (advisory) | DRC 11 errors: solder_mask_bridge 10, clearance 1 (report checks/out/wideband_controller-drc.json) | 2026-10-24 | `wideband_controller.kicad_pcb` 0179d031bc63 |
 | Module board identical to upstream | PASS | module board vs upstream master: 0 file(s) differ | 2026-10-24 |  |
 | ERC module (errors) | PASS | ERC 0 errors (report checks/out/wideband_controller-erc.json) | 2026-10-24 | `wideband_controller.kicad_sch` e54843a1e6ef |
-| DRC carrier (errors) | FAIL (advisory) | DRC 23 errors: courtyards_overlap 14, copper_edge_clearance 3, malformed_courtyard 3, starved_thermal 2 (report checks/out/board_carrier-drc.json) | 2026-10-24 | `board_carrier.kicad_pcb` affd6a48bd9d |
-| Carrier DRC vs upstream baseline (new violations, unconnected) | PASS | DRC vs upstream: 0 new violations, 0 unconnected | 2026-10-24 | `board_carrier.kicad_pcb` affd6a48bd9d |
-| Carrier: no new vias in SMD pads | PASS | via in pad: 0 new, 0 upstream | 2026-10-24 | `board_carrier.kicad_pcb` affd6a48bd9d |
-| Carrier layout review (sampled coupling and return-path heuristics) | PASS | review triggers: 0 | 2026-10-24 | `board_carrier.kicad_pcb` affd6a48bd9d, `layout_review.py` 2dfa9e8efa14, `layout_metrics.py` 23c78d58fd8a |
+| DRC carrier (errors) | FAIL (advisory) | DRC 23 errors: courtyards_overlap 14, copper_edge_clearance 3, malformed_courtyard 3, starved_thermal 2 (report checks/out/board_carrier-drc.json) | 2026-10-24 | `board_carrier.kicad_pcb` 723e2f4fca82 |
+| Carrier DRC vs upstream baseline (new violations, unconnected) | PASS | DRC vs upstream: 0 new violations, 0 unconnected | 2026-10-24 | `board_carrier.kicad_pcb` 723e2f4fca82 |
+| Carrier: no new vias in SMD pads | PASS | via in pad: 0 new, 0 upstream | 2026-10-24 | `board_carrier.kicad_pcb` 723e2f4fca82 |
+| Carrier layout review (sampled coupling and return-path heuristics) | PASS | review triggers: 0 | 2026-10-24 | `board_carrier.kicad_pcb` 723e2f4fca82, `layout_review.py` 2dfa9e8efa14, `layout_metrics.py` 23c78d58fd8a |
 | Layout geometry helper unit tests | PASS | OK | 2026-10-24 | `layout_metrics.py` 23c78d58fd8a, `test_layout_metrics.py` 2d93b205dd56 |
-| Layout track-order regression | PASS | PASS: tested orders agree | 2026-10-24 | `board_carrier.kicad_pcb` affd6a48bd9d, `layout_review.py` 2dfa9e8efa14, `layout_metrics.py` 23c78d58fd8a, `audit_layout_order.py` c40bda9f97e2 |
+| Layout track-order regression | PASS | PASS: tested orders agree | 2026-10-24 | `board_carrier.kicad_pcb` 723e2f4fca82, `layout_review.py` 2dfa9e8efa14, `layout_metrics.py` 23c78d58fd8a, `audit_layout_order.py` c40bda9f97e2 |
 | ERC carrier (errors) | PASS | ERC 0 errors (report checks/out/board_carrier-erc.json) | 2026-10-24 | `board_carrier.kicad_sch` 20e09bb79f3b |
 | Carrier netlist self-check (generator table) | PASS | netlist self-check: 18 nets, 0 problems | 2026-10-24 | `board_carrier.kicad_sch` 20e09bb79f3b, `gen_carrier_sch.py` 0ecc060b4160 |
 | No hand edits waiting | PASS | no drift | 2026-10-24 |  |
@@ -66,7 +66,7 @@ Mark a stage done only when its exit condition is true. Strike through, don't de
 | Firmware: analog output host tests, production auxout/pump_dac/can_helper on the f0 config (F3-F6) | PASS | [  PASSED  ] 21 tests. | 2026-10-24 | `auxout.cpp` 417044786829, `pump_dac.cpp` ac1d4bf351de, `can_helper.cpp` dc0ba8d660e6, `aux_curve.h` bb88ea23e570, `wideband_board_config.h` 7c5b76b0011c |
 | Firmware: static worst-case stack per thread fits (F8 estimate, f0 build) | PASS | stack estimate: ok, smallest margin 80 B | 2026-10-24 | `auxout.cpp` 417044786829, `can.cpp` 65a7078908bf, `heater_thread.cpp` 1c61085261f8, `pump_control.cpp` 6449053857fe, `sampling_thread.cpp` 65d58bbf0b52 |
 
-Written by `checks/run_all.py` at commit 38346b5. Don't edit by hand.
+Written by `checks/run_all.py` at commit e6993c7. Don't edit by hand.
 <!-- checks:end -->
 
 ## Bring-up results

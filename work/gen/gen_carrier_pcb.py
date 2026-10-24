@@ -550,6 +550,7 @@ def main(route=True):
         if not z.GetIsRuleArea() and z.GetNetname() == 'GND':
             z.SetIslandRemovalMode(pcbnew.ISLAND_REMOVAL_MODE_ALWAYS)
     close_d3_link(board)
+    merge_close_vias(board)
     pcbnew.ZONE_FILLER(board).Fill(board.Zones())
     if stitch_islands(board):
         pcbnew.ZONE_FILLER(board).Fill(board.Zones())
@@ -558,6 +559,39 @@ def main(route=True):
     board.Save(OUT)
     shutil.rmtree(td)
     print('wrote', os.path.relpath(OUT, REPO))
+
+
+def merge_close_vias(board, gap=0.25):
+    """Same-net vias whose holes are closer than `gap` mm (KiCad's hole_to_hole minimum here): keep one, move the
+    track ends that met the other onto it, delete the other. The pre-placed vias (fan-out, taps) are locked and win
+    over the router's. r26-r37 all shipped one such pair (+5V or GND, 0.225 mm apart) hidden as a DRC warning."""
+    T = pcbnew.ToMM
+    vias = [t for t in board.GetTracks() if t.Type() == pcbnew.PCB_VIA_T]
+    gone = set()
+    for i, a in enumerate(vias):
+        for b in vias[i + 1:]:
+            if id(a) in gone or id(b) in gone or a.GetNetCode() != b.GetNetCode():
+                continue
+            pa, pb = a.GetPosition(), b.GetPosition()
+            d = math.hypot(T(pa.x - pb.x), T(pa.y - pb.y)) - T(a.GetDrill()) / 2 - T(b.GetDrill()) / 2
+            if d >= gap:
+                continue
+            keep, drop = (a, b) if a.IsLocked() or not b.IsLocked() else (b, a)
+            kp, dp = keep.GetPosition(), drop.GetPosition()
+            moved = 0
+            for t in board.GetTracks():
+                if t.Type() == pcbnew.PCB_TRACE_T and t.GetNetCode() == keep.GetNetCode():
+                    if t.GetStart() == dp:
+                        t.SetStart(kp); moved += 1
+                    if t.GetEnd() == dp:
+                        t.SetEnd(kp); moved += 1
+            board.Delete(drop)
+            gone.add(id(drop))
+            print(f'merged via at {T(dp.x):.2f},{T(dp.y):.2f} into {T(kp.x):.2f},{T(kp.y):.2f} ({keep.GetNetname()}, '
+                  f'{moved} track ends moved)')
+    # zero-length tracks left behind by the move
+    for t in [t for t in board.GetTracks() if t.Type() == pcbnew.PCB_TRACE_T and t.GetStart() == t.GetEnd()]:
+        board.Delete(t)
 
 
 def grow_board(board, dy):

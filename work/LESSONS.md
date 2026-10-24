@@ -52,3 +52,9 @@ that would help any board as a line for the `pcb-design` skill (see its "Lessons
   (about 14 MB per run), one run at a time, `nice -n 19`, and look at `free -h` before starting heavy work on a shared machine.
 - 2026-10-24 Ramping the op-amp supply from 0 V made one TI-model run take over 10 minutes; a fixed supply with only the
   input ramped takes 0.5 s. Use Codex's ramp (fixed rails, input step from 1.0 V).
+- 2026-10-24 Every board since about r26 had two same-net vias with holes 0.225 mm apart (r36 GND, r37 +5V: a pre-placed
+  tap or fan-out via plus the router's own), which would drill into each other. KiCad rates hole_to_hole a warning, and
+  `drc_vs_upstream.py` compared errors only, so "0 new violations" hid it for a dozen runs. Caught by: reading the
+  warning-level DRC during the silkscreen pass. Fix: the delta check counts fab-relevant warning types too
+  (FAB_WARNINGS), and the generator merges close same-net vias after routing. Skill lesson candidate: a DRC gate must
+  include warning types that matter to the fab, not only errors.

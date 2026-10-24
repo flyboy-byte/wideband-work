@@ -8,19 +8,28 @@
 Upstream's carrier (git `master`, upgraded to KiCad 10) already has courtyard and edge errors of its own; this
 subtracts them by (type, sorted item descriptions). Exit 0 only when there are no new violations and nothing is
 unconnected. Needs kicad-cli.
+
+Errors of every type count, and so do the warning types in FAB_WARNINGS: things a fab or the board itself cares about
+that KiCad's default severities rate as warnings. Added 2026-10-24 after r26-r37 all carried two +5V vias drilled
+0.225 mm apart (hole_to_hole, a warning), hidden behind "0 new".
 """
 import json, os, subprocess, sys, tempfile
 
 REPO = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
 PCB = 'hardware/board_carrier/board_carrier.kicad_pcb'
+FAB_WARNINGS = {'hole_to_hole', 'hole_clearance', 'drill_out_of_range', 'annular_width', 'via_diameter', 'track_width',
+                'copper_sliver', 'track_dangling', 'via_dangling', 'isolated_copper', 'solder_mask_bridge', 'clearance',
+                'copper_edge_clearance', 'shorting_items', 'unconnected_items', 'npth_inside_courtyard', 'pth_inside_courtyard'}
 
 
 def drc(path, parity, out):
-    cmd = ['kicad-cli', 'pcb', 'drc', '--severity-error', '--format', 'json', '-o', out, path]
+    cmd = ['kicad-cli', 'pcb', 'drc', '--severity-all', '--format', 'json', '-o', out, path]
     if parity:
         cmd.insert(3, '--schematic-parity')
     subprocess.run(cmd, capture_output=True, check=True)
-    return json.load(open(out))
+    d = json.load(open(out))
+    d['violations'] = [v for v in d['violations'] if v.get('severity') == 'error' or v['type'] in FAB_WARNINGS]
+    return d
 
 
 def key(v):
