@@ -71,6 +71,7 @@ python3 work/checks/fw_package.py build|check F    # stage the flash package int
 python3 work/checks/test_fw_package.py             # package checker on good and bad images (21 cases)
 python3 work/checks/test_fault_entry_m0.py         # HardFault entry on a Cortex-M0 (QEMU microbit)
 make -C test/aux_out run                           # analog output host tests: production auxout/pump_dac/can_helper, f0 config (16)
+python3 work/checks/stack_estimate.py [-v]         # static worst-case stack per thread on the f0 build (F8 estimate)
 ```
 
 Test-build quirk: with the default relative `build/`, the test Makefile's search path finds `firmware/build/obj/*.o` (ARM

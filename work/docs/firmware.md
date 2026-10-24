@@ -106,8 +106,12 @@ PWM at its last duty.
 ## Not verified yet
 
 - On hardware: nothing. Needs the module, a carrier with the filter, and a meter (draft tests A1-A3 in `carrier.md`).
-- CAN TX thread stack (512 B) now also runs `UpdateAuxOut()`. ChibiOS stack checking is on (`chconf.h`), so an
-  overflow halts rather than corrupts, but the margin is unmeasured.
+- CAN TX thread stack (512 B) now also runs `UpdateAuxOut()`. Static worst case (F8, `work/checks/stack_estimate.py`,
+  2026-10-23, build 1c8f942): CAN TX 312 of 512 B; heater 168/256, pump 176/256, sampling 164/256, CAN RX 220/512, main
+  188/1024, deepest single interrupt 184/1024 (nesting not modelled). Smallest margin 80 B (pump). It is an estimate from the
+  disassembly: indirect calls are charged the deepest address-taken function (overestimates), ChibiOS's reserved context
+  space is counted again (overestimates), interrupt nesting is not counted (underestimates the exception stack). A runtime
+  high-water mark on the board (ChibiOS fills stacks when CH_DBG_FILL_THREADS is on) is still the real measurement.
 - The 0 V invalid output reads as 10 AFR on a receiver. Owner to decide if another value is better.
 - Trim needs a reflash per board, so how the owner flashes the module (SWD probe on the Tag-Connect pads, or rusEFI
   over CAN) is an open question.

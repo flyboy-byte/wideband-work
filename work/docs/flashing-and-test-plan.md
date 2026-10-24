@@ -29,6 +29,12 @@ board image showing pad 1 and cable orientation, and verify the exact probe's co
 generic cable color chart. Target-voltage sense is not permission to power the heater from the programmer. Select and
 verify one power arrangement, common ground and target voltage first; avoid back-powering from simultaneous sources.
 
+### F8 static stack estimate — DONE as an estimate, 2026-10-23 (Claude Opus 5.5)
+
+`python3 work/checks/stack_estimate.py [ELF] [-v]` (in `run_all.py`): per-thread worst case from the f0 ELF's disassembly;
+every thread fits, smallest margin 80 B (pump thread), CAN TX 312/512 B. Fails loudly on a non-f0 build or a missing thread.
+Limits in `firmware.md`. The hardware high-water measurement in F8 remains to do at bring-up.
+
 ### F3-F6 aux-output host tests — DONE except the F6 thread loop, 2026-10-23 (Claude Opus 5.5)
 
 `test/aux_out/` (16 tests, production code on the f0 config, fakes record every PWM/GPIO/CAN call); details in

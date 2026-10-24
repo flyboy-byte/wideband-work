@@ -174,5 +174,19 @@
       "../firmware/boards/f0_module/aux_curve.h",
       "../firmware/boards/f0_module/wideband_board_config.h"
     ]
+  },
+  {
+    "name": "Firmware: static worst-case stack per thread fits (F8 estimate, f0 build)",
+    "cmd": [
+      "python3",
+      "checks/stack_estimate.py"
+    ],
+    "files": [
+      "../firmware/auxout.cpp",
+      "../firmware/can.cpp",
+      "../firmware/heater_thread.cpp",
+      "../firmware/pump_control.cpp",
+      "../firmware/sampling_thread.cpp"
+    ]
   }
 ]

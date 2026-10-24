@@ -1,5 +1,10 @@
 # HANDOFF — dense session context (read after STATE.md)
 
+## F8 estimate done — 2026-10-23 (Claude Opus 5.5)
+
+`checks/stack_estimate.py`: all threads fit, smallest margin 80 B (pump), CAN TX 312/512. Needs an f0 build in
+`firmware/build` (in-tree f0 needs `bootloader/build_bootloader.sh` first). Runtime high-water still for bring-up.
+
 ## F3-F6 done — 2026-10-23 (Claude Opus 5.5)
 
 `test/aux_out/` (16 tests; `make -C test/aux_out run`, or `AUXOUT_SRC=` to test another version). Found and fixed F5:

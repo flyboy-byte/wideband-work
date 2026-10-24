@@ -1,6 +1,6 @@
 {
  "date": "2026-10-23",
- "git_head": "8e9fa1c",
+ "git_head": "1c8f942",
  "results": [
   {
    "name": "DRC module (errors)",
@@ -133,6 +133,18 @@
     "../firmware/can_helper.cpp": "dc0ba8d660e6",
     "../firmware/boards/f0_module/aux_curve.h": "bb88ea23e570",
     "../firmware/boards/f0_module/wideband_board_config.h": "b96f53982d27"
+   }
+  },
+  {
+   "name": "Firmware: static worst-case stack per thread fits (F8 estimate, f0 build)",
+   "status": "pass",
+   "summary": "stack estimate: ok, smallest margin 80 B",
+   "files": {
+    "../firmware/auxout.cpp": "417044786829",
+    "../firmware/can.cpp": "65a7078908bf",
+    "../firmware/heater_thread.cpp": "f524458f2290",
+    "../firmware/pump_control.cpp": "6449053857fe",
+    "../firmware/sampling_thread.cpp": "65d58bbf0b52"
    }
   }
  ]
