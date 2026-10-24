@@ -1,6 +1,6 @@
 # STATE — rusEFI wideband (module + carrier)
 
-Status: Stage 1 Requirements in progress; analog-out firmware drafted; carrier PCB fully routed, 0 new DRC / 0 open vs upstream (2026-10-23); self-audit round 1 done (`AUDIT.md`, `RELEASE_ASSESSMENT.md`: about 75 % confidence, caveats and owner decisions D1-D5); next: Codex round on the audit pack, then BOM/CPL
+Status: Stage 1 Requirements in progress; analog-out firmware drafted; carrier PCB fully routed, 0 new DRC / 0 open vs upstream (2026-10-23); self-audit round 1 (Sonnet) + review round 2 (Opus: O1, a 12 V fault on J3-5 reaches +5V through D3; owner decision D6) (`AUDIT.md`, `RELEASE_ASSESSMENT.md`: about 75 % confidence, caveats and owner decisions D1-D5); next: Codex round on the audit pack, then BOM/CPL
 Revision in progress: none yet   Revisions used (never reused): none by the owner. Upstream module exports are rev A, B, C (upstream's own scheme, not ours).
 <If the project already names revisions its own way (v1.0.0), keep its scheme.>
 Review pages: status report https://claude.ai/artifact/YRsjXKGZKG5AFbwkcMuYZ4 (private; rebuilt by `checks/report.py`)  fit check <link>  audit <link>
@@ -43,12 +43,12 @@ Mark a stage done only when its exit condition is true. Strike through, don't de
 | ERC module (errors) | PASS | ERC 0 errors (report checks/out/wideband_controller-erc.json) | 2026-10-23 | `wideband_controller.kicad_sch` e54843a1e6ef |
 | DRC carrier (errors) | FAIL | DRC 22 errors: courtyards_overlap 14, copper_edge_clearance 3, malformed_courtyard 3, starved_thermal 1 (report checks/out/board_carrier-drc.json) | 2026-10-23 | `board_carrier.kicad_pcb` 705213560ef6 |
 | Carrier DRC vs upstream baseline (new violations, unconnected) | PASS | DRC vs upstream: 0 new violations, 0 unconnected | 2026-10-23 | `board_carrier.kicad_pcb` 705213560ef6 |
-| Carrier: no new vias in SMD pads | PASS | 18:50:17: Debug: Adding duplicate image handler for 'XPM file' | 2026-10-23 | `board_carrier.kicad_pcb` 705213560ef6 |
+| Carrier: no new vias in SMD pads | PASS | via in pad: 0 new, 0 upstream | 2026-10-23 | `board_carrier.kicad_pcb` 705213560ef6 |
 | ERC carrier (errors) | PASS | ERC 0 errors (report checks/out/board_carrier-erc.json) | 2026-10-23 | `board_carrier.kicad_sch` fc67b216fcd9 |
 | Carrier netlist self-check (generator table) | PASS | netlist self-check: 17 nets, 0 problems | 2026-10-23 | `board_carrier.kicad_sch` fc67b216fcd9, `gen_carrier_sch.py` cebbd7036f4f |
 | No hand edits waiting | PASS | no drift | 2026-10-23 |  |
 
-Written by `checks/run_all.py` at commit bf13162. Don't edit by hand.
+Written by `checks/run_all.py` at commit ebbaf34. Don't edit by hand.
 <!-- checks:end -->
 
 ## Bring-up results

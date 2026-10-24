@@ -14,7 +14,9 @@ Replace it (don't append forever) at the next handoff; durable facts belong in S
 - Report page: `cd work && python3 checks/report.py` then publish `work/report/index.html` with the Artifact tool, same path
   = same URL (https://claude.ai/artifact/YRsjXKGZKG5AFbwkcMuYZ4, private, owner's account).
 
-## Later the same day (self-audit, Opus)
+## Later the same day (self-audit by Sonnet 5.5, reviewed by Opus 5.5 in AUDIT.md round 2)
+- **Open first: D6** (round 2, O1): J3-5 has no resistor between the connector and the D3 clamp to +5V; a 12 V wiring fault back-feeds +5V.
+  Recommended fix (owner to approve): 470R 1206 in series at J3-5, outside the feedback; needs schematic + regeneration + a new D3 link.
 - `RELEASE_ASSESSMENT.md` (new, read it first): concept, audit path, confidence (about 75 %), findings R1-R7, owner decisions D1-D5.
 - `AUDIT.md` round 1 = self-audit (low independence). Codex round still to do on `work/audit/carrier-d-2026-10-23/`
   (give Codex `work/audit/carrier-f-2026-10-23/`, built after the `can_helper.cpp` change; carrier-d and -e are older, ignore).

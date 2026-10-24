@@ -31,7 +31,7 @@ def main():
             results.append({'name': c['name'], 'status': 'skipped', 'summary': f"{c['cmd'][0]} not installed", 'files': files})
             continue
         r = subprocess.run(c['cmd'], capture_output=True, text=True)
-        lines = [l for l in (r.stdout + r.stderr).splitlines() if l.strip()]
+        lines = [l for l in (r.stdout + r.stderr).splitlines() if l.strip() and ': Debug: ' not in l]
         results.append({'name': c['name'], 'status': 'pass' if r.returncode == 0 else 'skipped' if r.returncode == 77 else 'fail',
                         'summary': lines[-1] if lines else f'exit {r.returncode}', 'files': files})
     run = {'date': today, 'git_head': head(), 'results': results}
