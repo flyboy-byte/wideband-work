@@ -19,7 +19,7 @@ Replace it (don't append forever) at the next handoff; durable facts belong in S
   Recommended fix (owner to approve): 470R 1206 in series at J3-5, outside the feedback; needs schematic + regeneration + a new D3 link.
 - `RELEASE_ASSESSMENT.md` (new, read it first): concept, audit path, confidence (about 75 %), findings R1-R7, owner decisions D1-D5.
 - `AUDIT.md` round 1 = self-audit (low independence). Codex round still to do on `work/audit/carrier-d-2026-10-23/`
-  (give Codex `work/audit/carrier-f-2026-10-23/`, built after the `can_helper.cpp` change; carrier-d and -e are older, ignore).
+  (give Codex `work/audit/carrier-g-2026-10-23/` (includes round 2); carrier-d/-e/-f are older, ignore).
 - Firmware: `firmware/can_helper.cpp` drops the CAN frame instead of waiting 100 ms when `AUXOUT_SEL1_PWM_CHANNEL` is set (no node on
   the bus would slow the analog output to about 9 Hz). f0_module and f1_dual build clean; +32 B flash, RAM unchanged.
 - r33: `NET_WEIGHT['/VOP12'] = 2.5` to pull C17 toward U6 pin 8 moved the placement: 6 open connections, `close_d3_link` skipped. Reverted
