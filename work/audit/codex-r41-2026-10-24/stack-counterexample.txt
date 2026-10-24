@@ -1,0 +1,45 @@
+Actual nested frame: 8 + 400 = 408 bytes on configured 256-byte heater stack.
+Checker exit: 0
+/tmp/wideband-stack-review-s7vttfqb/case.elf: 7 functions, 0 indirect-call targets (address in flash data)
+  ok   HeaterThread(void*)    8 of 256 B (+248)
+  ok   PumpThread(void*)    0 of 256 B (+256)
+  ok   SamplingThread(void*)    0 of 256 B (+256)
+  ok   CanTxThread(void*)    0 of 512 B (+512)
+  ok   CanRxThread(void*)    0 of 512 B (+512)
+  IndicationThread not in this build
+  ok   main                0 of 512 B (+512)
+  ok   interrupts (one)    0 of 512 B exception stack (+512), deepest handler None; nesting of interrupts not modelled
+stack estimate: ok, smallest margin 248 B
+
+
+/tmp/wideband-stack-review-s7vttfqb/case.elf:     file format elf32-littlearm
+
+
+Disassembly of section .text:
+
+08002000 <HeaterThread(void*)>:
+ 8002000:	b510      	push	{r4, lr}
+ 8002002:	4b01      	ldr	r3, [pc, #4]	@ (8002008 <HeaterThread(void*)+0x8>)
+ 8002004:	4798      	blx	r3
+ 8002006:	bd10      	pop	{r4, pc}
+ 8002008:	0800200d 	.word	0x0800200d
+
+0800200c <deep_helper>:
+ 800200c:	b0e4      	sub	sp, #400	@ 0x190
+ 800200e:	b064      	add	sp, #400	@ 0x190
+ 8002010:	4770      	bx	lr
+
+08002012 <PumpThread(void*)>:
+ 8002012:	4770      	bx	lr
+
+08002014 <SamplingThread(void*)>:
+ 8002014:	4770      	bx	lr
+
+08002016 <CanTxThread(void*)>:
+ 8002016:	4770      	bx	lr
+
+08002018 <CanRxThread(void*)>:
+ 8002018:	4770      	bx	lr
+
+0800201a <main>:
+ 800201a:	4770      	bx	lr

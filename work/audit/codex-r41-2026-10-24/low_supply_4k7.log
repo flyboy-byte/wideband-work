@@ -1,0 +1,451 @@
+Note: gnd in a subcircuit is not set to 0 automatically
+
+Note: Compatibility modes selected: ps a
+
+
+Circuit: * r41 independent case low_supply_4k7; supply is protected rail after d2
+
+Reducing trtol to 1 for xspice 'A' devices
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+Last Node Voltages
+------------------
+
+Node                                   Last Voltage        Previous Iter
+----                                   ------------        -------------
+battery                                           7                    7
+vcc                                        -3062.87             -3062.87
+five                                              5                    5
+input                                             1                    1
+xactive.esdn                               -2551.13             -2551.13
+xactive.mid                                -1531.44             -1531.44
+xactive.37                                        1                    1
+xactive.57                                 -1351.44             -1351.44
+xactive.58                                 -1711.44             -1711.44
+xactive.51                                 -1491.44             -1491.44
+xactive.52                                 -1571.44             -1571.44
+xactive.45                                 -2845.52             -2845.52
+xactive.vclp                               -2844.32             -2844.32
+xactive.56                                 -2845.52             -2845.52
+xactive.44                                 -2845.52             -2845.52
+xactive.43                                 -2843.12             -2843.12
+xactive.55                                 -1722.76             -1722.76
+xactive.42                                 -1722.76             -1722.76
+xactive.33                                 -1421.43             -1421.43
+oa                                         -1421.43             -1421.43
+xactive.79                              -0.00153144          -0.00153144
+xactive.vee_b                           -0.00153144          -0.00153144
+xactive.80                                 -3064.37             -3064.37
+xactive.vcc_b                              -3062.87             -3062.87
+xactive.86                                   1.0018               1.0018
+xactive.22                                 -1531.32             -1531.32
+xactive.23                                 -10.8748             -10.8748
+xactive.26                                  1.00166              1.00166
+xactive.xu3.e1_int1                         1532.44              1532.44
+xactive.24                                  1.00166              1.00166
+xactive.27                                 -3062.87             -3062.87
+xactive.xu3.e2_int1                        -1531.43             -1531.43
+xactive.25                                 -2551.13             -2551.13
+xactive.xu1.vref                           -1531.48             -1531.48
+xactive.xu1.vshf                           -1490.97             -1490.97
+xactive.vimon                              -1491.01             -1491.01
+xactive.xu1.zc                             -1530.55             -1530.55
+xactive.xu1.gzc_int1                              1                    1
+xactive.crs                                -1531.44             -1531.44
+xactive.xu1.gcr_int1                              0                    0
+xactive.28                                 -89566.1             -89566.1
+xactive.29                                 -86697.6             -86697.6
+xactive.30                                  -367747              -367747
+xactive.31                                 -1528.14             -1528.14
+xactive.32                                  11682.7              11682.6
+xactive.xu2.g1_int1                         13214.2              13214.1
+xactive.cl_clamp                           -2399.91             -2399.91
+xactive.34                                 -1535.26             -1535.26
+xactive.35                                 -1538.26             -1538.26
+xactive.clamp                              -1711.56             -1711.56
+xactive.xu5.g1_int1                     3.94109e-07          3.94109e-07
+xactive.36                                   304755               304755
+xactive.38                                 -398.641             -398.641
+xactive.39                                 -411.083             -411.083
+xactive.40                                 -1531.45             -1531.45
+xactive.41                                 -1531.44             -1531.44
+xactive.xi_nn.7                            0.833786             0.833786
+xactive.xi_nn.8                            0.833786             0.833786
+xactive.xi_nn.3                                   0                    0
+xactive.xi_nn.6                                   0                    0
+xactive.xi_nn.4                                   0                    0
+xactive.xi_nn.5                                   0                    0
+xactive.xi_np.7                            0.833786             0.833786
+xactive.xi_np.8                            0.833786             0.833786
+xactive.xi_np.3                                   0                    0
+xactive.xi_np.6                                   0                    0
+xactive.xi_np.4                                   0                    0
+xactive.xi_np.5                                   0                    0
+xactive.xe_n.7                             0.833786             0.833786
+xactive.xe_n.8                             0.833786             0.833786
+xactive.xe_n.3                                    0                    0
+xactive.xe_n.6                                    0                    0
+xactive.xe_n.4                                    0                    0
+xactive.xe_n.5                                    0                    0
+xactive.esdp                                      1                    1
+xactive.vsense                             -1711.48             -1711.48
+xactive.xvccs_lim_1.g1_int1                0.306287             0.306287
+xactive.46                              -0.00153144          -0.00153144
+xactive.47                                 -1531.44             -1531.44
+xactive.48                                 -1684.58             -1684.58
+xactive.49                                 -1531.32             -1531.32
+xactive.50                                 -481.412             -481.412
+xactive.xiqpos.g1_int1                    0.0404296            0.0404296
+xactive.xiqneg.g1_int1                            0                    0
+xactive.53                                 -1531.01             -1531.01
+xactive.xcl_amp.gvo+_int1                  0.429647             0.429647
+xactive.54                                 -1531.44             -1531.44
+xactive.xcl_amp.gvo-_int1                         0                    0
+xactive.60                                 -1531.44             -1531.44
+xactive.xgr_amp.gvo+_int1                         0                    0
+xactive.59                                 -1711.48             -1711.48
+xactive.61                                 -1531.09             -1531.09
+xactive.xgr_amp.gvo-_int1                  0.350841             0.350841
+xactive.62                                 -1531.44             -1531.44
+xactive.63                                 -1531.09             -1531.09
+xactive.xgr_src.g1_int1                      -0.013               -0.013
+xactive.64                                 -1531.01             -1531.01
+xactive.65                                 -1531.44             -1531.44
+xactive.xcl_src.g1_int1                    0.429647             0.429647
+xactive.66                                 -3070.84             -3070.84
+xactive.xclawp.g1_int1                      0.00797              0.00797
+xactive.xclawp.g1_int2                      40.4296              40.4296
+xactive.67                                  10.1985              10.1985
+xactive.xclawn.g1_int1                       0.0102               0.0102
+xactive.xclawn.g1_int2                      40.4296              40.4296
+xactive.68                                 -3070.84             -3070.84
+xactive.69                                  10.1985              10.1985
+xactive.vcc_clp                            -3070.84             -3070.84
+xactive.vee_clp                             10.1985              10.1985
+xactive.70                                  617.079              617.079
+xactive.xclaw_amp.gvo+_int1                 2148.52              2148.52
+xactive.vout_s                             -922.319             -922.319
+xactive.71                                 -598.924             -598.924
+xactive.xclaw_amp.gvo-_int1                 932.518              932.518
+xactive.72                                  617.079              617.079
+xactive.73                                 -598.924             -598.924
+xactive.claw_clamp                         -1970.26             -1970.26
+xactive.xclaw_src.g1_int1                     0.435                0.435
+xactive.sw_ol                              -1530.53             -1530.53
+xactive.74                                 -1530.44             -1530.44
+xactive.xol_sense.gsw+_int1                       1                    1
+xactive.75                                 -1483.42             -1483.42
+xactive.76                                 -1421.43             -1421.43
+xactive.77                                 -2399.91             -2399.91
+xactive.78                              -0.00153144          -0.00153144
+xactive.xvcm_clamp.g1_int1                  1531.44              1531.44
+xactive.81                                 -1531.44             -1531.44
+xactive.82                              -0.00153297          -0.00153297
+xactive.83                                 -3062.87             -3062.87
+xactive.84                                   1.1241               1.1241
+xactive.85                                   1.1241               1.1241
+inv                                        -2551.13             -2551.13
+xunused.esdn                               -1531.61             -1531.61
+xunused.mid                                -1531.44             -1531.44
+xunused.37                              4.06617e-08          4.06617e-08
+xunused.57                                 -1351.44             -1351.44
+xunused.58                                 -1711.44             -1711.44
+xunused.51                                 -1491.44             -1491.44
+xunused.52                                 -1571.44             -1571.44
+xunused.45                                 -1532.94             -1532.94
+xunused.vclp                               -1531.74             -1531.74
+xunused.56                                 -1532.94             -1532.94
+xunused.44                                 -1532.94             -1532.94
+xunused.43                                 -1530.54             -1530.54
+xunused.55                                 -1530.54             -1530.54
+xunused.42                                 -1530.54             -1530.54
+xunused.33                                 -1531.61             -1531.61
+unused                                     -1531.61             -1531.61
+xunused.79                              -0.00153144          -0.00153144
+xunused.vee_b                           -0.00153144          -0.00153144
+xunused.80                                 -3064.37             -3064.37
+xunused.vcc_b                              -3062.87             -3062.87
+xunused.86                               0.00180004           0.00180004
+xunused.22                                 -1531.32             -1531.32
+xunused.23                                 -10.8748             -10.8748
+xunused.26                               -0.0722408           -0.0722408
+xunused.xu3.e1_int1                         1531.37              1531.37
+xunused.24                               -0.0722408           -0.0722408
+xunused.27                                 -3062.87             -3062.87
+xunused.xu3.e2_int1                        -1531.43             -1531.43
+xunused.25                                 -1531.61             -1531.61
+xunused.xu1.vref                           -1531.48             -1531.48
+xunused.xu1.vshf                            -1538.6              -1538.6
+xunused.vimon                              -1538.64             -1538.64
+xunused.xu1.zc                             -1530.55             -1530.55
+xunused.xu1.gzc_int1                             -1                   -1
+xunused.crs                                -1531.44             -1531.44
+xunused.xu1.gcr_int1                              0                    0
+xunused.28                                 -1691.38             -1691.38
+xunused.29                                 -1691.37             -1691.37
+xunused.30                                 -2218.97             -2218.97
+xunused.31                                 -1531.89             -1531.89
+xunused.32                                 -3323.06             -3323.06
+xunused.xu2.g1_int1                        -1791.62             -1791.62
+xunused.cl_clamp                           -1533.39             -1533.39
+xunused.34                                 -1531.44             -1531.44
+xunused.35                                 -1531.44             -1531.44
+xunused.clamp                              -1531.44             -1531.44
+xunused.xu5.g1_int1                      3.9399e-07           3.9399e-07
+xunused.36                                   304748               304748
+xunused.38                                 -1531.44             -1531.44
+xunused.39                                 -1531.44             -1531.44
+xunused.40                                 -1531.44             -1531.44
+xunused.41                                 -1531.44             -1531.44
+xunused.xi_nn.7                            0.833786             0.833786
+xunused.xi_nn.8                            0.833786             0.833786
+xunused.xi_nn.3                                   0                    0
+xunused.xi_nn.6                                   0                    0
+xunused.xi_nn.4                                   0                    0
+xunused.xi_nn.5                                   0                    0
+xunused.xi_np.7                            0.833786             0.833786
+xunused.xi_np.8                            0.833786             0.833786
+xunused.xi_np.3                                   0                    0
+xunused.xi_np.6                                   0                    0
+xunused.xi_np.4                                   0                    0
+xunused.xi_np.5                                   0                    0
+xunused.xe_n.7                             0.833786             0.833786
+xunused.xe_n.8                             0.833786             0.833786
+xunused.xe_n.3                                    0                    0
+xunused.xe_n.6                                    0                    0
+xunused.xe_n.4                                    0                    0
+xunused.xe_n.5                                    0                    0
+xunused.esdp                            4.06617e-08          4.06617e-08
+xunused.vsense                             -1531.44             -1531.44
+xunused.xvccs_lim_1.g1_int1                 0.30628              0.30628
+xunused.46                               -0.0722407           -0.0722407
+xunused.47                                 -1531.44             -1531.44
+xunused.48                                 -1684.58             -1684.58
+xunused.49                                 -1531.39             -1531.39
+xunused.50                                 -482.098             -482.098
+xunused.xiqpos.g1_int1                            0                    0
+xunused.xiqneg.g1_int1                   0.00719764           0.00719764
+xunused.53                                 -1531.44             -1531.44
+xunused.xcl_amp.gvo+_int1                         0                    0
+xunused.54                                 -1531.44             -1531.44
+xunused.xcl_amp.gvo-_int1                         0                    0
+xunused.60                                 -1531.44             -1531.44
+xunused.xgr_amp.gvo+_int1                         0                    0
+xunused.59                                 -1531.44             -1531.44
+xunused.61                                 -1531.44             -1531.44
+xunused.xgr_amp.gvo-_int1                         0                    0
+xunused.62                                 -1531.44             -1531.44
+xunused.63                                 -1531.44             -1531.44
+xunused.xgr_src.g1_int1                           0                    0
+xunused.64                                 -1531.44             -1531.44
+xunused.65                                 -1531.44             -1531.44
+xunused.xcl_src.g1_int1                           0                    0
+xunused.66                                 -3064.29             -3064.29
+xunused.xclawp.g1_int1                   0.00142604           0.00142604
+xunused.xclawp.g1_int2                      7.19764              7.19764
+xunused.67                                  1.05713              1.05713
+xunused.xclawn.g1_int1                   0.00105866           0.00105866
+xunused.xclawn.g1_int2                      7.19764              7.19764
+xunused.68                                 -3064.29             -3064.29
+xunused.69                                  1.05713              1.05713
+xunused.vcc_clp                            -3064.29             -3064.29
+xunused.vee_clp                             1.05713              1.05713
+xunused.70                                  1.23596              1.23596
+xunused.xclaw_amp.gvo+_int1                 1532.68              1532.68
+xunused.vout_s                             -1531.62             -1531.62
+xunused.71                                    1.234                1.234
+xunused.xclaw_amp.gvo-_int1                 1532.67              1532.67
+xunused.72                                  1.23596              1.23596
+xunused.73                                    1.234                1.234
+xunused.claw_clamp                         -1533.39             -1533.39
+xunused.xclaw_src.g1_int1                0.00195141           0.00195141
+xunused.sw_ol                              -1531.44             -1531.44
+xunused.74                                 -1531.44             -1531.44
+xunused.xol_sense.gsw+_int1                       0                    0
+xunused.75                                  -1538.6              -1538.6
+xunused.76                                 -1531.61             -1531.61
+xunused.77                                 -1533.39             -1533.39
+xunused.78                               -0.0722407           -0.0722407
+xunused.xvcm_clamp.g1_int1                  1531.37              1531.37
+xunused.81                                 -1531.44             -1531.44
+xunused.82                              -0.00153297          -0.00153297
+xunused.83                                 -3062.87             -3062.87
+xunused.84                                0.0502355            0.0502355
+xunused.85                                0.0502355            0.0502355
+connector                                  0.994153             0.994153
+clamp                                       -3.3986              -3.3986
+b.xunused.xvcm_clamp.bg1#branch                    0                    0
+b.xunused.xol_sense.bgsw+#branch                    0                    0
+b.xunused.xclaw_src.bg1#branch                    0                    0
+b.xunused.xclaw_amp.bgvo-#branch                    0                    0
+b.xunused.xclaw_amp.bgvo+#branch                    0                    0
+b.xunused.xclawn.bg1#branch                       0                    0
+b.xunused.xclawp.bg1#branch                       0                    0
+b.xunused.xcl_src.bg1#branch                      0                    0
+b.xunused.xgr_src.bg1#branch                      0                    0
+b.xunused.xgr_amp.bgvo-#branch                    0                    0
+b.xunused.xgr_amp.bgvo+#branch                    0                    0
+b.xunused.xcl_amp.bgvo-#branch                    0                    0
+b.xunused.xcl_amp.bgvo+#branch                    0                    0
+b.xunused.xiqneg.bg1#branch                       0                    0
+b.xunused.xiqpos.bg1#branch                       0                    0
+b.xunused.xvccs_lim_1.bg1#branch                    0                    0
+b.xunused.xu5.bg1#branch                          0                    0
+b.xunused.xu2.bg1#branch                          0                    0
+b.xunused.xu1.bgcr#branch                         0                    0
+b.xunused.xu1.bgzc#branch                         0                    0
+b.xunused.xu3.be2#branch                          0                    0
+b.xunused.xu3.be1#branch                          0                    0
+b.xactive.xvcm_clamp.bg1#branch                    0                    0
+b.xactive.xol_sense.bgsw+#branch                    0                    0
+b.xactive.xclaw_src.bg1#branch                    0                    0
+b.xactive.xclaw_amp.bgvo-#branch                    0                    0
+b.xactive.xclaw_amp.bgvo+#branch                    0                    0
+b.xactive.xclawn.bg1#branch                       0                    0
+b.xactive.xclawp.bg1#branch                       0                    0
+b.xactive.xcl_src.bg1#branch                      0                    0
+b.xactive.xgr_src.bg1#branch                      0                    0
+b.xactive.xgr_amp.bgvo-#branch                    0                    0
+b.xactive.xgr_amp.bgvo+#branch                    0                    0
+b.xactive.xcl_amp.bgvo-#branch                    0                    0
+b.xactive.xcl_amp.bgvo+#branch                    0                    0
+b.xactive.xiqneg.bg1#branch                       0                    0
+b.xactive.xiqpos.bg1#branch                       0                    0
+b.xactive.xvccs_lim_1.bg1#branch                    0                    0
+b.xactive.xu5.bg1#branch                          0                    0
+b.xactive.xu2.bg1#branch                          0                    0
+b.xactive.xu1.bgcr#branch                         0                    0
+b.xactive.xu1.bgzc#branch                         0                    0
+b.xactive.xu3.be2#branch                          0                    0
+b.xactive.xu3.be1#branch                          0                    0
+h.xunused.h1#branch                    -0.000388186         -0.000388186
+v.xunused.v4#branch                     -0.00715882          -0.00715882
+h.xunused.h3#branch                     1.53128e-09          1.53128e-09
+v.xunused.v12#branch                     1.5286e-09           1.5286e-09
+h.xunused.h2#branch                     1.53127e-09          1.53127e-09
+v.xunused.v11#branch                    1.53588e-09          1.53588e-09
+h.xactive.h1#branch                      -0.0758653           -0.0758636
+v.xactive.v4#branch                       0.0480162             0.048016
+h.xactive.h3#branch                        0.124419             0.124419
+v.xactive.v12#branch                        1120.36              1120.36
+h.xactive.h2#branch                    -5.88156e-05         -5.88156e-05
+v.xactive.v11#branch                    5.11349e-09          5.11349e-09
+e.xunused.e1#branch                        0.043289             0.043289
+e.xunused.e4#branch                       0.0165057            0.0165057
+e.xunused.e5#branch                    -3.16264e-05         -3.16264e-05
+e.xunused.xe_n.e3#branch                     -2e-08               -2e-08
+e.xunused.xe_n.e2#branch                          0                    0
+e.xunused.xe_n.e1#branch                          0                    0
+e.xunused.xi_np.e2#branch                         0                    0
+e.xunused.xi_np.e1#branch                         0                    0
+e.xunused.xi_nn.e2#branch                         0                    0
+e.xunused.xi_nn.e1#branch                         0                    0
+e.xunused.xu1.eshf#branch                         0                    0
+e.xunused.xu3.e2#branch                           0                    0
+e.xunused.xu3.e1#branch                           0                    0
+e.xactive.e1#branch                        0.180894             0.212149 *
+e.xactive.e4#branch                         -4.4441              -4.4441
+e.xactive.e5#branch                         4.99114              4.99114
+e.xactive.xe_n.e3#branch               -1.99966e-08         -1.99966e-08
+e.xactive.xe_n.e2#branch                          0                    0
+e.xactive.xe_n.e1#branch                          0                    0
+e.xactive.xi_np.e2#branch                         0                    0
+e.xactive.xi_np.e1#branch                         0                    0
+e.xactive.xi_nn.e2#branch                         0                    0
+e.xactive.xi_nn.e1#branch                         0                    0
+e.xactive.xu1.eshf#branch                         0                    0
+e.xactive.xu3.e2#branch                           0                    0
+e.xactive.xu3.e1#branch                           0                    0
+v.xunused.xu1.v1#branch                           0                    0
+v.xunused.v_os#branch                  -3.30846e-14         -3.30846e-14
+v.xunused.vcm_max#branch                1.53293e-09          1.53293e-09
+v.xunused.vcm_min#branch               -1.53144e-09         -1.53144e-09
+v.xunused.v_orp#branch                            0                    0
+v.xunused.v_orn#branch                            0                    0
+v.xunused.v_iscn#branch                       4e-11                4e-11
+v.xunused.v_iscp#branch                      -4e-11               -4e-11
+v.xunused.v_grn#branch                      1.8e-10              1.8e-10
+v.xunused.v_grp#branch                     -1.8e-10             -1.8e-10
+v.xactive.xu1.v1#branch                           0                    0
+v.xactive.v_os#branch                  -3.35487e-12         -3.35509e-12
+v.xactive.vcm_max#branch                1.53293e-09          1.53293e-09
+v.xactive.vcm_min#branch               -1.53144e-09         -1.53144e-09
+v.xactive.v_orp#branch                            0                    0
+v.xactive.v_orn#branch                            0                    0
+v.xactive.v_iscn#branch                       4e-11                4e-11
+v.xactive.v_iscp#branch                      -4e-11               -4e-11
+v.xactive.v_grn#branch                      1.8e-10              1.8e-10
+v.xactive.v_grp#branch                     -1.8e-10             -1.8e-10
+vin#branch                              7.74275e-05          7.74285e-05
+v5#branch                               6.97619e-08          6.98201e-08
+vbat#branch                                -3.06987             -3.06987
+a.xunused.xclawn.ag1#branch_1_0                    0                    0
+a.xunused.xclawp.ag1#branch_1_0                    0                    0
+a.xactive.xclawn.ag1#branch_1_0                    0                    0
+a.xactive.xclawp.ag1#branch_1_0                    0                    0
+
+
+No. of Data Rows : 0
+ngspice-47 done
+Note: Starting dynamic gmin stepping
+Warning: Dynamic gmin stepping failed
+Note: Starting true gmin stepping
+Warning: True gmin stepping failed
+Note: Starting source stepping
+Warning: source stepping failed
+Note: Transient op started
+Error: Transient op failed, timestep too small
+
+
+Error: The operating point could not be simulated successfully.
+    Any of the following steps may fail.!
+
+
+Error: Finding the operating point for transient simulation failed 
+
+doAnalyses: TRAN:  Timestep too small; initial timepoint: trouble with node "e.xactive.e1#branch"
+
+
+run simulation(s) aborted
+Error: scale vector time has no data.
+
+Error: measure  before  avg(TRIG) : out of interval
+ meas tran before avg v(connector) from=3.5m to=3.9m failed!
+
+Error: scale vector time has no data.
+
+Error: measure  final  avg(TRIG) : out of interval
+ meas tran final avg v(connector) from=7.5m to=8m failed!
+
+Error: scale vector time has no data.
+
+Error: measure  peak  max(TRIG) : out of interval
+ meas tran peak max v(connector) from=4m to=8m failed!
+
+Error: scale vector time has no data.
+
+Error: measure  late_min  min(TRIG) : out of interval
+ meas tran late_min min v(connector) from=7.5m to=8m failed!
+
+Error: scale vector time has no data.
+
+Error: measure  late_max  max(TRIG) : out of interval
+ meas tran late_max max v(connector) from=7.5m to=8m failed!
+
+Error: scale vector time has no data.
+
+Error: measure  rail  avg(TRIG) : out of interval
+ meas tran rail avg v(vcc) from=7.5m to=8m failed!
+
+Error: scale vector time has no data.
+
+Error: measure  clamp_voltage  avg(TRIG) : out of interval
+ meas tran clamp_voltage avg v(clamp) from=7.5m to=8m failed!
+
+Error: scale vector time has no data.
+
+Error: measure  injection  avg(TRIG) : out of interval
+ meas tran injection avg i(v5) from=7.5m to=8m failed!
+
