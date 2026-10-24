@@ -51,8 +51,10 @@ Mark a stage done only when its exit condition is true. Strike through, don't de
 | ERC carrier (errors) | PASS | ERC 0 errors (report checks/out/board_carrier-erc.json) | 2026-10-23 | `board_carrier.kicad_sch` c2190cd03e68 |
 | Carrier netlist self-check (generator table) | PASS | netlist self-check: 18 nets, 0 problems | 2026-10-23 | `board_carrier.kicad_sch` c2190cd03e68, `gen_carrier_sch.py` ae5a44d3abf4 |
 | No hand edits waiting | PASS | no drift | 2026-10-23 |  |
+| Firmware: bootloader DATA writes stay inside the app partition (F1) | PASS | 52 guard cases; 0 unsafe accepted writes, 0 valid writes refused (stub only) | 2026-10-23 | `bootloader.cpp` 21cbac0cd469, `bootloader_bounds.h` 72e216e2e7bc |
+| Firmware: package checker accepts good images, rejects bad ones (F2) | PASS | 21 package cases, 0 wrong verdict(s) | 2026-10-23 | `fw_package.py` 34a1c5eb78dd, `wideband_image.h` 1ee39ace5944, `bootloader.cpp` 21cbac0cd469 |
 
-Written by `checks/run_all.py` at commit 34cd49d. Don't edit by hand.
+Written by `checks/run_all.py` at commit f2a437c. Don't edit by hand.
 <!-- checks:end -->
 
 ## Bring-up results

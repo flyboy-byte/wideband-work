@@ -1,6 +1,6 @@
 {
  "date": "2026-10-23",
- "git_head": "34cd49d",
+ "git_head": "f2a437c",
  "results": [
   {
    "name": "DRC module (errors)",
@@ -94,6 +94,25 @@
    "status": "pass",
    "summary": "no drift",
    "files": {}
+  },
+  {
+   "name": "Firmware: bootloader DATA writes stay inside the app partition (F1)",
+   "status": "pass",
+   "summary": "52 guard cases; 0 unsafe accepted writes, 0 valid writes refused (stub only)",
+   "files": {
+    "../firmware/boards/f0_module/bootloader/bootloader.cpp": "21cbac0cd469",
+    "../firmware/boards/f0_module/bootloader/bootloader_bounds.h": "72e216e2e7bc"
+   }
+  },
+  {
+   "name": "Firmware: package checker accepts good images, rejects bad ones (F2)",
+   "status": "pass",
+   "summary": "21 package cases, 0 wrong verdict(s)",
+   "files": {
+    "checks/fw_package.py": "34a1c5eb78dd",
+    "../for_rusefi/wideband_image.h": "1ee39ace5944",
+    "../firmware/boards/f0_module/bootloader/bootloader.cpp": "21cbac0cd469"
+   }
   }
  ]
 }

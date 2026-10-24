@@ -69,13 +69,27 @@
   },
   {
     "name": "Layout geometry helper unit tests",
-    "cmd": ["python3", "checks/test_layout_metrics.py"],
-    "files": ["checks/layout_metrics.py", "checks/test_layout_metrics.py"]
+    "cmd": [
+      "python3",
+      "checks/test_layout_metrics.py"
+    ],
+    "files": [
+      "checks/layout_metrics.py",
+      "checks/test_layout_metrics.py"
+    ]
   },
   {
     "name": "Layout track-order regression",
-    "cmd": ["python3", "checks/audit_layout_order.py"],
-    "files": ["../hardware/board_carrier/board_carrier.kicad_pcb", "checks/layout_review.py", "checks/layout_metrics.py", "checks/audit_layout_order.py"]
+    "cmd": [
+      "python3",
+      "checks/audit_layout_order.py"
+    ],
+    "files": [
+      "../hardware/board_carrier/board_carrier.kicad_pcb",
+      "checks/layout_review.py",
+      "checks/layout_metrics.py",
+      "checks/audit_layout_order.py"
+    ]
   },
   {
     "name": "ERC carrier (errors)",
@@ -109,5 +123,28 @@
       "check"
     ],
     "files": []
+  },
+  {
+    "name": "Firmware: bootloader DATA writes stay inside the app partition (F1)",
+    "cmd": [
+      "python3",
+      "checks/audit_bootloader_bounds.py"
+    ],
+    "files": [
+      "../firmware/boards/f0_module/bootloader/bootloader.cpp",
+      "../firmware/boards/f0_module/bootloader/bootloader_bounds.h"
+    ]
+  },
+  {
+    "name": "Firmware: package checker accepts good images, rejects bad ones (F2)",
+    "cmd": [
+      "python3",
+      "checks/test_fw_package.py"
+    ],
+    "files": [
+      "checks/fw_package.py",
+      "../for_rusefi/wideband_image.h",
+      "../firmware/boards/f0_module/bootloader/bootloader.cpp"
+    ]
   }
 ]

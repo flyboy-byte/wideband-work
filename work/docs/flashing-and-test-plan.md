@@ -29,6 +29,24 @@ board image showing pad 1 and cable orientation, and verify the exact probe's co
 generic cable color chart. Target-voltage sense is not permission to power the heater from the programmer. Select and
 verify one power arrangement, common ground and target voltage first; avoid back-powering from simultaneous sources.
 
+### F2 package build and validator — DONE 2026-10-23 (Claude Opus 5.5)
+
+`python3 work/checks/fw_package.py build [OUT]` builds the bootloader and app into a fresh directory (default
+`work/fw-build/<commit>/`, gitignored) with `BUILDDIR` and an explicit `ULIBS`, and never touches `firmware/build`,
+`deliver/` or the tracked `for_rusefi/` files. It writes upstream's three files plus `manifest.json` (commit, tree-dirty
+flag, tool versions, flash map, bytes used/free, CRC, SHA-256 of each file) and `build.log`.
+`fw_package.py check FILE` validates any of the three: exact sizes (25600 / 31744), the CRC through the bootloader's own
+`isAppValid()` (extracted from `bootloader.cpp`, compiled on the host with the project's `crc.cpp`) and through zlib, vector
+tables (SP in RAM; reset, NMI, HardFault, SVCall, PendSV, SysTick and IRQ vectors Thumb and inside their own partition), no
+config page; the layout constants are checked against `wideband_layout.ld`.
+Evidence: upstream's shipped `for_rusefi/wideband_image.h` passes, and the header writer reproduces it byte-for-byte;
+staged build at f2a437c: app 20,944 B used, 4,652 B free, CRC 429ca981, all checks pass; a second build in another
+directory is byte-identical (all three files). `checks/test_fw_package.py`: 21 cases (bad CRC, swapped CRC order,
+truncated, extended, linked without the bootloader offset, Thumb bit cleared, vector into the config page, SP outside RAM,
+bad header name/length, config page appended, shifted app, bootloader vector into the app; vector faults carry a fresh CRC
+so only the vector check can catch them; isAppValid() alone accepts/rejects), 0 wrong verdicts. Both checks in `run_all.py`.
+Not covered: whether the chip boots it (hardware), the bootloader region beyond its vector table, option bytes.
+
 ### First-flash procedure to finish before hardware arrives
 
 1. Produce a disposable/staged build with board identity, source commit, tool versions, image hashes and flash map.
