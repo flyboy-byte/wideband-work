@@ -62,7 +62,8 @@ error (0.1 V) is 0.2 AFR, which is why the reference buffer matters [INFERRED].
      -> 74LVC1G125 buffer, VCC = 3.000 V from REF3030, OE tied low   (full scale = the reference, not the LDO)
      -> 3.3k / 100n -> 3.3k / 100n                                   (lambda-x2's values)
      -> LM2904 non-inverting, gain 1 + 68k/100k = 1.68 -> full scale 5.04 V
-        dual loop: DC feedback (68k) from AFTER the 330R, so the ECU's input load causes no error;
+        dual loop: DC feedback (68k) from J3-5, after the 330R and R11 (r37; was after the 330R only), so the ECU's
+        input load causes no error;
         AC feedback Cf = 1 nF (C0G) from the op-amp output to IN-, so cable capacitance can't make it oscillate
      -> 330R -> 1N4148W clamps to +5V and GND -> 470R (R11, 1206) -> J3-5
    LM2904 supply: protected 12 V (LSU_Heater+ net) through 1k, 18 V zener, 10u 50 V + 100n
@@ -115,9 +116,12 @@ error (0.1 V) is 0.2 AFR, which is why the reference buffer matters [INFERRED].
    | C: dual loop, Cf 100 pF | 1 pF / 1 nF / 10 nF / 47 nF | 0% / 0% / 11% / 39% | no | 9-161 us |
    | **C: dual loop, Cf 1 nF** | 1 pF / 1 nF / 10 nF / 47 nF | **0% at every load** | no | 145-254 us |
    | **D: C plus R11 470R to the connector** | 1 pF / 1 nF / 10 nF / 47 nF | **0% / 0% / 0% / 0.5%** | no | 175-254 us |
+   | **E: D with the DC feedback at the connector (as built, r37)** | 1 pF / 1 nF / 10 nF / 47 nF / 100 nF | **0% / 0% / 0% / 9.4% / 28%** | no (settles) | 92-572 us |
 
    D's final value: 1.8417 V against C's 1.8503 V, 0.46 % low into the 100k load (R11 outside the loop) [DOCUMENTED run,
-   2026-10-23].
+   2026-10-23]. E (as built): 1.8503 V, the same as C: R11 is inside the loop [DOCUMENTED run, `sim/stability.sh`,
+   2026-10-24]. E rings more into a large capacitive load (47 nF and up); a cable is about 100 pF per metre [FROM MEMORY],
+   so a few nF at most.
 
    Final value with C: 1.8503 V against 1.848 V ideal (the difference is the model's input offset). Not simulated:
    the clamp diodes, the 100k pull-down, temperature, and cable inductance.

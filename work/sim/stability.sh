@@ -4,6 +4,7 @@
 # Gain 1 + 68k/100k, 330R series, 100k ECU input, cable capacitance Cload on the output.
 # A: feedback before the 330R.  B: feedback after it.  C: B plus Cf from op-amp output to IN- (dual loop).
 # D: C plus R11 470R in series to the connector, outside the feedback (fault protection, AUDIT O1 / decision D6).
+# E: D with the DC feedback taken at the connector, after R11 (as built from r37, C2 build-around); Cf stays 1 nF.
 # The load and cable sit on node conn; A-C join it to out through 1 mOhm (no effect).
 cd "$(dirname "$0")"
 [ -f models/lmx58_lm2904.lib ] || { echo "models/lmx58_lm2904.lib missing (TI SNOM268)"; exit 1; }
@@ -25,8 +26,10 @@ CIR
     A) echo "RF oa inn 68k" >> "$f" ;;
     B) echo "RF out inn 68k" >> "$f" ;;
     C|D) printf 'RF out inn 68k\nCF oa inn %s\n' "$3" >> "$f" ;;
+    E) printf 'RF conn inn 68k\nCF oa inn %s\n' "$3" >> "$f" ;;
   esac
   cat >> "$f" <<'CIR'
+.save v(conn)
 .tran 50n 1.2m 0 50n
 .control
 run
@@ -55,3 +58,4 @@ for c in 1p 1n 10n 47n; do run A $c -; done
 for c in 1p 1n 10n 47n; do run B $c -; done
 for cf in 100p 1n; do for c in 1p 1n 10n 47n; do run C $c $cf; done; done
 for c in 1p 1n 10n 47n; do run D $c 1n 470; done
+for c in 1p 1n 10n 47n 100n; do run E $c 1n 470; done
