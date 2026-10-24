@@ -4,29 +4,39 @@ Current review: Round 3 below supersedes the historical R11/full-scale/grounding
 Independent report: `docs/codex-audit-2026-10-23.md`; board remains at `986c803`.
 
 ## Hand-off (give this to each auditor with a read-only copy; not your conclusions)
-- Board: carrier PCB for the rusEFI wideband module (LSU 4.9 controller) adding a 0-5 V analog output (AFR 10 = 0 V, 20 = 5 V)
-  for Speeduino / Hondata FlashPro / a gauge. Analog stage: PB1 PWM -> 74LVC1G125 on a REF3030 3.000 V -> 2x RC (3.3k/100n)
-  -> LM2904 x1.68 (dual-loop feedback) -> 330R -> 1N4148WS clamps -> J3-5. Firmware: branch `analog-out`.
-- Commit and files: the commit that adds this text (see `git log -1 -- work/AUDIT.md`); `hardware/board_carrier/board_carrier.kicad_{sch,pcb}`,
-  `firmware/` diff (`git diff master -- firmware`), `work/docs/{analog-out,carrier,firmware}.md`, `work/sim/`.
-- Changed since last audit: no independent audit has happened yet; round 1 below is the author's own self-audit (also read `RELEASE_ASSESSMENT.md`). Since then: `firmware/can_helper.cpp` drops a CAN frame instead of waiting 100 ms on this board. Earlier change (2026-10-23, run r32): the last open
-  connection was closed by `gen/gen_carrier_pcb.py: close_d3_link` (D3 +5V -> U2 pin 3 on the top layer, 0.25 mm; GND via at 66.00,79.35
-  tied to C1 pin 2 by 0.2 mm; C2 pin 2 given a solid pour connection).
-- Check, in priority order (owner: effort goes to circuits, power, heater drive, control loops, firmware):
-  1. **Analog stage from first principles**: op-amp stability with cable capacitance (`sim/stability.sh`, TI model), output
-     clamps and the 0.7 mV ripple / 4.1 ms settling claim, behaviour with the output shorted to GND or +12 V.
-  2. **Power**: LM2904 supply (12 V -> 1k -> 18 V zener; input TVS SMCJ30CA lets the rail reach ~35-48 V; corrected 2026-10-24: the board has SMCJ24CA, about 27-39 V, see `docs/carrier.md`). R8 (330R) and R9 (1k)
-     are 0603 (100 mW): INFERRED too small for a sustained AOUT short or a surge; not simulated.
-  3. **New in r32**: C1 is the LSU heater supply bypass (upstream part). Its GND now returns through one 0.5 mm via and a 0.2 mm
-     tie (was a pour connection). INFERRED fine for a bypass cap, not measured. Is a heater-drive transient a concern?
-  4. **Firmware**: `git diff master -- firmware`: TIM3_CH4 on PB1 shared with the pump DAC, update from the CAN TX thread,
-     0 V while lambda invalid, test mode when SEL_2 is low at power-up, RAM full to the byte.
-  5. Layout of what moved; silkscreen; BOM/stock (nothing ordered; no fab files exist yet).
-- Known and accepted (don't re-report): module DRC 11 and carrier DRC 22 errors that are upstream's own (`checks/drc_vs_upstream.py`
-  subtracts them); upstream's thermal-relief warning on one pad; no fab files yet (nothing to compare against).
+- Board: carrier PCB for the rusEFI wideband module (LSU 4.9 controller), grown to 40.0 x 51.5 mm, adding a 0-5 V analog
+  output (AFR 10 = 0 V, 20 = 5 V) for Speeduino / Hondata FlashPro / a gauge. Analog stage: PB1 PWM -> 74LVC1G125 on a
+  REF3030 3.000 V -> 2x RC (3.3k/100n) -> LM2904 x1.68 -> 330R -> 1N4148WS clamps -> 470R R11 -> J3-5. DC feedback (68k)
+  is taken at J3-5, after R11; 1 nF from the op-amp output for stability. Firmware: branch `analog-out`.
+- Commit and files: the commit that adds this text. `hardware/board_carrier/board_carrier.kicad_{sch,pcb}` (r40),
+  fab candidate `work/out/carrier/` (Gerber zip, BOM, CPL, not-fitted, README), `firmware.diff` (`git diff master -- firmware`),
+  `work/docs/{carrier,firmware}.md`, `work/sim/{stability,load_accuracy}.sh`, `checks/jlc_rotation.{py,json}`.
+- Changed since round 3 (Codex, 2026-10-23, board r36):
+  - r37: every new part moved to the TOP (one-sided assembly); R6 feedback moved from the 330R/R11 node to J3-5 (owner:
+    build around an unknown receiver input); R9 0603 -> 1206; two M3 holes H1/H2.
+  - r38: two same-net vias 0.225 mm apart (hole_to_hole, a DRC *warning*) had been on every board since about r26; the
+    generator now merges them and the DRC delta counts fab-relevant warnings.
+  - r39-r40: silkscreen at 1.0 mm / 0.16 mm, labels only where they belong to their part; jumper function labels.
+  - Fab candidate: CPL rotations and positions corrected per part from EasyEDA footprints (`checks/jlc_rotation.py`).
+  - Firmware: independent watchdog refreshed by the heater loop (D10); F1-F9 from round 3's plan.
+- Check, in priority order:
+  1. **Fab files against the design**: every CPL rotation and position (D2 SS54: EasyEDA numbers its anode 1, KiCad its
+     cathode 1, paired by pin name -> 0 deg correction; U2 TO-252 shifted 0.725 mm; SOIC-8 +270, SOT-23 and SC-70 +180);
+     the rotation *sense* is INFERRED (JLC = KiCad, counter-clockwise from the top). BOM part numbers: D1 SMCJ24CA C151279,
+     D2 SS54 C22452 come from the board, not from upstream's stale export. Not-fitted list, no paste on the jumpers.
+  2. **Analog stage with R11 inside the loop**: stability into cable capacitance (TI model: no overshoot to 10 nF, 9 % at
+     47 nF), DC accuracy into pull-up and pull-down receiver inputs (`sim/load_accuracy.sh`), output low near 0 V into a
+     pull-up (unresolved, see known items), behaviour with J3-5 at 12 V now that the feedback sees it.
+  3. **Power**: op-amp rail 12 V -> 1k (1206) -> 18 V zener behind an SMCJ24CA; LM2904 is rated 26 V (plain part).
+  4. **Layout of the top-side stage**: return paths (`checks/layout_review.py -v`), bypass distances (C17 2.7, C15 2.3,
+     C12 2.1, C11 3.9 mm), the merged +5V via near 54.3, 92.75.
+  5. **Firmware**: `firmware/watchdog.h` and its use in `heater_thread.cpp`; anything in `firmware.diff`.
+- Known and accepted (don't re-report): upstream's own DRC errors (module 11, carrier 23; `drc_vs_upstream.py` subtracts
+  them, owner decision D2); a 12-16 V fault on J3-5 has no survival requirement (owner, C1); below about 1 V into a pull-up
+  input the output reads high (LM2904 sink near ground; model result also odd there); 13 small passives carry no
+  silkscreen label (assembly drawing `renders/carrier-f/assembly-top.svg` names them); upstream's relabelled bottom text
+  "TEST" clips a pad; no watchdog check-in for threads other than the heater loop (no RAM free).
 - Report format below.
-
-Build the pack for an outside reviewer with `checks/audit_pack.py <rev> <files>` (see AGENTS.md, "Cross-model audits").
 
 ## Report format
 Verdict first: "Would I order these files as they are?"
