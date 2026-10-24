@@ -23,6 +23,11 @@ Mark a stage done only when its exit condition is true. Strike through, don't de
 | 11 | Bring-up | Bring-up tests from `REQUIREMENTS.md` run and recorded below; RISK items checked; lessons in `LESSONS.md` | |
 
 ## Decisions already made (do not re-ask)
+- 2026-10-23 Owner answers, asked interactively (C1-C3, D1-D11) — owner:
+  - C2 receivers: all of Speeduino, K20Z3/FlashPro, an AFR gauge, and rusEFI over CAN. K20Z3 input resistance UNKNOWN: measure it at bring-up. Endpoint tolerance +-0.05 V after a one-time bench trim. Consequence (INFERRED from Codex's runs, 4.816 V max into 10k): the gain needs headroom above 5.0 V; change to be simulated before any part change.
+  - C1 12-16 V on J3-5: no survival requirement ("how bad would i have to be"); R11 470R stays as limiting only; accepted risk. Realistic route: J3-5 sits between J3-6 (12V_RAW) and J3-4 (heater+), so a solder bridge or misplug.
+  - C3 grounding: star at the ECU sensor ground. J3-1 power ground to block/battery; J3-7 only to the receiver's sensor ground; A4 measures the offset.
+  - D1 R9 -> 1206. D2 gate on "DRC vs upstream" instead of raw DRC, plus a dated C7 waiver. D7 no separate analog ground. D8 two M3 holes in the new bottom corners. D9 analog stage, R10 and JP2 to the top (one-sided assembly). D10 add the IWDG watchdog. D11 keep the 13 V assumption.
 - 2026-10-23 No size limit from upstream's `case/case.STL`: the owner designs his own enclosure in CAD ("what case. i do cad"). The carrier may grow; not going upstream, so no compatibility to keep. Next: fit check for a larger outline (about 40 x 52 mm), analog stage to the top if it fits, D6 series resistor — owner.
 - 2026-10-23 Test and audit effort goes to the big things: circuits (analog stage, power), the heater drive, the control loops (heater, pump) and firmware. Lighter checks for routine parts and docs — owner.
 - 2026-10-23 No simulated-narrowband output. FlashPro use is datalogging over the 0-5 V input; stock ECU closed loop stays on its narrowband sensor — owner.
