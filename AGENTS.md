@@ -16,12 +16,15 @@ carrier, then adapt it, starting with an analog 0-5 V output (`docs/analog-out.m
 | `firmware/`, `hardware/`, ... | Upstream `mck1117/wideband` code. Our changes are on branch `analog-out`; `master` stays equal to upstream. Remote `origin` = the public fork `flyboy-byte/wideband-work` (push there when the owner says); remote `upstream` has its push URL disabled |
 | `work/` | Our pcb-design files; the rows below are inside it |
 | `STATE.md` | Current stage, decisions already made (don't re-ask), open items. Read first |
+| `HANDOFF.md` | Dense hand-off from the last long session: run history, last raw output, next steps. Read second |
 | `REQUIREMENTS.md` | Owner's answers and the bring-up tests that define "working" |
 | `parts_research.md` | Part and option facts, each tagged and sourced |
 | `docs/` | Design notes, one per topic, with a facts table and an attempt log |
 | `AUDIT.md` | Hand-off for auditors and every audit round's findings |
 | `LESSONS.md` | Mistakes caught and what caught them |
 | `checks/` | Check scripts; `python3 checks/run_all.py` runs all and writes the table in `STATE.md` |
+| `gen/` | Carrier schematic and PCB generators (`gen_carrier_sch.py`, `gen_carrier_pcb.py`) and `finish_routes.py` |
+| `sim/` | ngspice decks: filter, op-amp stability (TI model gitignored in `sim/models/`) |
 
 ## Rules
 
