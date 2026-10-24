@@ -15,6 +15,9 @@ that KiCad's default severities rate as warnings. Added 2026-10-24 after r26-r37
 """
 import json, os, subprocess, sys, tempfile
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from upstream_ref import upstream_ref
+
 REPO = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
 PCB = 'hardware/board_carrier/board_carrier.kicad_pcb'
 FAB_WARNINGS = {'hole_to_hole', 'hole_clearance', 'drill_out_of_range', 'annular_width', 'via_diameter', 'track_width',
@@ -39,7 +42,7 @@ def key(v):
 def main():
     with tempfile.TemporaryDirectory() as td:
         base = os.path.join(td, 'base.kicad_pcb')
-        open(base, 'w').write(subprocess.run(['git', '-C', REPO, 'show', 'master:' + PCB], capture_output=True,
+        open(base, 'w').write(subprocess.run(['git', '-C', REPO, 'show', upstream_ref() + ':' + PCB], capture_output=True,
                                              text=True, check=True).stdout)
         subprocess.run(['kicad-cli', 'pcb', 'upgrade', base], capture_output=True, check=True)
         b = [key(v) for v in drc(base, False, os.path.join(td, 'base.json'))['violations']]

@@ -4,7 +4,7 @@
 > This is a fork of [mck1117/wideband](https://github.com/mck1117/wideband) (MIT) on branch `analog-out`. `master` is
 > upstream, untouched. Nothing here has been built or tested on hardware yet. As of 2026-10-24 the carrier board (r41)
 > is routed and checked, with JLC fab files exported and verified part by part; an independent audit round and the
-> order are still to come.
+> order are still to come. **Reviewing it?** Start at [`REVIEW.md`](REVIEW.md).
 
 <p align="center"><img src="work/renders/carrier-f/top.png" width="420" alt="Carrier board r41, top: the 0-5 V stage in the 15 mm strip below the module"></p>
 
@@ -41,7 +41,8 @@ Every claim carries an evidence tag (DOCUMENTED / REPORTED / INFERRED / UNKNOWN)
 - a `HANDOFF.md`, so a new session or another model can pick the work up cold
 
 `AGENTS.md` is written for any model; Codex audits go through `work/checks/audit_pack.py`, and the two models take
-turns (audit, verify, fix) as `AGENTS.md` describes. Rounds so far are in `work/AUDIT.md`.
+turns (audit, verify, fix) as `AGENTS.md` describes. Rounds so far are in `work/AUDIT.md`. Outside reviewers (a person,
+or their own model) start at [`REVIEW.md`](REVIEW.md): setup from a fresh clone, blind pack or full repo, report format.
 
 ## Where to look
 

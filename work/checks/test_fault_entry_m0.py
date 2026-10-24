@@ -16,6 +16,9 @@ entries. Exit 1 on any unexpected result; 2 if QEMU or the ARM toolchain is miss
 import shutil, subprocess, sys, tempfile
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from upstream_ref import upstream_ref
+
 HERE = Path(__file__).resolve().parent
 REPO = HERE.parents[1]
 ASM = REPO / 'firmware/main_hardfault_asm.S'
@@ -46,7 +49,7 @@ def main():
     with tempfile.TemporaryDirectory(prefix='wideband-m0fault-') as t:
         tmp = Path(t)
         old = tmp / 'upstream_hardfault_asm.S'
-        old.write_text(subprocess.run(['git', '-C', str(REPO), 'show', 'master:firmware/main_hardfault_asm.S'],
+        old.write_text(subprocess.run(['git', '-C', str(REPO), 'show', upstream_ref() + ':firmware/main_hardfault_asm.S'],
                                       capture_output=True, text=True, check=True).stdout)
         for name, asm, flags, want in [('current handler', ASM, (), 'reached'),
                                        ("upstream's handler (master)", old, (), 'lockup'),

@@ -1,0 +1,31 @@
+original
+         /AOUT_PWM     34.0 mm of track,  63.2 % over GND, longest gap  3.8 mm
+         /AOUT_BUF      3.2 mm of track, 100.0 % over GND, longest gap  0.0 mm
+         /AOUT_F1      24.5 mm of track,  96.9 % over GND, longest gap  0.5 mm
+         /AOUT_F2      10.8 mm of track, 100.0 % over GND, longest gap  0.0 mm
+         /AOUT_INN     15.2 mm of track,  91.8 % over GND, longest gap  0.5 mm
+         /AOUT_OA      11.8 mm of track,  85.1 % over GND, longest gap  0.5 mm
+         /AOUT         19.2 mm of track,  94.8 % over GND, longest gap  0.5 mm
+         /AOUT_J       47.2 mm of track,  96.3 % over GND, longest gap  1.2 mm
+         /VREF3         9.2 mm of track,  64.9 % over GND, longest gap  1.2 mm
+reverse
+         /AOUT_PWM     34.0 mm of track,  63.2 % over GND, longest gap  4.5 mm
+         /AOUT_BUF      3.2 mm of track, 100.0 % over GND, longest gap  0.0 mm
+         /AOUT_F1      24.5 mm of track,  96.9 % over GND, longest gap  0.5 mm
+         /AOUT_F2      10.8 mm of track, 100.0 % over GND, longest gap  0.0 mm
+         /AOUT_INN     15.2 mm of track,  91.8 % over GND, longest gap  0.5 mm
+         /AOUT_OA      11.8 mm of track,  85.1 % over GND, longest gap  1.2 mm
+         /AOUT         19.2 mm of track,  94.8 % over GND, longest gap  0.5 mm
+         /AOUT_J       47.2 mm of track,  96.3 % over GND, longest gap  1.2 mm
+         /VREF3         9.2 mm of track,  64.9 % over GND, longest gap  1.2 mm
+sorted
+         /AOUT_PWM     34.0 mm of track,  63.2 % over GND, longest gap  3.8 mm
+         /AOUT_BUF      3.2 mm of track, 100.0 % over GND, longest gap  0.0 mm
+         /AOUT_F1      24.5 mm of track,  96.9 % over GND, longest gap  0.5 mm
+         /AOUT_F2      10.8 mm of track, 100.0 % over GND, longest gap  0.0 mm
+         /AOUT_INN     15.2 mm of track,  91.8 % over GND, longest gap  1.2 mm
+         /AOUT_OA      11.8 mm of track,  85.1 % over GND, longest gap  0.5 mm
+         /AOUT         19.2 mm of track,  94.8 % over GND, longest gap  0.5 mm
+         /AOUT_J       47.2 mm of track,  96.3 % over GND, longest gap  1.2 mm
+         /VREF3         9.2 mm of track,  64.9 % over GND, longest gap  2.5 mm
+FAIL: track-order-dependent metrics

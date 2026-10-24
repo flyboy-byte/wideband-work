@@ -1,0 +1,11 @@
+FAIL offset=0 length=10 accepted write at 0x08001800
+FAIL offset=25592 length=10 accepted write at 0x08007bf8
+FAIL offset=25598 length=8 accepted write at 0x08007bfe
+FAIL offset=25598 length=10 accepted write at 0x08007bfe
+FAIL offset=25600 length=2 accepted write at 0x08007c00
+FAIL offset=25600 length=8 accepted write at 0x08007c00
+FAIL offset=25600 length=10 accepted write at 0x08007c00
+FAIL offset=26622 length=2 accepted write at 0x08007ffe
+FAIL offset=26622 length=8 accepted write at 0x08007ffe
+FAIL offset=26622 length=10 accepted write at 0x08007ffe
+48 guard cases; 10 unsafe accepted writes (stub only)

@@ -2,9 +2,12 @@
 """The module board files are exactly upstream's (branch master = mck1117/wideband), so its raw DRC errors are upstream's
 own (owner decision D2, 2026-10-23: raw DRC is advisory; this and drc_vs_upstream.py gate instead). Exit 1 if any
 file under hardware/board_module differs from master."""
-import subprocess, sys
+import os, subprocess, sys
 
-r = subprocess.run(['git', 'diff', '--name-only', 'master', '--', '../hardware/board_module'], capture_output=True, text=True)
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from upstream_ref import REPO, upstream_ref
+
+r = subprocess.run(['git', '-C', REPO, 'diff', '--name-only', upstream_ref(), '--', 'hardware/board_module'], capture_output=True, text=True)
 if r.returncode:
     print('git diff failed:', r.stderr.strip())
     sys.exit(1)

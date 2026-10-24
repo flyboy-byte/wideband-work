@@ -7,6 +7,9 @@ Upstream's own vias (git `master`) are reported as such and don't fail the check
 """
 import os, subprocess, sys, tempfile
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from upstream_ref import upstream_ref
+
 import pcbnew
 
 REPO = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
@@ -21,7 +24,7 @@ def vias(board):
 def main():
     with tempfile.TemporaryDirectory() as td:
         base = os.path.join(td, 'base.kicad_pcb')
-        open(base, 'w').write(subprocess.run(['git', '-C', REPO, 'show', 'master:' + PCB], capture_output=True,
+        open(base, 'w').write(subprocess.run(['git', '-C', REPO, 'show', upstream_ref() + ':' + PCB], capture_output=True,
                                              text=True, check=True).stdout)
         subprocess.run(['kicad-cli', 'pcb', 'upgrade', base], capture_output=True, check=True)
         up = [(T(v.GetPosition().x), T(v.GetPosition().y)) for v in vias(pcbnew.LoadBoard(base))]

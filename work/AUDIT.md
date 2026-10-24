@@ -1,7 +1,8 @@
 # Audit — rusEFI wideband carrier (0-5 V analog output)
 
-Current review: Round 3 below supersedes the historical R11/full-scale/grounding conclusions.
-Independent report: `docs/codex-audit-2026-10-23.md`; board remains at `986c803`.
+Current review: round 4 (board r41, 2026-10-24) is open for Codex and outside reviewers; start at `REVIEW.md` (repo root).
+Round 3 (Codex, board r36) supersedes the historical R11/full-scale/grounding conclusions; its report is
+`docs/codex-audit-2026-10-23.md`, with raw output in `audit/codex-2026-10-23/`.
 
 ## Hand-off (give this to each auditor with a read-only copy; not your conclusions)
 - Board: carrier PCB for the rusEFI wideband module (LSU 4.9 controller), grown to 40.0 x 51.5 mm, adding a 0-5 V analog

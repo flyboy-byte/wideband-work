@@ -1,0 +1,5 @@
+{"case": "fault_injection_budget", "fault_V": 12, "rail_ceiling_V": 5.5, "required_sink_mA": 12.553191489361701, "R11_W": 0.07406382978723405}
+{"case": "fault_injection_budget", "fault_V": 14.4, "rail_ceiling_V": 5.5, "required_sink_mA": 17.659574468085108, "R11_W": 0.14657446808510638}
+{"case": "fault_injection_budget", "fault_V": 16, "rail_ceiling_V": 5.5, "required_sink_mA": 21.063829787234045, "R11_W": 0.20853191489361705}
+{"case": "low_gain_full_scale", "load_ohm": 100000, "nominal_connector_V": 5.016422812779934, "maximum_connector_V": 4.976215746388017}
+{"case": "low_gain_full_scale", "load_ohm": 10000, "nominal_connector_V": 4.813753581661891, "maximum_connector_V": 4.775170926834805}

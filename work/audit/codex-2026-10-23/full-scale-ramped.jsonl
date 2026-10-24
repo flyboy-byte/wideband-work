@@ -1,0 +1,10 @@
+{"case": "full_scale_ramped", "feed_1k": true, "supply_V": 12, "load_ohm": 100000, "vcc_V": 10.3923316, "connector_V": 5.01874534, "before_V": 1.67444433806, "final_V": 5.018744516905238, "overshoot_pct": 2.461186849590543e-05, "late_ripple_mV": 0.001669999999620586, "settling_us": 257.2016099999996}
+{"case": "full_scale_ramped", "feed_1k": true, "supply_V": 12, "load_ohm": 10000, "vcc_V": 9.316313, "connector_V": 4.81585412, "before_V": 1.60669340655, "final_V": 4.815852207053179, "overshoot_pct": 5.960897980779045e-05, "late_ripple_mV": 0.0039000000002786805, "settling_us": 267.36421}
+{"case": "full_scale_ramped", "feed_1k": true, "supply_V": 7.5, "load_ohm": 100000, "vcc_V": 6.75563041, "connector_V": 5.01859928, "before_V": 1.67429804, "final_V": 5.018598617417033, "overshoot_pct": 1.9812303105568892e-05, "late_ripple_mV": 0.0013699999996674705, "settling_us": 257.1909599999997}
+{"case": "full_scale_ramped", "feed_1k": true, "supply_V": 7.5, "load_ohm": 10000, "vcc_V": 6.51836777, "connector_V": 4.81579721, "before_V": 1.6066386500000005, "final_V": 4.815795671431427, "overshoot_pct": 4.794307547791314e-05, "late_ripple_mV": 0.0031700000002743423, "settling_us": 267.36550000000005}
+{"case": "fault_injection_budget", "fault_V": 12, "rail_ceiling_V": 5.5, "required_sink_mA": 12.553191489361701, "R11_W": 0.07406382978723405}
+{"case": "fault_injection_budget", "fault_V": 14.4, "rail_ceiling_V": 5.5, "required_sink_mA": 17.659574468085108, "R11_W": 0.14657446808510638}
+{"case": "fault_injection_budget", "fault_V": 16, "rail_ceiling_V": 5.5, "required_sink_mA": 21.063829787234045, "R11_W": 0.20853191489361705}
+{"case": "low_gain_full_scale", "load_ohm": 100000, "nominal_connector_V": 5.016422812779934, "maximum_connector_V": 4.976215746388017}
+{"case": "low_gain_full_scale", "load_ohm": 10000, "nominal_connector_V": 4.813753581661891, "maximum_connector_V": 4.775170926834805}
+{"case": "resistance_tradeoff", "minimum_nominal_load_for_5V_ohm": 58749.99999999995, "maximum_series_R_for_5V_into_10k_ohm": 80.00000000000007, "fault_16V_sink_at_5p5V_with_80R_mA": 123.75}

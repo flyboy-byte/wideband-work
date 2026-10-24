@@ -66,7 +66,7 @@ least the claims a decision rests on before writing them into `docs/` or `STATE.
 - Findings from another model are claims to verify like any other (rule 1).
 
 ### Turn-taking between Claude and Codex (circuit and theory audits; owner, 2026-10-24)
-1. **Start**: the newest pack under `audit/` (now `audit/carrier-f-2026-10-24/`, PROMPT.md first) and the "Hand-off"
+1. **Start**: `REVIEW.md` at the repo root (setup, modes, report format; written for outside reviewers too), the newest pack under `audit/` (built by `sh checks/review_pack.sh`; packs are not committed, reviewers' output folders are) (now `audit/carrier-f-2026-10-24/`, PROMPT.md first) and the "Hand-off"
    section of `AUDIT.md`. Check from the files and first principles; simulations go in `sim/` or the auditor's own folder.
 2. **Auditor's output**: raw report in `audit/<model>-<date>/` (FINDINGS.md plus any decks, scripts and raw numbers), and
    a round in `AUDIT.md` (ID | Severity | Location | Evidence | Smallest fix | Status) naming the model and commit.
