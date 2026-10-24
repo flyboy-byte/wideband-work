@@ -84,7 +84,7 @@ move it to what a built board can tell us.
 | # | Decision | Default I'm using | Cost of the other way |
 | --- | --- | --- | --- |
 | D1 | R9 → 1206? (still open; room exists now) (R8 needs no change: fine in a GND short, and the 12 V short is fixed by D6, not by a bigger R8) | Keep 0603 and accept R2 as RISK until the audit | Parts move; the placer and router must run again (about 4 min each, but `close_d3_link` may stop applying) |
-| D2 | Release gate: the two raw DRC checks (module 11, carrier 22, all upstream's) always FAIL, so `release.py` can never pass | Not changed | Swap them in `checks.json` for the "vs upstream" check: **loosens your money gate, so your call** |
+| D2 | Release gate: the two raw DRC checks (module 11, carrier 23, all upstream's) always FAIL, and since 2026-10-23 so does the layout review (C7, 6.8 mm PWM return gap, inspected, accept recommended in `AUDIT.md`), so `release.py` can never pass | Not changed | Swap the DRC checks in `checks.json` for the "vs upstream" check, and either accept C7 as a recorded, dated waiver or move JP2 and re-run the board: **loosens your money gate, so your call** |
 | D3 | Output value while the sensor is invalid | 0 V | A mid value would look like a real AFR to a tune |
 | D4 | How the module gets flashed | Tag-Connect pads kept reachable | none yet |
 | D5 | ~~C17~~ done (r36, 2.1 mm); silkscreen overlaps remain (cosmetic) | Ship as is | a label pass |

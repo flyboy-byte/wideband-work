@@ -156,7 +156,7 @@ from the REF3030 [DOCUMENTED: measured on the board file].
 | L1 | Every connection made, nothing new in DRC | `checks/drc_vs_upstream.py` | 0 new, 0 open |
 | L2 | No vias in SMD pads | `checks/via_in_pad.py` | 0 |
 | L3 | Noisy nets (PWM, heater drive, CAN) kept off sensitive ones (sensor, filter, reference, output) | `checks/layout_review.py` part 1 | nothing within 1 mm (r34 had CAN_L 0.3 mm beside the output for 6.8 mm; fixed by moving the CAN terminator) |
-| L4 | Return path under every new signal track (GND on the other layer, or on both sides on its own layer) | `layout_review.py` part 2 | longest stretch without: 3.8 mm (PWM), 1.2 mm (output) |
+| L4 | Return path under every new signal track (GND on the other layer, or on both sides on its own layer) | `layout_review.py` part 2 (component metric repaired by Codex, C4) | largest uncovered component 6.8 mm (PWM, over the 5 mm review trigger: C7), 1.2 mm (output). C7 inspected 2026-10-23: the gap is JP2's opening in the bottom pour plus the PWM's own two-layer branch to R3/U4; low-current, low-speed signal next to its own filtered copy; accept recommended (`AUDIT.md` round 3) |
 | L5 | GND pour joined, stitched in new copper | DRC unconnected (pour islands count) + `layout_review.py` part 3 | joined; 16 GND vias in the strip, farthest pour point 10.7 mm from one |
 | L6 | Bypass caps at their pins | measured distances (above) | all under 2.4 mm |
 | L7 | Output's ground reference vs the heater's return current | calculation below | about 1-2 mV on the board; the wiring matters more |
