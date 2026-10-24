@@ -1,5 +1,9 @@
 # Release assessment — carrier board + analog output
 
+2026-10-23 Codex audit update: the assessment below is historical. R11 limits but does not prevent back-feed; full-scale
+trim has insufficient headroom for some loads/tolerances; the blanket sensor-ground wiring instruction is withdrawn.
+Read `AUDIT.md` round 3 and `docs/codex-audit-2026-10-23.md`. The earlier numerical confidence estimates are not test results.
+
 Written 2026-10-23 by Claude Sonnet 5.5 (same session as the r32 routing close); reviewed and corrected the same day by Claude
 Opus 5.5 (AUDIT.md round 2: R1 rewritten, R4 rate corrected, R8 added). For Logan. Plain language; every claim is tagged
 DOCUMENTED (a file or run I can point to), REPORTED (someone else's number), INFERRED (my reasoning, not measured), UNKNOWN.

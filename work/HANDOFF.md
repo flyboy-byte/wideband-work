@@ -1,5 +1,17 @@
 # HANDOFF — dense session context (read after STATE.md)
 
+## Codex audit addendum — 2026-10-23
+
+Read `docs/codex-audit-2026-10-23.md` and `AUDIT.md` round 3 first. Audited 34cd49d; no PCB/schematic/firmware changes.
+New bounded reproducers: `checks/audit_analog.py` and `checks/audit_layout_order.py`.
+Follow-up: order regression now PASSES; repaired checker flags a 6.8 mm PWM uncovered component (C7).
+Ramped endpoint models succeed at 12 V/7.5 V and 100k/10k: use `audit_analog.py --full-scale`.
+R11 limits but does not block back-feed; trim cannot restore a clipped
+full-scale endpoint. The generic ECU sensor-ground instruction is withdrawn: that wire can carry heater current.
+Next: resolve C1/C2/C3 electrically and inspect C7. C4's false metric is replaced with an explicitly limited component heuristic.
+80R instead of 470R restores nominal 5 V into 10k, but raises the 16 V fault-current budget to 123.75 mA: not a standalone fix.
+Original handoff retained below as history; its protection conclusions and zero-trigger layout signoff are superseded.
+
 Written 2026-10-23 late, after r36 (board grown, R11 added; Opus 5.5 reviewing and continuing Sonnet 5.5's session). Replaces
 the earlier handoffs of the day; the r17-r32 run table is kept below. Replace it at the next handoff.
 

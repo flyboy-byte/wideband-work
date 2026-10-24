@@ -1,6 +1,6 @@
 {
  "date": "2026-10-23",
- "git_head": "da28268",
+ "git_head": "34cd49d",
  "results": [
   {
    "name": "DRC module (errors)",
@@ -43,11 +43,33 @@
    }
   },
   {
-   "name": "Carrier layout review (coupling, return paths, GND; no review triggers)",
-   "status": "pass",
-   "summary": "review triggers: 0",
+   "name": "Carrier layout review (sampled coupling and return-path heuristics)",
+   "status": "fail",
+   "summary": "review triggers: 1 (return path /AOUT_PWM)",
    "files": {
-    "../hardware/board_carrier/board_carrier.kicad_pcb": "8db07cd11e6b"
+    "../hardware/board_carrier/board_carrier.kicad_pcb": "8db07cd11e6b",
+    "checks/layout_review.py": "2dfa9e8efa14",
+    "checks/layout_metrics.py": "23c78d58fd8a"
+   }
+  },
+  {
+   "name": "Layout geometry helper unit tests",
+   "status": "pass",
+   "summary": "OK",
+   "files": {
+    "checks/layout_metrics.py": "23c78d58fd8a",
+    "checks/test_layout_metrics.py": "2d93b205dd56"
+   }
+  },
+  {
+   "name": "Layout track-order regression",
+   "status": "pass",
+   "summary": "PASS: tested orders agree",
+   "files": {
+    "../hardware/board_carrier/board_carrier.kicad_pcb": "8db07cd11e6b",
+    "checks/layout_review.py": "2dfa9e8efa14",
+    "checks/layout_metrics.py": "23c78d58fd8a",
+    "checks/audit_layout_order.py": "c40bda9f97e2"
    }
   },
   {

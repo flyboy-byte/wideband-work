@@ -56,14 +56,26 @@
     ]
   },
   {
-    "name": "Carrier layout review (coupling, return paths, GND; no review triggers)",
+    "name": "Carrier layout review (sampled coupling and return-path heuristics)",
     "cmd": [
       "python3",
       "checks/layout_review.py"
     ],
     "files": [
-      "../hardware/board_carrier/board_carrier.kicad_pcb"
+      "../hardware/board_carrier/board_carrier.kicad_pcb",
+      "checks/layout_review.py",
+      "checks/layout_metrics.py"
     ]
+  },
+  {
+    "name": "Layout geometry helper unit tests",
+    "cmd": ["python3", "checks/test_layout_metrics.py"],
+    "files": ["checks/layout_metrics.py", "checks/test_layout_metrics.py"]
+  },
+  {
+    "name": "Layout track-order regression",
+    "cmd": ["python3", "checks/audit_layout_order.py"],
+    "files": ["../hardware/board_carrier/board_carrier.kicad_pcb", "checks/layout_review.py", "checks/layout_metrics.py", "checks/audit_layout_order.py"]
   },
   {
     "name": "ERC carrier (errors)",

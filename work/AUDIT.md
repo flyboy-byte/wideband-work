@@ -1,5 +1,8 @@
 # Audit — rusEFI wideband carrier (0-5 V analog output)
 
+Current review: Round 3 below supersedes the historical R11/full-scale/grounding conclusions.
+Independent report: `docs/codex-audit-2026-10-23.md`; board remains at `986c803`.
+
 ## Hand-off (give this to each auditor with a read-only copy; not your conclusions)
 - Board: carrier PCB for the rusEFI wideband module (LSU 4.9 controller) adding a 0-5 V analog output (AFR 10 = 0 V, 20 = 5 V)
   for Speeduino / Hondata FlashPro / a gauge. Analog stage: PB1 PWM -> 74LVC1G125 on a REF3030 3.000 V -> 2x RC (3.3k/100n)
@@ -80,3 +83,25 @@ Board grown 15 mm, stage moved to the new strip, R11 added. Status of earlier fi
 2.1 mm from U6 pin 8); R6 gone (close_d3_link no longer applies; C1 pad 2 back to upstream's own pour connection, whose
 1-spoke thermal is in upstream's DRC too); R7 open (silkscreen). New for the auditor: `docs/carrier.md` "Layout review
 checklist" and "Grounding and the output" (D7); `checks/layout_review.py` output; sim topology D.
+
+### Round 3 — 2026-10-23, Codex (independent tests and source review)
+Commit: 34cd49d
+Verdict: Not ready to order on the existing evidence. Keep the enlarged board; resolve the electrical claims below, not enclosure dimensions.
+Full evidence: `docs/codex-audit-2026-10-23.md`. Raw outputs: `audit/codex-2026-10-23/`.
+
+| ID | Severity | Location | Evidence (numbers) | Smallest fix | Status |
+| --- | --- | --- | --- | --- | --- |
+| C1 | RISK | R11/D3/+5V | INFERRED: 12.55 mA injection budget at 12 V fault, rail 5.5 V, assumed diode 0.6 V; no guaranteed sink established for all power states | analyze powered/unpowered fault states; qualify clamp/sink | open; O1 current limiting implemented, survival not established |
+| C2 | BUG | Full-scale trim claim | INFERRED: ideal nominal maximum 4.814 V into 10k; 1% low-gain corner 4.976 V into 100k; PWM saturates at duty 1 | establish load/tolerance budget and sufficient gain headroom | open; wording qualified, electrical endpoint remains unverified |
+| C3 | RISK | J3-7 sensor-ground instruction | DOCUMENTED: same net as heater return; INFERRED: main ground disconnect can divert heater return through receiver | receiver-approved grounding and fault-path analysis | open; blanket sensor-ground instruction withdrawn |
+| C4 | BUG | layout_review.py | DOCUMENTED: original PWM gap 3.8 vs 4.5 mm solely from track order; now weighted component metric, all net pairs included, 3 geometry tests and 3 board orders agree | explicit sampled component metric, not a longest-path claim | fixed locally 2026-10-23; new C7 review item |
+| C5 | NOTE | Stability evidence | DOCUMENTED: independent supply-fed typical-model tests settle in 176–255 us, 0–0.511% overshoot; DC attempt timed out | retain bounded result; full-scale/supply corners still needed | open (coverage limitation) |
+| C6 | NOTE | LM2904 supply rating | DOCUMENTED TI SLOS068AB: plain LM2904 26 V; 32 V belongs to LM2904V | correct docs; surge-energy budget, not just larger footprint | open (generator text and surge qualification) |
+| C7 | RISK | PWM ground-return corridor | DOCUMENTED repaired checker: 6.8 mm uncovered component vs existing 5 mm review trigger; not an impedance measurement | inspect corridor before routing change | open; board unchanged |
+
+Follow-up circuit tests: ramped full-scale TI-model runs completed at protected inputs 12 V and 7.5 V:
+about 5.019 V into 100k, 4.816 V into 10k. C2 remains open; typical-model headroom is adequate in these cases.
+Raw results: `audit/codex-2026-10-23/full-scale-ramped.jsonl`. Conditions and resistance/fault-current tradeoff in the report.
+
+Checked: DRC delta still 0 new/0 open; no drift before audit; small-signal stability independently reproduced.
+Not checked: hardware, fault survival, BOM availability/rotation, complete firmware runtime behavior. Prior host-test result was not rerun.

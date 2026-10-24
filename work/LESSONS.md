@@ -3,6 +3,14 @@
 Every mistake caught on this board, with when and what caught it. At bring-up and after each order, propose the ones
 that would help any board as a line for the `pcb-design` skill (see its "Lessons back to the skill" section).
 
+2026-10-23 Codex audit lessons (not yet sent to skill):
+- Geometry metrics must survive track-list permutation. The old gap count joined unrelated segments and overcounted
+  short tracks; order-regression tests caught it. Use length-weighted samples and label heuristic limits explicitly.
+- A current-limiting resistor is not a rail clamp. Account for powered-off injection and guaranteed sink current.
+- Calibration cannot overcome actuator saturation. The full-scale load/tolerance budget must precede a trim claim.
+- Record failed model convergence, then try a bounded ramp from a convergent operating point. Four full-scale cases
+  then ran successfully; this expands typical-model evidence, not fault/temperature qualification.
+
 | Date | Stage | What went wrong or nearly did | What caught it | General? | Sent to skill |
 | --- | --- | --- | --- | --- | --- |
 | 2026-10-23 | Requirements | Claimed module SEL pads were unused by firmware; the grep output was cut by `head -12` before the f0_module match | Re-check of the plan by a second model reading `port.cpp` | Yes: don't treat absence in truncated output as evidence | 2026-10-23 |

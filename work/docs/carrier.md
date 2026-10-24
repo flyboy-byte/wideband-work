@@ -81,10 +81,13 @@ error (0.1 V) is 0.2 AFR, which is why the reference buffer matters [INFERRED].
    - R11 470R between the clamps and J3-5 (added 2026-10-23, AUDIT.md round 2 O1): J3-5 sits between J3-6 (12V_RAW)
      and J3-4 (LSU_Heater+) [DOCUMENTED: J3 footprint pads]. Without it, 12 V on J3-5 reaches +5V through D3 with no
      limit (TJA1051, REF3030, module on that rail). With it: (12 - 5.6) / 470 = 14 mA into +5V, 0.09 W in R11 (1206,
-     250 mW) [INFERRED, calculation]. Outside the feedback, so it reads 0.46 % low into 100k (sim D below); the trim
-     removes that for the receiver it was trimmed on; into a 10k gauge it would be about 4.5 % low.
+     250 mW) [INFERRED, calculation]. This limits but does not prevent back-feed; power-off behavior and the rail's
+     guaranteed sink current remain unverified (Codex audit C1, 2026-10-23). Outside the feedback, it reads 0.46 % low
+     into 100k. Trim helps only while duty-cycle headroom remains: nominal full scale into 10k is 4.814 V and cannot
+     be trimmed to 5 V (C2). Endpoint tolerance and receiver load must be budgeted together.
    - Op-amp supply clamp: upstream's input TVS is an SMCJ30CA (C133648: 30 V standoff, 35.1 V breakdown per the JLC
-     listing), so the protected 12 V rail can reach about 35-48 V in a surge; the LM2904 is rated 32 V. 1k + 18 V zener
+     listing), so the protected 12 V rail can reach about 35-48 V in a surge; the plain TI LM2904 is rated 26 V, not 32 V
+     ([TI SLOS068AB](https://www.ti.com/lit/ds/symlink/lm358.pdf), supply tables; Codex audit C6). 1k + 18 V zener
      (BZT52C18, C173425) holds it below that; the op-amp draws about 1 mA, so the 1k costs about 1 V of headroom
      (fine down to about 7.5 V battery for a 5 V output) [INFERRED].
    - REF3030 output: 100 nF, inside the 0.1-10 uF stable range in TI's current datasheet (SBVS032J) [REPORTED via a
@@ -161,6 +164,9 @@ from the REF3030 [DOCUMENTED: measured on the board file].
 
 ## Grounding and the output
 
+2026-10-23 audit qualification: the 1–2 mV estimate below is not a solved copper-current distribution or a measurement.
+`layout_review.py` has an order-dependent gap metric (C4); its zero triggers do not validate this ground-offset estimate.
+
 - **On the board.** The heater's return current (up to about 0-4 A, REPORTED for wideband heaters in general) flows from
   the module's GND pads 9-10 (x 72.7, y 71-73.5) through the pour to J3-1 (68.75, 66) [DOCUMENTED: pad positions]. The
   output stage's ground is the pour 20 mm away in the strip, a dead end with no heater current; J3-7 sits beside J3-1.
@@ -173,10 +179,11 @@ from the REF3030 [DOCUMENTED: measured on the board file].
   tell the installer to tie the controller's ground to the receiver's ground source (Innovate LC-1/LC-2 wiring, REPORTED
   via forum and wiki posts; Hondata says the same for FlashPro: same ground as the ECU for power and analog, line 41
   above). This is upstream's grounding, not something the carrier changed.
-- **What we do now:** wiring instruction (J3-1 heavy and short to the ECU's ground point, J3-7 to the receiver's sensor
-  ground), bring-up test A4 measures the real offset, and the trim can take out a steady part. Board change (a separate
-  analog-ground net for J3-7) is owner decision D7 in `RELEASE_ASSESSMENT.md`; it would not stop the wire sharing
-  (any on-board tie keeps the two wires in parallel), so it is not recommended without A4 data [INFERRED].
+- **Superseded instruction (2026-10-23, Codex C3):** ~~J3-1 to the ECU ground point and J3-7 to the receiver's sensor ground.~~
+  J3-7 shares the heater-return net. It can carry part of the heater current, or become the sole return if J3-1's
+  wire opens [INFERRED from documented same-net topology]. Do not connect it to a low-current ECU sensor-ground pin
+  without receiver-specific approval. Use receiver-approved power/output grounding; exact wiring remains unresolved.
+  A4's high-impedance voltage measurement does not qualify a sensor-ground wire for heater current. D7 remains open.
 
 ## Firmware changes (our fork; f0 has no UART or TunerStudio, `halconf.h` HAL_USE_UART/SERIAL FALSE)
 
