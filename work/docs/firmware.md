@@ -52,6 +52,12 @@ All behind `AUXOUT_SEL1_PWM_CHANNEL`, defined only in `boards/f0_module/wideband
 - **Scale:** `AUXOUT_FULL_SCALE_VOLTS` = 3.0 x 1.68 = 5.04 V at 100% duty, matching the proposed carrier stage
   (REF3030 buffer, gain 1 + 68k/100k, `carrier.md`). A trim step comes with bring-up.
 
+## Bootloader bounds (fixed 2026-10-23)
+
+The f0 CAN bootloader accepted DATA writes up to 26 KiB into a 25 KiB app partition, reaching the config page (Codex F1).
+Fixed with `bootloader/bootloader_bounds.h`, bounds from the linker script; details and evidence in
+`flashing-and-test-plan.md`. Upstream's bug, not ours; a candidate to report upstream (owner's call).
+
 ## Not verified yet
 
 - On hardware: nothing. Needs the module, a carrier with the filter, and a meter (draft tests A1-A3 in `carrier.md`).

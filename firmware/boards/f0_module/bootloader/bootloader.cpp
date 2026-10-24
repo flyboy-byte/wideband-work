@@ -4,6 +4,7 @@
 #include "port_shared.h"
 #include "flash.h"
 #include "io_pins.h"
+#include "bootloader_bounds.h"
 #include "../../for_rusefi/wideband_can.h"
 
 #include <cstring>
@@ -63,6 +64,8 @@ void boot_app() {
 }
 
 uintptr_t appFlashAddr = (uintptr_t)__appflash_start__;
+// A linker symbol's value is its address
+size_t appFlashSize = (size_t)&__appflash_size__;
 
 void EraseAppPages()
 {
@@ -185,13 +188,9 @@ void RunBootloaderLoop()
             case WB_OPCODE_DATA: // opcode 2 is "write flash data"
                 // Embedded data is the flash address
 
-                // Don't allow misaligned writes
-                if (embeddedData % sizeof(flashdata_t) != 0 || frame.DLC % sizeof(flashdata_t) != 0)
-                {
-                    sendNak();
-                }
-                // Don't allow out of bounds writes
-                else if (embeddedData >= 26 * 1024)
+                // Don't allow misaligned, oversized or out of bounds writes (the app partition's size comes from the
+                // linker script; this used to accept offsets up to 26 KiB, which reached the config page)
+                if (!IsAppWriteAllowed(embeddedData, frame.DLC, appFlashSize, sizeof(flashdata_t)))
                 {
                     sendNak();
                 }

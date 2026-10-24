@@ -62,15 +62,16 @@ python3 checks/drift.py record ../hardware/board_carrier/board_carrier.kicad_pcb
 sim/stability.sh                                   # LM2904 stability vs cable capacitance (needs TI model in sim/models/, gitignored)
 cd firmware && make -j12 BOARD=f0_module           # firmware; also `BOARD=f1_dual` must still build
 
-# upstream gtest suite (host build; CI runs it under ASAN, then valgrind with SANITIZE=no). 43 tests pass (2026-10-23)
+# upstream gtest suite + ours (host build; CI runs it under ASAN, then valgrind with SANITIZE=no). 51 pass (2026-10-23)
 git submodule update --init test/googletest        # not checked out by default
-cd test && mkdir -p build/obj build/lst && make -j4 && ASAN_OPTIONS=detect_stack_use_after_return=1 build/wideband_test
-build/wideband_test --gtest_filter='*Heater*'      # single test / suite
+B=$(mktemp -d) && mkdir -p $B/obj $B/lst && (cd test && make -j8 BUILDDIR=$B) && ASAN_OPTIONS=detect_stack_use_after_return=1 $B/wideband_test
+$B/wideband_test --gtest_filter='BootloaderBounds*' # single test / suite
+python3 work/checks/audit_bootloader_bounds.py     # bootloader DATA guard, real source + stub flash (52 cases)
 ```
 
-Test-build quirk: the test Makefile's search path resolves `build/obj/*.o` to `firmware/build/obj/` (ARM objects), so the
-link fails with "cannot find build/obj/pid.o" while a firmware build exists. Move `firmware/build` aside for the test
-build, then put it back. The `mkdir -p` is also needed (the dir rule isn't a prerequisite of the object rules).
+Test-build quirk: with the default relative `build/`, the test Makefile's search path finds `firmware/build/obj/*.o` (ARM
+objects) and the link fails ("cannot find build/obj/pid.o"). An absolute `BUILDDIR` avoids it (Codex, 2026-10-23); the
+`mkdir` of `obj`/`lst` is still needed.
 
 ## How the carrier PCB is generated (`work/gen/gen_carrier_pcb.py`)
 

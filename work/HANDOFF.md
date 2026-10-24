@@ -1,5 +1,12 @@
 # HANDOFF — dense session context (read after STATE.md)
 
+## F1 done — 2026-10-23 (Claude Opus 5.5, after Codex)
+
+Bootloader DATA guard fixed (`bootloader_bounds.h`); `audit_bootloader_bounds.py` updated to the new call site, now also
+checks valid writes are accepted; 8 gtest cases; host suite 51/51 with LeakSanitizer on. Next per the plan: F2 (package
+validator), F3-F6 (aux-output host tests; `auxout.cpp` is not compiled into the host suite yet), then C1-C3 and C7.
+Host tests: absolute `BUILDDIR` (no moving `firmware/build`), see `CLAUDE.md`.
+
 ## Codex audit addendum — 2026-10-23
 
 Flashing, host tests, emulator feasibility and meter-only bring-up: `docs/flashing-and-test-plan.md`.

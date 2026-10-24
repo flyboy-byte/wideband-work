@@ -30,6 +30,7 @@ CPPSRC += \
 	test_stubs.cpp \
 	tests/test_sampler.cpp \
 	tests/test_heater.cpp \
+	tests/test_bootloader_bounds.cpp \
 
 INCDIR += \
 	$(PROJECT_DIR)/googletest/googlemock/ \

@@ -94,7 +94,20 @@ Write down expected behavior before changing production code; preserve intention
   length 8 crosses the app/config boundary. These are valid-size CAN payload cases. Length 10 is a separate synthetic robustness case,
   not a claim that the CAN driver supplies it in practice. A zero-byte call makes no flash write and is excluded from failure counts.
 
-### Bootloader finding to fix first
+### Bootloader finding to fix first — FIXED 2026-10-23 (Claude Opus 5.5)
+
+Status: done as specified, protocol unchanged. `firmware/boards/f0_module/bootloader/bootloader_bounds.h` holds
+`IsAppWriteAllowed(offset, length, appSize, wordSize)`: length at most 8, offset and length word-aligned, offset at most
+`appSize`, `length <= appSize - offset` (offset checked first, so no wrap). `bootloader.cpp` passes `appFlashSize`
+= address of linker symbol `__appflash_size__` (0x6400 = 25600 in the built ELF, read back from the binary). Zero-length
+frames stay accepted with no write, as before. Evidence: `python3 work/checks/audit_bootloader_bounds.py` 52 cases,
+0 unsafe accepts, 0 valid writes refused (4 new must-accept cases); with the old 26 KiB bound put back as a mutant it fails
+(3 unsafe); 8 new gtest cases `BootloaderBounds.*`, host suite 51/51 with ASan and LeakSanitizer on (leak check runs on
+this machine; it did not in Codex's environment). Bootloader 5520 of 6144 bytes (was 5508). Not done: no hardware,
+no CAN updater run. Left as found (upstream): `sendNak()` is empty, so a refused frame gets no reply and the updater
+times out; `isAppValid()` and `EraseAppPages()` still hard-code 25600 bytes / 25 pages (match the layout today).
+
+Original finding:
 
 `firmware/boards/f0_module/bootloader/bootloader.cpp:188-200` accepts offsets below **26 KiB**, while the linked app partition
 is **25 KiB**, and never bounds offset + payload length. `shared/flash.cpp:75-93` applies the supplied address and length
