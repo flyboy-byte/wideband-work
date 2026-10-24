@@ -1,169 +1,115 @@
 # HANDOFF — dense session context (read after STATE.md)
 
-## F7 done — 2026-10-23 (Claude Opus 5.5)
-
-13 heater `Update()` tests (host suite 64/64). Standalone f0 assumes 13 V supply: D11 (module PB0 has the divider; RAM 0 B).
-Remaining from Codex's plan: F6 thread cadence; circuit C1-C3, C7 (need owner answers: receiver load, endpoint tolerance,
-fault survival requirement, grounding policy); owner decisions D1, D2, D7-D11.
-
-## F8 estimate done — 2026-10-23 (Claude Opus 5.5)
-
-`checks/stack_estimate.py`: all threads fit, smallest margin 80 B (pump), CAN TX 312/512. Needs an f0 build in
-`firmware/build` (in-tree f0 needs `bootloader/build_bootloader.sh` first). Runtime high-water still for bring-up.
-
-## F3-F6 done — 2026-10-23 (Claude Opus 5.5)
-
-`test/aux_out/` (16 tests; `make -C test/aux_out run`, or `AUXOUT_SRC=` to test another version). Found and fixed F5:
-test mode never stepped (16-bit system time). Curve moved to `aux_curve.h`; trim macros overridable with a static_assert.
-Next: F7 heater coverage, F8 stack marks (needs hardware or a careful static estimate), F6 thread-loop cadence; circuit
-C1-C3, C7. Owner decisions D1, D2, D7-D10.
-
-## F2 and F9 done — 2026-10-23 (Claude Opus 5.5)
-
-F2: `checks/fw_package.py build|check`, `checks/test_fw_package.py` (21 cases). Staged packages in `work/fw-build/<commit>/`
-(gitignored). F9 (new, found writing F2): the f0 HardFault entry was Thumb-2, so a fault locked the M0 up instead of
-resetting; fixed, proven on QEMU microbit (`checks/test_fault_entry_m0.py`, includes upstream's entry as a must-fail).
-In-tree f0 builds need `boards/f0_module/bootloader/build_bootloader.sh` first (the app links its .o). Next: F3-F6
-(aux-output host tests), then circuit C1-C3, C7. Owner decision D10 (watchdog).
-
-## F1 done — 2026-10-23 (Claude Opus 5.5, after Codex)
-
-Bootloader DATA guard fixed (`bootloader_bounds.h`); `audit_bootloader_bounds.py` updated to the new call site, now also
-checks valid writes are accepted; 8 gtest cases; host suite 51/51 with LeakSanitizer on. Next per the plan: F2 (package
-validator), F3-F6 (aux-output host tests; `auxout.cpp` is not compiled into the host suite yet), then C1-C3 and C7.
-Host tests: absolute `BUILDDIR` (no moving `firmware/build`), see `CLAUDE.md`.
-
-## Codex audit addendum — 2026-10-23
-
-Flashing, host tests, emulator feasibility and meter-only bring-up: `docs/flashing-and-test-plan.md`.
-Fresh native build: 43/43 pass with leak checking disabled (environment limitation). Absolute temporary BUILDDIR avoids
-moving ARM build output. New `checks/audit_bootloader_bounds.py` reproduces F1 using actual source + recording flash stub:
-48 cases / 10 unsafe accepts, no hardware access. Next: F1 fix, safe image packaging/validation, actual aux-output tests.
-Plan contains Claude's bounded handoff; nothing was sent externally.
-
-Read `docs/codex-audit-2026-10-23.md` and `AUDIT.md` round 3 first. Audited 34cd49d; no PCB/schematic/firmware changes.
-New bounded reproducers: `checks/audit_analog.py` and `checks/audit_layout_order.py`.
-Follow-up: order regression now PASSES; repaired checker flags a 6.8 mm PWM uncovered component (C7).
-Ramped endpoint models succeed at 12 V/7.5 V and 100k/10k: use `audit_analog.py --full-scale`.
-R11 limits but does not block back-feed; trim cannot restore a clipped
-full-scale endpoint. The generic ECU sensor-ground instruction is withdrawn: that wire can carry heater current.
-Next: resolve C1/C2/C3 electrically and inspect C7. C4's false metric is replaced with an explicitly limited component heuristic.
-80R instead of 470R restores nominal 5 V into 10k, but raises the 16 V fault-current budget to 123.75 mA: not a standalone fix.
-Original handoff retained below as history; its protection conclusions and zero-trigger layout signoff are superseded.
-
-Written 2026-10-23 late, after r36 (board grown, R11 added; Opus 5.5 reviewing and continuing Sonnet 5.5's session). Replaces
-the earlier handoffs of the day; the r17-r32 run table is kept below. Replace it at the next handoff.
+Written 2026-10-23, end of a long day: Sonnet 5.5 (routing r32, self-audit), then Opus 5.5 (review, board growth r34-r36),
+then Codex (independent audit, commits 4e4b5a5 and f3cf90c), then Opus 5.5 again (Codex's firmware plan F1-F9). This file
+replaces all earlier handoffs; they are in its git history (`git log -p -- work/HANDOFF.md`). Replace it at the next handoff.
 
 ## Verify first, don't assume
-- `git status`, `git log --oneline -10` (branch `analog-out`; `master` == upstream mck1117/wideband at 2bb80d2; `upstream`
-  push disabled; `origin` = public fork github.com/flyboy-byte/wideband-work, push only when the owner says).
-- `cd work && python3 checks/run_all.py`. Expected (r36): module DRC 11 and carrier DRC 23 (all upstream's), **drc_vs_upstream
-  0 new / 0 unconnected**, via_in_pad 0, **layout_review 0 triggers**, carrier ERC 0, self-check 18/18, no drift.
-- `cd firmware && make clean && make -j12 BOARD=f0_module` (make clean when switching BOARD). Host tests: `CLAUDE.md`.
-- Report page: `REV=carrier-e python3 checks/report.py`, publish `work/report/index.html` with the Artifact tool (same path =
-  same URL https://claude.ai/artifact/YRsjXKGZKG5AFbwkcMuYZ4, private).
+- `git status` (clean except `hardware/board_carrier/~board_carrier.kicad_pro.lck`: KiCad's lock, maybe the owner has it
+  open, leave it), `git log --oneline -12` (branch `analog-out`). `master` == upstream mck1117/wideband 2bb80d2; `upstream`
+  push disabled; `origin` = public fork, push only when the owner says.
+- `cd work && python3 checks/run_all.py`: 16 checks, 3 known fails (raw output below).
+- Firmware: the in-tree f0 build links the bootloader object, so after any bootloader `make clean` run
+  `cd firmware/boards/f0_module/bootloader && bash build_bootloader.sh` first; then `cd firmware && make -j12 BOARD=f0_module`.
+  `make clean` when switching BOARD (stale objects fail the f1_dual link with `EFLD1` undefined). Staged, reproducible
+  package instead: `python3 work/checks/fw_package.py build` -> `work/fw-build/<commit>/` (gitignored).
+- Host tests: `B=$(mktemp -d) && mkdir -p $B/obj $B/lst && (cd test && make -j8 BUILDDIR=$B) && $B/wideband_test` -> 64/64
+  (absolute BUILDDIR: no more moving `firmware/build` aside). `make -C test/aux_out run` -> 16/16.
+- `checks/stack_estimate.py` reads `firmware/build/wideband.elf` and fails on a non-f0 build: rebuild f0 last.
 
-## This session, in order (read `RELEASE_ASSESSMENT.md` section 0 first)
-1. Sonnet self-audit (AUDIT round 1), firmware fix in `can_helper.cpp` (drop CAN frame, don't wait 100 ms, on this board).
-2. Opus review (AUDIT round 2): the 12 V-on-J3-5 fault path through D3 (O1), numbers corrected.
-3. Owner: no case limit, function first, no assumed engineering decisions (AGENTS.md rules 7-8; memory feedback-function-first).
-4. r34-r36: board grown 15 mm at the bottom (`GROW` in `gen/gen_carrier_pcb.py`, `grow_board()`), stage in the new strip,
-   R11 470R 1206 (C4502) at J3-5 (schematic net `AOUT_J`), `REROUTE = []`, PREROUTE only the stage's own nets, bypass
-   pseudo-nets (`BYPASS`, weight 8). `close_d3_link` no longer applies (prints "skipped"; dead, kept guarded).
-5. New `checks/layout_review.py` (coupling, return path incl. coplanar GND, pour/stitching), in `checks.json`.
-6. `sim/stability.sh` topology D (R11): 0-0.5 % overshoot, 0.46 % low into 100k.
-7. Grounding analysis and D7 (`docs/carrier.md`), bring-up test A4 proposed.
+Last raw output (2026-10-23, HEAD 357755f):
+```
+FAIL    DRC module (errors): DRC 11 errors: solder_mask_bridge 10, clearance 1
+FAIL    DRC carrier (errors): DRC 23 errors: courtyards_overlap 14, copper_edge_clearance 3, malformed_courtyard 3, starved_thermal 2
+PASS    Carrier DRC vs upstream baseline: 0 new violations, 0 unconnected
+PASS    Carrier: no new vias in SMD pads: 0 new, 0 upstream
+FAIL    Carrier layout review: review triggers: 1 (return path /AOUT_PWM)          <- Codex C7, open, board unchanged
+PASS    Layout geometry helper unit tests / track-order regression / ERC carrier 0 / self-check 18 nets / no drift
+PASS    F1 bootloader bounds: 52 guard cases; 0 unsafe accepted writes, 0 valid writes refused
+PASS    F2 package checker: 21 package cases, 0 wrong verdict(s)
+PASS    F9 HardFault entry on Cortex-M0 (QEMU microbit): as expected
+PASS    F3-F6 analog output host tests: 16 tests
+PASS    F8 stack estimate: ok, smallest margin 80 B
+16 checks, 3 failed, 0 skipped
+```
 
-| Run | Change | Result |
-| --- | --- | --- |
-| r36 | C17/C15 start targets on the correct (mirrored) side, bypass weight 8 | **0 new / 0 open / 0 via-in-pad / 0 review triggers**; C17 2.1 mm, C15 2.3 mm |
-| r35 | CAN terminator to the strip's left end, output group under the corridor right of the cutout | 0/0; coupling clean; C17 6.1 mm (stuck above the chip) |
-| r34 | board +15 mm, stage in the strip, R11, upstream tracks kept | 0/0 first try; CAN_L 0.3 mm beside the output for 6.8 mm (layout_review) |
-| r33 | `/VOP12` weight on the small board | 6 open: reverted |
+## Where things stand
+- **Board** (r36, commit 986c803): 40.0 x 51.5 mm (1.57 x 2.03 in), upstream's outline grown 15 mm at the bottom; analog
+  stage in the new strip on the bottom; R11 470R 1206 (C4502) between the clamps and J3-5; routed clean first try.
+  Unchanged since. Renders `work/renders/carrier-e/`; status page https://claude.ai/artifact/YRsjXKGZKG5AFbwkcMuYZ4 (private,
+  shows r36; does not yet show the firmware work).
+- **Audit**: rounds 1 (Sonnet self), 2 (Opus review), 3 (Codex) in `AUDIT.md`; Codex's report `docs/codex-audit-2026-10-23.md`
+  supersedes the earlier R11/full-scale/grounding conclusions. Follow-through rows (F2, F5, F9) under round 3.
+- **Firmware**: Codex's plan (`docs/flashing-and-test-plan.md`) F1, F2, F3-F5, F7, F8 (estimate) done, plus F9 found on the
+  way. Details and evidence: `docs/firmware.md`. Nothing flashed; no hardware exists.
+- **Assessment / decisions**: `RELEASE_ASSESSMENT.md` (D-table). Not ready to order.
+
+## This session's firmware work (Opus, after Codex), in order
+| Item | What | Evidence | Commit |
+| --- | --- | --- | --- |
+| F1 | Bootloader CAN DATA writes bounded to the 25 KiB app partition (was 26 KiB, offset+length unchecked) via `bootloader_bounds.h`, size from linker symbol `__appflash_size__` | harness 52 cases 0 unsafe + 4 must-accept; old bound as mutant fails; 8 gtest | f2a437c |
+| F2 | `fw_package.py build/check`: upstream's format staged without `build_wideband.sh`'s deletes; CRC via the bootloader's own `isAppValid()` compiled on host + zlib; M0 vector tables | upstream's shipped image passes, header reproduced byte-for-byte; 21 good/bad cases; two builds identical | 783a885 |
+| F9 | HardFault entry was Thumb-2 (`.cpu cortex-m3`): on the M0 a fault locked up, never reset; `bkpt()` in handlers did too | QEMU microbit Cortex-M0: old entry and BKPT lock up, new entry reaches C handler; f0 build 0 Thumb-2 ops | 8e9fa1c |
+| F3-F5 | `test/aux_out/`: production auxout/pump_dac/can_helper on the real f0 config + fake ChibiOS | 16 tests; **found F5: test mode stuck at 1.00 V** (16-bit systime wraps 6.55 s); fixed with 64-bit `chVTGetTimeStamp()`; old code fails exactly at 2.50/4.00 V points | 1c8f942 |
+| F8 | `stack_estimate.py`: static worst case per thread from the ELF | all fit, smallest margin 80 B (pump), CAN TX 312/512 | 5f966bf |
+| F7 | `test/tests/test_heater_update.cpp`: whole `Update()` path | 13 tests; 2 mutants caught; host 64/64 | 2c5e445 |
+
+Also: curve moved to `boards/f0_module/aux_curve.h`; `AUXOUT_TRIM_GAIN/OFFSET` overridable per build with a static_assert
+(0.8-1.2, +-0.5 V); app flash 21,488 B used, 4,108 B free; RAM unchanged (0 B free).
 
 ## Next, in order
-1. Owner decisions: D7 (analog ground), D8 (mounting holes), D9 (stage on top = one-sided assembly), D1 (R9 1206), D2 (release gate).
-2. Codex audit on a fresh pack (`checks/audit_pack.py carrier-h ...`, same file list as carrier-g plus `checks/layout_review.py` output).
-3. Silkscreen pass (overlapping refs in the strip), BOM/CPL, JLC quote (owner approves money), `release.py`.
+1. **Owner answers that block circuit work** (Codex C1-C3): receiver input resistance and endpoint tolerance (decides R11 value
+   and gain headroom, C2); must the board survive J3-5 at 12-16 V powered and unpowered (C1: R11 limits, doesn't block,
+   back-feed into +5V); car grounding policy (C3: J3-7 can carry heater current). Don't change components before these.
+2. **Owner decisions** in `RELEASE_ASSESSMENT.md`: D10 watchdog (a hang, not a fault, leaves heater PWM at last duty);
+   D11 read battery on PB0 instead of assuming 13 V without CAN (about 48 B RAM, 0 free); D7 analog ground; D8 mounting
+   holes; D9 stage on top (one-sided assembly); D1 R9 1206; D2 release gate vs upstream's DRC errors.
+3. Not blocked: C7 (6.8 mm PWM return-path component, `checks/layout_review.py -v`; inspect before any routing change, don't
+   retune the 5 mm trigger); F6 cadence (the CAN TX thread calls `UpdateAuxOut()` each cycle: needs the loop body split out
+   to host-test). Republish the status page with the firmware results (`REV=carrier-e python3 checks/report.py`; update
+   `report/tests.json` first, it still lists r33-r36 only).
+4. Then: fresh audit pack for the next independent round (`checks/audit_pack.py`), silkscreen pass, BOM/CPL, JLC quote
+   (owner approves money), `release.py`.
 
-## Earlier: r32 (small board, superseded by r34-r36)
-The one open connection (D3 clamp diode +5V pad, an island 4.2 mm from the +5V net) is closed, and the board regenerated:
-`gen/gen_carrier_pcb.py: close_d3_link()` applies `checks/whatif_route.py: CANDIDATES['FIX_D3']` before the final pour fill:
-1. +5V, F.Cu, 0.25 mm: via (60.10,78.15) -> (64.35,78.15) -> (64.35,80.50) -> (64.90,80.50), ends inside U2 pin 3 (+5V pad).
-2. GND via 0.5/0.3 at (66.00,79.35) + 0.2 mm F.Cu tie to C1 pin 2 (that track cut C1 pin 2 off its pour).
-3. C2 pin 2: solid zone connection (thermal spokes were starved by the same track).
-It only applies when D3 pin 1 is at (59.20,78.15), i.e. the seed-7 placement; otherwise it prints "skipped".
-
-Last raw output (regenerated board, 2026-10-23 18:33):
-```
-close_d3_link: D3 +5V linked to U2 pin 3 (top), C1 pin 2 GND via, C2 pin 2 solid
-wrote hardware/board_carrier/board_carrier.kicad_pcb
-DRC vs upstream: 0 new violations, 0 unconnected
-via in pad: 0 new, 0 upstream
-8 checks, 2 failed, 0 skipped      (the 2 failures are the upstream-baseline DRC runs: module 11, carrier 22)
-```
-
-## The method that found it (reuse it)
-`checks/whatif_route.py` puts candidate tracks/vias/pad settings on a scratch copy of the board and scores each with
-`drc_vs_upstream.py --pcb FILE` (~10 s, instead of the 4 min regeneration). Chain entries: `(net, layer, width, [pts])`,
-`('via', net, x, y, dia, drill)`, `('padsolid', ref, pad)`. `python3 checks/whatif_route.py NAME [--keep]`.
-Order of attempts (also on the report page): T1 route to U2 pin 3 (3 path shapes) -> closes it but floats C1 pin 2 and starves
-C2 pin 2; T2 grid of GND via spots (31 run; 5 reach 1 violation); T3 C2 pin 2 solid -> 0/0; T4 into the generator, regenerate:
-0/0 again; T5 looked at the render.
-
+## Board run history (generator `gen/gen_carrier_pcb.py`, seed 7)
 | Run | Change | Result |
 | --- | --- | --- |
-| r32 | `close_d3_link` (FIX_D3), found with whatif_route | **0 new / 0 open**, 0 new vias in pads (this session) |
-| r30 | vias out of SMD pads; CAN and D3 +5V in LOCAL_BOX | 0 new, 1 open (D3 +5V): committed 6d294ae |
-| r31 | seeds 1-2; +5V weight 4 in placement | worse (6, 9 open): reverted |
-| r29 | GND island removal + `join_gnd_pieces` | 0/0 but 9 vias in SMD pads |
-| r26-r28 | seed sweep (seed 7 best); D3 +5V fan-out via; LOCAL_BOX for LSU_Heater+ | 2 open -> 1 open |
-| r24-r25 | whole +5V branch / LSU_Heater+ into negotiation | worse (deadlock) |
-| r20-r23 | negotiated routing (PathFinder); free ring round top GND pads | 12/12 local nets |
-| r17-r19 | one-at-a-time pre-routing, various orders | walls in a different net each time |
-Runs r1-r16 are in this file's git history.
+| r36 | C17/C15 start targets on the mirrored-correct side, bypass weight 8 | 0 new / 0 open / 0 via-in-pad; C17 2.1 mm, C15 2.3 mm (current) |
+| r35 | CAN terminator to the strip's left end; output under the corridor right of the cutout | coupling clean; C17 6.1 mm |
+| r34 | board +15 mm, stage in the strip, R11, upstream tracks kept (`REROUTE = []`) | 0/0 first try; CAN_L 0.3 mm beside output 6.8 mm |
+| r33 | `/VOP12` weight on the small board | 6 open: reverted |
+| r32 | `close_d3_link` (found with `checks/whatif_route.py`) on the small board | 0/0; superseded, now dead code (prints "skipped") |
+| r17-r31 | pre-routing orders, PathFinder negotiation, seed sweeps, island joins, vias out of pads | details in git history of this file |
 
-## Next steps as of r32 (superseded, kept for history)
-1. **Audit** (nothing has been audited): pack is `work/audit/carrier-d-2026-10-23/` (gitignored, read-only; paste `PROMPT.md`
-   first; `firmware.diff` is `git diff master -- firmware`). Hand-off text is in `AUDIT.md`. Give it to Codex, keep its raw output
-   under `work/audit/`, add a round to `AUDIT.md` naming the auditor and commit. Check first: analog stage, power (R8/R9 0603,
-   zener rail), **C1 bypass return now 0.5 mm via + 0.2 mm tie** (new, INFERRED fine).
-2. Silkscreen overlaps (R3/C12, U5/C11) and C17 4.5 mm from U6 pin 8 (op-amp bypass; weight VOP12 or pin it). A placement change
-   invalidates `close_d3_link` (coordinates) and the result must be re-measured; fallbacks if that happens: move D3 by hand in
-   TARGETS next to U2 pin 3, or clamp to C11's +5V pad (same net, in the stage), then run seed 7 only.
-3. Review page (`reference` in the skill) and BOM/CPL -> JLC two-sided quote -> `checks/release.py`. Ordering is the owner's call.
+## Design facts a cold session would otherwise re-derive
+- Analog out: module pad SEL_1 = PB1 = TIM3_CH4 (AF1), shares the pump-DAC timer (48 MHz / 1024 = 46.9 kHz). Curve
+  10 AFR = 0 V ... 20 AFR = 5 V; invalid lambda -> 0 V; test mode when SEL_2 is low at power-up (also moves the CAN ID
+  offset to 4). Updated from the CAN TX thread (no RAM for a thread); CAN frames dropped, not waited for (`can_helper.cpp`).
+- Stage: 100k pull-down -> 74LVC1G125 on REF3030 3.000 V -> 2x 3.3k/100n -> LM2904 x1.68 dual-loop (DC after 330R + 1 nF) ->
+  330R -> 1N4148WS clamps to +5V/GND -> R11 470R -> J3-5. LM2904 supply LSU_Heater+ -> 1k -> 18 V zener. Plain LM2904 is
+  26 V rated, not 32 (Codex C6).
+- J3-5 sits between J3-6 (12V_RAW) and J3-4 (LSU_Heater+). J3-1 and J3-7 are the same GND net.
+- f0 system time: 16 bits at 10 kHz (wraps 6.55 s); use `chVTGetTimeStamp()` for anything longer. No watchdog on f0.
+- Without CAN the f0 sampler reports 0 V supply for 5 s, then 13 V (not measured); heater ramps at about 10.5 s.
+  Module has VBatt_Sense -> 100k/10k -> PB0, unused by the firmware.
 
-## Design facts a cold session would otherwise re-derive (sourced in docs/)
-- Analog out: module pad SEL_1 = PB1 = TIM3_CH4 (AF1), shares the pump-DAC timer (46.9 kHz, 1024 steps). PA8 not usable.
-  SEL_1 CAN-ID strap dropped, SEL_2 kept and = test mode when low at power-up. RAM full (no runtime allocation); update from the
-  CAN TX thread; curve 10 AFR = 0 V … 20 AFR = 5 V; invalid lambda -> 0 V (owner may change).
-- Stage: 100k pull-down -> 74LVC1G125 on REF3030 3.000 V -> 2x 3.3k/100n -> LM2904 x1.68, dual-loop feedback (DC after 330R + 1 nF
-  from op-amp out) -> 330R -> 1N4148WS clamps -> J3-5; J3-7 signal ground. LM2904 supply: LSU_Heater+ -> 1k -> 18 V zener.
-- (Until r33 the board was held inside case.STL; since r34 it is 40.0 x 51.5 mm.) Analog stage on the BOTTOM, in the strip; module cutout x48.76-56.76 y72.84-78.30. Passives 0402 except
-  R6, R8/R9 (flagged), C16/C17.
-- U2 pin 3 is a +5V pad (x 64.52-65.72, y 79.80-82.00); C1 = LSU_Heater+ / GND bypass; C2 = +5V / GND. The top corridor
-  between C10 and U2 is 0.55 mm: a track through it kills the pour on both sides, which is what T1 showed.
-
-## Tool quirks (also in the skill)
-- Everything in the earlier list holds (pcbnew deletes, Freerouting flags, kicad-cli render/svg, zsh `VAR=x time`, clangd noise).
-- **`pkill -f` / `pgrep -f NAME` match your own shell command** (exit 144 kills the call): kill by PID.
-- Test Makefile (`test/`) resolves `build/obj/*.o` to `firmware/build/obj/` via VPATH: move `firmware/build` aside, and
-  `mkdir -p build/obj build/lst` first.
-- `kicad-cli pcb export svg --layers F.Cu,Edge.Cuts --mode-single --page-size-mode 2 --exclude-drawing-sheet` gives a board-fit
-  SVG: with `rsvg-convert -w 4000` the scale is 99.9 px/mm from the board's top-left (39.975, 54.725), handy for crops.
-- pcbnew in KiCad 10: `conn.GetConnectedItems(item)` takes no flags (call `board.BuildConnectivity()` first);
-  `board.FindNet(name)`, not `GetNetInfo().GetNetItemByName`; `pad.SetLocalZoneConnection(pcbnew.ZONE_CONNECTION_FULL)`.
-- A background task's "completed" notice can be for the launcher, not the detached job: grep its log for a DONE marker.
+## Tool quirks
+- `pkill -f` / `pgrep -f NAME` match your own shell (exit 144): kill by PID. A background "completed" notice can be the
+  launcher, not the job: grep its log for a DONE marker.
+- Make doesn't rebuild on flag changes (UDEFS): `touch` the file. Quoted includes search the including file's directory
+  before `-I` (matters for host shims). clangd errors in this tree are noise; the real builds decide.
+- pcbnew (KiCad 10): `board.BuildConnectivity()` before `GetConnectedItems(item)`; `board.FindNet(name)`;
+  `pad.SetLocalZoneConnection(pcbnew.ZONE_CONNECTION_FULL)`. Bottom-side footprints are mirrored: pin 8 of a rot-0 SOIC is
+  lower right. The placer's half-perimeter cost ignores where a cap sits inside its net: use `BYPASS` pairs.
+- QEMU 11.1 `-M microbit` is a Cortex-M0 for instruction-level tests; it is not this chip (QEMU has no F042).
+- `drift.py record` keeps a snapshot under `work/checks/hardware/` (tracked, commit it with the board).
 
 ## Owner (Logan)
-Autonomy on "keep going": reversible steps without stopping, questions + defaults into STATE.md; stop for money, deleting,
-overwriting his KiCad edits, publishing, pushing. Hands-on tuner, don't explain ECU basics. Learning project. Bench: multimeter
-and iron only. Reviews from his phone (hence the report page). JLC places SMD; he solders through-hole.
+Autonomy on "keep going": reversible steps, questions + defaults into STATE.md; stop for money, deleting, overwriting his
+KiCad edits, publishing, pushing. Function first on this prototype (no enclosure/fit gates; he does the case in CAD last).
+No assumed engineering decisions (AGENTS.md rules 7-8). Hands-on tuner; learning project; bench = multimeter + iron;
+reviews from his phone; JLC places SMD, he solders through-hole.
 
 ## Do not re-raise
 Buying a ready-made controller; forking lambda-x2 / wideband-F103; narrowband simulation output; the Honda side; CAN-ID strap
-trade-off; separate repos; ~~keeping the deleted LSU_Heater+/+5V bottom tracks~~ (superseded r34: all upstream tracks kept); negotiating the whole +5V branch.
-
-## Open questions (owner), with the default in use
-Output while sensor invalid: 0 V. Flashing method: keep Tag-Connect pads reachable. Bring-up tests A1-A3 in docs/carrier.md:
-unconfirmed. JLC two-sided assembly cost: unchecked. Whether to publish the report page to anyone else: it is private.
+trade-off; separate repos; negotiating the whole +5V branch; upstream's case.STL as a size limit.

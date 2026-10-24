@@ -38,12 +38,13 @@ It's a learning project: build and test it ourselves, don't buy a ready-made uni
 - **Firmware** (branch `analog-out`): builds. Analog output on module pad SEL_1 = PB1 = TIM3_CH4 (shares the pump-DAC
   timer, 46.9 kHz). Compiled-in curve 10 AFR = 0 V … 20 AFR = 5 V, 0 V while lambda is invalid. Bench test mode (SEL_2
   strapped low: 1.00/2.50/4.00 V steps) and trim constants. RAM is full to the byte, which is safe because nothing is
-  allocated at runtime. Untested on hardware.
+  allocated at runtime. Untested on hardware. Host-tested 2026-10-23 (64 + 16 tests); upstream bugs fixed in the bootloader
+  bounds (F1) and the Cortex-M0 fault handler (F9), our test-mode bug fixed (F5): `work/docs/firmware.md`.
 - **Carrier schematic**: generated, ERC 0, netlist self-check 18/18 (R11 added r34).
 - **Carrier PCB**: grown to 40.0 x 51.5 mm (r36); the analog stage sits in the new strip. **0 new DRC violations, 0 open,
-  0 vias in pads, 0 layout-review triggers.** Next: owner decisions D7-D9 and D1-D2 (`work/RELEASE_ASSESSMENT.md`), Codex
-  audit on a fresh pack, silkscreen pass → BOM/CPL → JLC quote → `release.py`.
-- **Assessment**: `work/RELEASE_ASSESSMENT.md` (concept, audit path, confidence, caveats, owner decisions) and `work/AUDIT.md` rounds 1 (Sonnet self-audit) and 2 (Opus review); no outside audit yet.
+  0 vias in pads.** Codex's repaired layout check flags a 6.8 mm PWM return-path gap (C7, open). Next: owner answers for
+  Codex C1-C3 and decisions D1, D2, D7-D11 (`work/RELEASE_ASSESSMENT.md`), then silkscreen → BOM/CPL → JLC quote → `release.py`.
+- **Assessment**: `work/RELEASE_ASSESSMENT.md` (concept, audit path, confidence, caveats, owner decisions) and `work/AUDIT.md` rounds 1 (Sonnet self-audit), 2 (Opus review), 3 (Codex, independent: `work/docs/codex-audit-2026-10-23.md`).
 - **Module board**: upstream's, unchanged (DRC 11 upstream errors, judged harmless or not yet: open).
 
 ## Commands
