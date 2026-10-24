@@ -14,6 +14,17 @@ Replace it (don't append forever) at the next handoff; durable facts belong in S
 - Report page: `cd work && python3 checks/report.py` then publish `work/report/index.html` with the Artifact tool, same path
   = same URL (https://claude.ai/artifact/YRsjXKGZKG5AFbwkcMuYZ4, private, owner's account).
 
+## Later the same day (self-audit, Opus)
+- `RELEASE_ASSESSMENT.md` (new, read it first): concept, audit path, confidence (about 75 %), findings R1-R7, owner decisions D1-D5.
+- `AUDIT.md` round 1 = self-audit (low independence). Codex round still to do on `work/audit/carrier-d-2026-10-23/`
+  (pack predates the `can_helper.cpp` change: rebuild it with `checks/audit_pack.py` before handing over).
+- Firmware: `firmware/can_helper.cpp` drops the CAN frame instead of waiting 100 ms when `AUXOUT_SEL1_PWM_CHANNEL` is set (no node on
+  the bus would slow the analog output to about 9 Hz). f0_module and f1_dual build clean; +32 B flash, RAM unchanged.
+- r33: `NET_WEIGHT['/VOP12'] = 2.5` to pull C17 toward U6 pin 8 moved the placement: 6 open connections, `close_d3_link` skipped. Reverted
+  (generator and board back to bf13162; verified 0/0). C17 stays at 4.5 mm (accepted RISK R3).
+- `release.py` cannot pass while the two raw DRC checks fail on upstream's own errors: owner decision D2.
+- Build quirk: after switching `BOARD=` run `make clean`, else the link fails with stale objects (`EFLD1` undefined on f1_dual).
+
 ## What changed this session (r32)
 The one open connection (D3 clamp diode +5V pad, an island 4.2 mm from the +5V net) is closed, and the board regenerated:
 `gen/gen_carrier_pcb.py: close_d3_link()` applies `checks/whatif_route.py: CANDIDATES['FIX_D3']` before the final pour fill:

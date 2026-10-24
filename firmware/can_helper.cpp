@@ -3,6 +3,7 @@
 #include <cstring>
 
 #include "can.h"
+#include "port.h"
 
 CanTxMessage::CanTxMessage(uint32_t eid, uint8_t dlc, bool isExtended)
 {
@@ -29,8 +30,14 @@ CanTxMessage::CanTxMessage(uint32_t eid, uint8_t dlc, bool isExtended)
 
 CanTxMessage::~CanTxMessage()
 {
+#ifdef AUXOUT_SEL1_PWM_CHANNEL
+    // The analog output is updated from the CAN TX thread. With no other node on the bus nothing acknowledges
+    // the frames, the mailboxes fill, and a 100 ms wait here would slow the output to about 9 Hz: drop the frame.
+    canTransmitTimeout(&CAND1, CAN_ANY_MAILBOX, &m_frame, TIME_IMMEDIATE);
+#else
     // 100 ms timeout
     canTransmitTimeout(&CAND1, CAN_ANY_MAILBOX, &m_frame, TIME_MS2I(100));
+#endif
 }
 
 uint8_t& CanTxMessage::operator[](size_t index)

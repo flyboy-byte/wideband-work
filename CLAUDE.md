@@ -43,6 +43,7 @@ It's a learning project: build and test it ourselves, don't buy a ready-made uni
 - **Carrier PCB**: generated and routed. **0 new DRC violations and 0 open connections** beyond upstream's baseline (r32), no vias
   in pads. Next: C17 to U6 pin 8, silkscreen overlaps, then audit (pack in `work/audit/`, Codex round) → BOM/CPL → JLC
   two-sided quote → `release.py`.
+- **Assessment**: `work/RELEASE_ASSESSMENT.md` (concept, audit path, confidence, caveats, owner decisions) and `work/AUDIT.md` round 1 (self-audit).
 - **Module board**: upstream's, unchanged (DRC 11 upstream errors, judged harmless or not yet: open).
 
 ## Commands

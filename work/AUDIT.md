@@ -37,9 +37,22 @@ Severity: BLOCKER = don't order; BUG = wrong but workable; RISK = could bite (st
 NOTE. Then: what was checked and found correct, and what couldn't be checked.
 
 ## Rounds
-### Round 1 — <YYYY-MM-DD>, <auditor>
-Commit: <short hash audited>
-Verdict: <would I order these files as they are?>
+### Round 1 — 2026-10-23, Claude Opus (self-audit, same session as the author: low independence)
+Commit: bf13162 plus the `can_helper.cpp` change in the commit that adds this text
+Verdict: Not yet. Nothing found that makes the board unsafe or wrong for its main use, but R1/R2 are open RISKs, nothing has been
+audited by another model, and BOM/CPL/quote do not exist. Plain-language version with confidence numbers: `RELEASE_ASSESSMENT.md`.
 
 | ID | Severity | Location | Evidence (numbers) | Smallest fix | Status |
 | --- | --- | --- | --- | --- | --- |
+| R1 | RISK | R8 330R 0603 | short to +12 V: (12-5.6)/330 = 19 mA = 120 mW > 100 mW steady; short to GND 76 mW ok (INFERRED, not simulated) | R8 to 1206 | open (owner decision D1) |
+| R2 | RISK | R9 1k 0603, D5 BZT52C18 | surge 35-48 V: 17-30 mA, R9 0.3-0.9 W, zener 0.3-0.5 W (INFERRED) | R9 to 1206 or accept; failure only loses the analog output | open (D1) |
+| R3 | RISK | C17 to U6 pin 8 | 4.5 mm; C16 10 uF nearby; weighting the net (r33) gave 6 open connections | hand move later, or accept | accepted for now (INFERRED fine) |
+| R4 | RISK | firmware, `can_helper.cpp` | no CAN node: 100 ms mailbox wait in the thread that updates the output, 100 Hz to about 9 Hz | drop the frame on this board | fixed (this commit); bench check pending |
+| R5 | NOTE | REF3030 output cap | 100 nF vs REF30 table 0.1-22 uF (REPORTED) | none | accepted |
+| R6 | NOTE | C1 GND return | 0.5 mm via + 0.2 mm tie instead of a pour (INFERRED fine) | none | open, for the second auditor |
+| R7 | NOTE | silkscreen R3/C12, U5/C11 | overlaps | move labels | open |
+
+Checked and found correct: stability and ripple sims reproduce the doc tables (re-run today); ERC 0; netlist 17/17; DRC vs upstream
+0 new / 0 open; via-in-pad 0; firmware diff reads consistently (SEL_1 never touched as a strap, update guarded by a null config,
+invalid lambda gives 0 V, build f0_module and f1_dual clean). Could not check: any hardware behaviour, clamp and pull-down in
+simulation, cable inductance, temperature, BOM/stock, JLC rotation.
