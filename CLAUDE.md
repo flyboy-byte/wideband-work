@@ -74,7 +74,7 @@ build, then put it back. The `mkdir -p` is also needed (the dir rule isn't a pre
 ## How the carrier PCB is generated (`work/gen/gen_carrier_pcb.py`)
 
 The base is upstream's board from `master`, upgraded to KiCad 10, with every upstream track locked. New parts go on the
-**bottom**: the board can't grow inside `case/case.STL`, and the top is full. The steps:
+**bottom**: the top is full. (`case/case.STL` was treated as a size limit until 2026-10-23; the owner designs his own enclosure, so the board may now grow: see `work/STATE.md`.) The steps:
 1. Greedy placement to targets.
 2. **Annealing placement** by net length plus distance to existing copper.
 3. Pad nets from the schematic netlist.
