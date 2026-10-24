@@ -135,6 +135,30 @@
     "files": []
   },
   {
+    "name": "JLC rotation, origin and pin names from each part's EasyEDA footprint",
+    "cmd": [
+      "python3",
+      "checks/jlc_rotation.py"
+    ],
+    "files": [
+      "../hardware/board_carrier/board_carrier.kicad_pcb",
+      "../hardware/board_carrier/board_carrier.kicad_sch"
+    ]
+  },
+  {
+    "name": "Fab candidate (out/carrier) matches the board: Gerbers, BOM, CPL, not-fitted",
+    "cmd": [
+      "python3",
+      "checks/fab_files.py"
+    ],
+    "files": [
+      "../hardware/board_carrier/board_carrier.kicad_pcb",
+      "out/carrier/carrier-bom.csv",
+      "out/carrier/carrier-cpl.csv",
+      "out/carrier/carrier-gerbers.zip"
+    ]
+  },
+  {
     "name": "Firmware: bootloader DATA writes stay inside the app partition (F1)",
     "cmd": [
       "python3",

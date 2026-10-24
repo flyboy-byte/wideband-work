@@ -1,0 +1,649 @@
+{
+ "C1": {
+  "correction": 0,
+  "cpl_rot": 180.0,
+  "fit_mm": 0.087,
+  "kicad_rot": 180.0,
+  "lcsc": "C15849",
+  "origin_offset_mm": 0.0,
+  "paired_by": [
+   "number"
+  ],
+  "pins": 2,
+  "polarized": false,
+  "pos_shift_mm": [
+   0.0,
+   0.0
+  ]
+ },
+ "C10": {
+  "correction": 0,
+  "cpl_rot": 180.0,
+  "fit_mm": 0.193,
+  "kicad_rot": 180.0,
+  "lcsc": "C13585",
+  "origin_offset_mm": 0.0,
+  "paired_by": [
+   "number"
+  ],
+  "pins": 2,
+  "polarized": false,
+  "pos_shift_mm": [
+   0.0,
+   0.0
+  ]
+ },
+ "C11": {
+  "correction": 0,
+  "cpl_rot": 0.0,
+  "fit_mm": 0.06,
+  "kicad_rot": 0.0,
+  "lcsc": "C1525",
+  "origin_offset_mm": 0.0,
+  "paired_by": [
+   "number"
+  ],
+  "pins": 2,
+  "polarized": false,
+  "pos_shift_mm": [
+   0.0,
+   0.0
+  ]
+ },
+ "C12": {
+  "correction": 0,
+  "cpl_rot": 180.0,
+  "fit_mm": 0.06,
+  "kicad_rot": 180.0,
+  "lcsc": "C1525",
+  "origin_offset_mm": 0.0,
+  "paired_by": [
+   "number"
+  ],
+  "pins": 2,
+  "polarized": false,
+  "pos_shift_mm": [
+   0.0,
+   0.0
+  ]
+ },
+ "C13": {
+  "correction": 0,
+  "cpl_rot": 180.0,
+  "fit_mm": 0.06,
+  "kicad_rot": 180.0,
+  "lcsc": "C1525",
+  "origin_offset_mm": 0.0,
+  "paired_by": [
+   "number"
+  ],
+  "pins": 2,
+  "polarized": false,
+  "pos_shift_mm": [
+   0.0,
+   0.0
+  ]
+ },
+ "C14": {
+  "correction": 0,
+  "cpl_rot": 270.0,
+  "fit_mm": 0.06,
+  "kicad_rot": 270.0,
+  "lcsc": "C1525",
+  "origin_offset_mm": 0.0,
+  "paired_by": [
+   "number"
+  ],
+  "pins": 2,
+  "polarized": false,
+  "pos_shift_mm": [
+   0.0,
+   0.0
+  ]
+ },
+ "C15": {
+  "correction": 0,
+  "cpl_rot": 270.0,
+  "fit_mm": 0.06,
+  "kicad_rot": 270.0,
+  "lcsc": "C1523",
+  "origin_offset_mm": 0.0,
+  "paired_by": [
+   "number"
+  ],
+  "pins": 2,
+  "polarized": false,
+  "pos_shift_mm": [
+   0.0,
+   0.0
+  ]
+ },
+ "C16": {
+  "correction": 0,
+  "cpl_rot": 270.0,
+  "fit_mm": 0.118,
+  "kicad_rot": 270.0,
+  "lcsc": "C13585",
+  "origin_offset_mm": 0.0,
+  "paired_by": [
+   "number"
+  ],
+  "pins": 2,
+  "polarized": false,
+  "pos_shift_mm": [
+   0.0,
+   0.0
+  ]
+ },
+ "C17": {
+  "correction": 0,
+  "cpl_rot": 90.0,
+  "fit_mm": 0.075,
+  "kicad_rot": 90.0,
+  "lcsc": "C14663",
+  "origin_offset_mm": 0.0,
+  "paired_by": [
+   "number"
+  ],
+  "pins": 2,
+  "polarized": false,
+  "pos_shift_mm": [
+   0.0,
+   0.0
+  ]
+ },
+ "C2": {
+  "correction": 0,
+  "cpl_rot": 90.0,
+  "fit_mm": 0.087,
+  "kicad_rot": 90.0,
+  "lcsc": "C15849",
+  "origin_offset_mm": 0.0,
+  "paired_by": [
+   "number"
+  ],
+  "pins": 2,
+  "polarized": false,
+  "pos_shift_mm": [
+   0.0,
+   0.0
+  ]
+ },
+ "C3": {
+  "correction": 0,
+  "cpl_rot": 90.0,
+  "fit_mm": 0.087,
+  "kicad_rot": 90.0,
+  "lcsc": "C15849",
+  "origin_offset_mm": 0.0,
+  "paired_by": [
+   "number"
+  ],
+  "pins": 2,
+  "polarized": false,
+  "pos_shift_mm": [
+   0.0,
+   0.0
+  ]
+ },
+ "C4": {
+  "correction": 0,
+  "cpl_rot": 270.0,
+  "fit_mm": 0.065,
+  "kicad_rot": 270.0,
+  "lcsc": "C1567",
+  "origin_offset_mm": 0.0,
+  "paired_by": [
+   "number"
+  ],
+  "pins": 2,
+  "polarized": false,
+  "pos_shift_mm": [
+   0.0,
+   0.0
+  ]
+ },
+ "C5": {
+  "correction": 0,
+  "cpl_rot": 90.0,
+  "fit_mm": 0.065,
+  "kicad_rot": 90.0,
+  "lcsc": "C1567",
+  "origin_offset_mm": 0.0,
+  "paired_by": [
+   "number"
+  ],
+  "pins": 2,
+  "polarized": false,
+  "pos_shift_mm": [
+   0.0,
+   0.0
+  ]
+ },
+ "C6": {
+  "correction": 0,
+  "cpl_rot": 270.0,
+  "fit_mm": 0.062,
+  "kicad_rot": 270.0,
+  "lcsc": "C45783",
+  "origin_offset_mm": 0.0,
+  "paired_by": [
+   "number"
+  ],
+  "pins": 2,
+  "polarized": false,
+  "pos_shift_mm": [
+   0.0,
+   0.0
+  ]
+ },
+ "C7": {
+  "correction": 0,
+  "cpl_rot": 180.0,
+  "fit_mm": 0.193,
+  "kicad_rot": 180.0,
+  "lcsc": "C13585",
+  "origin_offset_mm": 0.0,
+  "paired_by": [
+   "number"
+  ],
+  "pins": 2,
+  "polarized": false,
+  "pos_shift_mm": [
+   0.0,
+   0.0
+  ]
+ },
+ "C8": {
+  "correction": 0,
+  "cpl_rot": 0.0,
+  "fit_mm": 0.193,
+  "kicad_rot": 0.0,
+  "lcsc": "C13585",
+  "origin_offset_mm": 0.0,
+  "paired_by": [
+   "number"
+  ],
+  "pins": 2,
+  "polarized": false,
+  "pos_shift_mm": [
+   0.0,
+   0.0
+  ]
+ },
+ "C9": {
+  "correction": 0,
+  "cpl_rot": 180.0,
+  "fit_mm": 0.193,
+  "kicad_rot": 180.0,
+  "lcsc": "C13585",
+  "origin_offset_mm": 0.0,
+  "paired_by": [
+   "number"
+  ],
+  "pins": 2,
+  "polarized": false,
+  "pos_shift_mm": [
+   0.0,
+   0.0
+  ]
+ },
+ "D1": {
+  "correction": 0,
+  "cpl_rot": 0.0,
+  "fit_mm": 0.035,
+  "kicad_rot": 0.0,
+  "lcsc": "C151279",
+  "origin_offset_mm": 0.0,
+  "paired_by": [
+   "number"
+  ],
+  "pins": 2,
+  "polarized": false,
+  "pos_shift_mm": [
+   0.0,
+   0.0
+  ]
+ },
+ "D2": {
+  "correction": 0,
+  "cpl_rot": 270.0,
+  "fit_mm": 0.504,
+  "kicad_rot": 270.0,
+  "lcsc": "C22452",
+  "origin_offset_mm": 0.0,
+  "paired_by": [
+   "name"
+  ],
+  "pins": 2,
+  "polarized": true,
+  "pos_shift_mm": [
+   0.0,
+   0.0
+  ]
+ },
+ "D3": {
+  "correction": 0,
+  "cpl_rot": 270.0,
+  "fit_mm": 0.122,
+  "kicad_rot": 270.0,
+  "lcsc": "C2128",
+  "origin_offset_mm": 0.0,
+  "paired_by": [
+   "name"
+  ],
+  "pins": 2,
+  "polarized": true,
+  "pos_shift_mm": [
+   0.0,
+   0.0
+  ]
+ },
+ "D4": {
+  "correction": 0,
+  "cpl_rot": 90.0,
+  "fit_mm": 0.122,
+  "kicad_rot": 90.0,
+  "lcsc": "C2128",
+  "origin_offset_mm": 0.0,
+  "paired_by": [
+   "name"
+  ],
+  "pins": 2,
+  "polarized": true,
+  "pos_shift_mm": [
+   0.0,
+   0.0
+  ]
+ },
+ "D5": {
+  "correction": 0,
+  "cpl_rot": 0.0,
+  "fit_mm": 0.042,
+  "kicad_rot": 0.0,
+  "lcsc": "C173425",
+  "origin_offset_mm": 0.0,
+  "paired_by": [
+   "band"
+  ],
+  "pins": 2,
+  "polarized": true,
+  "pos_shift_mm": [
+   0.0,
+   0.0
+  ]
+ },
+ "R1": {
+  "correction": 0,
+  "cpl_rot": 90.0,
+  "fit_mm": 0.034,
+  "kicad_rot": 90.0,
+  "lcsc": "C22962",
+  "origin_offset_mm": 0.0,
+  "paired_by": [
+   "number"
+  ],
+  "pins": 2,
+  "polarized": false,
+  "pos_shift_mm": [
+   0.0,
+   0.0
+  ]
+ },
+ "R10": {
+  "correction": 0,
+  "cpl_rot": 0.0,
+  "fit_mm": 0.077,
+  "kicad_rot": 0.0,
+  "lcsc": "C25079",
+  "origin_offset_mm": 0.0,
+  "paired_by": [
+   "number"
+  ],
+  "pins": 2,
+  "polarized": false,
+  "pos_shift_mm": [
+   0.0,
+   0.0
+  ]
+ },
+ "R11": {
+  "correction": 0,
+  "cpl_rot": 90.0,
+  "fit_mm": 0.016,
+  "kicad_rot": 90.0,
+  "lcsc": "C4502",
+  "origin_offset_mm": 0.0,
+  "paired_by": [
+   "number"
+  ],
+  "pins": 2,
+  "polarized": false,
+  "pos_shift_mm": [
+   0.0,
+   0.0
+  ]
+ },
+ "R2": {
+  "correction": 0,
+  "cpl_rot": 90.0,
+  "fit_mm": 0.034,
+  "kicad_rot": 90.0,
+  "lcsc": "C23179",
+  "origin_offset_mm": 0.0,
+  "paired_by": [
+   "number"
+  ],
+  "pins": 2,
+  "polarized": false,
+  "pos_shift_mm": [
+   0.0,
+   0.0
+  ]
+ },
+ "R3": {
+  "correction": 0,
+  "cpl_rot": 180.0,
+  "fit_mm": 0.077,
+  "kicad_rot": 180.0,
+  "lcsc": "C25741",
+  "origin_offset_mm": 0.0,
+  "paired_by": [
+   "number"
+  ],
+  "pins": 2,
+  "polarized": false,
+  "pos_shift_mm": [
+   0.0,
+   0.0
+  ]
+ },
+ "R4": {
+  "correction": 0,
+  "cpl_rot": 90.0,
+  "fit_mm": 0.077,
+  "kicad_rot": 90.0,
+  "lcsc": "C25890",
+  "origin_offset_mm": 0.0,
+  "paired_by": [
+   "number"
+  ],
+  "pins": 2,
+  "polarized": false,
+  "pos_shift_mm": [
+   0.0,
+   0.0
+  ]
+ },
+ "R5": {
+  "correction": 0,
+  "cpl_rot": 0.0,
+  "fit_mm": 0.077,
+  "kicad_rot": 0.0,
+  "lcsc": "C25890",
+  "origin_offset_mm": 0.0,
+  "paired_by": [
+   "number"
+  ],
+  "pins": 2,
+  "polarized": false,
+  "pos_shift_mm": [
+   0.0,
+   0.0
+  ]
+ },
+ "R6": {
+  "correction": 0,
+  "cpl_rot": 270.0,
+  "fit_mm": 0.072,
+  "kicad_rot": 270.0,
+  "lcsc": "C23231",
+  "origin_offset_mm": 0.0,
+  "paired_by": [
+   "number"
+  ],
+  "pins": 2,
+  "polarized": false,
+  "pos_shift_mm": [
+   0.0,
+   0.0
+  ]
+ },
+ "R7": {
+  "correction": 0,
+  "cpl_rot": 0.0,
+  "fit_mm": 0.077,
+  "kicad_rot": 0.0,
+  "lcsc": "C25741",
+  "origin_offset_mm": 0.0,
+  "paired_by": [
+   "number"
+  ],
+  "pins": 2,
+  "polarized": false,
+  "pos_shift_mm": [
+   0.0,
+   0.0
+  ]
+ },
+ "R8": {
+  "correction": 0,
+  "cpl_rot": 0.0,
+  "fit_mm": 0.072,
+  "kicad_rot": 0.0,
+  "lcsc": "C23138",
+  "origin_offset_mm": 0.0,
+  "paired_by": [
+   "number"
+  ],
+  "pins": 2,
+  "polarized": false,
+  "pos_shift_mm": [
+   0.0,
+   0.0
+  ]
+ },
+ "R9": {
+  "correction": 0,
+  "cpl_rot": 270.0,
+  "fit_mm": 0.016,
+  "kicad_rot": 270.0,
+  "lcsc": "C4410",
+  "origin_offset_mm": 0.0,
+  "paired_by": [
+   "number"
+  ],
+  "pins": 2,
+  "polarized": false,
+  "pos_shift_mm": [
+   0.0,
+   0.0
+  ]
+ },
+ "U1": {
+  "correction": 270,
+  "cpl_rot": 0.0,
+  "fit_mm": 0.125,
+  "kicad_rot": 90.0,
+  "lcsc": "C38695",
+  "origin_offset_mm": 0.0,
+  "paired_by": [
+   "name"
+  ],
+  "pins": 8,
+  "polarized": false,
+  "pos_shift_mm": [
+   0.0,
+   0.0
+  ]
+ },
+ "U2": {
+  "correction": 0,
+  "cpl_rot": 270.0,
+  "fit_mm": 0.01,
+  "kicad_rot": 270.0,
+  "lcsc": "C58069",
+  "origin_offset_mm": 0.725,
+  "paired_by": [
+   "name"
+  ],
+  "pins": 2,
+  "polarized": false,
+  "pos_shift_mm": [
+   -0.0,
+   -0.725
+  ]
+ },
+ "U4": {
+  "correction": 180,
+  "cpl_rot": 0.0,
+  "fit_mm": 0.008,
+  "kicad_rot": 180.0,
+  "lcsc": "C12519",
+  "origin_offset_mm": 0.001,
+  "paired_by": [
+   "name",
+   "number"
+  ],
+  "pins": 5,
+  "polarized": false,
+  "pos_shift_mm": [
+   0.0,
+   0.0
+  ]
+ },
+ "U5": {
+  "correction": 180,
+  "cpl_rot": 90.0,
+  "fit_mm": 0.397,
+  "kicad_rot": 270.0,
+  "lcsc": "C38423",
+  "origin_offset_mm": 0.099,
+  "paired_by": [
+   "name"
+  ],
+  "pins": 3,
+  "polarized": false,
+  "pos_shift_mm": [
+   0.0,
+   0.0
+  ]
+ },
+ "U6": {
+  "correction": 270,
+  "cpl_rot": 270.0,
+  "fit_mm": 0.125,
+  "kicad_rot": 0.0,
+  "lcsc": "C7934",
+  "origin_offset_mm": 0.0,
+  "paired_by": [
+   "number"
+  ],
+  "pins": 8,
+  "polarized": false,
+  "pos_shift_mm": [
+   0.0,
+   0.0
+  ]
+ }
+}

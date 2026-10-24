@@ -74,3 +74,4 @@ work/audit/
 # staged firmware packages (checks/fw_package.py build) and Python caches
 work/fw-build/
 __pycache__/
+work/out/

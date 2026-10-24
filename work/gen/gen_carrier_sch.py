@@ -57,7 +57,7 @@ PARTS = {
     # [REPORTED, LCSC/JLC listing 2026-10-24]
     'R9':  ('Device', 'R', '1k', 'Resistor_SMD:R_1206_3216Metric', 'C4410', (215.9, 213.36), 'op-amp supply feed from the protected 12 V'),
     'D5':  ('Device', 'D_Zener', '18V', 'Diode_SMD:D_SOD-123', 'C173425', (241.3, 213.36),
-            'clamps op-amp supply: TVS D1 (SMCJ30CA) lets the rail reach about 35-48 V, LM2904 is rated 32 V'),
+            'clamps op-amp supply: TVS D1 (SMCJ24CA, C151279) lets the rail reach about 27-39 V; plain LM2904 is rated 26 V'),
     'C16': ('Device', 'C', '10u', 'Capacitor_SMD:C_1206_3216Metric', 'C13585', (266.7, 213.36), 'op-amp supply, 50 V'),
     'C17': ('Device', 'C', '100n', C0603, 'C14663', (292.1, 213.36), 'op-amp bypass'),
     'JP1': ('Jumper', 'SolderJumper_2_Open', 'TEST', 'Jumper:SolderJumper-2_P1.3mm_Open_RoundedPad1.0x1.5mm', '',

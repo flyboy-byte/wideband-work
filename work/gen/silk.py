@@ -14,7 +14,7 @@ import os, sys
 
 import pcbnew
 
-H, W = 1.0, 0.15            # text height, line width (mm)
+H, W = 1.0, 0.16            # text height, line width (mm): JLC's 6 mil is 0.1524 mm; the skill says 0.16 minimum
 PAD_GAP = 0.15              # from any pad
 SILK_GAP = 0.1              # from other silkscreen
 EDGE_GAP = 0.3

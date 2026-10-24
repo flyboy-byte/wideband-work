@@ -82,11 +82,16 @@ error (0.1 V) is 0.2 AFR, which is why the reference buffer matters [INFERRED].
      and J3-4 (LSU_Heater+) [DOCUMENTED: J3 footprint pads]. Without it, 12 V on J3-5 reaches +5V through D3 with no
      limit (TJA1051, REF3030, module on that rail). With it: (12 - 5.6) / 470 = 14 mA into +5V, 0.09 W in R11 (1206,
      250 mW) [INFERRED, calculation]. This limits but does not prevent back-feed; power-off behavior and the rail's
-     guaranteed sink current remain unverified (Codex audit C1, 2026-10-23). Outside the feedback, it reads 0.46 % low
-     into 100k. Trim helps only while duty-cycle headroom remains: nominal full scale into 10k is 4.814 V and cannot
-     be trimmed to 5 V (C2). Endpoint tolerance and receiver load must be budgeted together.
-   - Op-amp supply clamp: upstream's input TVS is an SMCJ30CA (C133648: 30 V standoff, 35.1 V breakdown per the JLC
-     listing), so the protected 12 V rail can reach about 35-48 V in a surge; the plain TI LM2904 is rated 26 V, not 32 V
+     guaranteed sink current remain unverified (Codex audit C1, 2026-10-23). ~~Outside the feedback, it reads 0.46 % low
+     into 100k ... cannot be trimmed to 5 V (C2).~~ Superseded r37 (2026-10-24): R11 is inside the DC feedback, so the
+     load no longer shifts the output (section "Receiver load and the feedback point").
+   - Op-amp supply clamp: upstream's input TVS is an **SMCJ24CA** (C151279), per upstream's board and schematic of
+     2023-02-03 [DOCUMENTED: `git show master:hardware/board_carrier/board_carrier.kicad_sch`, EasyEDA title for C151279].
+     Corrected 2026-10-24: this note said SMCJ30CA (C133648), which is what upstream's older exported BOM
+     (`hardware/board_carrier/export/carrier_bom.csv`, 2023-01-05) lists; that export is stale (it also has SS34 for D2,
+     where the board has SS54 C22452). SMCJ24CA: 24 V standoff, about 26.7 V breakdown, about 38.9 V clamping at its rated
+     pulse current [FROM MEMORY, standard SMCJ table; check the datasheet], so the protected 12 V rail reaches about
+     27-39 V in a surge (the 35-48 V used before was the SMCJ30CA's, so the design below was sized for more); the plain TI LM2904 is rated 26 V, not 32 V
      ([TI SLOS068AB](https://www.ti.com/lit/ds/symlink/lm358.pdf), supply tables; Codex audit C6). 1k + 18 V zener
      (BZT52C18, C173425) holds it below that; the op-amp draws about 1 mA, so the 1k costs about 1 V of headroom
      (fine down to about 7.5 V battery for a 5 V output) [INFERRED].

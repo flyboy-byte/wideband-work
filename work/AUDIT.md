@@ -15,7 +15,7 @@ Independent report: `docs/codex-audit-2026-10-23.md`; board remains at `986c803`
 - Check, in priority order (owner: effort goes to circuits, power, heater drive, control loops, firmware):
   1. **Analog stage from first principles**: op-amp stability with cable capacitance (`sim/stability.sh`, TI model), output
      clamps and the 0.7 mV ripple / 4.1 ms settling claim, behaviour with the output shorted to GND or +12 V.
-  2. **Power**: LM2904 supply (12 V -> 1k -> 18 V zener; input TVS SMCJ30CA lets the rail reach ~35-48 V). R8 (330R) and R9 (1k)
+  2. **Power**: LM2904 supply (12 V -> 1k -> 18 V zener; input TVS SMCJ30CA lets the rail reach ~35-48 V; corrected 2026-10-24: the board has SMCJ24CA, about 27-39 V, see `docs/carrier.md`). R8 (330R) and R9 (1k)
      are 0603 (100 mW): INFERRED too small for a sustained AOUT short or a surge; not simulated.
   3. **New in r32**: C1 is the LSU heater supply bypass (upstream part). Its GND now returns through one 0.5 mm via and a 0.2 mm
      tie (was a pour connection). INFERRED fine for a bypass cap, not measured. Is a heater-drive transient a concern?

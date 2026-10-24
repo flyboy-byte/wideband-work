@@ -58,3 +58,11 @@ that would help any board as a line for the `pcb-design` skill (see its "Lessons
   warning-level DRC during the silkscreen pass. Fix: the delta check counts fab-relevant warning types too
   (FAB_WARNINGS), and the generator merges close same-net vias after routing. Skill lesson candidate: a DRC gate must
   include warning types that matter to the fab, not only errors.
+- 2026-10-24 JLC/EasyEDA pad numbering can differ from KiCad's for the same package: C22452 (SS54, SMA) numbers the
+  anode 1, KiCad's D_SMA numbers the cathode 1. A rotation table found by pairing pads by number would have placed D2,
+  the reverse-polarity diode, backwards (board dead on power-up). Caught by: `checks/jlc_rotation.py` comparing EasyEDA's
+  symbol pin names with the schematic's, confirmed by the cathode band in EasyEDA's footprint. Fix: pair pads by pin
+  function (names, else the cathode band), number only for parts without names. Skill lesson candidate.
+- 2026-10-24 Upstream's exported BOM/CPL were older than its board (different TVS and Schottky, missing caps, old
+  positions). Caught by: comparing the board's LCSC fields with the export, then `git log` on both. Never take fab
+  data from an export without checking its date against the design files.

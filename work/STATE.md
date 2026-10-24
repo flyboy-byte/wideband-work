@@ -1,6 +1,6 @@
 # STATE — rusEFI wideband (module + carrier)
 
-Status: 2026-10-24 — board r39 (r37 + overlapping-via fix, stricter DRC delta, silkscreen pass): analog stage on the TOP (one-sided assembly, D9), DC feedback from J3-5 after R11 (C2 build-around, simulated), R9 1206 (D1), M3 holes (D8); 0 new DRC / 0 open / 0 via-in-pad / layout review 0 triggers (C7 cleared, 4.1 mm). Checks 18: 0 failed, 2 advisory (raw upstream DRC, D2). Owner answers C1-C3, D1-D11 recorded below. D10 watchdog done (0 B RAM, host 69 tests, bench test W1 drafted). Silkscreen done r39. Next: BOM/CPL, JLC quote (owner approves money), audit round 4, release.py. Firmware: F1-F9 done (host 64 + aux 21). Nothing ordered, flashed or pushed.
+Status: 2026-10-24 — board r40 (r37 + overlapping-via fix, stricter DRC delta, silkscreen); fab candidate exported to work/out/carrier (BOM 25 lines, CPL 38 parts with EasyEDA-measured rotations; D2 would have been reversed by number pairing); checks 20: 0 failed, 2 advisory. analog stage on the TOP (one-sided assembly, D9), DC feedback from J3-5 after R11 (C2 build-around, simulated), R9 1206 (D1), M3 holes (D8); 0 new DRC / 0 open / 0 via-in-pad / layout review 0 triggers (C7 cleared, 4.1 mm). Checks 18: 0 failed, 2 advisory (raw upstream DRC, D2). Owner answers C1-C3, D1-D11 recorded below. D10 watchdog done (0 B RAM, host 69 tests, bench test W1 drafted). Silkscreen done r39-r40; fab candidate exported. Next: audit round 4 (independent) on the candidate, then the JLC quote (owner approves money: upload the candidate, read the placement preview for every IC and diode), BOM/CPL, JLC quote (owner approves money), audit round 4, release.py. Firmware: F1-F9 done (host 64 + aux 21). Nothing ordered, flashed or pushed.
 Revision in progress: none yet   Revisions used (never reused): none by the owner. Upstream module exports are rev A, B, C (upstream's own scheme, not ours).
 <If the project already names revisions its own way (v1.0.0), keep its scheme.>
 Review pages: status report https://claude.ai/artifact/YRsjXKGZKG5AFbwkcMuYZ4 (private; rebuilt by `checks/report.py`)  fit check <link>  audit <link>
@@ -27,6 +27,7 @@ Mark a stage done only when its exit condition is true. Strike through, don't de
   - C2 receivers: all of Speeduino, K20Z3/FlashPro, an AFR gauge, and rusEFI over CAN. K20Z3 input resistance UNKNOWN: measure it at bring-up. Endpoint tolerance +-0.05 V after a one-time bench trim. Not a forced change: the shortfall (4.816 V max into 10k, Codex runs) only touches the top near 20 AFR and only into a low-resistance input. First measure the K20Z3 input with a multimeter; at 100k or more the trim reaches +-0.05 V as is; if low, simulate 68k -> about 75k or set the receiver table from measured volts (owner agreed 2026-10-23).
   - 2026-10-24 C2 build-around (owner: "build around it", no way to measure the receiver): 68k DC feedback moves to J3-5 after R11 (E). Simulated: 1-5 V within 3 mV into 4.7k-100k pull-downs and 10k-47k pull-ups; below 1 V into a pull-up still unverified. `docs/carrier.md` "Receiver load and the feedback point". In the next board run.
   - 2026-10-24 Silkscreen default (Claude, reversible; owner may override): labels at JLC's 1.0 mm / 0.15 mm minimum, only where a label clearly belongs to its part; the jumpers carry their function (TEST, 120R) instead of JP1/JP2; 13 crowded passives unlabelled (CPL and renders name them).
+  - 2026-10-24 Upstream's `hardware/board_carrier/export/` files are stale (BOM 2023-01-05: SMCJ30CA/SS34, no C6-C10; positions before the 2023-02-03 re-placement). Part numbers come from the board's LCSC fields: D1 SMCJ24CA C151279, D2 SS54 C22452 (DOCUMENTED, upstream git).
   - D9 caveat: moving the stage to the top re-places a clean board to save an unpriced fee; price the two-sided fee first and come back to the owner if the saving is small.
   - C1 12-16 V on J3-5: no survival requirement ("how bad would i have to be"); R11 470R stays as limiting only; accepted risk. Realistic route: J3-5 sits between J3-6 (12V_RAW) and J3-4 (heater+), so a solder bridge or misplug.
   - C3 grounding: star at the ECU sensor ground. J3-1 power ground to block/battery; J3-7 only to the receiver's sensor ground; A4 measures the offset.
@@ -51,15 +52,17 @@ Mark a stage done only when its exit condition is true. Strike through, don't de
 | DRC module (errors) | FAIL (advisory) | DRC 11 errors: solder_mask_bridge 10, clearance 1 (report checks/out/wideband_controller-drc.json) | 2026-10-24 | `wideband_controller.kicad_pcb` 0179d031bc63 |
 | Module board identical to upstream | PASS | module board vs upstream master: 0 file(s) differ | 2026-10-24 |  |
 | ERC module (errors) | PASS | ERC 0 errors (report checks/out/wideband_controller-erc.json) | 2026-10-24 | `wideband_controller.kicad_sch` e54843a1e6ef |
-| DRC carrier (errors) | FAIL (advisory) | DRC 23 errors: courtyards_overlap 14, copper_edge_clearance 3, malformed_courtyard 3, starved_thermal 2 (report checks/out/board_carrier-drc.json) | 2026-10-24 | `board_carrier.kicad_pcb` 69d2c1daf5d9 |
-| Carrier DRC vs upstream baseline (new violations, unconnected) | PASS | DRC vs upstream: 0 new violations, 0 unconnected | 2026-10-24 | `board_carrier.kicad_pcb` 69d2c1daf5d9 |
-| Carrier: no new vias in SMD pads | PASS | via in pad: 0 new, 0 upstream | 2026-10-24 | `board_carrier.kicad_pcb` 69d2c1daf5d9 |
-| Carrier layout review (sampled coupling and return-path heuristics) | PASS | review triggers: 0 | 2026-10-24 | `board_carrier.kicad_pcb` 69d2c1daf5d9, `layout_review.py` 2dfa9e8efa14, `layout_metrics.py` 23c78d58fd8a |
+| DRC carrier (errors) | FAIL (advisory) | DRC 23 errors: courtyards_overlap 14, copper_edge_clearance 3, malformed_courtyard 3, starved_thermal 2 (report checks/out/board_carrier-drc.json) | 2026-10-24 | `board_carrier.kicad_pcb` 996147cddf67 |
+| Carrier DRC vs upstream baseline (new violations, unconnected) | PASS | DRC vs upstream: 0 new violations, 0 unconnected | 2026-10-24 | `board_carrier.kicad_pcb` 996147cddf67 |
+| Carrier: no new vias in SMD pads | PASS | via in pad: 0 new, 0 upstream | 2026-10-24 | `board_carrier.kicad_pcb` 996147cddf67 |
+| Carrier layout review (sampled coupling and return-path heuristics) | PASS | review triggers: 0 | 2026-10-24 | `board_carrier.kicad_pcb` 996147cddf67, `layout_review.py` 2dfa9e8efa14, `layout_metrics.py` 23c78d58fd8a |
 | Layout geometry helper unit tests | PASS | OK | 2026-10-24 | `layout_metrics.py` 23c78d58fd8a, `test_layout_metrics.py` 2d93b205dd56 |
-| Layout track-order regression | PASS | PASS: tested orders agree | 2026-10-24 | `board_carrier.kicad_pcb` 69d2c1daf5d9, `layout_review.py` 2dfa9e8efa14, `layout_metrics.py` 23c78d58fd8a, `audit_layout_order.py` c40bda9f97e2 |
+| Layout track-order regression | PASS | PASS: tested orders agree | 2026-10-24 | `board_carrier.kicad_pcb` 996147cddf67, `layout_review.py` 2dfa9e8efa14, `layout_metrics.py` 23c78d58fd8a, `audit_layout_order.py` c40bda9f97e2 |
 | ERC carrier (errors) | PASS | ERC 0 errors (report checks/out/board_carrier-erc.json) | 2026-10-24 | `board_carrier.kicad_sch` 20e09bb79f3b |
-| Carrier netlist self-check (generator table) | PASS | netlist self-check: 18 nets, 0 problems | 2026-10-24 | `board_carrier.kicad_sch` 20e09bb79f3b, `gen_carrier_sch.py` 0ecc060b4160 |
+| Carrier netlist self-check (generator table) | PASS | netlist self-check: 18 nets, 0 problems | 2026-10-24 | `board_carrier.kicad_sch` 20e09bb79f3b, `gen_carrier_sch.py` a1f0542c68c5 |
 | No hand edits waiting | PASS | no drift | 2026-10-24 |  |
+| JLC rotation, origin and pin names from each part's EasyEDA footprint | PASS | jlc rotation: 38 parts measured, 4 need a correction, 0 problem(s) | 2026-10-24 | `board_carrier.kicad_pcb` 996147cddf67, `board_carrier.kicad_sch` 20e09bb79f3b |
+| Fab candidate (out/carrier) matches the board: Gerbers, BOM, CPL, not-fitted | PASS | fab files: 38 placed, 6 not fitted, outline 40.00 x 51.50 mm, 0 problem(s) | 2026-10-24 | `board_carrier.kicad_pcb` 996147cddf67, `carrier-bom.csv` da46539a4b37, `carrier-cpl.csv` 66a7fdc2200c, `carrier-gerbers.zip` cd60e4a5277f |
 | Firmware: bootloader DATA writes stay inside the app partition (F1) | PASS | 52 guard cases; 0 unsafe accepted writes, 0 valid writes refused (stub only) | 2026-10-24 | `bootloader.cpp` 21cbac0cd469, `bootloader_bounds.h` 72e216e2e7bc |
 | Firmware: package checker accepts good images, rejects bad ones (F2) | PASS | 21 package cases, 0 wrong verdict(s) | 2026-10-24 | `fw_package.py` 34a1c5eb78dd, `wideband_image.h` 1ee39ace5944, `bootloader.cpp` 21cbac0cd469 |
 | Firmware: HardFault entry reaches the C handler on a Cortex-M0 (F9, QEMU microbit) | PASS | fault entry on Cortex-M0: as expected | 2026-10-24 | `main_hardfault_asm.S` d32262764759, `main.cpp` f1c2e96ebf08 |
@@ -67,7 +70,7 @@ Mark a stage done only when its exit condition is true. Strike through, don't de
 | Firmware: analog output host tests, production auxout/pump_dac/can_helper on the f0 config (F3-F6) | PASS | [  PASSED  ] 21 tests. | 2026-10-24 | `auxout.cpp` 417044786829, `pump_dac.cpp` ac1d4bf351de, `can_helper.cpp` dc0ba8d660e6, `aux_curve.h` bb88ea23e570, `wideband_board_config.h` 7c5b76b0011c |
 | Firmware: static worst-case stack per thread fits (F8 estimate, f0 build) | PASS | stack estimate: ok, smallest margin 80 B | 2026-10-24 | `auxout.cpp` 417044786829, `can.cpp` 65a7078908bf, `heater_thread.cpp` 1c61085261f8, `pump_control.cpp` 6449053857fe, `sampling_thread.cpp` 65d58bbf0b52 |
 
-Written by `checks/run_all.py` at commit a1fffcb. Don't edit by hand.
+Written by `checks/run_all.py` at commit 832096f. Don't edit by hand.
 <!-- checks:end -->
 
 ## Bring-up results
