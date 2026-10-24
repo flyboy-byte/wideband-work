@@ -64,3 +64,16 @@ least the claims a decision rests on before writing them into `docs/` or `STATE.
 - Bring findings back into `AUDIT.md` as a new round naming the auditor (e.g. "Codex, 2026-10-24") and the commit.
   Keep each model's raw output as its own file under `audit/`; don't merge models' findings into one voice.
 - Findings from another model are claims to verify like any other (rule 1).
+
+### Turn-taking between Claude and Codex (circuit and theory audits; owner, 2026-10-24)
+1. **Start**: the newest pack under `audit/` (now `audit/carrier-f-2026-10-24/`, PROMPT.md first) and the "Hand-off"
+   section of `AUDIT.md`. Check from the files and first principles; simulations go in `sim/` or the auditor's own folder.
+2. **Auditor's output**: raw report in `audit/<model>-<date>/` (FINDINGS.md plus any decks, scripts and raw numbers), and
+   a round in `AUDIT.md` (ID | Severity | Location | Evidence | Smallest fix | Status) naming the model and commit.
+   The auditor may add tests and checks (and fix a broken checker, saying so), but doesn't change design files (the
+   generators, schematic, board, firmware behaviour): it proposes the fix. Commit with the area prefix (`work:`).
+3. **Back to the designer**: verify every finding before acting (rule 1), fix or answer each one, and add a
+   follow-through row per finding (fixed + evidence, or why not), then rebuild the pack for the next round.
+4. **Done** when a round names the current commit with no open BLOCKER or BUG; `checks/release.py` enforces that.
+5. Never, for either model: ordering, pushing, publishing, or overwriting the owner's KiCad edits (`checks/drift.py`).
+   Disagreements between models go to the owner as a decision with both arguments, not settled by the last writer.
