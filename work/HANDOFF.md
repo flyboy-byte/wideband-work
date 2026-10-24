@@ -17,7 +17,7 @@ Replace it (don't append forever) at the next handoff; durable facts belong in S
 ## Later the same day (self-audit, Opus)
 - `RELEASE_ASSESSMENT.md` (new, read it first): concept, audit path, confidence (about 75 %), findings R1-R7, owner decisions D1-D5.
 - `AUDIT.md` round 1 = self-audit (low independence). Codex round still to do on `work/audit/carrier-d-2026-10-23/`
-  (pack predates the `can_helper.cpp` change: rebuild it with `checks/audit_pack.py` before handing over).
+  (give Codex `work/audit/carrier-f-2026-10-23/`, built after the `can_helper.cpp` change; carrier-d and -e are older, ignore).
 - Firmware: `firmware/can_helper.cpp` drops the CAN frame instead of waiting 100 ms when `AUXOUT_SEL1_PWM_CHANNEL` is set (no node on
   the bus would slow the analog output to about 9 Hz). f0_module and f1_dual build clean; +32 B flash, RAM unchanged.
 - r33: `NET_WEIGHT['/VOP12'] = 2.5` to pull C17 toward U6 pin 8 moved the placement: 6 open connections, `close_d3_link` skipped. Reverted
