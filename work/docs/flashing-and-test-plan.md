@@ -40,13 +40,12 @@ that f0 without CAN assumes 13 V (owner decision D11). Details in `firmware.md`.
 every thread fits, smallest margin 80 B (pump thread), CAN TX 312/512 B. Fails loudly on a non-f0 build or a missing thread.
 Limits in `firmware.md`. The hardware high-water measurement in F8 remains to do at bring-up.
 
-### F3-F6 aux-output host tests — DONE except the F6 thread loop, 2026-10-23 (Claude Opus 5.5)
+### F3-F6 aux-output host tests — DONE, 2026-10-23 (Claude Opus 5.5)
 
-`test/aux_out/` (16 tests, production code on the f0 config, fakes record every PWM/GPIO/CAN call); details in
+`test/aux_out/` (21 tests, production code on the f0 config, fakes record every PWM/GPIO/CAN call); details in
 `firmware.md`. F5 found a real bug: test mode stayed at 1.00 V (16-bit system time wraps at 6.55 s); fixed and shown by
 running the same tests against the old `auxout.cpp` (fails exactly at the 2.50/4.00 V points). Trim configuration is
-rejected at compile time outside 0.8-1.2 gain / +-0.5 V offset. Not done: F6 "analog update every scheduled cycle"
-(the CAN TX thread loop), F7 heater coverage, F8 stack high-water marks.
+rejected at compile time outside 0.8-1.2 gain / +-0.5 V offset. F6 (2026-10-23): the production CAN TX thread loop (`can.cpp`, unchanged) runs in the harness for a set number of 10 ms windows: one output update per cycle with frames acknowledged and with no node on the bus (every send `TIME_IMMEDIATE`, every window 100 ticks), through the 16-bit tick wrap, lambda through the thread, and test mode 1.00/2.50/4.00 V end to end with the bus down. Mutants: upstream's 100 ms blocking send fails 3 tests, the loop without `UpdateAuxOut()` fails 5. A host scheduler, not real-time proof on the chip. (F7 and F8 below.)
 
 ### F2 package build and validator — DONE 2026-10-23 (Claude Opus 5.5)
 

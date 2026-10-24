@@ -237,3 +237,90 @@ TEST(CanTx, FrameIsDroppedNotWaitedFor)
     ASSERT_EQ(fake::canTimeouts.size(), 1u);
     EXPECT_EQ(fake::canTimeouts[0], TIME_IMMEDIATE);
 }
+
+// ---- F6: the production CAN TX thread loop (can.cpp) updates the output once per 10 ms cycle (WBO_TX_PERIOD_MS),
+// whether or not anything on the bus takes the frames. A host scheduler, not real-time proof on the chip.
+void CanTxThread(void*);
+#include "can.h"
+
+class CanTxLoop : public AuxOut
+{
+protected:
+    void SetUp() override
+    {
+        AuxOut::SetUp();
+        InitCan();   // reads the configuration the frames use; its threads are not started (fakes.cpp)
+    }
+
+    // Run the thread for `cycles` sleep windows; returns the output writes made by the loop (Boot's are not counted)
+    int Run(int cycles)
+    {
+        int before = fake::DutyWrites(AuxTimer, AuxChannel);
+        fake::loopCycles = cycles;
+        try
+        {
+            CanTxThread(nullptr);
+        }
+        catch (fake::StopLoop&)
+        {
+        }
+        return fake::DutyWrites(AuxTimer, AuxChannel) - before;
+    }
+};
+
+static constexpr uint64_t CycleTicks = 100;   // 10 ms at 10 kHz
+
+TEST_F(CanTxLoop, OneUpdatePerCycleWithFramesAcknowledged)
+{
+    Boot();
+    EXPECT_EQ(Run(500), 500);
+    EXPECT_EQ(fake::ticks, 500 * CycleTicks);
+    EXPECT_EQ(fake::canTimeouts.size(), 2u * 500);   // StandardData + DiagData, one channel
+}
+
+TEST_F(CanTxLoop, NoAckOnTheBusStillUpdatesEveryCycle)
+{
+    // No other node: every mailbox stays full. 10 s of loop must be 1000 updates, not one per stalled frame
+    Boot();
+    fake::canResult = MSG_TIMEOUT;
+    EXPECT_EQ(Run(1000), 1000);
+    EXPECT_EQ(fake::ticks, 1000 * CycleTicks);
+    for (auto t : fake::canTimeouts)
+        ASSERT_EQ(t, TIME_IMMEDIATE);
+    for (auto w : fake::sleepWindows)
+        ASSERT_EQ(w, CycleTicks);
+}
+
+TEST_F(CanTxLoop, KeepsTheCadenceAcrossTheTickCounterWrap)
+{
+    // 16-bit system time wraps every 655.36 cycles: run through it twice
+    Boot();
+    EXPECT_EQ(Run(1400), 1400);
+    EXPECT_EQ(fake::ticks, 1400 * CycleTicks);
+}
+
+TEST_F(CanTxLoop, OutputFollowsLambdaThroughTheThread)
+{
+    Boot();
+    fake::lambda = 1.0f;
+    Run(1);
+    EXPECT_NEAR(AuxDuty(), DutyFor(AfrToVolts(14.7f)), 1e-3);
+    fake::Reset();   // keep the boot state (statics), clear the records
+    fake::lambda = 0.8f;
+    Run(1);
+    EXPECT_NEAR(AuxDuty(), DutyFor(AfrToVolts(0.8f * 14.7f)), 1e-3);
+}
+
+TEST_F(CanTxLoop, TestModeStepsThroughTheThreadWithTheBusDown)
+{
+    // F5 end to end: SEL_2 low at power-up, no CAN node, the real loop for 30 s gives 1.00, 2.50, 4.00 V
+    Boot(true);
+    fake::canResult = MSG_TIMEOUT;
+    const float steps[] = {1.00f, 2.50f, 4.00f};
+    for (float v : steps)
+    {
+        fake::sleepWindows.clear();
+        Run(1000);
+        EXPECT_NEAR(AuxDuty(), DutyFor(v), 1e-6) << v << " V";
+    }
+}

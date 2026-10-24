@@ -14,7 +14,7 @@ replaces all earlier handoffs; they are in its git history (`git log -p -- work/
   `make clean` when switching BOARD (stale objects fail the f1_dual link with `EFLD1` undefined). Staged, reproducible
   package instead: `python3 work/checks/fw_package.py build` -> `work/fw-build/<commit>/` (gitignored).
 - Host tests: `B=$(mktemp -d) && mkdir -p $B/obj $B/lst && (cd test && make -j8 BUILDDIR=$B) && $B/wideband_test` -> 64/64
-  (absolute BUILDDIR: no more moving `firmware/build` aside). `make -C test/aux_out run` -> 16/16.
+  (absolute BUILDDIR: no more moving `firmware/build` aside). `make -C test/aux_out run` -> 21/21.
 - `checks/stack_estimate.py` reads `firmware/build/wideband.elf` and fails on a non-f0 build: rebuild f0 last.
 
 Last raw output (2026-10-23, HEAD 357755f):
@@ -51,6 +51,7 @@ PASS    F8 stack estimate: ok, smallest margin 80 B
 | F2 | `fw_package.py build/check`: upstream's format staged without `build_wideband.sh`'s deletes; CRC via the bootloader's own `isAppValid()` compiled on host + zlib; M0 vector tables | upstream's shipped image passes, header reproduced byte-for-byte; 21 good/bad cases; two builds identical | 783a885 |
 | F9 | HardFault entry was Thumb-2 (`.cpu cortex-m3`): on the M0 a fault locked up, never reset; `bkpt()` in handlers did too | QEMU microbit Cortex-M0: old entry and BKPT lock up, new entry reaches C handler; f0 build 0 Thumb-2 ops | 8e9fa1c |
 | F3-F5 | `test/aux_out/`: production auxout/pump_dac/can_helper on the real f0 config + fake ChibiOS | 16 tests; **found F5: test mode stuck at 1.00 V** (16-bit systime wraps 6.55 s); fixed with 64-bit `chVTGetTimeStamp()`; old code fails exactly at 2.50/4.00 V points | 1c8f942 |
+| F6 | the production CAN TX loop run for N windows in `test/aux_out` (fake `chThdSleepUntilWindowed` throws to stop it) | 5 tests: one update per 10 ms cycle with and without bus ACK, across the tick wrap, test mode end to end; blocking-send mutant fails 3, no-update mutant fails 5 | this commit |
 | F8 | `stack_estimate.py`: static worst case per thread from the ELF | all fit, smallest margin 80 B (pump), CAN TX 312/512 | 5f966bf |
 | F7 | `test/tests/test_heater_update.cpp`: whole `Update()` path | 13 tests; 2 mutants caught; host 64/64 | 2c5e445 |
 
@@ -63,10 +64,9 @@ Also: curve moved to `boards/f0_module/aux_curve.h`; `AUXOUT_TRIM_GAIN/OFFSET` o
    back-feed into +5V); car grounding policy (C3: J3-7 can carry heater current). Don't change components before these.
 2. **Owner decisions** in `RELEASE_ASSESSMENT.md`: D10 watchdog (a hang, not a fault, leaves heater PWM at last duty);
    D11 read battery on PB0 instead of assuming 13 V without CAN (about 48 B RAM, 0 free); D7 analog ground; D8 mounting
-   holes; D9 stage on top (one-sided assembly); D1 R9 1206; D2 release gate vs upstream's DRC errors.
-3. Not blocked: C7 (6.8 mm PWM return-path component, `checks/layout_review.py -v`; inspect before any routing change, don't
-   retune the 5 mm trigger); F6 cadence (the CAN TX thread calls `UpdateAuxOut()` each cycle: needs the loop body split out
-   to host-test). Republish the status page with the firmware results (`REV=carrier-e python3 checks/report.py`; update
+   holes; D9 stage on top (one-sided assembly); D1 R9 1206; D2 release gate vs upstream's DRC errors and the C7 layout-review fail.
+3. ~~C7~~ inspected (commit 1ecef63: JP2's pour opening + the PWM's own layer swap; accept recommended, folded into D2;
+   trigger not retuned). ~~F6~~ done (5 loop tests). Not blocked: republish the status page with the firmware results (`REV=carrier-e python3 checks/report.py`; update
    `report/tests.json` first, it still lists r33-r36 only).
 4. Then: fresh audit pack for the next independent round (`checks/audit_pack.py`), silkscreen pass, BOM/CPL, JLC quote
    (owner approves money), `release.py`.

@@ -9,6 +9,7 @@
 #include "heater_control.h"
 #include "lambda_conversion.h"
 #include "aux_curve.h"
+#include "status.h"
 
 PWMDriver PWMD1{1}, PWMD3{3};
 FakeGpio fakeGpioA{'A'}, fakeGpioB{'B'};
@@ -24,9 +25,13 @@ float lambda;
 bool heaterClosedLoop;
 std::vector<sysinterval_t> canTimeouts;
 msg_t canResult;
+int loopCycles;
+std::vector<systime_t> sleepWindows;
 
 void Reset()
 {
+    loopCycles = 0;
+    sleepWindows.clear();
     events.clear();
     starts.clear();
     ticks = 0;
@@ -68,7 +73,35 @@ void palSetPadMode(FakeGpio* port, int pad, uint32_t mode)
 msg_t canTransmitTimeout(CANDriver*, int, const CANTxFrame*, sysinterval_t timeout)
 {
     fake::canTimeouts.push_back(timeout);
+    // A blocking send (any timeout but immediate) with no mailbox free would stall the thread: charge the wait
+    if (fake::canResult == MSG_TIMEOUT && timeout != TIME_IMMEDIATE)
+        fake::ticks += timeout == TIME_INFINITE ? 10 * 10000 : timeout;
     return fake::canResult;
+}
+
+msg_t canReceiveTimeout(CANDriver*, int, CANRxFrame*, sysinterval_t) { return MSG_TIMEOUT; }
+void canStart(CANDriver*, const CANConfig*) {}
+const CANConfig& GetCanConfig()
+{
+    static CANConfig config{};
+    return config;
+}
+
+void chRegSetThreadName(const char*) {}
+void* chThdCreateStatic(void* wsp, size_t, int, tfunc_t, void*) { return wsp; }
+void chThdSleep(sysinterval_t time) { fake::ticks += time; }
+void NVIC_SystemReset() {}
+
+systime_t chThdSleepUntilWindowed(systime_t prev, systime_t next)
+{
+    fake::sleepWindows.push_back((systime_t)(next - prev));
+    // Wake at the window end; if the work already ran past it, ChibiOS returns at once (no sleep)
+    systime_t now = chVTGetSystemTime();
+    if ((systime_t)(now - prev) < (systime_t)(next - prev))
+        fake::ticks += (systime_t)(next - now);
+    if ((int)fake::sleepWindows.size() >= fake::loopCycles)
+        throw fake::StopLoop{};
+    return next;
 }
 
 // ---- firmware/pwm.h, recorded instead of touching a timer
@@ -123,3 +156,9 @@ Configuration* GetConfiguration()
 }
 
 bool IsSel2StrappedLow() { return fake::sel2Low; }
+
+// ---- What can.cpp reads besides the above
+wbo::Status GetCurrentStatus(int) { return wbo::Status::RunningClosedLoop; }
+float GetHeaterDuty(int) { return 0.5f; }
+void SetPumpGainAdjust(float) {}
+void SetConfiguration() {}

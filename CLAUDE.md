@@ -38,7 +38,7 @@ It's a learning project: build and test it ourselves, don't buy a ready-made uni
 - **Firmware** (branch `analog-out`): builds. Analog output on module pad SEL_1 = PB1 = TIM3_CH4 (shares the pump-DAC
   timer, 46.9 kHz). Compiled-in curve 10 AFR = 0 V … 20 AFR = 5 V, 0 V while lambda is invalid. Bench test mode (SEL_2
   strapped low: 1.00/2.50/4.00 V steps) and trim constants. RAM is full to the byte, which is safe because nothing is
-  allocated at runtime. Untested on hardware. Host-tested 2026-10-23 (64 + 16 tests); upstream bugs fixed in the bootloader
+  allocated at runtime. Untested on hardware. Host-tested 2026-10-23 (64 + 21 tests); upstream bugs fixed in the bootloader
   bounds (F1) and the Cortex-M0 fault handler (F9), our test-mode bug fixed (F5): `work/docs/firmware.md`.
 - **Carrier schematic**: generated, ERC 0, netlist self-check 18/18 (R11 added r34).
 - **Carrier PCB**: grown to 40.0 x 51.5 mm (r36); the analog stage sits in the new strip. **0 new DRC violations, 0 open,
@@ -71,7 +71,7 @@ python3 work/checks/audit_bootloader_bounds.py     # bootloader DATA guard, real
 python3 work/checks/fw_package.py build|check F    # stage the flash package into work/fw-build/<commit>/ / validate one
 python3 work/checks/test_fw_package.py             # package checker on good and bad images (21 cases)
 python3 work/checks/test_fault_entry_m0.py         # HardFault entry on a Cortex-M0 (QEMU microbit)
-make -C test/aux_out run                           # analog output host tests: production auxout/pump_dac/can_helper, f0 config (16)
+make -C test/aux_out run                           # analog output host tests: production auxout/pump_dac/can_helper, f0 config, CAN TX loop (21)
 python3 work/checks/stack_estimate.py [-v]         # static worst-case stack per thread on the f0 build (F8 estimate)
 ```
 

@@ -1,6 +1,6 @@
 {
  "date": "2026-10-23",
- "git_head": "357755f",
+ "git_head": "1ecef63",
  "results": [
   {
    "name": "DRC module (errors)",
@@ -126,7 +126,7 @@
   {
    "name": "Firmware: analog output host tests, production auxout/pump_dac/can_helper on the f0 config (F3-F6)",
    "status": "pass",
-   "summary": "[  PASSED  ] 16 tests.",
+   "summary": "[  PASSED  ] 21 tests.",
    "files": {
     "../firmware/auxout.cpp": "417044786829",
     "../firmware/pump_dac.cpp": "ac1d4bf351de",

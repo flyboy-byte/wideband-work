@@ -28,6 +28,12 @@ extern bool heaterClosedLoop;
 extern std::vector<sysinterval_t> canTimeouts;
 extern msg_t canResult;
 
+// The CAN TX thread loop: chThdSleepUntilWindowed advances `ticks` to the window end, records the window, and throws
+// StopLoop once `loopCycles` windows have passed, so the production while(1) can be run for a set number of cycles
+struct StopLoop {};
+extern int loopCycles;
+extern std::vector<systime_t> sleepWindows;   // next - prev of each window (16-bit arithmetic, like the target)
+
 void Reset();
 // Last duty written to a PWM channel, or -1 if never written
 float LastDuty(int timer, int channel);

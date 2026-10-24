@@ -81,10 +81,12 @@ decision D11.
 `test/aux_out/` builds the production `auxout.cpp`, `pump_dac.cpp` and `can_helper.cpp` against the real f0_module board
 config, with fake ChibiOS headers (`shim/hal.h`; system time typed from the board's own `chconf.h`) and recording fakes
 for the Pwm wrapper, GPIO, CAN and the sensor/heater/config functions. `make -C test/aux_out run`; in `run_all.py`.
-16 tests, expected values from the design, not the code: volts to duty against 5.04 V full scale, clamping, channel 1
+21 tests (16 + 5 for F6), expected values from the design, not the code: volts to duty against 5.04 V full scale, clamping, channel 1
 ignored, only TIM3 channel index 3 written (pump channel and the one TIM3 start untouched), zero duty before PB1 goes to
 AF1; the curve (AFR 10 = 0 V ... 20 = 5 V, clamped); validity (heater not closed loop, Nernst window strict at 0.35/0.55 V,
 NaN lambda -> 0 V); test mode; CAN frames sent with TIME_IMMEDIATE.
+
+F6 (2026-10-23): the production CAN TX thread loop (`can.cpp`, unchanged) runs in the harness for a set number of 10 ms windows: one output update per cycle with frames acknowledged and with no node on the bus (every send `TIME_IMMEDIATE`, every window 100 ticks), through the 16-bit tick wrap, lambda through the thread, and test mode 1.00/2.50/4.00 V end to end with the bus down. Mutants: upstream's 100 ms blocking send fails 3 tests, the loop without `UpdateAuxOut()` fails 5. A host scheduler, not real-time proof on the chip.
 
 **Bug found (F5): test mode never left 1.00 V.** The step was `TIME_I2MS(chVTGetSystemTime()) / 10000 % 3`. On the f0,
 `CH_CFG_ST_RESOLUTION` is 16 and `CH_CFG_ST_FREQUENCY` 10000 (`boards/f0_module/chconf.h`), so `systime_t` is 16 bits and

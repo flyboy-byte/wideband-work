@@ -100,3 +100,31 @@ struct CANTxFrame
     uint8_t data8[8];
 };
 msg_t canTransmitTimeout(CANDriver* canp, int mailbox, const CANTxFrame* ctfp, sysinterval_t timeout);
+struct CANRxFrame
+{
+    uint8_t DLC;
+    uint8_t RTR;
+    uint8_t IDE;
+    uint32_t SID;
+    uint32_t EID;
+    uint8_t data8[8];
+};
+struct CANConfig
+{
+    int unused;
+};
+msg_t canReceiveTimeout(CANDriver* canp, int mailbox, CANRxFrame* crfp, sysinterval_t timeout);
+void canStart(CANDriver* canp, const CANConfig* config);
+const CANConfig& GetCanConfig();   // port_shared.h declares it only when WB_PROD
+
+// ---- Threads (what can.cpp uses; the CAN TX loop runs in the test's own thread, see fakes.h StopLoop)
+#define NORMALPRIO 128
+#define THD_WORKING_AREA(s, n) char s[n]
+typedef void (*tfunc_t)(void*);
+void chRegSetThreadName(const char* name);
+void* chThdCreateStatic(void* wsp, size_t size, int prio, tfunc_t pf, void* arg);
+void chThdSleep(sysinterval_t time);
+// Same arithmetic as ChibiOS chtime.h: wraps at the systime_t width
+inline systime_t chTimeAddX(systime_t systime, sysinterval_t interval) { return (systime_t)(systime + interval); }
+systime_t chThdSleepUntilWindowed(systime_t prev, systime_t next);
+void NVIC_SystemReset();

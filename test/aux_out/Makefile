@@ -9,6 +9,8 @@ FW := $(abspath ../../firmware)
 GT := $(abspath ../googletest/googletest)
 BUILDDIR ?= build
 AUXOUT_SRC ?= $(FW)/auxout.cpp
+CAN_SRC ?= $(FW)/can.cpp
+CAN_HELPER_SRC ?= $(FW)/can_helper.cpp
 CXX ?= g++
 EXTRA ?=
 
@@ -17,7 +19,7 @@ CXXFLAGS = -std=c++17 -g -O1 -Wall -Wextra -Wno-unused-parameter -Wno-missing-fi
 	-I$(CURDIR) -I$(CURDIR)/shim -I$(FW)/boards/f0_module -I$(FW)/boards/f0_module/io -I$(FW)/boards -I$(FW) \
 	-I$(FW)/util -I$(FW)/libfirmware/util/include -I$(GT)/include -I$(GT)
 
-SRC = test_aux_out.cpp fakes.cpp $(AUXOUT_SRC) $(FW)/pump_dac.cpp $(FW)/can_helper.cpp \
+SRC = test_aux_out.cpp fakes.cpp $(AUXOUT_SRC) $(FW)/pump_dac.cpp $(CAN_HELPER_SRC) $(CAN_SRC) \
 	$(FW)/libfirmware/util/src/math.cpp $(GT)/src/gtest-all.cc $(GT)/src/gtest_main.cc
 
 $(BUILDDIR)/aux_out_test: $(SRC) $(wildcard shim/*.h) fakes.h

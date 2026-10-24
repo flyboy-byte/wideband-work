@@ -54,10 +54,10 @@ Mark a stage done only when its exit condition is true. Strike through, don't de
 | Firmware: bootloader DATA writes stay inside the app partition (F1) | PASS | 52 guard cases; 0 unsafe accepted writes, 0 valid writes refused (stub only) | 2026-10-23 | `bootloader.cpp` 21cbac0cd469, `bootloader_bounds.h` 72e216e2e7bc |
 | Firmware: package checker accepts good images, rejects bad ones (F2) | PASS | 21 package cases, 0 wrong verdict(s) | 2026-10-23 | `fw_package.py` 34a1c5eb78dd, `wideband_image.h` 1ee39ace5944, `bootloader.cpp` 21cbac0cd469 |
 | Firmware: HardFault entry reaches the C handler on a Cortex-M0 (F9, QEMU microbit) | PASS | fault entry on Cortex-M0: as expected | 2026-10-23 | `main_hardfault_asm.S` d32262764759, `main.cpp` f1c2e96ebf08 |
-| Firmware: analog output host tests, production auxout/pump_dac/can_helper on the f0 config (F3-F6) | PASS | [  PASSED  ] 16 tests. | 2026-10-23 | `auxout.cpp` 417044786829, `pump_dac.cpp` ac1d4bf351de, `can_helper.cpp` dc0ba8d660e6, `aux_curve.h` bb88ea23e570, `wideband_board_config.h` b96f53982d27 |
+| Firmware: analog output host tests, production auxout/pump_dac/can_helper on the f0 config (F3-F6) | PASS | [  PASSED  ] 21 tests. | 2026-10-23 | `auxout.cpp` 417044786829, `pump_dac.cpp` ac1d4bf351de, `can_helper.cpp` dc0ba8d660e6, `aux_curve.h` bb88ea23e570, `wideband_board_config.h` b96f53982d27 |
 | Firmware: static worst-case stack per thread fits (F8 estimate, f0 build) | PASS | stack estimate: ok, smallest margin 80 B | 2026-10-23 | `auxout.cpp` 417044786829, `can.cpp` 65a7078908bf, `heater_thread.cpp` f524458f2290, `pump_control.cpp` 6449053857fe, `sampling_thread.cpp` 65d58bbf0b52 |
 
-Written by `checks/run_all.py` at commit 357755f. Don't edit by hand.
+Written by `checks/run_all.py` at commit 1ecef63. Don't edit by hand.
 <!-- checks:end -->
 
 ## Bring-up results
