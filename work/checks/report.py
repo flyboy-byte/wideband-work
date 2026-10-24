@@ -10,7 +10,7 @@ import base64, html, json, os, subprocess, sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 WORK = os.path.join(HERE, '..')
-REV = os.environ.get('REV', 'carrier-e')
+REV = os.environ.get('REV', 'carrier-f')
 
 
 def img(name, width=1100):
@@ -38,10 +38,10 @@ def main():
     tpl = open(os.path.join(HERE, 'report_template.html')).read()
     out = (tpl.replace('{{DATE}}', run['date']).replace('{{HEAD}}', run['git_head']).replace('{{CHECKS}}', rows)
            .replace('{{TESTS}}', trows).replace('{{HEADLINE}}', html.escape(tests['headline']))
-           .replace('{{TOP}}', fig('top.png', 'Top view, 3D render (KiCad 10): upstream carrier, grown 15 mm at the bottom (40.0 x 51.5 mm, 1.57 x 2.03 in).', 1000))
-           .replace('{{BOTTOM}}', fig('bottom.png', 'Bottom view (mirrored): the analog stage in the new strip. U6 op-amp, R8/R11 output resistors, D3/D4 clamps.', 1000))
-           .replace('{{ZOOM_CUR}}', fig('../carrier-d/bottom.png', 'Before (r32, 40 x 36.5 mm): new parts squeezed between the module pin rows.', 800))
-           .replace('{{ZOOM_WHATIF}}', fig('bottom.png', 'After (r36, 40 x 51.5 mm): the stage in the strip, caps at their pins, R11 at the output.', 800)))
+           .replace('{{TOP}}', fig('top.png', 'Top view, 3D render (KiCad 10), r41: upstream carrier grown 15 mm (40.0 x 51.5 mm, 1.57 x 2.03 in); the analog stage, both jumpers and the M3 holes in the new strip.', 1000))
+           .replace('{{BOTTOM}}', fig('bottom.png', 'Bottom view (mirrored), r41: tracks only in the strip, copper-free rings around the holes.', 1000))
+           .replace('{{ZOOM_CUR}}', fig('../carrier-e/bottom.png', 'Before (r36): the stage on the bottom of the strip.', 800))
+           .replace('{{ZOOM_WHATIF}}', fig('top.png', 'After (r41): the stage on the top, one-sided assembly.', 800)))
     os.makedirs(os.path.join(WORK, 'report'), exist_ok=True)
     open(os.path.join(WORK, 'report', 'index.html'), 'w').write(out)
     print('report/index.html', len(out) // 1024, 'KB')

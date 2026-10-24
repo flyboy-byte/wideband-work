@@ -12,12 +12,12 @@ Mark a stage done only when its exit condition is true. Strike through, don't de
 | --- | --- | --- | --- |
 | 1 | Requirements | `REQUIREMENTS.md` answered by the owner; breakout/perfboard ruled out | |
 | 2 | Parts | Every part in `parts_research.md` with pinout, land pattern, temp rating, stock, source URL; real 3D model seen for user-handled and tall parts | |
-| 3 | Schematic | Generated from code; netlist self-check passes | |
+| 3 | Schematic | Generated from code; netlist self-check passes | 2026-10-24 (r41: ERC 0, self-check 18/18) |
 | 4 | Fit check | Artifact page with the to-scale picture and size table (mm + in) approved by the owner | |
-| 5 | Placement | Fixed parts and critical loops locked; back side checked | |
-| 6 | Routing | Best run chosen by DRC count, not router score; vias out of SMD pads | |
-| 7 | 3D and mechanical | Access check done for every user-handled part; renders looked at, then published and approved by the owner | |
-| 8 | Fab files | `checks/run_all.py` all PASS (DRC included, nothing skipped) on the current design | |
+| 5 | Placement | Fixed parts and critical loops locked; back side checked | 2026-10-24 (r41: stage on the top, bypass caps 2.1-3.9 mm, bottom carries tracks only) |
+| 6 | Routing | Best run chosen by DRC count, not router score; vias out of SMD pads | 2026-10-24 (r41: 0 new incl. fab warnings, 0 open, 0 vias in pads, layout review 0) |
+| 7 | 3D and mechanical | Access check done for every user-handled part; renders looked at, then published and approved by the owner | renders looked at and published (status page v3); jumpers on open top area, holes copper-free; **owner approval pending** |
+| 8 | Fab files | `checks/run_all.py` all PASS (DRC included, nothing skipped) on the current design | 2026-10-24 candidate in `work/out/carrier/`: 20 checks pass, raw upstream DRC advisory by D2 |
 | 9 | Audit | `AUDIT.md` round with no open BLOCKER or BUG; earlier fixes re-confirmed | |
 | 10 | Order | `checks/release.py` released `fab/<rev>/`; committed the same day; row in `ORDERS.md` | |
 | 11 | Bring-up | Bring-up tests from `REQUIREMENTS.md` run and recorded below; RISK items checked; lessons in `LESSONS.md` | |

@@ -51,7 +51,7 @@ code{font-family:var(--mono);font-size:.84em;background:var(--todo-bg);padding:1
   <section>
     <h2>Checks</h2>
     <div class="scroll"><table><thead><tr><th>Result</th><th>Check</th><th>Detail</th></tr></thead><tbody>{{CHECKS}}</tbody></table></div>
-    <p class="meta">Module DRC (11) and carrier DRC (23) are upstream's own errors. "vs upstream" counts only what we added.</p>
+    <p class="meta">Module DRC (11) and carrier DRC (23) are upstream's own errors, advisory by your decision D2. "vs upstream" counts only what we added, including fab-relevant warnings.</p>
   </section>
 
   <section>
@@ -60,8 +60,8 @@ code{font-family:var(--mono);font-size:.84em;background:var(--todo-bg);padding:1
   </section>
 
   <section>
-    <h2>Before and after: the bottom side</h2>
-    <div class="callout"><p>The old board held every new part between the module's pin rows (left). The grown board puts the whole analog stage in a new 15 mm strip (right), below the module's PWM/test/supply pins and away from the heater and sensor pins. R11 (470 Ω) now sits between the output clamps and J3-5, so 12 V landing on the output pin can't reach the 5 V rail.</p></div>
+    <h2>Before and after: the stage moves to the top</h2>
+    <div class="callout"><p>r36 had the analog stage on the bottom of the new strip (left). r41 has it on the top (right), so every SMD part is on one side and JLC's Economic assembly applies. The op-amp now takes its feedback at the output pin, after R11, so the receiver's input doesn't shift the reading; R9 is 1206; the two M3 holes have no copper under a screw head; the jumpers are labelled TEST and 120R.</p></div>
     <div class="pics">{{ZOOM_CUR}}{{ZOOM_WHATIF}}</div>
     <h2>Runs and open decisions</h2>
     <p>Each run regenerates and routes the whole board, then scores it: DRC against upstream's own errors, vias in pads, and <code>checks/layout_review.py</code> (noisy nets beside sensitive ones, return paths under tracks, ground pour). Decisions are yours; the default in use is listed.</p>

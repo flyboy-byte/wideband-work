@@ -1,5 +1,5 @@
 {
- "headline": "Board grown to 40.0 x 51.5 mm with a 12 V-fault resistor (R11) at the output; routed clean on the first run (0 new DRC, 0 open, 0 layout-review flags). Nothing ordered or built; no outside audit yet.",
+ "headline": "Board r41: analog stage on the top (one-sided JLC assembly), feedback taken at the output pin so any receiver input reads right (simulated), watchdog in the firmware, fab files exported and checked part by part. Nothing ordered or built; outside audit round 4 is next, then your JLC quote.",
  "tests": [
   {
    "id": "r33",
@@ -28,32 +28,74 @@
   {
    "id": "D7",
    "what": "Separate analog ground for J3-7 on the board (heater current shares the ground wires).",
-   "state": "todo",
-   "result": "Default: no board change. Measure the real offset first with bring-up test A4 (mV between J3-7 and the ECU sensor ground, engine running)."
+   "state": "done",
+   "result": "No board change (your decision). Bring-up test A4 measures the real ground offset."
   },
   {
    "id": "D8",
    "what": "Mounting holes in the new bottom corners for your enclosure.",
-   "state": "todo",
-   "result": "Default: none added. Say if you want them and where."
+   "state": "done",
+   "result": "Done r37: two M3 holes; r41 keeps copper 3.6 mm clear of them."
   },
   {
    "id": "D9",
    "what": "Put the analog stage on the top of the strip for one-sided (cheaper) JLC assembly.",
-   "state": "todo",
-   "result": "Default: bottom, as routed. Price difference unchecked."
+   "state": "done",
+   "result": "Done r37: every SMD part on the top. Economic $8 setup vs $50 two-sided (JLC help, 2025-09)."
   },
   {
    "id": "D1",
    "what": "R9 (op-amp supply resistor) 0603 to 1206 for long surges.",
-   "state": "todo",
-   "result": "Default: 0603. Room exists now."
+   "state": "done",
+   "result": "Done r37: R9 1k 1206 (C4410)."
   },
   {
-   "id": "Audit",
-   "what": "Codex (outside model) audit of the grown board.",
+   "id": "r37",
+   "what": "Stage to the top; feedback from J3-5 after R11; R9 1206; M3 holes.",
+   "state": "done",
+   "result": "0 new DRC, 0 open; PWM return gap 4.1 mm (C7 cleared)."
+  },
+  {
+   "id": "r38",
+   "what": "Merge same-net vias drilled too close; DRC check counts fab warnings.",
+   "state": "done",
+   "result": "Found a hole_to_hole pair hidden since about r26; fixed."
+  },
+  {
+   "id": "r39-r40",
+   "what": "Silkscreen at JLC minimum, labels only where they belong; fab export.",
+   "state": "done",
+   "result": "11-12 labels, TEST and 120R on the jumpers; BOM 25 lines, CPL 38 parts."
+  },
+  {
+   "id": "JLC",
+   "what": "Rotation, origin and pin names from each part's EasyEDA footprint.",
+   "state": "done",
+   "result": "4 rotation fixes, U2 shifted 0.725 mm, D2 would have gone on backwards by pad number: fixed."
+  },
+  {
+   "id": "r41",
+   "what": "No copper under the screw heads.",
+   "state": "done",
+   "result": "Pour was 0.3 mm from the holes; now 3.6 mm."
+  },
+  {
+   "id": "D10",
+   "what": "Watchdog on the heater loop.",
+   "state": "done",
+   "result": "0 B RAM, 5 host tests, bench self-test build W1."
+  },
+  {
+   "id": "Audit 4",
+   "what": "Codex audit of r41 and the fab files.",
    "state": "todo",
-   "result": "Self-audit and Opus review done (AUDIT.md rounds 1-2); fresh pack to build."
+   "result": "Pack: work/audit/carrier-f-2026-10-24/."
+  },
+  {
+   "id": "Quote",
+   "what": "JLC quote and placement preview (your money call).",
+   "state": "todo",
+   "result": "Check D2 and every IC in the preview; stock on C13585, C14663, C7934."
   }
  ]
 }

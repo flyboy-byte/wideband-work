@@ -8,7 +8,7 @@ Independent report: `docs/codex-audit-2026-10-23.md`; board remains at `986c803`
   output (AFR 10 = 0 V, 20 = 5 V) for Speeduino / Hondata FlashPro / a gauge. Analog stage: PB1 PWM -> 74LVC1G125 on a
   REF3030 3.000 V -> 2x RC (3.3k/100n) -> LM2904 x1.68 -> 330R -> 1N4148WS clamps -> 470R R11 -> J3-5. DC feedback (68k)
   is taken at J3-5, after R11; 1 nF from the op-amp output for stability. Firmware: branch `analog-out`.
-- Commit and files: the commit that adds this text. `hardware/board_carrier/board_carrier.kicad_{sch,pcb}` (r40),
+- Commit and files: the commit that adds this text. `hardware/board_carrier/board_carrier.kicad_{sch,pcb}` (r41),
   fab candidate `work/out/carrier/` (Gerber zip, BOM, CPL, not-fitted, README), `firmware.diff` (`git diff master -- firmware`),
   `work/docs/{carrier,firmware}.md`, `work/sim/{stability,load_accuracy}.sh`, `checks/jlc_rotation.{py,json}`.
 - Changed since round 3 (Codex, 2026-10-23, board r36):
@@ -17,6 +17,7 @@ Independent report: `docs/codex-audit-2026-10-23.md`; board remains at `986c803`
   - r38: two same-net vias 0.225 mm apart (hole_to_hole, a DRC *warning*) had been on every board since about r26; the
     generator now merges them and the DRC delta counts fab-relevant warnings.
   - r39-r40: silkscreen at 1.0 mm / 0.16 mm, labels only where they belong to their part; jumper function labels.
+  - r41: no copper within 3.6 mm of the mounting holes on either layer (the pour was 0.3 mm from them).
   - Fab candidate: CPL rotations and positions corrected per part from EasyEDA footprints (`checks/jlc_rotation.py`).
   - Firmware: independent watchdog refreshed by the heater loop (D10); F1-F9 from round 3's plan.
 - Check, in priority order:
@@ -31,11 +32,15 @@ Independent report: `docs/codex-audit-2026-10-23.md`; board remains at `986c803`
   4. **Layout of the top-side stage**: return paths (`checks/layout_review.py -v`), bypass distances (C17 2.7, C15 2.3,
      C12 2.1, C11 3.9 mm), the merged +5V via near 54.3, 92.75.
   5. **Firmware**: `firmware/watchdog.h` and its use in `heater_thread.cpp`; anything in `firmware.diff`.
+  6. **Not checked by the designer**: the temperature rating of every part against an engine-bay or cabin install (the
+     owner has not said where the box goes; upstream's 10 uF caps are X5R, typically 85 C, FROM MEMORY); the Gerbers in
+     a viewer; JLC's edge-clearance rule for assembly (C11's centre is 1.85 mm from the edge).
 - Known and accepted (don't re-report): upstream's own DRC errors (module 11, carrier 23; `drc_vs_upstream.py` subtracts
   them, owner decision D2); a 12-16 V fault on J3-5 has no survival requirement (owner, C1); below about 1 V into a pull-up
   input the output reads high (LM2904 sink near ground; model result also odd there); 13 small passives carry no
   silkscreen label (assembly drawing `renders/carrier-f/assembly-top.svg` names them); upstream's relabelled bottom text
-  "TEST" clips a pad; no watchdog check-in for threads other than the heater loop (no RAM free).
+  "TEST" clips a pad; no watchdog check-in for threads other than the heater loop (no RAM free); mounting holes isolated
+  by design (owner may add a plastic washer anyway).
 - Report format below.
 
 ## Report format
