@@ -7,7 +7,8 @@
 Base = upstream's board at `master`, upgraded to KiCad 10. Every pad's net is set from the generated schematic's
 netlist (work/gen/gen_carrier_sch.py writes it), so board and schematic match. The board is upstream's
 40 x 36.5 mm grown by GROW mm at the bottom edge, away from the connector (the owner designs his own enclosure, so
-case/case.STL is no limit, 2026-10-23). New parts go in that strip, on the BOTTOM side.
+case/case.STL is no limit, 2026-10-23). New parts go in that strip, on the side named by SIDE (top since 2026-10-24,
+owner decision D9: one-sided JLC assembly; r1-r36 put them on the bottom).
 Upstream's tracks and vias are locked before routing, so Freerouting only adds the new connections.
 """
 import json, math, os, re, shutil, subprocess, sys, tempfile, xml.etree.ElementTree as ET
@@ -27,6 +28,16 @@ FREEROUTING = os.path.expanduser('~/.local/share/freerouting/freerouting-2.5.0.j
 # J3-5); buffer, reference and RC chain below the cutout, fed from module pad 3; op-amp supply parts lower left, fed
 # from module pad 7 (VBatt_Sense, the same protected 12 V net as LSU_Heater+). Placed in this order.
 GROW = 15.0   # mm added at the bottom edge (y 91.25 -> 106.25)
+# Side of the new parts. 'top' (D9, 2026-10-24): every SMD part then sits on the top, so JLC's Economic assembly
+# applies ($8 setup, against $50 for Standard two-sided [REPORTED, JLC help "PCB assembly price", updated 2025-09]).
+# The strip's top is free: the module's courtyard ends at y 90.7 and only the GND pour reaches below (checked 2026-10-24).
+SIDE = os.environ.get('SIDE', 'top')
+CU = pcbnew.F_Cu if SIDE == 'top' else pcbnew.B_Cu            # the new parts' copper layer
+FAR = pcbnew.B_Cu if SIDE == 'top' else pcbnew.F_Cu           # the other layer (fan-out vias reach its GND pour)
+CRT = pcbnew.F_CrtYd if SIDE == 'top' else pcbnew.B_CrtYd
+# M3 mounting holes in the strip's corners (owner decision D8, 2026-10-23), centres 3.5 mm in from both edges.
+# MountingHole_3.2mm_M3: plain NPTH, no copper, courtyard about 3.45 mm radius
+HOLES = [('H1', (39.975 + 3.5, 106.275 - 3.5)), ('H2', (80.025 - 3.5, 106.275 - 3.5))]
 # Floorplan in the strip (bottom side, coordinates seen from the top): the stage sits below the module's LEFT pad column
 # (pads 3 SEL_1 PWM, 4 SEL_2, 7 LSU_Heater+), away from the right column (heater drive pads 11-12, sensor pads 13-16).
 # PWM in at the left, filter left to right, op-amp in the middle, its supply right of it. The output (R8, clamps, R11)
@@ -99,19 +110,19 @@ def mm(v):
 
 
 def courtyard_box(fp):
-    """(x0, y0, x1, y1) in mm of the footprint's bottom courtyard, grown by CLEAR."""
-    bb = fp.GetCourtyard(pcbnew.B_CrtYd).BBox()
+    """(x0, y0, x1, y1) in mm of the footprint's courtyard on the new parts' side, grown by CLEAR."""
+    bb = fp.GetCourtyard(CRT).BBox()
     return (pcbnew.ToMM(bb.GetX()) - CLEAR, pcbnew.ToMM(bb.GetY()) - CLEAR,
             pcbnew.ToMM(bb.GetRight()) + CLEAR, pcbnew.ToMM(bb.GetBottom()) + CLEAR)
 
 
 def obstacle_shapes(board):
-    """Boxes (x0, y0, x1, y1) and circles (x, y, r) in mm that bottom parts must keep out of."""
+    """Boxes (x0, y0, x1, y1) and circles (x, y, r) in mm that new parts must keep out of (on their side)."""
     T = pcbnew.ToMM
     boxes, circles = [], []
     for fp in board.GetFootprints():
         for g in fp.GraphicalItems():
-            if g.GetLayer() in (pcbnew.B_CrtYd, pcbnew.Edge_Cuts):
+            if g.GetLayer() in (CRT, pcbnew.Edge_Cuts):
                 bb = g.GetBoundingBox()
                 boxes.append((T(bb.GetX()), T(bb.GetY()), T(bb.GetRight()), T(bb.GetBottom())))
         for pad in fp.Pads():
@@ -122,7 +133,7 @@ def obstacle_shapes(board):
             x, y = T(t.GetPosition().x), T(t.GetPosition().y)
             if t.GetNetname() != 'GND' or x >= KEEP_THERMAL_VIAS_X:    # stray GND stitching vias may be removed
                 circles.append((x, y, T(t.GetWidth(pcbnew.F_Cu)) / 2))
-        elif t.GetLayer() == pcbnew.B_Cu:
+        elif t.GetLayer() == CU:
             (x0, y0), (x1, y1) = (T(t.GetStart().x), T(t.GetStart().y)), (T(t.GetEnd().x), T(t.GetEnd().y))
             n = max(1, int(((x1 - x0) ** 2 + (y1 - y0) ** 2) ** 0.5 / 0.2))
             for i in range(n + 1):
@@ -248,7 +259,7 @@ def anneal(board, nets, obstacles, seed=1, iters=200000):
     # Upstream bottom tracks: a straight pad-to-pad connection that crosses one needs a via pair or a long detour
     # (seed 7 of r13 left the op-amp output unrouted with C15 and R8 on opposite sides of two sensor tracks)
     segs = np.array([(T(t.GetStart().x), T(t.GetStart().y), T(t.GetEnd().x), T(t.GetEnd().y))
-                     for t in board.GetTracks() if t.Type() == pcbnew.PCB_TRACE_T and t.GetLayer() == pcbnew.B_Cu])
+                     for t in board.GetTracks() if t.Type() == pcbnew.PCB_TRACE_T and t.GetLayer() == CU])
 
     def crossings(x0, y0, x1, y1):
         if not len(segs):
@@ -368,7 +379,16 @@ def main(route=True):
     for t in board.GetTracks():
         t.SetLocked(True)
 
-    # New footprints on the bottom, placed one by one at the nearest legal spot to their target
+    # Mounting holes first, so the placer keeps parts off them
+    for ref, (hx, hy) in HOLES:
+        h = pcbnew.FootprintLoad(os.path.join(FPLIB, 'MountingHole.pretty'), 'MountingHole_3.2mm_M3')
+        h.SetReference(ref)
+        h.Reference().SetVisible(False)
+        h.Value().SetVisible(False)
+        h.SetPosition(pcbnew.VECTOR2I(mm(hx), mm(hy)))
+        h.SetLocked(True)
+        board.Add(h)
+    # New footprints on SIDE, placed one by one at the nearest legal spot to their target
     obstacles = obstacle_shapes(board)
     placed = []
     for ref, (tx, ty) in TARGETS:
@@ -384,7 +404,8 @@ def main(route=True):
         fp.Reference().SetTextSize(pcbnew.VECTOR2I(mm(0.8), mm(0.8)))
         fp.Reference().SetTextThickness(mm(0.12))
         board.Add(fp)
-        fp.Flip(fp.GetPosition(), pcbnew.FLIP_DIRECTION_LEFT_RIGHT)
+        if SIDE != 'top':
+            fp.Flip(fp.GetPosition(), pcbnew.FLIP_DIRECTION_LEFT_RIGHT)
         spot = find_spot(fp, tx, ty, obstacles, placed)
         if not spot:
             sys.exit(f'no legal spot for {ref} near {tx},{ty}')
@@ -410,7 +431,7 @@ def main(route=True):
     new_boxes = []
     for fp in board.GetFootprints():
         if fp.GetReference() in dict(TARGETS):
-            bb = fp.GetCourtyard(pcbnew.B_CrtYd).BBox()
+            bb = fp.GetCourtyard(CRT).BBox()
             bb.Inflate(mm(0.35))
             new_boxes.append(bb)
     stray = [t for t in board.GetTracks() if t.Type() == pcbnew.PCB_VIA_T and t.GetNetname() == 'GND' and
@@ -626,7 +647,7 @@ def fanout_gnd(board, netname='GND', refs=None):
     T, net = pcbnew.ToMM, board.FindNet(netname)
     pcbnew.ZONE_FILLER(board).Fill(board.Zones())
     gnd = [z for z in board.Zones() if not z.GetIsRuleArea() and z.GetNetname() == 'GND'][0]
-    top = gnd.GetFilledPolysList(pcbnew.F_Cu)
+    top = gnd.GetFilledPolysList(FAR)   # the via must land in the other layer's GND fill
     e = board.GetBoardEdgesBoundingBox()
     ex0, ey0, ex1, ey1 = (T(v) for v in (e.GetX(), e.GetY(), e.GetRight(), e.GetBottom()))
     others = [p for f in board.GetFootprints() for p in f.Pads() if p.GetNetname() != netname and p.IsOnCopperLayer()]
@@ -675,7 +696,7 @@ def fanout_gnd(board, netname='GND', refs=None):
             v.SetPosition(best); v.SetWidth(mm(0.6)); v.SetDrill(mm(0.3)); v.SetNet(net); v.SetLocked(True)
             board.Add(v)
             t = pcbnew.PCB_TRACK(board)
-            t.SetStart(pad.GetPosition()); t.SetEnd(best); t.SetWidth(mm(0.3)); t.SetLayer(pcbnew.B_Cu)
+            t.SetStart(pad.GetPosition()); t.SetEnd(best); t.SetWidth(mm(0.3)); t.SetLayer(CU)
             t.SetNet(net); t.SetLocked(True)
             board.Add(t)
             added += 1

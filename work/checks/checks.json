@@ -9,7 +9,16 @@
     ],
     "files": [
       "../hardware/board_module/wideband_controller.kicad_pcb"
-    ]
+    ],
+    "advisory": "D2 (owner, 2026-10-23): upstream's own errors, advisory; gated by \"Module board identical to upstream\" instead"
+  },
+  {
+    "name": "Module board identical to upstream",
+    "cmd": [
+      "python3",
+      "checks/module_vs_upstream.py"
+    ],
+    "files": []
   },
   {
     "name": "ERC module (errors)",
@@ -33,7 +42,8 @@
     ],
     "files": [
       "../hardware/board_carrier/board_carrier.kicad_pcb"
-    ]
+    ],
+    "advisory": "D2 (owner, 2026-10-23): upstream's own errors, advisory; gated by \"Carrier DRC vs upstream baseline\" instead"
   },
   {
     "name": "Carrier DRC vs upstream baseline (new violations, unconnected)",

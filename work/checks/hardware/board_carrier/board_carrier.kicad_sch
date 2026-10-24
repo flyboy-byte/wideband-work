@@ -8953,7 +8953,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
+		(property "Footprint" "Resistor_SMD:R_1206_3216Metric"
 			(at 215.9 213.36 0)
 			(hide yes)
 			(effects
@@ -8983,7 +8983,7 @@
 				(justify left)
 			)
 		)
-		(property "LCSC" "C21190"
+		(property "LCSC" "C4410"
 			(at 215.9 213.36 0)
 			(hide yes)
 			(effects
@@ -10957,16 +10957,6 @@
 		(uuid "2363f9d8-f623-594d-86e0-555d4adb9fbd")
 	)
 	(label "AOUT"
-		(at 279.4 168.91 0)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left bottom)
-		)
-		(uuid "43f16da7-fd69-55fb-a0a1-9ed0712bef10")
-	)
-	(label "AOUT"
 		(at 334.01 213.36 0)
 		(effects
 			(font
@@ -11005,6 +10995,16 @@
 			(justify left bottom)
 		)
 		(uuid "6d20bce7-58a8-59b8-aecb-1c82bada2579")
+	)
+	(label "AOUT_J"
+		(at 279.4 168.91 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "f03344dd-4c8f-58b9-bdd1-cf0ac9ca6ca9")
 	)
 	(label "AOUT_J"
 		(at 135.255 137.16 0)

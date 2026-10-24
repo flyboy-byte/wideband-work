@@ -5,7 +5,7 @@
 
 Refuses (exit 1, every reason listed) unless:
   - the git working tree is clean, so the files are exactly a commit;
-  - checks/last_run.json passed (none failed or skipped), nothing but notes (*.md) changed since the commit it
+  - checks/last_run.json passed (none failed or skipped; a check marked "advisory" in checks.json may fail, it is listed), nothing but notes (*.md) changed since the commit it
     ran at, and every checked file still has the hash it was checked with;
   - checks/drift.py reports no hand edits waiting to be folded into the generator;
   - the last round in AUDIT.md names a commit after which only notes (*.md) changed, and has no open BLOCKER or BUG;
@@ -54,7 +54,9 @@ def main(rev, files):
             why.append(f"design files changed since checks ran at {run.get('git_head')}: run checks/run_all.py"
                        + (f" ({', '.join(moved[:5])})" if moved else ''))
         for x in run['results']:
-            if x['status'] != 'pass':
+            if x['status'] == 'fail' and x.get('advisory'):
+                print(f"note: advisory check failed (does not block): {x['name']}: {x['advisory']}")
+            elif x['status'] != 'pass':
                 why.append(f"check {x['status']}: {x['name']}: {x['summary']}")
             for f, h in x['files'].items():
                 if sha(f) != h:

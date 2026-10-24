@@ -141,6 +141,8 @@ error (0.1 V) is 0.2 AFR, which is why the reference buffer matters [INFERRED].
 
 ## Layout (r36, 2026-10-23)
 
+**Superseded in part by r37 (2026-10-24):** the stage is now on the TOP of the strip (D9), R6 feeds back from J3-5 (C2), R9 is 1206, M3 holes H1/H2 sit 3.5 mm in from the strip corners. r37 numbers: `work/HANDOFF.md` run table; renders `renders/carrier-f/`. The r36 text below is history.
+
 The board is upstream's 40.0 x 36.5 mm grown 15 mm at the bottom edge, away from the connector: **40.0 x 51.5 mm (1.57 x
 2.03 in)**. The owner designs his own enclosure, so `case/case.STL` is no limit (STATE.md decision). The whole analog
 stage sits in the new strip, on the bottom side, below the module's left pad column (pads 3 PWM, 4 TEST, 7 supply). The

@@ -74,7 +74,8 @@ Also: curve moved to `boards/f0_module/aux_curve.h`; `AUXOUT_TRIM_GAIN/OFFSET` o
 ## Board run history (generator `gen/gen_carrier_pcb.py`, seed 7)
 | Run | Change | Result |
 | --- | --- | --- |
-| r36 | C17/C15 start targets on the mirrored-correct side, bypass weight 8 | 0 new / 0 open / 0 via-in-pad; C17 2.1 mm, C15 2.3 mm (current) |
+| r37 | parts to the TOP (SIDE, D9), R6 feedback from J3-5 after R11 (C2), R9 1206 (D1), M3 holes H1/H2 (D8) | 0 new / 0 open / 0 via-in-pad; layout review 0 triggers (PWM return 4.1 mm, was 6.8: C7 cleared); C17 2.7, C15 2.3, C12 2.1, C11 3.9 mm (feed reaches C11 first); bottom carries only tracks; renders `renders/carrier-f/` (current) |
+| r36 | C17/C15 start targets on the mirrored-correct side, bypass weight 8 | 0 new / 0 open / 0 via-in-pad; C17 2.1 mm, C15 2.3 mm |
 | r35 | CAN terminator to the strip's left end; output under the corridor right of the cutout | coupling clean; C17 6.1 mm |
 | r34 | board +15 mm, stage in the strip, R11, upstream tracks kept (`REROUTE = []`) | 0/0 first try; CAN_L 0.3 mm beside output 6.8 mm |
 | r33 | `/VOP12` weight on the small board | 6 open: reverted |

@@ -23,7 +23,7 @@ NS = uuid.UUID('6f1c3a52-2f1e-4d55-9a0b-7a1f3c1d2e01')
 R0603 = 'Resistor_SMD:R_0603_1608Metric'
 C0603 = 'Capacitor_SMD:C_0603_1608Metric'
 # 0402 where it fits the rating: the bottom-side area was too crowded to route with all-0603 (PCB runs r1-r12,
-# 2026-10-23). Kept 0603: R6 (68k is Extended in 0402), R8 and R9 (fault/surge current), C17 (18 V rail).
+# 2026-10-23). Kept 0603: R6 (68k is Extended in 0402), R8 (fault current), C17 (18 V rail); R9 1206 (D1).
 R0402 = 'Resistor_SMD:R_0402_1005Metric'
 C0402 = 'Capacitor_SMD:C_0402_1005Metric'
 PARTS = {
@@ -41,7 +41,7 @@ PARTS = {
     'C14': ('Device', 'C', '100n', C0402, 'C1525', (292.1, 129.54), 'second RC stage'),
     'U6':  ('Amplifier_Operational', 'LM2904', 'LM2904', 'Package_SO:SOIC-8_3.9x4.9mm_P1.27mm', 'C7934', None,
             'x1.68 to 5.04 V full scale; -40 C rated; on the clamped 12 V'),
-    'R6':  ('Device', 'R', '68k', R0603, 'C23231', (279.4, 172.72), 'DC feedback from after R8 (no load error)'),
+    'R6':  ('Device', 'R', '68k', R0603, 'C23231', (279.4, 172.72), 'DC feedback from J3-5, after R11: no error from the receiver load (sim/load_accuracy.sh E)'),
     'R7':  ('Device', 'R', '100k', R0402, 'C25741', (304.8, 172.72), 'gain 1 + 68k/100k = 1.68'),
     'C15': ('Device', 'C', '1n', C0402, 'C1523', (330.2, 172.72),
             'AC feedback from the op-amp output: no oscillation with cable C (work/sim/stability.sh)'),
@@ -49,11 +49,13 @@ PARTS = {
     'D3':  ('Diode', '1N4148WS', '1N4148WS', 'Diode_SMD:D_SOD-323', 'C2128', (330.2, 213.36), 'clamp output to +5V'),
     'D4':  ('Diode', '1N4148WS', '1N4148WS', 'Diode_SMD:D_SOD-323', 'C2128', (355.6, 213.36), 'clamp output to GND'),
     # J3-5 sits between J3-6 (12V_RAW) and J3-4 (LSU_Heater+). Without R11, 12 V on J3-5 reaches +5V through D3 unlimited
-    # (AUDIT.md round 2, O1); with it, (12 - 5.6) / 470 = 14 mA, 0.09 W. Outside the feedback: 0.46 % low into 100k
-    # (sim/stability.sh D), removed by the trim. C4502: 470R 1206 1 % 250 mW [REPORTED, LCSC datasheet listing]
+    # (AUDIT.md round 2, O1); with it, (12 - 5.6) / 470 = 14 mA, 0.09 W. Inside the DC feedback since 2026-10-24 (R6 from
+    # J3-5): the receiver's input, pull-up or pull-down, no longer shifts the output (sim/load_accuracy.sh, C2). C4502: 470R 1206 1 % 250 mW [REPORTED, LCSC datasheet listing]
     'R11': ('Device', 'R', '470', 'Resistor_SMD:R_1206_3216Metric', 'C4502', (381.0, 213.36),
             'series resistor at J3-5: a 12 V wiring fault cannot back-feed +5V through D3'),
-    'R9':  ('Device', 'R', '1k', R0603, 'C21190', (215.9, 213.36), 'op-amp supply feed from the protected 12 V'),
+    # 1206 (owner decision D1, 2026-10-23): load-dump current into the zener. C4410 UNI-ROYAL 1206W4F1001T5E 1 % 250 mW
+    # [REPORTED, LCSC/JLC listing 2026-10-24]
+    'R9':  ('Device', 'R', '1k', 'Resistor_SMD:R_1206_3216Metric', 'C4410', (215.9, 213.36), 'op-amp supply feed from the protected 12 V'),
     'D5':  ('Device', 'D_Zener', '18V', 'Diode_SMD:D_SOD-123', 'C173425', (241.3, 213.36),
             'clamps op-amp supply: TVS D1 (SMCJ30CA) lets the rail reach about 35-48 V, LM2904 is rated 32 V'),
     'C16': ('Device', 'C', '10u', 'Capacitor_SMD:C_1206_3216Metric', 'C13585', (266.7, 213.36), 'op-amp supply, 50 V'),
@@ -80,8 +82,8 @@ NETS = {
     'AOUT_F2':    [('R5', '2'), ('C14', '1'), ('U6', '3')],
     'AOUT_INN':   [('U6', '2'), ('R6', '2'), ('R7', '1'), ('C15', '2')],
     'AOUT_OA':    [('U6', '1'), ('C15', '1'), ('R8', '1')],
-    'AOUT':       [('R8', '2'), ('R6', '1'), ('D3', '2'), ('D4', '1'), ('R11', '1')],
-    'AOUT_J':     [('R11', '2'), ('J3', '5')],
+    'AOUT':       [('R8', '2'), ('D3', '2'), ('D4', '1'), ('R11', '1')],
+    'AOUT_J':     [('R11', '2'), ('R6', '1'), ('J3', '5')],
     'LSU_Heater+': [('R9', '1')],
     'VOP12':      [('R9', '2'), ('D5', '1'), ('C16', '1'), ('C17', '1'), ('U6', '8')],
     'U6B_FB':     [('U6', '6'), ('U6', '7')],

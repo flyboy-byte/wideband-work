@@ -41,9 +41,9 @@ It's a learning project: build and test it ourselves, don't buy a ready-made uni
   allocated at runtime. Untested on hardware. Host-tested 2026-10-23 (64 + 21 tests); upstream bugs fixed in the bootloader
   bounds (F1) and the Cortex-M0 fault handler (F9), our test-mode bug fixed (F5): `work/docs/firmware.md`.
 - **Carrier schematic**: generated, ERC 0, netlist self-check 18/18 (R11 added r34).
-- **Carrier PCB**: grown to 40.0 x 51.5 mm (r36); the analog stage sits in the new strip. **0 new DRC violations, 0 open,
-  0 vias in pads.** Codex's repaired layout check flags a 6.8 mm PWM return-path gap (C7, open). Next: owner answers for
-  Codex C1-C3 and decisions D1, D2, D7-D11 (`work/RELEASE_ASSESSMENT.md`), then silkscreen → BOM/CPL → JLC quote → `release.py`.
+- **Carrier PCB**: 40.0 x 51.5 mm, r37 (2026-10-24): analog stage on the TOP of the grown strip, feedback after R11, R9 1206,
+  M3 holes. **0 new DRC, 0 open, 0 vias in pads, layout review 0 triggers.** Owner answers C1-C3 and D1-D11 recorded
+  (`work/STATE.md`). Next: D10 watchdog firmware, silkscreen → BOM/CPL → JLC quote → `release.py`.
 - **Assessment**: `work/RELEASE_ASSESSMENT.md` (concept, audit path, confidence, caveats, owner decisions) and `work/AUDIT.md` rounds 1 (Sonnet self-audit), 2 (Opus review), 3 (Codex, independent: `work/docs/codex-audit-2026-10-23.md`).
 - **Module board**: upstream's, unchanged (DRC 11 upstream errors, judged harmless or not yet: open).
 
@@ -82,7 +82,7 @@ objects) and the link fails ("cannot find build/obj/pid.o"). An absolute `BUILDD
 ## How the carrier PCB is generated (`work/gen/gen_carrier_pcb.py`)
 
 The base is upstream's board from `master`, upgraded to KiCad 10, with every upstream track locked. New parts go on the
-**bottom**: the top is full. (`case/case.STL` was treated as a size limit until 2026-10-23; the owner designs his own enclosure, so the board may now grow: see `work/STATE.md`.) The steps:
+**top** of the grown strip since r37 (`SIDE`, D9: one-sided JLC assembly; r1-r36 had them on the bottom). (`case/case.STL` was treated as a size limit until 2026-10-23; the owner designs his own enclosure, so the board may now grow: see `work/STATE.md`.) The steps:
 0. Grow the outline and pours by `GROW` mm at the bottom edge (the strip the stage goes in).
 1. Greedy placement to targets.
 2. **Annealing placement** by net length plus distance to existing copper, plus bypass caps tied to their pins (`BYPASS`).
@@ -102,13 +102,14 @@ Module pad SEL_1 carries the PWM. On the carrier:
 - 100k pull-down → 74LVC1G125 buffer powered from a REF3030 (3.000 V), so the PWM amplitude is the reference, not the
   MCU supply
 - 2× RC 3.3k/100n
-- LM2904 ×1.68 (68k/100k) with a dual-loop feedback: DC feedback after the 330R, plus 1 nF from the op-amp output. TI's
-  model shows feedback after the resistor alone oscillates into cable capacitance.
-- 330R → 1N4148WS clamps to +5V and GND → 470R (R11, so a 12 V wiring fault can't reach +5V) → connector J3-5, with J3-7
+- LM2904 ×1.68 (68k/100k) with a dual-loop feedback: DC feedback from J3-5 (after the 330R and R11, so the receiver's
+  load, pull-up or pull-down, causes no error: `sim/load_accuracy.sh`), plus 1 nF from the op-amp output. TI's model shows
+  feedback after the resistor alone oscillates into cable capacitance.
+- 330R → 1N4148WS clamps to +5V and GND → 470R (R11, limits a 12 V wiring fault into +5V; inside the DC loop since r37) → connector J3-5, with J3-7
   as signal ground (on the pour beside J3-1; see `work/docs/carrier.md` "Grounding and the output")
 - LM2904 supply: 12 V → 1k → 18 V zener, because the input TVS lets the rail reach about 35-48 V
 
-Passives are 0402 except R6, R8, R9, R11, C16 and C17.
+Passives are 0402 except R6, R8, R9 (1206), R11, C16 and C17. Two M3 holes in the strip corners (r37).
 
 ## Rules
 

@@ -1,6 +1,6 @@
 # STATE — rusEFI wideband (module + carrier)
 
-Status: 2026-10-23 — Codex plan F1, F2, F3-F5, F7, F8 (estimate) done, plus F9; bugs fixed: bootloader bounds (F1), M0 fault lockup (F9), test mode stuck at 1.00 V (F5, ours); host 64 + aux 16 tests; owner decisions D1, D2, D7-D11 open; D10 watchdog for the owner; Codex round 3 plus follow-up; board unchanged (r36, 40.0 x 51.5 mm). DRC delta 0 new / 0 open, no drift. Small-signal and four ramped full-scale model runs complete. Layout checker repaired and regression-tested; now flags PWM return component 6.8 mm. Suite: 8 pass / 3 fail (two inherited DRC checks plus PWM review). Open: fault back-feed/sink behavior, full-scale load/tolerance, receiver grounding, PWM return review. See AUDIT.md and docs/codex-audit-2026-10-23.md; historical confidence percentages are not evidence.
+Status: 2026-10-24 — board r37: analog stage on the TOP (one-sided assembly, D9), DC feedback from J3-5 after R11 (C2 build-around, simulated), R9 1206 (D1), M3 holes (D8); 0 new DRC / 0 open / 0 via-in-pad / layout review 0 triggers (C7 cleared, 4.1 mm). Checks 17: 0 failed, 2 advisory (raw upstream DRC, D2). Owner answers C1-C3, D1-D11 recorded below. Next: D10 watchdog firmware, silkscreen pass, BOM/CPL, JLC quote (owner approves money), audit round 4, release.py. Firmware: F1-F9 done (host 64 + aux 21). Nothing ordered, flashed or pushed.
 Revision in progress: none yet   Revisions used (never reused): none by the owner. Upstream module exports are rev A, B, C (upstream's own scheme, not ours).
 <If the project already names revisions its own way (v1.0.0), keep its scheme.>
 Review pages: status report https://claude.ai/artifact/YRsjXKGZKG5AFbwkcMuYZ4 (private; rebuilt by `checks/report.py`)  fit check <link>  audit <link>
@@ -47,24 +47,25 @@ Mark a stage done only when its exit condition is true. Strike through, don't de
 <!-- checks:start -->
 | Check | Result | Summary | Date | Files (sha256/12) |
 | --- | --- | --- | --- | --- |
-| DRC module (errors) | FAIL | DRC 11 errors: solder_mask_bridge 10, clearance 1 (report checks/out/wideband_controller-drc.json) | 2026-10-23 | `wideband_controller.kicad_pcb` 0179d031bc63 |
-| ERC module (errors) | PASS | ERC 0 errors (report checks/out/wideband_controller-erc.json) | 2026-10-23 | `wideband_controller.kicad_sch` e54843a1e6ef |
-| DRC carrier (errors) | FAIL | DRC 23 errors: courtyards_overlap 14, copper_edge_clearance 3, malformed_courtyard 3, starved_thermal 2 (report checks/out/board_carrier-drc.json) | 2026-10-23 | `board_carrier.kicad_pcb` 8db07cd11e6b |
-| Carrier DRC vs upstream baseline (new violations, unconnected) | PASS | DRC vs upstream: 0 new violations, 0 unconnected | 2026-10-23 | `board_carrier.kicad_pcb` 8db07cd11e6b |
-| Carrier: no new vias in SMD pads | PASS | via in pad: 0 new, 0 upstream | 2026-10-23 | `board_carrier.kicad_pcb` 8db07cd11e6b |
-| Carrier layout review (sampled coupling and return-path heuristics) | FAIL | review triggers: 1 (return path /AOUT_PWM) | 2026-10-23 | `board_carrier.kicad_pcb` 8db07cd11e6b, `layout_review.py` 2dfa9e8efa14, `layout_metrics.py` 23c78d58fd8a |
-| Layout geometry helper unit tests | PASS | OK | 2026-10-23 | `layout_metrics.py` 23c78d58fd8a, `test_layout_metrics.py` 2d93b205dd56 |
-| Layout track-order regression | PASS | PASS: tested orders agree | 2026-10-23 | `board_carrier.kicad_pcb` 8db07cd11e6b, `layout_review.py` 2dfa9e8efa14, `layout_metrics.py` 23c78d58fd8a, `audit_layout_order.py` c40bda9f97e2 |
-| ERC carrier (errors) | PASS | ERC 0 errors (report checks/out/board_carrier-erc.json) | 2026-10-23 | `board_carrier.kicad_sch` c2190cd03e68 |
-| Carrier netlist self-check (generator table) | PASS | netlist self-check: 18 nets, 0 problems | 2026-10-23 | `board_carrier.kicad_sch` c2190cd03e68, `gen_carrier_sch.py` ae5a44d3abf4 |
-| No hand edits waiting | PASS | no drift | 2026-10-23 |  |
-| Firmware: bootloader DATA writes stay inside the app partition (F1) | PASS | 52 guard cases; 0 unsafe accepted writes, 0 valid writes refused (stub only) | 2026-10-23 | `bootloader.cpp` 21cbac0cd469, `bootloader_bounds.h` 72e216e2e7bc |
-| Firmware: package checker accepts good images, rejects bad ones (F2) | PASS | 21 package cases, 0 wrong verdict(s) | 2026-10-23 | `fw_package.py` 34a1c5eb78dd, `wideband_image.h` 1ee39ace5944, `bootloader.cpp` 21cbac0cd469 |
-| Firmware: HardFault entry reaches the C handler on a Cortex-M0 (F9, QEMU microbit) | PASS | fault entry on Cortex-M0: as expected | 2026-10-23 | `main_hardfault_asm.S` d32262764759, `main.cpp` f1c2e96ebf08 |
-| Firmware: analog output host tests, production auxout/pump_dac/can_helper on the f0 config (F3-F6) | PASS | [  PASSED  ] 21 tests. | 2026-10-23 | `auxout.cpp` 417044786829, `pump_dac.cpp` ac1d4bf351de, `can_helper.cpp` dc0ba8d660e6, `aux_curve.h` bb88ea23e570, `wideband_board_config.h` b96f53982d27 |
-| Firmware: static worst-case stack per thread fits (F8 estimate, f0 build) | PASS | stack estimate: ok, smallest margin 80 B | 2026-10-23 | `auxout.cpp` 417044786829, `can.cpp` 65a7078908bf, `heater_thread.cpp` f524458f2290, `pump_control.cpp` 6449053857fe, `sampling_thread.cpp` 65d58bbf0b52 |
+| DRC module (errors) | FAIL (advisory) | DRC 11 errors: solder_mask_bridge 10, clearance 1 (report checks/out/wideband_controller-drc.json) | 2026-10-24 | `wideband_controller.kicad_pcb` 0179d031bc63 |
+| Module board identical to upstream | PASS | module board vs upstream master: 0 file(s) differ | 2026-10-24 |  |
+| ERC module (errors) | PASS | ERC 0 errors (report checks/out/wideband_controller-erc.json) | 2026-10-24 | `wideband_controller.kicad_sch` e54843a1e6ef |
+| DRC carrier (errors) | FAIL (advisory) | DRC 23 errors: courtyards_overlap 14, copper_edge_clearance 3, malformed_courtyard 3, starved_thermal 2 (report checks/out/board_carrier-drc.json) | 2026-10-24 | `board_carrier.kicad_pcb` affd6a48bd9d |
+| Carrier DRC vs upstream baseline (new violations, unconnected) | PASS | DRC vs upstream: 0 new violations, 0 unconnected | 2026-10-24 | `board_carrier.kicad_pcb` affd6a48bd9d |
+| Carrier: no new vias in SMD pads | PASS | via in pad: 0 new, 0 upstream | 2026-10-24 | `board_carrier.kicad_pcb` affd6a48bd9d |
+| Carrier layout review (sampled coupling and return-path heuristics) | PASS | review triggers: 0 | 2026-10-24 | `board_carrier.kicad_pcb` affd6a48bd9d, `layout_review.py` 2dfa9e8efa14, `layout_metrics.py` 23c78d58fd8a |
+| Layout geometry helper unit tests | PASS | OK | 2026-10-24 | `layout_metrics.py` 23c78d58fd8a, `test_layout_metrics.py` 2d93b205dd56 |
+| Layout track-order regression | PASS | PASS: tested orders agree | 2026-10-24 | `board_carrier.kicad_pcb` affd6a48bd9d, `layout_review.py` 2dfa9e8efa14, `layout_metrics.py` 23c78d58fd8a, `audit_layout_order.py` c40bda9f97e2 |
+| ERC carrier (errors) | PASS | ERC 0 errors (report checks/out/board_carrier-erc.json) | 2026-10-24 | `board_carrier.kicad_sch` 20e09bb79f3b |
+| Carrier netlist self-check (generator table) | PASS | netlist self-check: 18 nets, 0 problems | 2026-10-24 | `board_carrier.kicad_sch` 20e09bb79f3b, `gen_carrier_sch.py` 0ecc060b4160 |
+| No hand edits waiting | PASS | no drift | 2026-10-24 |  |
+| Firmware: bootloader DATA writes stay inside the app partition (F1) | PASS | 52 guard cases; 0 unsafe accepted writes, 0 valid writes refused (stub only) | 2026-10-24 | `bootloader.cpp` 21cbac0cd469, `bootloader_bounds.h` 72e216e2e7bc |
+| Firmware: package checker accepts good images, rejects bad ones (F2) | PASS | 21 package cases, 0 wrong verdict(s) | 2026-10-24 | `fw_package.py` 34a1c5eb78dd, `wideband_image.h` 1ee39ace5944, `bootloader.cpp` 21cbac0cd469 |
+| Firmware: HardFault entry reaches the C handler on a Cortex-M0 (F9, QEMU microbit) | PASS | fault entry on Cortex-M0: as expected | 2026-10-24 | `main_hardfault_asm.S` d32262764759, `main.cpp` f1c2e96ebf08 |
+| Firmware: analog output host tests, production auxout/pump_dac/can_helper on the f0 config (F3-F6) | PASS | [  PASSED  ] 21 tests. | 2026-10-24 | `auxout.cpp` 417044786829, `pump_dac.cpp` ac1d4bf351de, `can_helper.cpp` dc0ba8d660e6, `aux_curve.h` bb88ea23e570, `wideband_board_config.h` b96f53982d27 |
+| Firmware: static worst-case stack per thread fits (F8 estimate, f0 build) | PASS | stack estimate: ok, smallest margin 80 B | 2026-10-24 | `auxout.cpp` 417044786829, `can.cpp` 65a7078908bf, `heater_thread.cpp` f524458f2290, `pump_control.cpp` 6449053857fe, `sampling_thread.cpp` 65d58bbf0b52 |
 
-Written by `checks/run_all.py` at commit 1ecef63. Don't edit by hand.
+Written by `checks/run_all.py` at commit 9d862aa. Don't edit by hand.
 <!-- checks:end -->
 
 ## Bring-up results
