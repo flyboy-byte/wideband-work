@@ -71,7 +71,7 @@ Mark a stage done only when its exit condition is true. Strike through, don't de
 | Firmware: analog output host tests, production auxout/pump_dac/can_helper on the f0 config (F3-F6) | PASS | [  PASSED  ] 21 tests. | 2026-10-24 | `auxout.cpp` 417044786829, `pump_dac.cpp` ac1d4bf351de, `can_helper.cpp` dc0ba8d660e6, `aux_curve.h` bb88ea23e570, `wideband_board_config.h` 7c5b76b0011c |
 | Firmware: static worst-case stack per thread fits (F8 estimate, f0 build) | PASS | stack estimate: ok, smallest margin 80 B | 2026-10-24 | `auxout.cpp` 417044786829, `can.cpp` 65a7078908bf, `heater_thread.cpp` 1c61085261f8, `pump_control.cpp` 6449053857fe, `sampling_thread.cpp` 65d58bbf0b52 |
 
-Written by `checks/run_all.py` at commit 0bc13ed. Don't edit by hand.
+Written by `checks/run_all.py` at commit a6fa711. Don't edit by hand.
 <!-- checks:end -->
 
 ## Bring-up results

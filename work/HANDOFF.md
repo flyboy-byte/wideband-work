@@ -1,8 +1,6 @@
 # HANDOFF — dense session context (read after STATE.md)
 
-Written 2026-10-23, end of a long day: Sonnet 5.5 (routing r32, self-audit), then Opus 5.5 (review, board growth r34-r36),
-then Codex (independent audit, commits 4e4b5a5 and f3cf90c), then Opus 5.5 again (Codex's firmware plan F1-F9). This file
-replaces all earlier handoffs; they are in its git history (`git log -p -- work/HANDOFF.md`). Replace it at the next handoff.
+Written 2026-10-23, updated through 2026-10-24 (Opus 5.5: r37-r41, watchdog, fab export, open register). Replace at the next handoff.
 
 ## Verify first, don't assume
 - `git status` (clean except `hardware/board_carrier/~board_carrier.kicad_pro.lck`: KiCad's lock, maybe the owner has it
@@ -17,32 +15,43 @@ replaces all earlier handoffs; they are in its git history (`git log -p -- work/
   (absolute BUILDDIR: no more moving `firmware/build` aside). `make -C test/aux_out run` -> 21/21.
 - `checks/stack_estimate.py` reads `firmware/build/wideband.elf` and fails on a non-f0 build: rebuild f0 last.
 
-Last raw output (2026-10-23, HEAD 357755f):
+Last raw output (2026-10-24, board r41, after commit a6fa711):
 ```
-FAIL    DRC module (errors): DRC 11 errors: solder_mask_bridge 10, clearance 1
-FAIL    DRC carrier (errors): DRC 23 errors: courtyards_overlap 14, copper_edge_clearance 3, malformed_courtyard 3, starved_thermal 2
-PASS    Carrier DRC vs upstream baseline: 0 new violations, 0 unconnected
-PASS    Carrier: no new vias in SMD pads: 0 new, 0 upstream
-FAIL    Carrier layout review: review triggers: 1 (return path /AOUT_PWM)          <- Codex C7, open, board unchanged
-PASS    Layout geometry helper unit tests / track-order regression / ERC carrier 0 / self-check 18 nets / no drift
-PASS    F1 bootloader bounds: 52 guard cases; 0 unsafe accepted writes, 0 valid writes refused
-PASS    F2 package checker: 21 package cases, 0 wrong verdict(s)
-PASS    F9 HardFault entry on Cortex-M0 (QEMU microbit): as expected
-PASS    F3-F6 analog output host tests: 16 tests
-PASS    F8 stack estimate: ok, smallest margin 80 B
-16 checks, 3 failed, 0 skipped
+FAIL    DRC module (errors): DRC 11 errors: solder_mask_bridge 10, clearance 1 (report checks/out/wideband_controller-drc.json)  [advisory]
+PASS    Module board identical to upstream: module board vs upstream master: 0 file(s) differ
+PASS    ERC module (errors): ERC 0 errors (report checks/out/wideband_controller-erc.json)
+FAIL    DRC carrier (errors): DRC 23 errors: courtyards_overlap 14, copper_edge_clearance 3, malformed_courtyard 3, starved_thermal 2 (report checks/out/board_carrier-drc.json)  [advisory]
+PASS    Carrier DRC vs upstream baseline (new violations, unconnected): DRC vs upstream: 0 new violations, 0 unconnected
+PASS    Carrier: no new vias in SMD pads: via in pad: 0 new, 0 upstream
+PASS    Carrier layout review (sampled coupling and return-path heuristics): review triggers: 0
+PASS    Layout geometry helper unit tests: OK
+PASS    Layout track-order regression: PASS: tested orders agree
+PASS    ERC carrier (errors): ERC 0 errors (report checks/out/board_carrier-erc.json)
+PASS    Carrier netlist self-check (generator table): netlist self-check: 18 nets, 0 problems
+PASS    No hand edits waiting: no drift
+PASS    JLC rotation, origin and pin names from each part's EasyEDA footprint: jlc rotation: 38 parts measured, 4 need a correction, 0 problem(s)
+PASS    Fab candidate (out/carrier) matches the board: Gerbers, BOM, CPL, not-fitted: fab files: 38 placed, 6 not fitted, outline 40.00 x 51.50 mm, 0 problem(s)
+PASS    Firmware: bootloader DATA writes stay inside the app partition (F1): 52 guard cases; 0 unsafe accepted writes, 0 valid writes refused (stub only)
+PASS    Firmware: package checker accepts good images, rejects bad ones (F2): 21 package cases, 0 wrong verdict(s)
+PASS    Firmware: HardFault entry reaches the C handler on a Cortex-M0 (F9, QEMU microbit): fault entry on Cortex-M0: as expected
+PASS    Firmware: host gtest suite (sampler, heater, F7, F1 bounds, D10 watchdog): [  PASSED  ] 69 tests.
+PASS    Firmware: analog output host tests, production auxout/pump_dac/can_helper on the f0 config (F3-F6): [  PASSED  ] 21 tests.
+PASS    Firmware: static worst-case stack per thread fits (F8 estimate, f0 build): stack estimate: ok, smallest margin 80 B
+20 checks, 0 failed, 2 advisory failed, 0 skipped
 ```
 
-## Where things stand
-- **Board** (r36, commit 986c803): 40.0 x 51.5 mm (1.57 x 2.03 in), upstream's outline grown 15 mm at the bottom; analog
-  stage in the new strip on the bottom; R11 470R 1206 (C4502) between the clamps and J3-5; routed clean first try.
-  Unchanged since. Renders `work/renders/carrier-e/`; status page https://claude.ai/artifact/YRsjXKGZKG5AFbwkcMuYZ4 (private,
-  shows r36; does not yet show the firmware work).
-- **Audit**: rounds 1 (Sonnet self), 2 (Opus review), 3 (Codex) in `AUDIT.md`; Codex's report `docs/codex-audit-2026-10-23.md`
-  supersedes the earlier R11/full-scale/grounding conclusions. Follow-through rows (F2, F5, F9) under round 3.
-- **Firmware**: Codex's plan (`docs/flashing-and-test-plan.md`) F1, F2, F3-F5, F7, F8 (estimate) done, plus F9 found on the
-  way. Details and evidence: `docs/firmware.md`. Nothing flashed; no hardware exists.
-- **Assessment / decisions**: `RELEASE_ASSESSMENT.md` (D-table). Not ready to order.
+## Where things stand (2026-10-24)
+- **Board r41**: 40.0 x 51.5 mm; analog stage on the TOP (one-sided JLC Economic assembly); DC feedback from J3-5 after
+  R11 (load-independent, `sim/load_accuracy.sh`, `sim/stability.sh` topology E); R9 1206; M3 holes H1/H2 with 3.6 mm
+  copper keep-out; overlapping-via merge; silkscreen pass (TEST/120R jumper labels). Renders `renders/carrier-f/`
+  (top, bottom, assembly-top.svg). Status page v3: https://claude.ai/artifact/YRsjXKGZKG5AFbwkcMuYZ4
+- **Fab candidate** `work/out/carrier/` (gitignored, rebuild with `python3 gen/export_fab.py`): BOM 25 lines (7 Extended),
+  CPL 38 parts with EasyEDA-measured rotations (`checks/jlc_rotation.py`; D2 paired by pin name, U2 shifted 0.725 mm),
+  checked by `checks/fab_files.py`. Not released; nothing ordered.
+- **Firmware**: F1-F9 done; D10 watchdog done (`firmware/watchdog.h`, bench self-test `WB_WATCHDOG_SELFTEST`). Host 69 + aux 21.
+- **Audit**: round 4 pending (Codex). Pack `audit/carrier-f-2026-10-24/` was built at r40: rebuild at r41 first.
+- **Everything open**: `STATE.md` "Open register" (board/fab, module board not prepared, firmware, deeper tests, bench).
+- **Skill**: `~/.claude/skills/claude-usage/` (bridge key `~/.config/libre-bridge/keys/claude-usage.key`, read:usage only).
 
 ## This session's firmware work (Opus, after Codex), in order
 | Item | What | Evidence | Commit |
