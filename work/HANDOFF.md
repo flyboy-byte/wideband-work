@@ -1,105 +1,88 @@
 # HANDOFF — dense session context (read after STATE.md)
 
-Written 2026-10-23, updated through 2026-10-24 (Opus 5.5: r37-r41, watchdog, fab export, open register). Replace at the next handoff.
+Written 2026-10-25 (Opus 5.5) at the end of the session that answered round 6. Replaces the 2026-10-24 version (in git
+history). Replace it at the next handoff.
 
 ## Verify first, don't assume
-- `git status` (clean except `hardware/board_carrier/~board_carrier.kicad_pro.lck`: KiCad's lock, maybe the owner has it
-  open, leave it), `git log --oneline -12` (branch `analog-out`). `master` == upstream mck1117/wideband 2bb80d2; `upstream`
-  push disabled; `origin` = public fork, push only when the owner says.
-- `cd work && python3 checks/run_all.py`: 16 checks, 3 known fails (raw output below).
-- Firmware: the in-tree f0 build links the bootloader object, so after any bootloader `make clean` run
-  `cd firmware/boards/f0_module/bootloader && bash build_bootloader.sh` first; then `cd firmware && make -j12 BOARD=f0_module`.
-  `make clean` when switching BOARD (stale objects fail the f1_dual link with `EFLD1` undefined). Staged, reproducible
-  package instead: `python3 work/checks/fw_package.py build` -> `work/fw-build/<commit>/` (gitignored).
-- Host tests: `B=$(mktemp -d) && mkdir -p $B/obj $B/lst && (cd test && make -j8 BUILDDIR=$B) && $B/wideband_test` -> 69/69 (or `python3 work/checks/host_tests.py`, also in run_all)
-  (absolute BUILDDIR: no more moving `firmware/build` aside). `make -C test/aux_out run` -> 21/21.
-- `checks/stack_estimate.py` reads `firmware/build/wideband.elf` and fails on a non-f0 build: rebuild f0 last.
+- `git status`: clean except `hardware/board_carrier/~board_carrier.kicad_pro.lck`, a stale KiCad lock from 2026-10-23
+  (KiCad isn't running; leave it). `git branch --show-current` must say `analog-out`: **Codex once ran in this checkout
+  and left it on its review branch**, so later edits landed there. `git log --oneline -5`. `master` = upstream
+  mck1117/wideband; `upstream` push disabled; `origin` = public fork. Push is allowed (owner lifted the hold 2026-10-24).
+- `cd work && python3 checks/run_all.py`: **26 checks, 0 failed, 2 advisory** (raw upstream DRC, owner decision D2).
+  A reviewer runs `python3 checks/run_all.py --report DIR` instead (leaves STATE.md and tracked reports alone).
+- Firmware: `cd firmware/boards/f0_module/bootloader && ./build_bootloader.sh`, then `make -C firmware -j8 BOARD=f0_module`
+  (the stack check reads `firmware/build/wideband.elf`; rebuild f0 last). Host tests 70/70 (`checks/host_tests.py`),
+  aux 21/21 (`make -C test/aux_out run`).
+- Sims (TI model in `sim/models/`, not committed): one at a time under `nice`; on this shared machine stability takes
+  tens of minutes each (full scale took about an hour on 2026-10-25).
 
-Last raw output (2026-10-24, board r41, after commit a6fa711):
+Last raw output (2026-10-25, after the round 6 fixes):
 ```
-FAIL    DRC module (errors): DRC 11 errors: solder_mask_bridge 10, clearance 1 (report checks/out/wideband_controller-drc.json)  [advisory]
-PASS    Module board identical to upstream: module board vs upstream master: 0 file(s) differ
-PASS    ERC module (errors): ERC 0 errors (report checks/out/wideband_controller-erc.json)
-FAIL    DRC carrier (errors): DRC 23 errors: courtyards_overlap 14, copper_edge_clearance 3, malformed_courtyard 3, starved_thermal 2 (report checks/out/board_carrier-drc.json)  [advisory]
-PASS    Carrier DRC vs upstream baseline (new violations, unconnected): DRC vs upstream: 0 new violations, 0 unconnected
-PASS    Carrier: no new vias in SMD pads: via in pad: 0 new, 0 upstream
-PASS    Carrier layout review (sampled coupling and return-path heuristics): review triggers: 0
-PASS    Layout geometry helper unit tests: OK
-PASS    Layout track-order regression: PASS: tested orders agree
-PASS    ERC carrier (errors): ERC 0 errors (report checks/out/board_carrier-erc.json)
-PASS    Carrier netlist self-check (generator table): netlist self-check: 18 nets, 0 problems
-PASS    No hand edits waiting: no drift
-PASS    JLC rotation, origin and pin names from each part's EasyEDA footprint: jlc rotation: 38 parts measured, 4 need a correction, 0 problem(s)
-PASS    Fab candidate (out/carrier) matches the board: Gerbers, BOM, CPL, not-fitted: fab files: 38 placed, 6 not fitted, outline 40.00 x 51.50 mm, 0 problem(s)
-PASS    Firmware: bootloader DATA writes stay inside the app partition (F1): 52 guard cases; 0 unsafe accepted writes, 0 valid writes refused (stub only)
-PASS    Firmware: package checker accepts good images, rejects bad ones (F2): 21 package cases, 0 wrong verdict(s)
-PASS    Firmware: HardFault entry reaches the C handler on a Cortex-M0 (F9, QEMU microbit): fault entry on Cortex-M0: as expected
-PASS    Firmware: host gtest suite (sampler, heater, F7, F1 bounds, D10 watchdog): [  PASSED  ] 69 tests.
-PASS    Firmware: analog output host tests, production auxout/pump_dac/can_helper on the f0 config (F3-F6): [  PASSED  ] 21 tests.
-PASS    Firmware: static worst-case stack per thread fits (F8 estimate, f0 build): stack estimate: ok, smallest margin 80 B
-20 checks, 0 failed, 2 advisory failed, 0 skipped
+FAIL  DRC module (errors): DRC 11 errors: solder_mask_bridge 10, clearance 1  [advisory, D2]
+FAIL  DRC carrier (errors): DRC 23 errors: courtyards_overlap 14, copper_edge_clearance 3, ...  [advisory, D2]
+PASS  Carrier DRC vs upstream baseline: 0 new violations, 0 unconnected
+PASS  JLC rotation (carrier): 38 parts measured, 4 need a correction, 0 problem(s)
+PASS  Fab candidate matches the board: 38 placed, 6 not fitted, outline 40.00 x 51.50 mm, 0 problem(s)
+PASS  Host gtest suite: [  PASSED  ] 70 tests.     PASS  Analog output host tests: [  PASSED  ] 21 tests.
+PASS  Static worst-case stack: ok, smallest margin 92 B     PASS  Stack checker cases: 4, 0 wrong verdict(s)
+PASS  Sim wrappers: 0 wrong verdict(s)     PASS  Boot level: output low from reset
+PASS  Module order files: 57 parts measured, 6 need a correction, 0 problem(s)
+PASS  Reviewer docs agree with the repo: 0 problem(s)     PASS  Surge budget: 0 problem(s)
+26 checks, 0 failed, 2 advisory failed, 0 skipped   (the other 12 pass as before: last_run.json)
 ```
 
-## Where things stand (2026-10-24, late; supersedes the block below)
-- **Board**: r41 layout + B1 fix (R3 4.7k C25900) + J3 bottom labels (OUT, GND, 12V restored). No parts moved since r41.
-  24 checks: 0 failed, 2 advisory (raw upstream DRC, D2). Pushed: `analog-out` on origin.
-- **Firmware**: PB1 pull-down (app + bootloader), invalid = 5.0 V, heater voltage clamped at 0 (upstream bug), watchdog.
-  Host 70 + aux 21 tests pass; stack margin 64 B. Flash package `work/fw-build/ba01449/` checked (gitignored; rebuild
-  with `checks/fw_package.py build`).
-- **Audits**: rounds 4 (Codex, fork PR #1 merged) and 5 (cousin's Claude, branch on `sidewinderzz/wideband-work`,
-  cherry-picked) answered in `AUDIT.md`. **Round 6 open**: hand-off in `AUDIT.md` (8 items), `REVIEW.md`, pack
-  `sh checks/review_pack.sh`. Watch for a PR from the cousin.
-- **Module**: `gen/module_fab.py` stages upstream rev C with R10/C3 substituted, J1/J3 off the BOM, Q1 CPL corrected
-  (180 -> 0, would have gone on turned); `checks/jlc_rotation.py --board module` 57/57.
-- **SWD (D4, owner)**: HiLetgo ST-Link V2 clone + TC2030-IDC-NL + jumpers; table and `st-flash` command in `docs/wiring.md`.
-- **Route, costs, shopping list, manufacturer**: `ROADMAP.md`. Wiring: `docs/wiring.md`. Ordering: `docs/ordering.md`.
-- **Open**: round 6; Torex XC6206 pin table (site blocks fetches; owner can read it in a browser); TC2030 plug fit
-  through the cutout (try with the cable); J3 terminals/seals for Molex 36792-1201; owner's purchases and the order.
-- Tool quirks found today: `LESSONS.md` (bc and exponents, pkill matching itself, EasyEDA needs curl, TI model can't
-  solve its operating point through R9: use `uic`).
+## Where things stand (2026-10-25)
+- **Board**: r41 layout, unchanged since 2026-10-24. Part changes: R3 4.7k (B1, 2026-10-24), **R9 C844867** (Vishay
+  CRCW1206 HP pulse-proof, 0.75 W; R6-S3, 2026-10-25), one LCSC field each in the board and schematic. Fab candidate
+  `work/out/carrier/` re-exported (26 BOM lines, 8 Extended). Not released; nothing ordered.
+- **Firmware**: unchanged in behaviour since 2026-10-24 (PB1 pull-down, invalid = 5.0 V, heater clamp, watchdog);
+  2026-10-25 changed two comments only.
+- **Audits**: rounds 1-6 recorded in `AUDIT.md`. Round 6 (Codex/Astra, PR #2, merged by fast-forward): 2 BUG
+  (both in our checkers: stack checker, sim wrappers), 3 RISK, 3 NOTE; 5 fixed, 2 accepted, each fix with a
+  regression that fails on the old code. **Round 7 running now** (owner started Astra on 2026-10-25 with the prompt
+  below; its folder will be `work/audit/astra-2026-10-25b/`, branch `review/astra-2026-10-25b`, in its own worktree
+  `../wideband-review-astra`). Tasks: `review/TASKS.md` TK1-TK7.
+- **Cousin (sidewinderzz)**: no activity since his round 5 branch (2026-10-24 21:43 UTC); his `analog-out` is behind.
+- **Module**: `gen/module_fab.py` stages upstream rev C (R10/C3 substituted, J1/J3 off BOM, Q1 CPL 180 -> 0). U9
+  pinout settled by round 6 from Torex's datasheet.
+- **Recommendation given to the owner (2026-10-25)**: after round 7, if there's no BLOCKER or BUG, release and order;
+  stop routine desk reviews; the next review worth paying for comes after bench data (A1-A8).
 
-## Where things stand (2026-10-24)
-- **External review ready** (later 2026-10-24): `REVIEW.md` at the root (fresh-clone setup, blind pack via
-  `sh checks/review_pack.sh` or full repo, report format, where raw output goes); verified by a scratch clone running
-  all 20 checks. Pushed 2026-10-24 (analog-out 8ad4b28, dotfiles 70aa5e9).
-- **Board r41**: 40.0 x 51.5 mm; analog stage on the TOP (one-sided JLC Economic assembly); DC feedback from J3-5 after
-  R11 (load-independent, `sim/load_accuracy.sh`, `sim/stability.sh` topology E); R9 1206; M3 holes H1/H2 with 3.6 mm
-  copper keep-out; overlapping-via merge; silkscreen pass (TEST/120R jumper labels). Renders `renders/carrier-f/`
-  (top, bottom, assembly-top.svg). Status page v3: https://claude.ai/artifact/YRsjXKGZKG5AFbwkcMuYZ4
-- **Fab candidate** `work/out/carrier/` (gitignored, rebuild with `python3 gen/export_fab.py`): BOM 25 lines (7 Extended),
-  CPL 38 parts with EasyEDA-measured rotations (`checks/jlc_rotation.py`; D2 paired by pin name, U2 shifted 0.725 mm),
-  checked by `checks/fab_files.py`. Not released; nothing ordered.
-- **Firmware**: F1-F9 done; D10 watchdog done (`firmware/watchdog.h`, bench self-test `WB_WATCHDOG_SELFTEST`). Host 69 + aux 21.
-- **Audit**: round 4 pending (Codex). Pack `audit/carrier-f-2026-10-24/` was built at r40: rebuild at r41 first.
-- **Everything open**: `STATE.md` "Open register" (board/fab, module board not prepared, firmware, deeper tests, bench).
-- **Skill**: `~/.claude/skills/claude-usage/` (bridge key `~/.config/libre-bridge/keys/claude-usage.key`, read:usage only).
+## Next, in order
+1. **Round 7 result**: when the owner says it's done, check `gh pr list -R flyboy-byte/wideband-work`, read
+   `work/audit/astra-2026-10-25b/FINDINGS.md`, verify each finding yourself (fix + regression that fails on the old
+   code, or a written answer), add a "Round 7" section to `AUDIT.md`, merge the PR (it should only add its folder:
+   check `git diff --name-only analog-out...origin/<branch>`).
+2. **Release** (if no open BLOCKER/BUG): `python3 gen/export_fab.py`, `python3 checks/run_all.py`, then
+   `python3 checks/release.py <new rev> out/carrier/carrier-gerbers.zip out/carrier/carrier-bom.csv out/carrier/carrier-cpl.csv out/carrier/not-fitted.csv`.
+   `release.py` needs the last audit round to cover the current design. Revision letters used: `STATE.md`.
+3. **Order** (owner, money): `docs/ordering.md`. Edge rails for C11 (R6-S4); placement preview Q1 (module) and D2
+   (carrier) first; `checks/bom_stock.py 5` on the day. About $180-215 for 5 + 5 (`ROADMAP.md`).
+4. **Owner purchases**: HiLetgo ST-Link V2 + TC2030-IDC-NL + jumpers, LSU 4.9 + Bosch 1 928 404 669 plug kit,
+   Molex 36792-1201 (terminals and seals from AS-36783-001-001). Bench tests: `docs/carrier.md` A1-A8, W1, H1-H6.
 
-## This session's firmware work (Opus, after Codex), in order
-| Item | What | Evidence | Commit |
-| --- | --- | --- | --- |
-| F1 | Bootloader CAN DATA writes bounded to the 25 KiB app partition (was 26 KiB, offset+length unchecked) via `bootloader_bounds.h`, size from linker symbol `__appflash_size__` | harness 52 cases 0 unsafe + 4 must-accept; old bound as mutant fails; 8 gtest | f2a437c |
-| F2 | `fw_package.py build/check`: upstream's format staged without `build_wideband.sh`'s deletes; CRC via the bootloader's own `isAppValid()` compiled on host + zlib; M0 vector tables | upstream's shipped image passes, header reproduced byte-for-byte; 21 good/bad cases; two builds identical | 783a885 |
-| F9 | HardFault entry was Thumb-2 (`.cpu cortex-m3`): on the M0 a fault locked up, never reset; `bkpt()` in handlers did too | QEMU microbit Cortex-M0: old entry and BKPT lock up, new entry reaches C handler; f0 build 0 Thumb-2 ops | 8e9fa1c |
-| F3-F5 | `test/aux_out/`: production auxout/pump_dac/can_helper on the real f0 config + fake ChibiOS | 16 tests; **found F5: test mode stuck at 1.00 V** (16-bit systime wraps 6.55 s); fixed with 64-bit `chVTGetTimeStamp()`; old code fails exactly at 2.50/4.00 V points | 1c8f942 |
-| F6 | the production CAN TX loop run for N windows in `test/aux_out` (fake `chThdSleepUntilWindowed` throws to stop it) | 5 tests: one update per 10 ms cycle with and without bus ACK, across the tick wrap, test mode end to end; blocking-send mutant fails 3, no-update mutant fails 5 | this commit |
-| F8 | `stack_estimate.py`: static worst case per thread from the ELF | all fit, smallest margin 80 B (pump), CAN TX 312/512 | 5f966bf |
-| D10 | IWDG watchdog refreshed by the heater loop (`firmware/watchdog.h`), 0 B RAM, +44 B flash, debug-freeze, bench self-test flag `WB_WATCHDOG_SELFTEST` | disassembly; 5 host tests; 3 mutants caught; f1_dual builds | 2026-10-24 |
-| F7 | `test/tests/test_heater_update.cpp`: whole `Update()` path | 13 tests; 2 mutants caught; host 64/64 | 2c5e445 |
+Round 7 start (the owner pasted this into Codex):
+```
+cd ~/projects/wideband-work && git pull && codex
+Independent review, round 7. Check our round 6 fixes; don't trust our docs. Read REVIEW.md, then work/review/TASKS.md,
+then the "Hand-off" in work/AUDIT.md. Work in your own worktree (git worktree add ../wideband-review-astra -b
+review/astra-2026-10-25b), folder work/audit/astra-2026-10-25b/, with FINDINGS.md copied from
+work/review/FINDINGS-TEMPLATE.md. Work TK1-TK7 in order without waiting for me; update FINDINGS.md and commit after each
+task. Run checks with `python3 checks/run_all.py --report <your folder>`. Don't change design files. With a quarter of
+your budget left, write the verdict, push, and open a PR to flyboy-byte/wideband-work.
+```
 
-Also: curve moved to `boards/f0_module/aux_curve.h`; `AUXOUT_TRIM_GAIN/OFFSET` overridable per build with a static_assert
-(0.8-1.2, +-0.5 V); app flash 21,488 B used, 4,108 B free; RAM unchanged (0 B free).
-
-## Next, in order (updated 2026-10-24)
-1. **Audit round 4** on the fab candidate: pack `audit/carrier-f-2026-10-24/` (PROMPT.md first). Owner runs Codex or
-   another model on it; bring findings back as a round in `AUDIT.md`. `release.py` needs that round, naming the commit,
-   with no open BLOCKER or BUG.
-2. **JLC quote** (owner, money): upload `work/out/carrier/` (rebuild with `python3 gen/export_fab.py` first). In the
-   placement preview look at every IC and diode, D2 above all (EasyEDA numbers its anode 1); the rotation sense is
-   INFERRED. Check stock on C13585, C14663, C15849, C7934 (`parts_research.md`), and look for a Basic 470R 1206 for R11.
-3. Then `checks/release.py <rev> work/out/carrier/*` (the owner picks the revision letter), commit `fab/<rev>/` the day
-   the order is placed, row in `ORDERS.md`.
-4. Open but not blocking: republish the status page (`report/tests.json` still lists r33-r36); bench test W1 (watchdog)
-   and A1-A4 once hardware exists; the hidden labels are on `renders/carrier-f/assembly-top.svg`.
+## This session (2026-10-25), what changed and where
+| Item | What | Evidence |
+| --- | --- | --- |
+| Review docs | `REVIEW.md` (three rules, two routes, agent prompt with worktree), `review/TASKS.md`, `review/FINDINGS-TEMPLATE.md`, `review/PROMPT.md`; pack adds plain-text part/net lists (`checks/pack_extras.py`), module Gerbers, `INDEX.md`, a zip | `checks/review_docs.py` (self-test 5/5) |
+| Pack bug | carrier and module `README.md`/`not-fitted.csv` collided; module's overwrote the carrier's | `audit_pack.py` refuses collisions, `FILE=NAME` renames |
+| R6-S6 | stack checker cut real recursion through pointers | `NARROW` table + every loop fails; test case 4 fails (hangs) on the old checker; production margin 92 B |
+| R6-S8 | aborted ngspice runs passed all three wrappers | `sim/completed.sh`; 9 fake cases fail on the old wrappers; real runs 25/25, 48/48, 27/27 (full scale identical) |
+| R6-S7 | stability step before the output settled | step at 3 ms + 0.5 mV drift guard; `sim/stability.out`: E 0 % to 10 nF, 9.2 % / 22.4 % at 47 / 100 nF |
+| R6-S3 | R9 250 mW at 0.475 W in a clamped load dump | R9 -> C844867; `checks/surge_budget.py` fails on C4410 |
+| Docs | offset budget 7 mV max (R6-S1); fuse wording (R6-S5); 35-48 V -> 27-39 V; bench test A8 (backfeed); edge rails step; `run_all.py --report` | `AUDIT.md` round 6 |
+| Skill | `pcb-design` updated and pushed (dotfiles): reviewer briefing, `templates/review/`, scripts (`run_all --report`, advisory, `audit_pack` fixes), sim completion, surge budget | `~/.claude/skills/pcb-design` and `~/.agents/skills/pcb-design` in step |
 
 ## Board run history (generator `gen/gen_carrier_pcb.py`, seed 7)
 | Run | Change | Result |
@@ -118,15 +101,18 @@ Also: curve moved to `boards/f0_module/aux_curve.h`; `AUXOUT_TRIM_GAIN/OFFSET` o
 
 ## Design facts a cold session would otherwise re-derive
 - Analog out: module pad SEL_1 = PB1 = TIM3_CH4 (AF1), shares the pump-DAC timer (48 MHz / 1024 = 46.9 kHz). Curve
-  10 AFR = 0 V ... 20 AFR = 5 V; invalid lambda -> 0 V; test mode when SEL_2 is low at power-up (also moves the CAN ID
-  offset to 4). Updated from the CAN TX thread (no RAM for a thread); CAN frames dropped, not waited for (`can_helper.cpp`).
-- Stage: 100k pull-down -> 74LVC1G125 on REF3030 3.000 V -> 2x 3.3k/100n -> LM2904 x1.68 dual-loop (DC after 330R + 1 nF) ->
-  330R -> 1N4148WS clamps to +5V/GND -> R11 470R -> J3-5. LM2904 supply LSU_Heater+ -> 1k -> 18 V zener. Plain LM2904 is
-  26 V rated, not 32 (Codex C6).
+  10 AFR = 0 V ... 20 AFR = 5 V; **invalid lambda -> 5.0 V** (lean end, since 2026-10-24); test mode when SEL_2 is low at
+  power-up (also moves the CAN ID offset to 4). Updated from the CAN TX thread; CAN frames dropped, not waited for.
+- Stage: R3 4.7k pull-down (+ PB1 pull-down in both board.h) -> 74LVC1G125 on REF3030 3.000 V -> 2x 3.3k/100n ->
+  LM2904 x1.68 dual loop (DC from J3-5 after R11, 1 nF from the op-amp output) -> 330R -> 1N4148WS clamps to +5V/GND ->
+  R11 470R -> J3-5. LM2904 supply `/LSU_Heater+` -> R9 1k (C844867) -> `/VOP12`, 18 V zener D5. Plain LM2904 is 26 V
+  rated, offset 7 mV max.
 - J3-5 sits between J3-6 (12V_RAW) and J3-4 (LSU_Heater+). J3-1 and J3-7 are the same GND net.
-- f0 system time: 16 bits at 10 kHz (wraps 6.55 s); use `chVTGetTimeStamp()` for anything longer. No watchdog on f0.
-- Without CAN the f0 sampler reports 0 V supply for 5 s, then 13 V (not measured); heater ramps at about 10.5 s.
-  Module has VBatt_Sense -> 100k/10k -> PB0, unused by the firmware.
+- f0 system time: 16 bits at 10 kHz (wraps 6.55 s); use `chVTGetTimeStamp()` for anything longer. IWDG watchdog
+  refreshed by the heater loop (`firmware/watchdog.h`).
+- Stack checker: the only `ISampler` is `Sampler`, the only `IHeaterController` is `HeaterController`; five callers
+  narrowed in `checks/stack_estimate.py` `NARROW`. A new virtual class or callback makes it fail until the table is
+  updated: that's intended.
 
 ## Tool quirks
 - `pkill -f` / `pgrep -f NAME` match your own shell (exit 144): kill by PID. A background "completed" notice can be the
@@ -138,13 +124,19 @@ Also: curve moved to `boards/f0_module/aux_curve.h`; `AUXOUT_TRIM_GAIN/OFFSET` o
   lower right. The placer's half-perimeter cost ignores where a cap sits inside its net: use `BYPASS` pairs.
 - QEMU 11.1 `-M microbit` is a Cortex-M0 for instruction-level tests; it is not this chip (QEMU has no F042).
 - `drift.py record` keeps a snapshot under `work/checks/hardware/` (tracked, commit it with the board).
+- ngspice exits 0 after aborting a transient and prints zeros for windows it never reached: wrappers check `END`
+  against the stop time (`sim/completed.sh`).
+- bash reads a script as it runs: don't edit a `sim/*.sh` while it's running.
+- A Codex reviewer in the same checkout switches its branch: reviewers use `git worktree` (REVIEW.md).
 
 ## Owner (Logan)
 Autonomy on "keep going": reversible steps, questions + defaults into STATE.md; stop for money, deleting, overwriting his
-KiCad edits, publishing, pushing. Function first on this prototype (no enclosure/fit gates; he does the case in CAD last).
-No assumed engineering decisions (AGENTS.md rules 7-8). Hands-on tuner; learning project; bench = multimeter + iron;
-reviews from his phone; JLC places SMD, he solders through-hole.
+KiCad edits, publishing. Pushing is fine now. Function first on this prototype (no enclosure/fit gates; he does the case
+in CAD last). Hands-on tuner; learning project; bench = multimeter + iron; reviews from his phone; JLC places SMD, he
+solders through-hole. "Astra" = Codex (GPT models) on this machine, logged into his GitHub. Don't send lessons back to
+the cousin's skill (owner, 2026-10-24).
 
 ## Do not re-raise
 Buying a ready-made controller; forking lambda-x2 / wideband-F103; narrowband simulation output; the Honda side; CAN-ID strap
-trade-off; separate repos; negotiating the whole +5V branch; upstream's case.STL as a size limit.
+trade-off; separate repos; negotiating the whole +5V branch; upstream's case.STL as a size limit; upstream's own analog
+output (PR #352); engine-bay heat as a design driver.

@@ -29,7 +29,7 @@ def main():
     env = dict(os.environ)
     if report:
         os.makedirs(report, exist_ok=True)
-        env['WB_REPORT_DIR'] = os.path.abspath(report)   # kicad_check.py writes its reports there
+        env['CHECKS_REPORT_DIR'] = os.path.abspath(report)   # kicad_check.py writes its reports there
     checks = json.load(open('checks/checks.json'))
     today = datetime.date.today().isoformat()
     results = []

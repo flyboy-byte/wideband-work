@@ -2,7 +2,7 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-Last updated 2026-10-23 (routing closed, r32). `AGENTS.md` is the authoritative, model-agnostic guide (evidence tags, subagents, Codex
+Last updated 2026-10-25 (round 6 answered). `AGENTS.md` is the authoritative, model-agnostic guide (evidence tags, subagents, Codex
 audits) and wins over this file. Where this file and `work/STATE.md` / `work/HANDOFF.md` disagree, those win: they
 hold the current state; this file holds orientation.
 
@@ -33,19 +33,18 @@ It's a learning project: build and test it ourselves, don't buy a ready-made uni
 4. Work the current stage (see "Where it stands"). At a natural stop: commit the best state, replace `HANDOFF.md`,
    update `STATE.md`, add lessons to `LESSONS.md`, give Logan a resume block.
 
-## Where it stands (2026-10-23; check `work/STATE.md` for newer)
+## Where it stands (2026-10-25; `work/STATE.md` and `work/HANDOFF.md` have the detail and win)
 
 - **Firmware** (branch `analog-out`): builds. Analog output on module pad SEL_1 = PB1 = TIM3_CH4 (shares the pump-DAC
-  timer, 46.9 kHz). Compiled-in curve 10 AFR = 0 V … 20 AFR = 5 V, 5.0 V (20 AFR, lean end) while lambda is invalid (was 0 V until 2026-10-24). Bench test mode (SEL_2
-  strapped low: 1.00/2.50/4.00 V steps) and trim constants. RAM is full to the byte, which is safe because nothing is
-  allocated at runtime. Untested on hardware. Host-tested 2026-10-24 (69 + 21 tests); watchdog (D10) refreshed by the heater loop; upstream bugs fixed in the bootloader
-  bounds (F1) and the Cortex-M0 fault handler (F9), our test-mode bug fixed (F5): `work/docs/firmware.md`.
-- **Carrier schematic**: generated, ERC 0, netlist self-check 18/18 (R11 added r34).
-- **Carrier PCB**: 40.0 x 51.5 mm, r37 (2026-10-24): analog stage on the TOP of the grown strip, feedback after R11, R9 1206,
-  M3 holes. **0 new DRC, 0 open, 0 vias in pads, layout review 0 triggers.** Owner answers C1-C3 and D1-D11 recorded
-  (`work/STATE.md`). Next: silkscreen → BOM/CPL → JLC quote → `release.py`.
-- **Assessment**: `work/RELEASE_ASSESSMENT.md` (concept, audit path, confidence, caveats, owner decisions) and `work/AUDIT.md` rounds 1 (Sonnet self-audit), 2 (Opus review), 3 (Codex, independent: `work/docs/codex-audit-2026-10-23.md`).
-- **Module board**: upstream's, unchanged (DRC 11 upstream errors, judged harmless or not yet: open).
+  timer, 46.9 kHz). Curve 10 AFR = 0 V … 20 AFR = 5 V; 5.0 V (lean end) while lambda is invalid; bench test mode (SEL_2
+  strapped low: 1.00/2.50/4.00 V steps) and trim constants. RAM full to the byte (nothing allocated at runtime).
+  Watchdog refreshed by the heater loop; heater voltage clamped at 0 (upstream bug); upstream bootloader (F1) and
+  Cortex-M0 fault-handler (F9) bugs fixed. Host tests 70 + 21. Untested on hardware: `work/docs/firmware.md`.
+- **Carrier**: r41 layout, 40.0 x 51.5 mm, analog stage on the top; R3 4.7k, R9 pulse-proof C844867. 0 new DRC, 0 open,
+  0 vias in pads. Fab candidate staged in `work/out/carrier/`, not released. 26 checks pass (2 advisory: upstream DRC).
+- **Module board**: upstream's rev C, staged for JLC by `work/gen/module_fab.py` (two substitutions, Q1 CPL fixed).
+- **Audits**: rounds 1-6 in `work/AUDIT.md`; round 7 (Codex, a re-check of the round 6 fixes) next or running.
+  Outside reviewers start from `REVIEW.md` and `work/review/TASKS.md`. Then `release.py` and the order (owner).
 
 ## Commands
 
@@ -73,6 +72,8 @@ python3 work/checks/test_fw_package.py             # package checker on good and
 python3 work/checks/test_fault_entry_m0.py         # HardFault entry on a Cortex-M0 (QEMU microbit)
 make -C test/aux_out run                           # analog output host tests: production auxout/pump_dac/can_helper, f0 config, CAN TX loop (21)
 python3 work/checks/stack_estimate.py [-v]         # static worst-case stack per thread on the f0 build (F8 estimate)
+python3 work/checks/surge_budget.py                # R9/D5 power in a clamped load dump against their ratings
+sh work/checks/review_pack.sh                      # (from work/) the outside reviewer's pack and zip; python3 checks/run_all.py --report DIR for a reviewer
 ```
 
 Test-build quirk: with the default relative `build/`, the test Makefile's search path finds `firmware/build/obj/*.o` (ARM
