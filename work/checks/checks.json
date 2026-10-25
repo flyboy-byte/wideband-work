@@ -281,5 +281,21 @@
       "gen/module_fab.py",
       "checks/jlc_rotation.py"
     ]
+  },
+  {
+    "name": "Reviewer docs agree with the repo (REVIEW.md check count, TASKS.md IDs and files, pack contents)",
+    "cmd": [
+      "sh",
+      "-c",
+      "python3 checks/review_docs.py --self-test && python3 checks/review_docs.py"
+    ],
+    "files": [
+      "../REVIEW.md",
+      "review/TASKS.md",
+      "review/FINDINGS-TEMPLATE.md",
+      "checks/review_pack.sh",
+      "checks/checks.json",
+      "AUDIT.md"
+    ]
   }
 ]

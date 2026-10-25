@@ -86,3 +86,11 @@ that would help any board as a line for the `pcb-design` skill (see its "Lessons
   a switch shorting R9 for 1 ms gave the same answer.
 - 2026-10-24 LCSC warehouse stock is not JLC assembly stock (LM2904: 112 vs 219,277). Check stock with JLC's own parts
   API (`checks/bom_stock.py`), and check the upstream module's BOM too: two of its parts were out at JLC.
+- 2026-10-24 An outside agent given a review brief (Codex, round 4) waited for a go-ahead, stopped after a first pass,
+  and ran out of credits before writing up its second pass; the best finding (the heater bug) survived only because
+  the owner saved the transcript. A brief needs numbered tasks with a "done" line each, an explicit "start now, don't
+  wait", write-up and commit after every task, and a stop-at-a-quarter-budget rule (`review/TASKS.md`).
+- 2026-10-24 The review pack copied files by basename, so the module's `README.md` and `not-fitted.csv` overwrote the
+  carrier's: a blind reviewer never saw the carrier's not-fitted list. Caught while rewriting the docs. Pack builders
+  must refuse a name collision. Docs that quote numbers (the check count) need a check that compares them with the
+  repo (`checks/review_docs.py`).

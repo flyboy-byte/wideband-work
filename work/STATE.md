@@ -1,6 +1,6 @@
 # STATE — rusEFI wideband (module + carrier)
 
-Status: 2026-10-24 (evening) — board r41 + B1 fix (R3 4.7k; layout unchanged), firmware with PB1 pull-down, invalid = 5.0 V and the heater clamp; 23 checks: 0 failed, 2 advisory. Five audit rounds; round 5 (cousin's Claude) BUG B1 fixed, RISK R1 confirmed on TI's model (only 4.7k receivers with +5V low miss full scale). **Next: re-audit of these changes (round 6, hand-off ready), then the order (owner).** Module pre-order check done: Q1 (VND14 heater switch) would have been placed turned 180 from upstream's CPL; corrected in the staged files. The whole road, costs, shopping list and manufacturer choice: `ROADMAP.md`. JLC stock checked live for both boards (`checks/bom_stock.py`); module JLC files staged with 2 substitutions (`gen/module_fab.py`). Pushed 2026-10-24 (owner: push it all).
+Status: 2026-10-24 (evening) — board r41 + B1 fix (R3 4.7k; layout unchanged), firmware with PB1 pull-down, invalid = 5.0 V and the heater clamp; 25 checks: 0 failed, 2 advisory. Five audit rounds; round 5 (cousin's Claude) BUG B1 fixed, RISK R1 confirmed on TI's model (only 4.7k receivers with +5V low miss full scale). **Next: re-audit of these changes (round 6, hand-off ready), then the order (owner).** Module pre-order check done: Q1 (VND14 heater switch) would have been placed turned 180 from upstream's CPL; corrected in the staged files. The whole road, costs, shopping list and manufacturer choice: `ROADMAP.md`. JLC stock checked live for both boards (`checks/bom_stock.py`); module JLC files staged with 2 substitutions (`gen/module_fab.py`). Pushed 2026-10-24 (owner: push it all).
 Revision in progress: none yet   Revisions used (never reused): none by the owner. Upstream module exports are rev A, B, C (upstream's own scheme, not ours).
 <If the project already names revisions its own way (v1.0.0), keep its scheme.>
 Review pages: status report https://claude.ai/artifact/YRsjXKGZKG5AFbwkcMuYZ4 (private; rebuilt by `checks/report.py`)  fit check <link>  audit <link>
@@ -74,8 +74,9 @@ Mark a stage done only when its exit condition is true. Strike through, don't de
 | Sim wrappers fail when ngspice gives no valid result (Codex R41-CX2) | PASS | sim wrappers: 0 wrong verdict(s) | 2026-10-24 | `stability.sh` 34e48e6b3d5a, `load_accuracy.sh` c9a8b3e9ea4e |
 | Output low from reset until the app drives PB1 (R3 vs the PB1 pull in both board.h; outside review B1) | PASS | boot level: output low from reset | 2026-10-24 | `board_carrier.kicad_pcb` 814ef38918b1, `board.h` 0a70a2bb2fa0, `board.h` 1dc40c1c92c0 |
 | Module order files: JLC rotation, origin and pin names from EasyEDA against the order CPL (upstream rev C + fixes) | PASS | jlc rotation: 57 parts measured, 6 need a correction, 0 problem(s) | 2026-10-24 | `wideband_controller.kicad_pcb` 0179d031bc63, `module_fab.py` fe36cd34cf0f, `jlc_rotation.py` b1455144624f |
+| Reviewer docs agree with the repo (REVIEW.md check count, TASKS.md IDs and files, pack contents) | PASS | review docs: 0 problem(s) | 2026-10-24 | `REVIEW.md` 35f9ebb7138d, `TASKS.md` 74513aa7360e, `FINDINGS-TEMPLATE.md` 5cf5fe3087a1, `review_pack.sh` 9c0410055ee6, `checks.json` f75ebc939a10, `AUDIT.md` ab5bf5b1a281 |
 
-Written by `checks/run_all.py` at commit 8a9abc7. Don't edit by hand.
+Written by `checks/run_all.py` at commit 95e0a25. Don't edit by hand.
 <!-- checks:end -->
 
 ## Bring-up results
@@ -87,6 +88,15 @@ Written by `checks/run_all.py` at commit 8a9abc7. Don't edit by hand.
 | --- | --- | --- |
 
 ## Open register (2026-10-24, end of session)
+- 2026-10-24 late: reviewer docs rebuilt for a cold agent (owner: Astra Codex "didn't really know what all to do and how
+  to help"). `REVIEW.md` leads with three rules (work without waiting, write as you go, stop at a quarter budget) and
+  two routes (agent with the repo; chat with one zip). Work list `review/TASKS.md` (TK1-TK13), report
+  `review/FINDINGS-TEMPLATE.md` (coverage row per task, two worked examples), chat prompt `review/PROMPT.md`. The pack
+  gained plain-text part and net lists for both boards (`checks/pack_extras.py`), the module Gerbers, `INDEX.md` and a
+  zip; the old pack silently lost the carrier's README and not-fitted list (same basenames as the module's;
+  `audit_pack.py` now refuses that). New check `checks/review_docs.py` (count, task IDs, pack files, scripts). Local
+  only: not pushed.
+- Owner (2026-10-24, do not re-ask): don't send our lessons back to the cousin's skill.
 - 2026-10-24 evening: owner delegated B1/N1/R1 and the heater clamp to Claude and said push everything (his cousin's review, Codex's PR and second pass, our tests). Done: `AUDIT.md` rounds 4 and 5 with follow-through; `ROADMAP.md` for the route. Watch for a PR from the cousin (he may not be finished) or anyone else.
 - 2026-10-24 External-review prep done: `REVIEW.md`; checks use `origin/master` when a clone has no local `master` (`checks/upstream_ref.py`); reviewers' raw output under `audit/<reviewer>-<date>/` is now tracked (packs are not); a fresh clone ran all 20 checks after building bootloader + app (stack check needs the ELF). pcb-design skill lessons added (pad pairing by pin function, fab warnings in the DRC gate, BOM from the board, independent fab-file check, outside reviewers, SPICE memory): dotfiles commit 70aa5e9, pushed 2026-10-24.
 - Owner (do not re-ask): engine-bay heat is not a design driver for this prototype.

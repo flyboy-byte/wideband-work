@@ -71,6 +71,7 @@ build/
 # audit packs are generated
 # audit packs are rebuilt by checks/audit_pack.py; reviewers' raw reports (audit/<reviewer>-<date>/) are kept
 work/audit/carrier-*/
+work/audit/carrier-*.zip
 work/audit/module-*/
 
 # staged firmware packages (checks/fw_package.py build) and Python caches

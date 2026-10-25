@@ -1,6 +1,6 @@
 {
  "date": "2026-10-24",
- "git_head": "8a9abc7",
+ "git_head": "95e0a25",
  "results": [
   {
    "name": "DRC module (errors)",
@@ -221,6 +221,19 @@
     "../hardware/board_module/wideband_controller.kicad_pcb": "0179d031bc63",
     "gen/module_fab.py": "fe36cd34cf0f",
     "checks/jlc_rotation.py": "b1455144624f"
+   }
+  },
+  {
+   "name": "Reviewer docs agree with the repo (REVIEW.md check count, TASKS.md IDs and files, pack contents)",
+   "status": "pass",
+   "summary": "review docs: 0 problem(s)",
+   "files": {
+    "../REVIEW.md": "35f9ebb7138d",
+    "review/TASKS.md": "74513aa7360e",
+    "review/FINDINGS-TEMPLATE.md": "5cf5fe3087a1",
+    "checks/review_pack.sh": "9c0410055ee6",
+    "checks/checks.json": "f75ebc939a10",
+    "AUDIT.md": "ab5bf5b1a281"
    }
   }
  ]

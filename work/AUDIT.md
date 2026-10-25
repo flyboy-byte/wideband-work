@@ -6,6 +6,9 @@ Round 3 (Codex, board r36) supersedes the historical R11/full-scale/grounding co
 `docs/codex-audit-2026-10-23.md`, with raw output in `audit/codex-2026-10-23/`.
 
 ## Hand-off (give this to each auditor with a read-only copy; not your conclusions)
+- **The work list is `review/TASKS.md`** (TK1-TK13: question, files, how to check, what "done" means), and the
+  report to fill in is `review/FINDINGS-TEMPLATE.md`. How to start, the routes and the setup: `../REVIEW.md`. This
+  hand-off is the background for those tasks.
 - Board: carrier PCB for the rusEFI wideband module (LSU 4.9 controller), grown to 40.0 x 51.5 mm, adding a 0-5 V analog
   output (AFR 10 = 0 V, 20 = 5 V) for Speeduino / Hondata FlashPro / a gauge.
   - Analog stage: PB1 PWM -> 4.7k pull-down R3 -> 74LVC1G125 on a REF3030 3.000 V -> 2x RC (3.3k/100n) -> LM2904 x1.68
@@ -66,7 +69,7 @@ Round 3 (Codex, board r36) supersedes the historical R11/full-scale/grounding co
   - The mounting holes are isolated.
   - Engine-bay temperature ratings aren't a design driver (owner).
   - Upstream's own analog output (PR #352) isn't used (owner).
-- Report format below.
+- Report format: `review/FINDINGS-TEMPLATE.md` (the table below is the same, plus a Status column we fill in).
 ## Report format
 Verdict first: "Would I order these files as they are?"
 

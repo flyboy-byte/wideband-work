@@ -7,7 +7,7 @@ Prices are REPORTED, from JLC's pages and live API on 2026-10-24; re-read the qu
 ## Where we are
 
 - **Carrier (our board)**: r41 layout with the B1 fix, R3 4.7k (2026-10-24).
-  - 23 checks pass. The raw upstream DRC is advisory (owner decision D2).
+  - 25 checks pass. The raw upstream DRC is advisory (owner decision D2).
   - The fab candidate is exported and checked part by part.
   - All 26 BOM lines are in stock at JLC for 5 boards.
   - It has had five audit rounds: Sonnet self-audit, Opus, Codex x2, and the cousin's Claude. Round 5's one BUG (B1)
