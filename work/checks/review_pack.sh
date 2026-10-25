@@ -15,4 +15,4 @@ python3 checks/audit_pack.py "$REV" \
   sim/stability.sh sim/load_accuracy.sh sim/full_scale_corners.sh sim/full_scale_corners.out \
   checks/jlc_rotation.py checks/jlc_rotation.json checks/boot_level.py ../firmware/watchdog.h ../firmware/heater_control.cpp \
   out/module/module-bom.csv out/module/module-cpl.csv out/module/not-fitted.csv out/module/README.md \
-  docs/ordering.md ROADMAP.md
+  docs/ordering.md docs/wiring.md renders/module/swd-pads.png ROADMAP.md
