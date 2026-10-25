@@ -18,7 +18,7 @@ Would I order these files as they are? **Not yet assessed**: review in progress;
 | TK5 Heater clamp | PARTLY | — | 70/70 host tests and 2 new production-code sequence tests pass. 60s clamp and30 recovery cycles; integrator bounded±3V. See TK5-heater.md; thermal plant/overshoot not simulated. |
 | TK6 Analog DC | PARTLY | R6-S1 | Independent exact RC ripple0.658/0.421mV at50/80%; gain tolerance calculation; primary LM2904 limits. Full-scale sweep running; longer-window/zero cases queued for later evidence update. TK6-calculations.md. |
 | TK7 Stability | PARTLY | — | Reviewed actual E topology and measurement validity; five nominal step cases queued serially behind TK6. No phase-margin/process-corner claim. TK7-stability.md. |
-| TK8 Faults | | | |
+| TK8 Faults | FINDING | R6-S2 | Calculated12V injection13.6mA into held5V rail; no guaranteed sink. Grounded output~5.2mA in illustrative coupled-supply model. Open power ground routes heater current through receiver ground. TK8-faults.md. |
 | TK9 Op-amp supply | | | |
 | TK10 Layout | | | |
 | TK11 Wiring sheet | | | |
@@ -34,6 +34,7 @@ Status: OK = checked and found right; FINDING = see the table below; PARTLY = sa
 | ID | Task | Severity | Location | Evidence (numbers) | Smallest fix |
 | --- | --- | --- | --- | --- | --- |
 | R6-S1 | TK6 | NOTE | `work/docs/carrier.md:134,143` | DOCUMENTED TI SLOS068AB5.8: plain LM2904 offset3mV typ/7mV max at25C,10mV over temperature; CALCULATED output offset bound11.76mV at25C vs cited5.04mV. | Correct accuracy budget to the exact ordered variant's limits; retain two-point calibration. |
+| R6-S2 | TK8 | RISK | D3/+5V, `work/docs/carrier.md:91` | CALCULATED12V fault injects13.6mA if rail held5V; ST L78M has no guaranteed sink. Unpowered initial R11 load276mW. Previously open backfeed risk remains unqualified, especially receiver connected while board off. | Establish sink/clamp behavior and receiver protection for powered/off states, or isolate the clamp from the unsinkable rail. |
 
 Severity: BLOCKER = don't order; BUG = wrong but workable; RISK = could bite (say when); NOTE = worth knowing.
 Tag each piece of evidence: MEASURED (you ran it), CALCULATED (show the sum), DOCUMENTED (name the datasheet and page),
