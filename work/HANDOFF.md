@@ -40,6 +40,23 @@ PASS    Firmware: static worst-case stack per thread fits (F8 estimate, f0 build
 20 checks, 0 failed, 2 advisory failed, 0 skipped
 ```
 
+## Where things stand (2026-10-24, late; supersedes the block below)
+- **Board**: r41 layout + B1 fix (R3 4.7k C25900) + J3 bottom labels (OUT, GND, 12V restored). No parts moved since r41.
+  24 checks: 0 failed, 2 advisory (raw upstream DRC, D2). Pushed: `analog-out` on origin.
+- **Firmware**: PB1 pull-down (app + bootloader), invalid = 5.0 V, heater voltage clamped at 0 (upstream bug), watchdog.
+  Host 70 + aux 21 tests pass; stack margin 64 B. Flash package `work/fw-build/ba01449/` checked (gitignored; rebuild
+  with `checks/fw_package.py build`).
+- **Audits**: rounds 4 (Codex, fork PR #1 merged) and 5 (cousin's Claude, branch on `sidewinderzz/wideband-work`,
+  cherry-picked) answered in `AUDIT.md`. **Round 6 open**: hand-off in `AUDIT.md` (8 items), `REVIEW.md`, pack
+  `sh checks/review_pack.sh`. Watch for a PR from the cousin.
+- **Module**: `gen/module_fab.py` stages upstream rev C with R10/C3 substituted, J1/J3 off the BOM, Q1 CPL corrected
+  (180 -> 0, would have gone on turned); `checks/jlc_rotation.py --board module` 57/57.
+- **Route, costs, shopping list, manufacturer**: `ROADMAP.md`. Wiring: `docs/wiring.md`. Ordering: `docs/ordering.md`.
+- **Open**: round 6; Torex XC6206 pin table (site blocks fetches; owner can read it in a browser); TC2030 plug fit
+  through the cutout (try with the cable); J3 terminals/seals for Molex 36792-1201; owner's purchases and the order.
+- Tool quirks found today: `LESSONS.md` (bc and exponents, pkill matching itself, EasyEDA needs curl, TI model can't
+  solve its operating point through R9: use `uic`).
+
 ## Where things stand (2026-10-24)
 - **External review ready** (later 2026-10-24): `REVIEW.md` at the root (fresh-clone setup, blind pack via
   `sh checks/review_pack.sh` or full repo, report format, where raw output goes); verified by a scratch clone running
