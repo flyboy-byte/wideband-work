@@ -118,8 +118,25 @@ little more than 2.
 
 ## R1: full scale into a low-resistance receiver (TI model, clamps, R9 supply, +5V tolerance)
 
-Results: `sim/full_scale_corners.out` (`sim/full_scale_corners.sh`, 27 cases). See the summary added below when the
-sweep finishes.
+`sim/full_scale_corners.sh`; raw results in `sim/full_scale_corners.out`. 27 cases, all valid (DOCUMENTED, TI model;
+D3/D4 use generic 1N4148 parameters, FROM MEMORY). Supply is the protected rail (battery minus about 0.4 V).
+
+| Receiver input | +5V 4.8 V | +5V 5.0 V | +5V 5.2 V |
+| --- | --- | --- | --- |
+| 100k, 10k (18 cases, all supplies) | +2 mV | +2 mV | +2 mV |
+| 4.7k, 13.4 V supply | -66 mV | +2 mV | +2 mV |
+| 4.7k, 11.6 V supply | -87 mV | +2 mV | +2 mV |
+| 4.7k, 9.0 V supply | -178 mV | -37 mV | +2 mV |
+
+What it means:
+- Into 10k or more, full scale holds within the +-0.05 V target at every corner.
+- Into 4.7k, it holds while the module's +5V is at least 5.0 V and the supply at least about 11 V. With +5V at 4.8 V,
+  D3 clamps the 330R/R11 node (2-3 mA into +5V) and the top of the scale drops by 0.13-0.36 AFR. 20 AFR is beyond
+  anything you tune for, so the cost is at the very lean end.
+- Trim can't remove this, because it depends on the load and on +5V.
+- Bench check: measure +5V at bring-up (it's on J3) and the receiver's input resistance if you can. Most ECU analog
+  inputs are 10k or more (INFERRED). No board change unless a 4.7k receiver is the target; lowering R11 is then the
+  option, at the cost of more fault current (Codex's trade-off).
 
 ## Everything else still open (one list)
 
