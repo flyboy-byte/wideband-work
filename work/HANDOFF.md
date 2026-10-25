@@ -37,7 +37,9 @@ release gate rounds: 4/4 right            (old gate judged: Round 5; new: Round 
 - Cousin (sidewinderzz): no activity since 2026-10-24 21:43 UTC.
 
 ## Next, in order
-1. **Owner picks the first revision name** (none used; e.g. `carrier-a`, or `v1.0`). Then
+1. ~~Owner picks the first revision name~~ DONE 2026-10-25: **`flyboy-o2-v1`** (owner wanted a personal name, no
+   rusEFI leftovers), released at `a642c86` to `fab/flyboy-o2-v1/` with both boards (not-fitted lists renamed
+   `carrier-`/`module-not-fitted.csv`, they collide otherwise). How it was done:
    `python3 gen/export_fab.py && python3 checks/run_all.py`, commit, and
    `python3 checks/release.py <rev> out/carrier/carrier-gerbers.zip out/carrier/carrier-bom.csv out/carrier/carrier-cpl.csv out/carrier/not-fitted.csv`.
    Then fill `fab/<rev>/README.md`, add the rev to "Revisions used" in STATE.md, commit. The module files (`out/module/`)

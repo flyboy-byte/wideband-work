@@ -41,10 +41,10 @@ It's a learning project: build and test it ourselves, don't buy a ready-made uni
   Watchdog refreshed by the heater loop; heater voltage clamped at 0 (upstream bug); upstream bootloader (F1) and
   Cortex-M0 fault-handler (F9) bugs fixed. Host tests 70 + 21. Untested on hardware: `work/docs/firmware.md`.
 - **Carrier**: r41 layout, 40.0 x 51.5 mm, analog stage on the top; R3 4.7k, R9 pulse-proof C844867. 0 new DRC, 0 open,
-  0 vias in pads. Fab candidate staged in `work/out/carrier/`, not released. 27 checks pass (2 advisory: upstream DRC).
+  0 vias in pads. **Released as `flyboy-o2-v1`** (`work/fab/flyboy-o2-v1/`, carrier + module, 2026-10-25), not ordered yet. 27 checks pass (2 advisory: upstream DRC).
 - **Module board**: upstream's rev C, staged for JLC by `work/gen/module_fab.py` (two substitutions, Q1 CPL fixed).
 - **Audits**: rounds 1-7 in `work/AUDIT.md`; round 7 (Codex, PR #3) found no BLOCKER or BUG. Next review after bench data.
-  Outside reviewers start from `REVIEW.md` and `work/review/TASKS.md`. Then `release.py` and the order (owner).
+  Outside reviewers start from `REVIEW.md` and `work/review/TASKS.md`. Next: the order (owner), then bring-up.
 
 ## Commands
 
