@@ -47,6 +47,9 @@ Round 3 (Codex, board r36) supersedes the historical R11/full-scale/grounding co
      - The checker no longer folds a two-lead tab part's 180 into 0 (only true two-pad parts fit either way); the
        carrier's 38 rotations are unchanged.
   7. **Live stock check** `checks/bom_stock.py` (JLC's parts API) and the cost/route in `ROADMAP.md`.
+  8. **J3 silkscreen** (bottom): J3-5 OUT, J3-7 GND, and upstream's 12V under J3-6, which r1-r41 had deleted. The labels
+     are 1.0 mm; the layout is otherwise unchanged. Wiring sheet `docs/wiring.md`: J3 pins, the sensor plug, SWD.
+     Does it match the board? Diagram `renders/module/swd-pads.png`: is J2 reachable through the carrier cutout?
 - Still open from before:
   - The rotation *sense* of the CPL is INFERRED (JLC = KiCad). D2 (SS54) is paired by pin name.
   - R9/D5 surge is not simulated (Codex C6).

@@ -1,6 +1,6 @@
 {
  "date": "2026-10-24",
- "git_head": "c872a61",
+ "git_head": "ba01449",
  "results": [
   {
    "name": "DRC module (errors)",
@@ -30,7 +30,7 @@
    "status": "fail",
    "summary": "DRC 23 errors: courtyards_overlap 14, copper_edge_clearance 3, malformed_courtyard 3, starved_thermal 2 (report checks/out/board_carrier-drc.json)",
    "files": {
-    "../hardware/board_carrier/board_carrier.kicad_pcb": "8bd963c4811b"
+    "../hardware/board_carrier/board_carrier.kicad_pcb": "814ef38918b1"
    },
    "advisory": "D2 (owner, 2026-10-23): upstream's own errors, advisory; gated by \"Carrier DRC vs upstream baseline\" instead"
   },
@@ -39,7 +39,7 @@
    "status": "pass",
    "summary": "DRC vs upstream: 0 new violations, 0 unconnected",
    "files": {
-    "../hardware/board_carrier/board_carrier.kicad_pcb": "8bd963c4811b"
+    "../hardware/board_carrier/board_carrier.kicad_pcb": "814ef38918b1"
    }
   },
   {
@@ -47,7 +47,7 @@
    "status": "pass",
    "summary": "via in pad: 0 new, 0 upstream",
    "files": {
-    "../hardware/board_carrier/board_carrier.kicad_pcb": "8bd963c4811b"
+    "../hardware/board_carrier/board_carrier.kicad_pcb": "814ef38918b1"
    }
   },
   {
@@ -55,7 +55,7 @@
    "status": "pass",
    "summary": "review triggers: 0",
    "files": {
-    "../hardware/board_carrier/board_carrier.kicad_pcb": "8bd963c4811b",
+    "../hardware/board_carrier/board_carrier.kicad_pcb": "814ef38918b1",
     "checks/layout_review.py": "2dfa9e8efa14",
     "checks/layout_metrics.py": "23c78d58fd8a"
    }
@@ -74,7 +74,7 @@
    "status": "pass",
    "summary": "PASS: tested orders agree",
    "files": {
-    "../hardware/board_carrier/board_carrier.kicad_pcb": "8bd963c4811b",
+    "../hardware/board_carrier/board_carrier.kicad_pcb": "814ef38918b1",
     "checks/layout_review.py": "2dfa9e8efa14",
     "checks/layout_metrics.py": "23c78d58fd8a",
     "checks/audit_layout_order.py": "c40bda9f97e2"
@@ -108,7 +108,7 @@
    "status": "pass",
    "summary": "jlc rotation: 38 parts measured, 4 need a correction, 0 problem(s)",
    "files": {
-    "../hardware/board_carrier/board_carrier.kicad_pcb": "8bd963c4811b",
+    "../hardware/board_carrier/board_carrier.kicad_pcb": "814ef38918b1",
     "../hardware/board_carrier/board_carrier.kicad_sch": "742b4bfdedd3"
    }
   },
@@ -117,10 +117,10 @@
    "status": "pass",
    "summary": "fab files: 38 placed, 6 not fitted, outline 40.00 x 51.50 mm, 0 problem(s)",
    "files": {
-    "../hardware/board_carrier/board_carrier.kicad_pcb": "8bd963c4811b",
+    "../hardware/board_carrier/board_carrier.kicad_pcb": "814ef38918b1",
     "out/carrier/carrier-bom.csv": "790bdb6de3f9",
     "out/carrier/carrier-cpl.csv": "66a7fdc2200c",
-    "out/carrier/carrier-gerbers.zip": "06e83cf93099"
+    "out/carrier/carrier-gerbers.zip": "94a3500d6a70"
    }
   },
   {
@@ -208,7 +208,7 @@
    "status": "pass",
    "summary": "boot level: output low from reset",
    "files": {
-    "../hardware/board_carrier/board_carrier.kicad_pcb": "8bd963c4811b",
+    "../hardware/board_carrier/board_carrier.kicad_pcb": "814ef38918b1",
     "../firmware/boards/f0_module/board.h": "0a70a2bb2fa0",
     "../firmware/boards/f0_module/bootloader/cfg/board.h": "1dc40c1c92c0"
    }

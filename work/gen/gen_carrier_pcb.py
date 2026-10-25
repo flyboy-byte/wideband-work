@@ -539,14 +539,29 @@ def main(route=True):
     ds.m_SolderMaskMinWidth = mm(0.1)
 
     # Bottom silkscreen: upstream's labels name module pads for an older module revision (TX/RX/nRESET);
-    # the current module has SEL_1/SEL_2/VBatt_Sense there. Fix the labels; drop texts our parts now cover.
+    # the current module has SEL_1/SEL_2/VBatt_Sense there. Fix the labels; drop the title our strip now covers.
+    # Upstream's '12V' under J3-6 stays (r1-r41 deleted it, from when our parts were on the bottom; restored 2026-10-24),
+    # and the two J3 pins we put to use get labels in the same style: J3-5 OUT (the 0-5 V output), J3-7 GND (the output's reference ground)
     relabel = {'TX': 'AOUT', 'RX': 'TEST', 'nRESET': 'VBAT', 'v1.1': 'v1.1-aout'}
+    template = None
     for d in list(board.GetDrawings()):
         if d.GetLayer() == pcbnew.B_SilkS and d.Type() == pcbnew.PCB_TEXT_T:
             if d.GetText() in relabel:
                 d.SetText(relabel[d.GetText()])
-            elif d.GetText() in ('rusEFI LSU 4.9 Controller', '12V'):
+            elif d.GetText() == 'rusEFI LSU 4.9 Controller':
                 board.Remove(d)
+            elif d.GetText() == '1' and template is None:
+                template = d
+    j3 = {p.GetNumber(): p.GetPosition() for p in board.FindFootprintByReference('J3').Pads()}
+    # 'OUT', not 'AOUT': four characters at 1.0 mm ran into '12V' on the 3.5 mm pitch
+    for pin, text, side in (('5', 'OUT', +1), ('7', 'GND', -1)):
+        t = template.Duplicate()
+        t.SetText(text)
+        t.SetTextSize(pcbnew.VECTOR2I(mm(1.0), mm(1.0)))   # JLC's minimum (silk.py H, W), smaller than upstream's
+        t.SetTextThickness(mm(0.16))
+        # same rows as upstream's labels: below the 1-6 row (pin centre + 2.5 mm), above the 7-12 row (- 2.25 mm)
+        t.SetPosition(pcbnew.VECTOR2I(j3[pin].x, j3[pin].y + mm(2.5 if side > 0 else -2.25)))
+        board.Add(t)
 
     board.Save(base)
     sys.path.insert(0, os.path.dirname(__file__))

@@ -72,7 +72,7 @@ The priority list and the "known and accepted" list are in `work/AUDIT.md`, unde
 
 0. **The 2026-10-24 changes**: "Changed since rounds 4 and 5" in the hand-off, items 1-7. They cover the boot level
    (R3 4.7k plus the PB1 pull-down), invalid = 5 V, the heater clamp, the checker fixes, the new full-scale sim and
-   the module order files.
+   the module order files, and the J3 labels and wiring sheet.
 1. **Fab files against the design.** Check every CPL rotation and offset, the BOM part numbers and the not-fitted
    list. D2 and U2 are the tricky parts. The rotation *sense* (JLC = KiCad, counter-clockwise from the top) is
    INFERRED. The module's order files (`python3 gen/module_fab.py`) are checked by `checks/jlc_rotation.py --board module`. Q1 is

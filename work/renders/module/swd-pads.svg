@@ -1,0 +1,88 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="760" viewBox="0 0 1500 760" font-family="DejaVu Sans, sans-serif"><rect width="1500" height="760" fill="#fff"/>
+<text x="150" y="46" font-size="16" font-weight="600">1. Module alone, upside down (seen from below): flash it here first</text>
+<clipPath id="p1"><rect x="150" y="60" width="507.9999164630452" height="380.0"/></clipPath>
+<g clip-path="url(#p1)">
+<rect x="173.8080320781906" y="83.80803207819059" width="460.38385230666404" height="332.3839358436188" rx="6" fill="#2f5d34" stroke="#183a1c" stroke-width="2"/>
+<circle cx="202.42528663617585" cy="108.39379320426883" r="13.491218177641331" fill="#d4a017" stroke="#6b5200"/>
+<circle cx="202.42528663617585" cy="148.7087275233381" r="13.491218177641331" fill="#d4a017" stroke="#6b5200"/>
+<circle cx="202.42528663617585" cy="189.0236618424076" r="13.491218177641331" fill="#d4a017" stroke="#6b5200"/>
+<circle cx="202.42528663617585" cy="229.33859616147706" r="13.491218177641331" fill="#d4a017" stroke="#6b5200"/>
+<circle cx="202.42528663617585" cy="269.65353048054635" r="13.491218177641331" fill="#d4a017" stroke="#6b5200"/>
+<circle cx="202.42528663617585" cy="309.96846479961584" r="13.491218177641331" fill="#d4a017" stroke="#6b5200"/>
+<circle cx="202.42528663617585" cy="350.28339911868505" r="13.491218177641331" fill="#d4a017" stroke="#6b5200"/>
+<circle cx="202.42528663617585" cy="390.59833343775455" r="13.491218177641331" fill="#d4a017" stroke="#6b5200"/>
+<circle cx="605.5746298268696" cy="108.39379320426883" r="13.491218177641331" fill="#d4a017" stroke="#6b5200"/>
+<circle cx="605.5746298268696" cy="148.7087275233381" r="13.491218177641331" fill="#d4a017" stroke="#6b5200"/>
+<circle cx="605.5746298268696" cy="189.0236618424076" r="13.491218177641331" fill="#d4a017" stroke="#6b5200"/>
+<circle cx="605.5746298268696" cy="229.33859616147706" r="13.491218177641331" fill="#d4a017" stroke="#6b5200"/>
+<circle cx="605.5746298268696" cy="269.65353048054635" r="13.491218177641331" fill="#d4a017" stroke="#6b5200"/>
+<circle cx="605.5746298268696" cy="309.96846479961584" r="13.491218177641331" fill="#d4a017" stroke="#6b5200"/>
+<circle cx="605.5746298268696" cy="350.28339911868505" r="13.491218177641331" fill="#d4a017" stroke="#6b5200"/>
+<circle cx="605.5746298268696" cy="390.59833343775455" r="13.491218177641331" fill="#d4a017" stroke="#6b5200"/>
+<circle cx="478.58258672180096" cy="180.96067497859377" r="7.861412192218531" fill="#111"/>
+<circle cx="559.2124553599399" cy="197.08664870622138" r="7.861412192218531" fill="#111"/>
+<circle cx="559.2124553599399" cy="164.83470125096594" r="7.861412192218531" fill="#111"/>
+<circle cx="498.7400538813358" cy="191.03940855836098" r="6.248814819455755" fill="#e8c35a" stroke="#000"/>
+<text x="498.7400538813358" y="195.00741390472606" font-size="11" font-weight="700" text-anchor="middle">1</text>
+<circle cx="498.7400538813358" cy="170.88194139882634" r="6.248814819455755" fill="#e8c35a" stroke="#000"/>
+<text x="498.7400538813358" y="174.84994674519143" font-size="11" font-weight="700" text-anchor="middle">2</text>
+<circle cx="518.8975210408705" cy="191.03940855836098" r="6.248814819455755" fill="#e8c35a" stroke="#000"/>
+<text x="518.8975210408705" y="195.00741390472606" font-size="11" font-weight="700" text-anchor="middle">3</text>
+<circle cx="518.8975210408705" cy="170.88194139882634" r="6.248814819455755" fill="#e8c35a" stroke="#000"/>
+<text x="518.8975210408705" y="174.84994674519143" font-size="11" font-weight="700" text-anchor="middle">4</text>
+<circle cx="539.0549882004051" cy="191.03940855836098" r="6.248814819455755" fill="#e8c35a" stroke="#000"/>
+<text x="539.0549882004051" y="195.00741390472606" font-size="11" font-weight="700" text-anchor="middle">5</text>
+<circle cx="539.0549882004051" cy="170.88194139882634" r="6.248814819455755" fill="#e8c35a" stroke="#000"/>
+<text x="539.0549882004051" y="174.84994674519143" font-size="11" font-weight="700" text-anchor="middle">6</text>
+</g>
+<text x="165.91963744961697" y="112.39379320426883" font-size="11" text-anchor="end">J1-1 GND</text>
+<text x="165.91963744961697" y="152.7087275233381" font-size="11" text-anchor="end">J1-2 GND</text>
+<text x="165.91963744961697" y="193.0236618424076" font-size="11" text-anchor="end">J1-3 LSU_Heater-</text>
+<text x="165.91963744961697" y="233.33859616147706" font-size="11" text-anchor="end">J1-4 LSU_Heater-</text>
+<text x="165.91963744961697" y="273.65353048054635" font-size="11" text-anchor="end">J1-5 LSU_Ip</text>
+<text x="165.91963744961697" y="313.96846479961584" font-size="11" text-anchor="end">J1-6 LSU_Vm</text>
+<text x="165.91963744961697" y="354.28339911868505" font-size="11" text-anchor="end">J1-7 LSU_Rtrim</text>
+<text x="165.91963744961697" y="394.59833343775455" font-size="11" text-anchor="end">J1-8 LSU_Un</text>
+<text x="642.0802790134285" y="112.39379320426883" font-size="11" text-anchor="start">J3-1 +5V</text>
+<text x="642.0802790134285" y="152.7087275233381" font-size="11" text-anchor="start">J3-2 GND</text>
+<text x="642.0802790134285" y="193.0236618424076" font-size="11" text-anchor="start">J3-3 AOUT_PWM</text>
+<text x="642.0802790134285" y="233.33859616147706" font-size="11" text-anchor="start">J3-4 TEST_SEL2</text>
+<text x="642.0802790134285" y="273.65353048054635" font-size="11" text-anchor="start">J3-5 CAN_RX</text>
+<text x="642.0802790134285" y="313.96846479961584" font-size="11" text-anchor="start">J3-6 CAN_TX</text>
+<text x="642.0802790134285" y="354.28339911868505" font-size="11" text-anchor="start">J3-7 LSU_Heater+</text>
+<text x="642.0802790134285" y="394.59833343775455" font-size="11" text-anchor="start">J3-8 not connected (Boot0)</text>
+<text x="860" y="46" font-size="16" font-weight="600">2. Carrier from below, module fitted: J2 in the cutout</text>
+<clipPath id="p2"><rect x="860" y="60" width="508.22952281849234" height="380.0"/></clipPath>
+<g clip-path="url(#p2)">
+<rect x="344.05975917942646" y="-338.8107625984834" width="1131.1877508547639" height="1455.998216143897" fill="#2f5d34"/>
+<rect x="1001.2219414300579" y="172.9775531440463" width="225.78563995837655" height="154.04489371190738" fill="#f4f1e8" stroke="#000" stroke-width="2"/>
+<circle cx="1042.3740151627767" cy="250.0" r="13.989445518061535" fill="#111"/>
+<circle cx="1185.8555076557159" cy="278.6962984985875" r="13.989445518061535" fill="#111"/>
+<circle cx="1185.8555076557159" cy="221.3037015014121" r="13.989445518061535" fill="#111"/>
+<circle cx="1078.2443882860118" cy="267.9351865616171" r="11.119815668202758" fill="#e8c35a" stroke="#000"/>
+<text x="1078.2443882860118" y="274.99628363312" font-size="16" font-weight="700" text-anchor="middle">1</text>
+<circle cx="1078.2443882860118" cy="232.0648134383825" r="11.119815668202758" fill="#e8c35a" stroke="#000"/>
+<text x="1078.2443882860118" y="239.1259105098854" font-size="16" font-weight="700" text-anchor="middle">2</text>
+<circle cx="1114.1147614092463" cy="267.9351865616171" r="11.119815668202758" fill="#e8c35a" stroke="#000"/>
+<text x="1114.1147614092463" y="274.99628363312" font-size="16" font-weight="700" text-anchor="middle">3</text>
+<circle cx="1114.1147614092463" cy="232.0648134383825" r="11.119815668202758" fill="#e8c35a" stroke="#000"/>
+<text x="1114.1147614092463" y="239.1259105098854" font-size="16" font-weight="700" text-anchor="middle">4</text>
+<circle cx="1149.985134532481" cy="267.9351865616171" r="11.119815668202758" fill="#e8c35a" stroke="#000"/>
+<text x="1149.985134532481" y="274.99628363312" font-size="16" font-weight="700" text-anchor="middle">5</text>
+<circle cx="1149.985134532481" cy="232.0648134383825" r="11.119815668202758" fill="#e8c35a" stroke="#000"/>
+<text x="1149.985134532481" y="239.1259105098854" font-size="16" font-weight="700" text-anchor="middle">6</text>
+</g>
+<text x="860" y="458.0" font-size="12">Cutout 8.0 x 5.5 mm; carrier 1.6 mm thick. Plug body fit: UNKNOWN until tried.</text>
+<text x="120" y="520" font-size="15" font-weight="600">J2 pads (module netlist)</text>
+<text x="120" y="544" font-size="13">pad 1: 3.3 V (target sense)</text>
+<text x="120" y="564" font-size="13">pad 2: SWDIO</text>
+<text x="120" y="584" font-size="13">pad 3: nRESET</text>
+<text x="120" y="604" font-size="13">pad 4: SWCLK</text>
+<text x="120" y="624" font-size="13">pad 5: GND</text>
+<text x="120" y="644" font-size="13">pad 6: SWO: not connected</text>
+<text x="420" y="544" font-size="13">Black dots: the plug's three locating holes (2 on one side, 1 on the other),</text>
+<text x="420" y="564" font-size="13">so a TC2030 "-NL" plug only fits one way round.</text>
+<text x="420" y="584" font-size="13">Pinout matches Tag-Connect's ARM Cortex mapping (FROM MEMORY): TC2030-CTX-NL cable.</text>
+<text x="420" y="604" font-size="13">Pad 1 is the target-voltage sense: power the board from its own supply, not the probe.</text>
+<text x="420" y="644" font-size="12" fill="#555">Generated by work/gen/swd_diagram.py from the KiCad files; both panels mirrored (view from below).</text>
+</svg>

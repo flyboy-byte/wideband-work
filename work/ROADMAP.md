@@ -108,9 +108,9 @@ little more than 2.
 | What | Why | Part / note | Status |
 | --- | --- | --- | --- |
 | SWD programmer | first flash, trim reflash, recovery | ST-LINK V2 clone or STLINK-V3MINIE (FROM MEMORY ~$10-20) | D4, owner |
-| Tag-Connect cable | the module's J2 pads | TC2030-IDC-NL (no legs, FROM MEMORY ~$40); a 10-pin Cortex adapter if the probe needs it | D4. Budget alternative: hold the probe wires on the pads by hand for each flash (fiddly, and trim means reflashing) |
+| Tag-Connect cable | the module's J2 pads | TC2030-CTX-NL (no legs, 10-pin Cortex plug; J2's pinout looks like Tag-Connect's Cortex layout, FROM MEMORY ~$40-50). `docs/wiring.md`, `renders/module/swd-pads.png` | D4. Budget alternative: hold the probe wires on the pads by hand for each flash (fiddly, and trim means reflashing) |
 | J3 connector | carrier sensor/power/CAN/output header, hand-soldered | Molex 36783-1201 (MX120G, 12-way, right angle, -40..105 C) | DOCUMENTED ([Molex](https://www.molex.com/en-us/products/part-detail/367831201)) |
-| J3 mating plug + terminals + seals | the harness side | **UNKNOWN**: confirm on Molex's page for 36783-1201 ("mates with") | to find |
+| J3 mating plug + terminals + seals | the harness side | Molex 36792-1201 (MX120G 12-circuit sealed receptacle; Newark lists it as the mate); terminals and seals per Molex AS-36783-001-001 | REPORTED, confirm terminals |
 | Bosch LSU 4.9 sensor | the sensor | Bosch 0 258 017 025 or equivalent (`parts_research.md`: EUR 70-91, REPORTED) | owner |
 | LSU 4.9 harness plug | sensor to harness | Bosch 1 928 404 669 (harness side) with its terminals and seals ([rusEFI wiki](https://wiki.rusefi.com/WBO/), [kit](https://www.t7design.co.uk/bosch-4-9lsu-lambda-connector-plug-pins-seals-1-928-404-669.html)). Don't cut off the sensor's own plug: it holds the trim resistor | REPORTED |
 | 1x8 2.54 mm headers x2 per module | module to carrier | any; or the BOM's C32713274 bought loose | cheap |
@@ -143,7 +143,9 @@ What it means:
 
 - Re-audit of the 2026-10-24 changes (step 1). Watch for a PR from the cousin; he may not be finished.
 - Torex XC6206 datasheet: confirm pin 2 = VOUT (U9; EasyEDA's names say otherwise, a secondary source agrees with KiCad).
-- The J3 mating plug part number (shopping list).
+- J3 terminals and seals for the Molex 36792-1201 plug (AS-36783-001-001).
+- Whether the TC2030 plug fits through the carrier cutout for the trim reflash (try with the real cable; flash the module before soldering it on).
+- 2026-10-24: J3 silkscreen labels for OUT (J3-5), GND (J3-7) and 12V (J3-6, upstream's, which r1-r41 had deleted) added; wiring sheet `docs/wiring.md`.
 - R9/D5 surge (Codex C6) is not simulated. Power on the 1206 resistor at the TVS clamp level was 0.44 W against a
   0.25 W rating for an unknown time (Codex, INFERRED). Owner C1: no fault-survival requirement. It stays a known RISK
   on the bench list.

@@ -8,15 +8,17 @@ Evidence tags as in `AGENTS.md`.
 From the carrier netlist (`kicad-cli sch export netlist`, `hardware/board_carrier/board_carrier.kicad_sch`)
 and `export/carrier_bom.csv` [DOCUMENTED]:
 
+Upstream's carrier, as first read (2026-10-23). Our use of J3 and the wiring: `docs/wiring.md`.
+
 | Connector J3 (MX120G-12, 2x6) | Net |
 | --- | --- |
 | 1 | GND |
 | 2 | LSU_Ip |
 | 3 | LSU_Heater- |
 | 4 | LSU_Heater+ (12 V after the reverse-polarity Schottky) |
-| 5 | **unconnected** |
+| 5 | **unconnected** upstream; ours: AOUT_J, the 0-5 V output (silkscreen OUT) |
 | 6 | 12V_RAW (input) |
-| 7 | **unconnected** |
+| 7 | **unconnected** upstream; ours: GND, the output's reference ground (silkscreen GND) |
 | 8 | LSU_Vm |
 | 9 | LSU_Rtrim |
 | 10 | LSU_Un |
