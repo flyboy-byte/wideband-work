@@ -1,0 +1,9 @@
+{
+  "command": [
+    "python3",
+    "checks/via_in_pad.py"
+  ],
+  "cwd": "/home/logan/projects/wideband-work/work",
+  "returncode": 0,
+  "seconds": 0.92
+}

@@ -1,0 +1,68 @@
+1. Coupling (noisy -> sensitive): closest edge gap, length within 0.5 mm same layer, length stacked on the other layer
+         /AOUT_PWM      -> /LSU_Ip      gap 24.14 mm  near  0.0 mm  stacked  0.0 mm
+         /AOUT_PWM      -> /LSU_Vm      gap 25.07 mm  near  0.0 mm  stacked  0.0 mm
+         /AOUT_PWM      -> /LSU_Un      gap 20.37 mm  near  0.0 mm  stacked  0.0 mm
+         /AOUT_PWM      -> /LSU_Rtrim   gap 23.02 mm  near  0.0 mm  stacked  0.0 mm
+         /AOUT_PWM      -> /AOUT_F1     gap  2.15 mm  near  0.0 mm  stacked  0.7 mm
+         /AOUT_PWM      -> /AOUT_F2     gap  3.93 mm  near  0.0 mm  stacked  0.0 mm
+         /AOUT_PWM      -> /AOUT_INN    gap  3.90 mm  near  0.0 mm  stacked  0.0 mm
+         /AOUT_PWM      -> /VREF3       gap  0.52 mm  near  0.0 mm  stacked  0.0 mm
+         /AOUT_PWM      -> /AOUT        gap  2.06 mm  near  0.0 mm  stacked  0.0 mm
+         /AOUT_PWM      -> /AOUT_J      gap  2.46 mm  near  0.0 mm  stacked  0.0 mm
+         /AOUT_BUF      -> /LSU_Ip      gap 27.52 mm  near  0.0 mm  stacked  0.0 mm
+         /AOUT_BUF      -> /LSU_Vm      gap 26.18 mm  near  0.0 mm  stacked  0.0 mm
+         /AOUT_BUF      -> /LSU_Un      gap 24.05 mm  near  0.0 mm  stacked  0.0 mm
+         /AOUT_BUF      -> /LSU_Rtrim   gap 25.01 mm  near  0.0 mm  stacked  0.0 mm
+         /AOUT_BUF      -> /AOUT_F1     gap  0.50 mm  near  0.2 mm  stacked  0.0 mm
+         /AOUT_BUF      -> /AOUT_F2     gap  5.72 mm  near  0.0 mm  stacked  0.0 mm
+         /AOUT_BUF      -> /AOUT_INN    gap  5.54 mm  near  0.0 mm  stacked  0.0 mm
+         /AOUT_BUF      -> /VREF3       gap  1.05 mm  near  0.0 mm  stacked  0.0 mm
+         /AOUT_BUF      -> /AOUT        gap  1.83 mm  near  0.0 mm  stacked  0.0 mm
+         /AOUT_BUF      -> /AOUT_J      gap  4.07 mm  near  0.0 mm  stacked  0.0 mm
+         /LSU_Heater-   -> /LSU_Ip      gap  0.90 mm  near  0.0 mm  stacked  0.0 mm
+         /LSU_Heater-   -> /LSU_Vm      gap  2.05 mm  near  0.0 mm  stacked  0.0 mm
+         /LSU_Heater-   -> /LSU_Un      gap  3.55 mm  near  0.0 mm  stacked  0.0 mm
+         /LSU_Heater-   -> /LSU_Rtrim   gap  2.34 mm  near  0.0 mm  stacked  0.0 mm
+         /LSU_Heater-   -> /AOUT_F1     gap 25.32 mm  near  0.0 mm  stacked  0.0 mm
+         /LSU_Heater-   -> /AOUT_F2     gap 23.39 mm  near  0.0 mm  stacked  0.0 mm
+         /LSU_Heater-   -> /AOUT_INN    gap 20.92 mm  near  0.0 mm  stacked  0.0 mm
+         /LSU_Heater-   -> /VREF3       gap 27.38 mm  near  0.0 mm  stacked  0.0 mm
+         /LSU_Heater-   -> /AOUT        gap 18.31 mm  near  0.0 mm  stacked  0.0 mm
+         /LSU_Heater-   -> /AOUT_J      gap 16.28 mm  near  0.0 mm  stacked  0.0 mm
+         /CAN_H         -> /LSU_Ip      gap 15.34 mm  near  0.0 mm  stacked  0.0 mm
+         /CAN_H         -> /LSU_Vm      gap 15.36 mm  near  0.0 mm  stacked  0.0 mm
+         /CAN_H         -> /LSU_Un      gap 14.89 mm  near  0.0 mm  stacked  0.0 mm
+         /CAN_H         -> /LSU_Rtrim   gap 15.48 mm  near  0.0 mm  stacked  0.0 mm
+         /CAN_H         -> /AOUT_F1     gap  5.74 mm  near  0.0 mm  stacked  0.0 mm
+         /CAN_H         -> /AOUT_F2     gap 13.68 mm  near  0.0 mm  stacked  0.0 mm
+         /CAN_H         -> /AOUT_INN    gap  9.48 mm  near  0.0 mm  stacked  0.0 mm
+         /CAN_H         -> /VREF3       gap  7.63 mm  near  0.0 mm  stacked  0.0 mm
+         /CAN_H         -> /AOUT        gap  8.07 mm  near  0.0 mm  stacked  0.0 mm
+         /CAN_H         -> /AOUT_J      gap  2.23 mm  near  0.0 mm  stacked  0.0 mm
+         /CAN_L         -> /LSU_Ip      gap 14.09 mm  near  0.0 mm  stacked  0.0 mm
+         /CAN_L         -> /LSU_Vm      gap 14.09 mm  near  0.0 mm  stacked  0.0 mm
+         /CAN_L         -> /LSU_Un      gap 14.88 mm  near  0.0 mm  stacked  0.0 mm
+         /CAN_L         -> /LSU_Rtrim   gap 14.27 mm  near  0.0 mm  stacked  0.0 mm
+         /CAN_L         -> /AOUT_F1     gap  1.13 mm  near  0.0 mm  stacked  0.0 mm
+         /CAN_L         -> /AOUT_F2     gap  9.25 mm  near  0.0 mm  stacked  0.0 mm
+         /CAN_L         -> /AOUT_INN    gap  8.10 mm  near  0.0 mm  stacked  0.0 mm
+         /CAN_L         -> /VREF3       gap  3.95 mm  near  0.0 mm  stacked  0.0 mm
+         /CAN_L         -> /AOUT        gap  3.46 mm  near  0.0 mm  stacked  0.0 mm
+         /CAN_L         -> /AOUT_J      gap  4.67 mm  near  0.0 mm  stacked  0.0 mm
+2. Return path: share of each new signal track with filled GND on the other layer under it, or on its own layer
+   within 0.5 mm on both sides (coplanar); largest uncovered component, branch lengths summed
+   sampled track heuristic only; pads, unsplit junctions, impedance and actual current distribution are not solved
+         /AOUT_PWM     36.4 mm of track,  94.9 % over GND, uncovered component  0.7 mm
+         /AOUT_BUF      2.2 mm of track,  36.6 % over GND, uncovered component  1.4 mm
+         /AOUT_F1      11.8 mm of track,  92.0 % over GND, uncovered component  0.9 mm
+         /AOUT_F2       8.3 mm of track,  85.8 % over GND, uncovered component  0.5 mm
+         /AOUT_INN     11.4 mm of track,  91.3 % over GND, uncovered component  1.0 mm
+         /AOUT_OA       4.6 mm of track, 100.0 % over GND, uncovered component  0.0 mm
+         /AOUT         15.0 mm of track,  80.9 % over GND, uncovered component  1.8 mm
+         /AOUT_J       39.4 mm of track,  94.1 % over GND, uncovered component  1.2 mm
+         /VREF3         4.1 mm of track,  84.2 % over GND, uncovered component  0.7 mm
+3. GND pour
+  F.Cu: 7 filled GND piece(s)
+  B.Cu: 3 filled GND piece(s)
+  strip (y > 91.25): 16 GND vias; farthest bottom-pour point from a via 7.8 mm
+review triggers: 0

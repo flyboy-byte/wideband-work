@@ -1,0 +1,10 @@
+{
+  "command": [
+    "python3",
+    "checks/layout_review.py",
+    "-v"
+  ],
+  "cwd": "/home/logan/projects/wideband-work/work",
+  "returncode": 0,
+  "seconds": 1.36
+}

@@ -20,7 +20,7 @@ Would I order these files as they are? **Not yet assessed**: review in progress;
 | TK7 Stability | PARTLY | — | Reviewed actual E topology and measurement validity; five nominal step cases queued serially behind TK6. No phase-margin/process-corner claim. TK7-stability.md. |
 | TK8 Faults | FINDING | R6-S2 | Calculated12V injection13.6mA into held5V rail; no guaranteed sink. Grounded output~5.2mA in illustrative coupled-supply model. Open power ground routes heater current through receiver ground. TK8-faults.md. |
 | TK9 Op-amp supply | FINDING | R6-S3 | At illustrative38.9V/400ms:R9 437mW/0.175J,D5 376mW/0.150J. Exact vendor pulse/thermal data missing; nominal ratings do not establish survival. TK9-surge.md. |
-| TK10 Layout | | | |
+| TK10 Layout | FINDING | R6-S4 | DRC0new/0open; vias0new; layout0triggers. Supply-cap distances1.69/3.94/2.73mm; C11 body~1.60mm from edge vs JLC2.5mm rule. TK10-layout.md/log. |
 | TK11 Wiring sheet | | | |
 | TK12 Firmware diff | | | |
 | TK13 These docs | | | |
@@ -36,6 +36,7 @@ Status: OK = checked and found right; FINDING = see the table below; PARTLY = sa
 | R6-S1 | TK6 | NOTE | `work/docs/carrier.md:134,143` | DOCUMENTED TI SLOS068AB5.8: plain LM2904 offset3mV typ/7mV max at25C,10mV over temperature; CALCULATED output offset bound11.76mV at25C vs cited5.04mV. | Correct accuracy budget to the exact ordered variant's limits; retain two-point calibration. |
 | R6-S2 | TK8 | RISK | D3/+5V, `work/docs/carrier.md:91` | CALCULATED12V fault injects13.6mA if rail held5V; ST L78M has no guaranteed sink. Unpowered initial R11 load276mW. Previously open backfeed risk remains unqualified, especially receiver connected while board off. | Establish sink/clamp behavior and receiver protection for powered/off states, or isolate the clamp from the unsinkable rail. |
 | R6-S3 | TK9 | RISK | R9 C4410 / D5 C173425 | CALCULATED38.9V/400ms ideal18V clamp:R9 0.437W/0.175J(1.75x nominal continuous rating); exact UNI-ROYAL/MDD pulse qualification absent. Not proof of failure, but survival is unestablished. | Qualify exact parts against protected waveform, or select a documented pulse-rated R9. |
+| R6-S4 | TK10 | RISK | C11(50.4,104.4mm),lower edge | MEASURED center1.85mm/body~1.60mm from edge; DOCUMENTED JLC assembly terms require body clearance2.5mm. Bare-board assembly route not yet qualified. | Obtain JLC rail/panel acceptance;5mm tooling rails may avoid layout changes. |
 
 Severity: BLOCKER = don't order; BUG = wrong but workable; RISK = could bite (say when); NOTE = worth knowing.
 Tag each piece of evidence: MEASURED (you ran it), CALCULATED (show the sum), DOCUMENTED (name the datasheet and page),

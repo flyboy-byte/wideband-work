@@ -1,0 +1,10 @@
+{
+  "command": [
+    "python3",
+    "checks/drc_vs_upstream.py",
+    "-v"
+  ],
+  "cwd": "/home/logan/projects/wideband-work/work",
+  "returncode": 0,
+  "seconds": 2.44
+}
