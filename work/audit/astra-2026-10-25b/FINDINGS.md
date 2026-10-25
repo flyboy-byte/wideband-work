@@ -14,7 +14,7 @@ Would I order these files as they are? **Not assessed yet**: review in progress.
 | TK1 Stack checker | OK | — | Fresh ELF, four regressions, all40BLX sites and five narrowed caller sets checked. Worst thread margin92B reproduced; startup/interrupt scope assessed in TK1-stack-review.md. |
 | TK2 Sim wrappers | OK | — |26fixture verdicts correct; actual old abort logs and short/no-END cases rejected. Real25case stability sweep passes completion/baseline guards; E0%through10nF,9.2%at47nF. TK2-sims.md. |
 | TK3 R9 surge | PARTLY | R7-S1 | R9 nominal overload fixed:0.480W with -1%R vs0.75W conditional rating. MDD D5 derating gives92.7C case ceiling for0.382W. Real400ms input envelope/board cooling unknown; TK3-surge-review.md. |
-| TK4 Backfeed | | | |
+| TK4 Backfeed | PARTLY | R7-S2 | Source-checked loads:6.235mA typical subtotal excluding MCU/IO/LED/ADC; no guaranteed13.6mA floor. LM2904 is NOT on+5V. No pre-prototype swap recommended under C1; TK4-backfeed-review.md. |
 | TK5 Fab files | | | |
 | TK6 Round 6 leftovers | | | |
 | TK7 These docs | | | |
@@ -28,6 +28,7 @@ Status: OK = checked and found right; FINDING = see the table below; PARTLY = sa
 | ID | Task | Severity | Location | Evidence (numbers) | Smallest fix |
 | --- | --- | --- | --- | --- | --- |
 | R7-S1 | TK3 | RISK | checks/surge_budget.py:6-10; R9/D5/D1 | DOCUMENTED/CALCULATED:0.480W R9 requires thermal conditions; D5 0.382W exceeds its derated rating above92.7C case.38.9V clamp is specified at a short pulse, not an arbitrary400ms event. | Keep HP R9; qualify the survival claim and define input/thermal envelope before claiming automotive-surge qualification. Detail in TK3-surge-review.md. |
+| R7-S2 | TK4 | NOTE | review/TASKS.md TK4; docs/carrier.md A8; AUDIT.md round6 R6-S2 response | MEASURED U6.8=VOP12,not+5V; its current cannot count as a5V sink. A8's module-branch-only measurement excludes carrier loads. No guaranteed minimum13.6mA established. | Correct load list; distinguish module current from aggregate U2 output and record operating states. Keep accepted C1 risk explicit. |
 
 Severity: BLOCKER = don't order; BUG = wrong but workable; RISK = could bite (say when); NOTE = worth knowing.
 Tag each piece of evidence: MEASURED (you ran it), CALCULATED (show the sum), DOCUMENTED (name the datasheet and page),

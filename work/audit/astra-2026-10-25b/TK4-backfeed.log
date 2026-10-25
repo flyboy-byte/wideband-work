@@ -1,0 +1,35 @@
+carrier rail-connected active parts:
+U1 TJA1051T-3 [('3', '+5V')]
+U2 LM78M05_TO252 [('3', '+5V')]
+U3 f042_wideband_module [('1', '+5V')]
+U5 REF3030 [('1', '+5V')]
+U6 LM2904 [('8', '/VOP12')]
+module rail-connected active parts:
+U1 MCP6004 [('4', '+3V3')]
+U2 STM32F042K6Tx [('1', '+3V3'), ('17', '+3V3')]
+U3 REF3033 [('1', '+5V')]
+U5 AD8628 [('5', '+3V3')]
+U9 XC6206P332MR [('2', '+3V3'), ('3', '+5V')]
+Assume diode0.6V. Rail voltage below is constant-load illustration only:
+load0mA -> rail11.400V (not valid after device limits exceeded)
+load5mA -> rail9.050V (not valid after device limits exceeded)
+load10mA -> rail6.700V (not valid after device limits exceeded)
+load13.6mA -> rail5.008V (not valid after device limits exceeded)
+Typical illustrative subtotal excluding MCU/IO/LED/ADC/buffer:6.235mA
+With ST illustrative3.4..20.7mA MCU states:9.635..26.935mA, NOT bounds
+R11=470: 12V injection at held5V=13.617mA;
+  5V into4.7k requires OA=5.851V before supply headroom
+R11=2200: 12V injection at held5V=2.909mA;
+  5V into4.7k requires OA=7.691V before supply headroom
+08:22:15: Debug: Adding duplicate image handler for 'PNG file'
+08:22:15: Debug: Adding duplicate image handler for 'JPEG file'
+08:22:15: Debug: Adding duplicate image handler for 'TIFF file'
+08:22:15: Debug: Adding duplicate image handler for 'GIF file'
+08:22:15: Debug: Adding duplicate image handler for 'PNM file'
+08:22:15: Debug: Adding duplicate image handler for 'PCX file'
+08:22:15: Debug: Adding duplicate image handler for 'IFF file'
+08:22:15: Debug: Adding duplicate image handler for 'Windows icon file'
+08:22:15: Debug: Adding duplicate image handler for 'Windows cursor file'
+08:22:15: Debug: Adding duplicate image handler for 'Windows animated cursor file'
+08:22:15: Debug: Adding duplicate image handler for 'TGA file'
+08:22:15: Debug: Adding duplicate image handler for 'XPM file'
