@@ -17,7 +17,7 @@ Would I order these files as they are? **Not yet assessed**: review in progress;
 | TK4 Invalid output | PARTLY | — | 21/21 aux tests pass, source path table in TK4-invalid.md. Normal invalid states command5V; sensor fault detection and receiver response cannot be universalized from this logic. |
 | TK5 Heater clamp | PARTLY | — | 70/70 host tests and 2 new production-code sequence tests pass. 60s clamp and30 recovery cycles; integrator bounded±3V. See TK5-heater.md; thermal plant/overshoot not simulated. |
 | TK6 Analog DC | PARTLY | R6-S1 | Independent exact RC ripple0.658/0.421mV at50/80%; gain tolerance calculation; primary LM2904 limits. Full-scale sweep running; longer-window/zero cases queued for later evidence update. TK6-calculations.md. |
-| TK7 Stability | | | |
+| TK7 Stability | PARTLY | — | Reviewed actual E topology and measurement validity; five nominal step cases queued serially behind TK6. No phase-margin/process-corner claim. TK7-stability.md. |
 | TK8 Faults | | | |
 | TK9 Op-amp supply | | | |
 | TK10 Layout | | | |
