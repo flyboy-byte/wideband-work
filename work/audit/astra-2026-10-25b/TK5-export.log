@@ -1,0 +1,4 @@
+ok   checks/drc_vs_upstream.py: DRC vs upstream: 0 new violations, 0 unconnected
+ok   checks/jlc_rotation.py: jlc rotation: 38 parts measured, 4 need a correction, 0 problem(s)
+gerbers: 12 files (board_carrier-B_Cu.gbl, board_carrier-B_Mask.gbs, board_carrier-B_Paste.gbp, board_carrier-B_Silkscreen.gbo, board_carrier-Edge_Cuts.gm1, board_carrier-F_Cu.gtl, board_carrier-F_Mask.gts, board_carrier-F_Paste.gtp, board_carrier-F_Silkscreen.gto, board_carrier-NPTH.drl, board_carrier-PTH.drl, board_carrier-job.gbrjob)
+wrote work/out/carrier: carrier-gerbers.zip, carrier-bom.csv (26 lines), carrier-cpl.csv (38 parts), not-fitted.csv (6), README.md

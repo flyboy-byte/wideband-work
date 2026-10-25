@@ -1,0 +1,103 @@
+make: Entering directory '/home/logan/projects/wideband-review-astra/firmware'
+Compiler Options
+arm-none-eabi-gcc -c -mcpu=cortex-m0 -mthumb -O2 -ggdb -fomit-frame-pointer -falign-functions=16 -fsingle-precision-constant -DWB_PROD=1 -Wl,--defsym=USE_BOOTLOADER=1 -ffunction-sections -fdata-sections -fno-common -flto -Wall -Wextra -Wundef -Wstrict-prototypes -Wa,-alms=./build/lst/ -DCORTEX_USE_FPU=FALSE -MD -MP -MF ./.dep/build.d -I. -Iboards/f0_module -IChibiOS/os/license -IChibiOS/os/hal/include -IChibiOS/os/hal/osal/rt-nil -IChibiOS/os/rt/include -IChibiOS/os/oslib/include -IChibiOS/os/hal/lib/streams -IChibiOS/os/various/cpp_wrappers -IChibiOS/os/hal/lib/complex/mfs -IChibiOS/os/common/portability/GCC -IChibiOS/os/common/startup/ARMCMx/compilers/GCC -IChibiOS/os/common/startup/ARMCMx/devices/STM32F0xx -IChibiOS/os/common/ext/ARM/CMSIS/Core/Include -IChibiOS/os/common/ext/ST/STM32F0xx -IChibiOS/os/hal/ports/common/ARMCMx -IChibiOS/os/hal/ports/STM32/STM32F0xx -IChibiOS/os/hal/ports/STM32/LLD/ADCv1 -IChibiOS/os/hal/ports/STM32/LLD/CANv1 -IChibiOS/os/hal/ports/STM32/LLD/DACv1 -IChibiOS/os/hal/ports/STM32/LLD/DMAv1 -IChibiOS/os/hal/ports/STM32/LLD/EXTIv1 -IChibiOS/os/hal/ports/STM32/LLD/GPIOv2 -IChibiOS/os/hal/ports/STM32/LLD/I2Cv2 -IChibiOS/os/hal/ports/STM32/LLD/RTCv2 -IChibiOS/os/hal/ports/STM32/LLD/SPIv2 -IChibiOS/os/hal/ports/STM32/LLD/SYSTICKv1 -IChibiOS/os/hal/ports/STM32/LLD/TIMv1 -IChibiOS/os/hal/ports/STM32/LLD/USART -IChibiOS/os/hal/ports/STM32/LLD/USARTv2 -IChibiOS/os/hal/ports/STM32/LLD/USBv1 -IChibiOS/os/hal/ports/STM32/LLD/xWDGv1 -IChibiOS/os/common/portability/GCC -IChibiOS/os/common/ports/ARM-common -IChibiOS/os/common/ports/ARMv6-M -Ilibfirmware/util/include -Iutil/ -Iutil/math/ -Iconsole/binary/ -Iboards/ -Ishared/ -Iboards/f0_module/io/ main.c -o main.o
+
+Compiling crt0_v6m.S
+Compiling vectors.S
+Compiling chcoreasm.S
+Compiling main_hardfault_asm.S
+Compiling hal.c
+Compiling hal_st.c
+Compiling hal_buffered_serial.c
+Compiling hal_buffers.c
+Compiling hal_flash.c
+Compiling hal_queues.c
+Compiling hal_adc.c
+Compiling hal_mmcsd.c
+Compiling hal_can.c
+Compiling hal_pal.c
+Compiling hal_pwm.c
+Compiling osal.c
+Compiling chsys.c
+Compiling chrfcu.c
+Compiling chdebug.c
+Compiling chtrace.c
+Compiling chvt.c
+Compiling chschd.c
+Compiling chinstances.c
+Compiling chthreads.c
+Compiling chsem.c
+Compiling chprintf.c
+Compiling chscanf.c
+Compiling memstreams.c
+Compiling nullstreams.c
+Compiling bufstreams.c
+Compiling syscalls.c
+Compiling hal_mfs.c
+Compiling crt1.c
+Compiling nvic.c
+Compiling stm32_isr.c
+Compiling hal_lld.c
+Compiling hal_efl_lld.c
+Compiling hal_adc_lld.c
+Compiling hal_can_lld.c
+Compiling stm32_dma.c
+Compiling stm32_exti.c
+Compiling hal_pal_lld.c
+Compiling hal_st_lld.c
+Compiling hal_pwm_lld.c
+Compiling chcore.c
+Compiling board.c
+Compiling ch.cpp
+Compiling port.cpp
+Compiling port_shared.cpp
+Compiling util_dummy.cpp
+Compiling crc.cpp
+Compiling fragments.cpp
+Compiling math.cpp
+Compiling pid.cpp
+Compiling sampling.cpp
+Compiling heater_control.cpp
+Compiling timer.cpp
+Compiling flash.cpp
+Compiling can.cpp
+Compiling can_helper.cpp
+Compiling status.cpp
+Compiling lambda_conversion.cpp
+Compiling pwm.cpp
+Compiling dac.cpp
+Compiling pump_dac.cpp
+Compiling pump_control.cpp
+Compiling max3185x.cpp
+Compiling uart.cpp
+Compiling auxout.cpp
+Compiling indication.cpp
+Compiling sampling_thread.cpp
+Compiling heater_thread.cpp
+Compiling main.cpp
+Linking build/wideband.elf
+Creating build/wideband.hex
+Creating build/wideband.bin
+Creating build/wideband.dmp
+Creating build/wideband.list
+Creating build/wideband.srec
+
+   text	   data	    bss	    dec	    hex	filename
+  21580	   6168	   5864	  33612	   834c	build/wideband.elf
+
+Done
+make: Leaving directory '/home/logan/projects/wideband-review-astra/firmware'
+egrep: warning: egrep is obsolescent; using grep -E
+grep: warning: stray \ before #
+egrep: warning: egrep is obsolescent; using grep -E
+grep: warning: stray \ before #
+egrep: warning: egrep is obsolescent; using grep -E
+grep: warning: stray \ before #
+egrep: warning: egrep is obsolescent; using grep -E
+grep: warning: stray \ before #
+main.cpp:42:5: warning: 'TS_ENABLED' is not defined, evaluates to '0' [-Wundef]
+   42 | #if TS_ENABLED
+      |     ^~~~~~~~~~
+/usr/arm-none-eabi/bin/ld:app.ld:90: warning: memory region `shared' not declared
+lto-wrapper: warning: Options to '-Xassembler' do not match: -alms=./build/lst/hal.lst, -alms=./build/lst/hal_st.lst, dropping all '-Xassembler' and '-Wa' options.
+/usr/arm-none-eabi/bin/ld: warning: build/wideband.elf has a LOAD segment with RWX permissions

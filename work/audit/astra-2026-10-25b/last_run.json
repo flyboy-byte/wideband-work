@@ -1,0 +1,249 @@
+{
+ "date": "2026-10-25",
+ "git_head": "cb67854",
+ "results": [
+  {
+   "name": "DRC module (errors)",
+   "status": "fail",
+   "summary": "DRC 11 errors: solder_mask_bridge 10, clearance 1 (report /home/logan/projects/wideband-review-astra/work/audit/astra-2026-10-25b/wideband_controller-drc.json)",
+   "files": {
+    "../hardware/board_module/wideband_controller.kicad_pcb": "0179d031bc63"
+   },
+   "advisory": "D2 (owner, 2026-10-23): upstream's own errors, advisory; gated by \"Module board identical to upstream\" instead"
+  },
+  {
+   "name": "Module board identical to upstream",
+   "status": "pass",
+   "summary": "module board vs upstream master: 0 file(s) differ",
+   "files": {}
+  },
+  {
+   "name": "ERC module (errors)",
+   "status": "pass",
+   "summary": "ERC 0 errors (report /home/logan/projects/wideband-review-astra/work/audit/astra-2026-10-25b/wideband_controller-erc.json)",
+   "files": {
+    "../hardware/board_module/wideband_controller.kicad_sch": "e54843a1e6ef"
+   }
+  },
+  {
+   "name": "DRC carrier (errors)",
+   "status": "fail",
+   "summary": "DRC 23 errors: courtyards_overlap 14, copper_edge_clearance 3, malformed_courtyard 3, starved_thermal 2 (report /home/logan/projects/wideband-review-astra/work/audit/astra-2026-10-25b/board_carrier-drc.json)",
+   "files": {
+    "../hardware/board_carrier/board_carrier.kicad_pcb": "986aced34840"
+   },
+   "advisory": "D2 (owner, 2026-10-23): upstream's own errors, advisory; gated by \"Carrier DRC vs upstream baseline\" instead"
+  },
+  {
+   "name": "Carrier DRC vs upstream baseline (new violations, unconnected)",
+   "status": "pass",
+   "summary": "DRC vs upstream: 0 new violations, 0 unconnected",
+   "files": {
+    "../hardware/board_carrier/board_carrier.kicad_pcb": "986aced34840"
+   }
+  },
+  {
+   "name": "Carrier: no new vias in SMD pads",
+   "status": "pass",
+   "summary": "via in pad: 0 new, 0 upstream",
+   "files": {
+    "../hardware/board_carrier/board_carrier.kicad_pcb": "986aced34840"
+   }
+  },
+  {
+   "name": "Carrier layout review (sampled coupling and return-path heuristics)",
+   "status": "pass",
+   "summary": "review triggers: 0",
+   "files": {
+    "../hardware/board_carrier/board_carrier.kicad_pcb": "986aced34840",
+    "checks/layout_review.py": "2dfa9e8efa14",
+    "checks/layout_metrics.py": "23c78d58fd8a"
+   }
+  },
+  {
+   "name": "Layout geometry helper unit tests",
+   "status": "pass",
+   "summary": "OK",
+   "files": {
+    "checks/layout_metrics.py": "23c78d58fd8a",
+    "checks/test_layout_metrics.py": "2d93b205dd56"
+   }
+  },
+  {
+   "name": "Layout track-order regression",
+   "status": "pass",
+   "summary": "PASS: tested orders agree",
+   "files": {
+    "../hardware/board_carrier/board_carrier.kicad_pcb": "986aced34840",
+    "checks/layout_review.py": "2dfa9e8efa14",
+    "checks/layout_metrics.py": "23c78d58fd8a",
+    "checks/audit_layout_order.py": "c40bda9f97e2"
+   }
+  },
+  {
+   "name": "ERC carrier (errors)",
+   "status": "pass",
+   "summary": "ERC 0 errors (report /home/logan/projects/wideband-review-astra/work/audit/astra-2026-10-25b/board_carrier-erc.json)",
+   "files": {
+    "../hardware/board_carrier/board_carrier.kicad_sch": "7899a4c38db8"
+   }
+  },
+  {
+   "name": "Carrier netlist self-check (generator table)",
+   "status": "pass",
+   "summary": "netlist self-check: 18 nets, 0 problems",
+   "files": {
+    "../hardware/board_carrier/board_carrier.kicad_sch": "7899a4c38db8",
+    "gen/gen_carrier_sch.py": "bc7a0b98744c"
+   }
+  },
+  {
+   "name": "No hand edits waiting",
+   "status": "pass",
+   "summary": "no drift",
+   "files": {}
+  },
+  {
+   "name": "JLC rotation, origin and pin names from each part's EasyEDA footprint",
+   "status": "pass",
+   "summary": "jlc rotation: 38 parts measured, 4 need a correction, 0 problem(s)",
+   "files": {
+    "../hardware/board_carrier/board_carrier.kicad_pcb": "986aced34840",
+    "../hardware/board_carrier/board_carrier.kicad_sch": "7899a4c38db8"
+   }
+  },
+  {
+   "name": "Fab candidate (out/carrier) matches the board: Gerbers, BOM, CPL, not-fitted",
+   "status": "pass",
+   "summary": "fab files: 38 placed, 6 not fitted, outline 40.00 x 51.50 mm, 0 problem(s)",
+   "files": {
+    "../hardware/board_carrier/board_carrier.kicad_pcb": "986aced34840",
+    "out/carrier/carrier-bom.csv": "4929cced2179",
+    "out/carrier/carrier-cpl.csv": "66a7fdc2200c",
+    "out/carrier/carrier-gerbers.zip": "7d55a237a2ea"
+   }
+  },
+  {
+   "name": "Firmware: bootloader DATA writes stay inside the app partition (F1)",
+   "status": "pass",
+   "summary": "52 guard cases; 0 unsafe accepted writes, 0 valid writes refused (stub only)",
+   "files": {
+    "../firmware/boards/f0_module/bootloader/bootloader.cpp": "21cbac0cd469",
+    "../firmware/boards/f0_module/bootloader/bootloader_bounds.h": "72e216e2e7bc"
+   }
+  },
+  {
+   "name": "Firmware: package checker accepts good images, rejects bad ones (F2)",
+   "status": "pass",
+   "summary": "16 package cases, 0 wrong verdict(s)",
+   "files": {
+    "checks/fw_package.py": "34a1c5eb78dd",
+    "../for_rusefi/wideband_image.h": "1ee39ace5944",
+    "../firmware/boards/f0_module/bootloader/bootloader.cpp": "21cbac0cd469"
+   }
+  },
+  {
+   "name": "Firmware: HardFault entry reaches the C handler on a Cortex-M0 (F9, QEMU microbit)",
+   "status": "pass",
+   "summary": "fault entry on Cortex-M0: as expected",
+   "files": {
+    "../firmware/main_hardfault_asm.S": "d32262764759",
+    "../firmware/main.cpp": "f1c2e96ebf08"
+   }
+  },
+  {
+   "name": "Firmware: host gtest suite (sampler, heater, F7, F1 bounds, D10 watchdog)",
+   "status": "pass",
+   "summary": "[  PASSED  ] 70 tests.",
+   "files": {
+    "../firmware/heater_control.cpp": "7368eb50561e",
+    "../firmware/sampling.cpp": "8a229de01887",
+    "../firmware/watchdog.h": "3c55e521fda5",
+    "../firmware/boards/f0_module/bootloader/bootloader_bounds.h": "72e216e2e7bc"
+   }
+  },
+  {
+   "name": "Firmware: analog output host tests, production auxout/pump_dac/can_helper on the f0 config (F3-F6)",
+   "status": "pass",
+   "summary": "[  PASSED  ] 21 tests.",
+   "files": {
+    "../firmware/auxout.cpp": "417044786829",
+    "../firmware/pump_dac.cpp": "ac1d4bf351de",
+    "../firmware/can_helper.cpp": "0dd77d348207",
+    "../firmware/boards/f0_module/aux_curve.h": "bb88ea23e570",
+    "../firmware/boards/f0_module/wideband_board_config.h": "75af39efb19f"
+   }
+  },
+  {
+   "name": "Firmware: static worst-case stack per thread fits (F8 estimate, f0 build)",
+   "status": "pass",
+   "summary": "stack estimate: ok, smallest margin 92 B",
+   "files": {
+    "../firmware/auxout.cpp": "417044786829",
+    "../firmware/can.cpp": "65a7078908bf",
+    "../firmware/heater_thread.cpp": "1c61085261f8",
+    "../firmware/pump_control.cpp": "6449053857fe",
+    "../firmware/sampling_thread.cpp": "65d58bbf0b52"
+   }
+  },
+  {
+   "name": "Stack checker: known-answer Cortex-M0 cases incl. a pointer in a literal pool (Codex R41-CX1)",
+   "status": "pass",
+   "summary": "stack checker cases: 4, 0 wrong verdict(s)",
+   "files": {
+    "checks/stack_estimate.py": "b4a89208d6a3"
+   }
+  },
+  {
+   "name": "Sim wrappers fail when ngspice gives no valid result (Codex R41-CX2)",
+   "status": "pass",
+   "summary": "sim wrappers: 0 wrong verdict(s)",
+   "files": {
+    "sim/stability.sh": "b5a591f40734",
+    "sim/load_accuracy.sh": "ff3f503474e9"
+   }
+  },
+  {
+   "name": "Output low from reset until the app drives PB1 (R3 vs the PB1 pull in both board.h; outside review B1)",
+   "status": "pass",
+   "summary": "boot level: output low from reset",
+   "files": {
+    "../hardware/board_carrier/board_carrier.kicad_pcb": "986aced34840",
+    "../firmware/boards/f0_module/board.h": "0a70a2bb2fa0",
+    "../firmware/boards/f0_module/bootloader/cfg/board.h": "1dc40c1c92c0"
+   }
+  },
+  {
+   "name": "Module order files: JLC rotation, origin and pin names from EasyEDA against the order CPL (upstream rev C + fixes)",
+   "status": "pass",
+   "summary": "jlc rotation: 57 parts measured, 6 need a correction, 0 problem(s)",
+   "files": {
+    "../hardware/board_module/wideband_controller.kicad_pcb": "0179d031bc63",
+    "gen/module_fab.py": "fe36cd34cf0f",
+    "checks/jlc_rotation.py": "b1455144624f"
+   }
+  },
+  {
+   "name": "Reviewer docs agree with the repo (REVIEW.md check count, TASKS.md IDs and files, pack contents)",
+   "status": "pass",
+   "summary": "review docs: 0 problem(s)",
+   "files": {
+    "../REVIEW.md": "03a46b495d88",
+    "review/TASKS.md": "c8ef35f54227",
+    "review/FINDINGS-TEMPLATE.md": "7d85be0c9a6e",
+    "checks/review_pack.sh": "fbeab94d332c",
+    "checks/checks.json": "dc4c91019308",
+    "AUDIT.md": "cd1726084e56"
+   }
+  },
+  {
+   "name": "Op-amp supply survives a clamped load dump: R9 and D5 power within rating (Codex round 6, R6-S3)",
+   "status": "pass",
+   "summary": "surge budget: 0 problem(s)",
+   "files": {
+    "../hardware/board_carrier/board_carrier.kicad_pcb": "986aced34840",
+    "checks/surge_budget.py": "1db2f3367695"
+   }
+  }
+ ]
+}

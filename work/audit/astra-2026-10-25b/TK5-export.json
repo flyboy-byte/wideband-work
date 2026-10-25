@@ -1,0 +1,9 @@
+{
+  "command": [
+    "python3",
+    "gen/export_fab.py"
+  ],
+  "cwd": "/home/logan/projects/wideband-review-astra/work",
+  "returncode": 0,
+  "seconds": 4.65
+}

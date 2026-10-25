@@ -1,0 +1,10 @@
+{
+  "command": [
+    "python3",
+    "checks/bom_stock.py",
+    "5"
+  ],
+  "cwd": "/home/logan/projects/wideband-review-astra/work",
+  "returncode": 0,
+  "seconds": 41.64
+}

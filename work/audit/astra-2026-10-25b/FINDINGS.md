@@ -15,7 +15,7 @@ Would I order these files as they are? **Not assessed yet**: review in progress.
 | TK2 Sim wrappers | OK | — |26fixture verdicts correct; actual old abort logs and short/no-END cases rejected. Real25case stability sweep passes completion/baseline guards; E0%through10nF,9.2%at47nF. TK2-sims.md. |
 | TK3 R9 surge | PARTLY | R7-S1 | R9 nominal overload fixed:0.480W with -1%R vs0.75W conditional rating. MDD D5 derating gives92.7C case ceiling for0.382W. Real400ms input envelope/board cooling unknown; TK3-surge-review.md. |
 | TK4 Backfeed | PARTLY | R7-S2 | Source-checked loads:6.235mA typical subtotal excluding MCU/IO/LED/ADC; no guaranteed13.6mA floor. LM2904 is NOT on+5V. No pre-prototype swap recommended under C1; TK4-backfeed-review.md. |
-| TK5 Fab files | | | |
+| TK5 Fab files | PARTLY | — | R9 exact part/unchanged geometry verified;26BOM/38CPL,live stock26/26available. Canonical suite26checks:0nonadvisory failures,2accepted advisories,0skipped; report isolation verified. C11 rail acceptance still order-day gate. TK5-fab-review.md. |
 | TK6 Round 6 leftovers | | | |
 | TK7 These docs | | | |
 | TK99 Beyond the list | | | |
