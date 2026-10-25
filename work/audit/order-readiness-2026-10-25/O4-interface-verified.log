@@ -1,0 +1,44 @@
+J3 1 +5V -> carrier U3 1 +5V offset mm (-35.504000000000005, -3.676000000000002)
+J3 2 GND -> carrier U3 2 GND offset mm (-35.504000000000005, -3.6759999999999877)
+J3 3 /SEL_1 -> carrier U3 3 /AOUT_PWM offset mm (-35.504000000000005, -3.676000000000002)
+J3 4 /SEL_2 -> carrier U3 4 /TEST_SEL2 offset mm (-35.504000000000005, -3.676000000000002)
+J3 5 /CAN_RX -> carrier U3 5 /CAN_RX offset mm (-35.504000000000005, -3.676000000000002)
+J3 6 /CAN_TX -> carrier U3 6 /CAN_TX offset mm (-35.504000000000005, -3.676000000000002)
+J3 7 /VBatt_Sense -> carrier U3 7 /LSU_Heater+ offset mm (-35.504000000000005, -3.676000000000002)
+J3 8 /Boot0 -> carrier U3 8 unconnected-(U3-Boot0-Pad8) offset mm (-35.504000000000005, -3.676000000000002)
+J1 1 Net-(J1-Pin_1) -> carrier U3 9 GND offset mm (-35.50399999999999, -3.676000000000002)
+J1 2 Net-(J1-Pin_1) -> carrier U3 10 GND offset mm (-35.50399999999999, -3.6759999999999877)
+J1 3 Net-(J1-Pin_3) -> carrier U3 11 /LSU_Heater- offset mm (-35.50399999999999, -3.676000000000002)
+J1 4 Net-(J1-Pin_3) -> carrier U3 12 /LSU_Heater- offset mm (-35.50399999999999, -3.676000000000002)
+J1 5 /LSU_Ip -> carrier U3 13 /LSU_Ip offset mm (-35.50399999999999, -3.676000000000002)
+J1 6 /LSU_Vm -> carrier U3 14 /LSU_Vm offset mm (-35.50399999999999, -3.676000000000002)
+J1 7 /LSU_Rtrim -> carrier U3 15 /LSU_Rtrim offset mm (-35.50399999999999, -3.676000000000002)
+J1 8 /LSU_Un -> carrier U3 16 /LSU_Un offset mm (-35.50399999999999, -3.676000000000002)
+All 16 positions align by one translation; row spacing 25.4 mm, pitch 2.54 mm.
+J2 pad net / position (module coordinates):
+alignment hole  (90.805, 79.248) drill mm 0.9906
+alignment hole  (85.725, 80.264) drill mm 0.9906
+alignment hole  (85.725, 78.232) drill mm 0.9906
+1 +3V3 (89.535, 79.883) drill mm 0.0
+2 /SWDIO (89.535, 78.613) drill mm 0.0
+3 /nRESET (88.265, 79.883) drill mm 0.0
+4 /SWCLK (88.265, 78.613) drill mm 0.0
+5 GND (86.995, 79.883) drill mm 0.0
+6 unconnected-(J2-SWO-Pad6) (86.995, 78.613) drill mm 0.0
+Carrier cutout geometry:
+Rect (48.824, 72.905) (56.698, 78.239)
+Cutout nominal mm 7.874000000000002 5.334000000000003 TC2030 body per manufacturer drawing mm 9.906 6.096
+Cable body cannot pass straight through cutout. Protruding-pin reach at final stack height NOT established.
+Interface geometry measurement: PASS; fit/stack decisions remain open.
+11:28:06: Debug: Adding duplicate image handler for 'PNG file'
+11:28:06: Debug: Adding duplicate image handler for 'JPEG file'
+11:28:06: Debug: Adding duplicate image handler for 'TIFF file'
+11:28:06: Debug: Adding duplicate image handler for 'GIF file'
+11:28:06: Debug: Adding duplicate image handler for 'PNM file'
+11:28:06: Debug: Adding duplicate image handler for 'PCX file'
+11:28:06: Debug: Adding duplicate image handler for 'IFF file'
+11:28:06: Debug: Adding duplicate image handler for 'Windows icon file'
+11:28:06: Debug: Adding duplicate image handler for 'Windows cursor file'
+11:28:06: Debug: Adding duplicate image handler for 'Windows animated cursor file'
+11:28:06: Debug: Adding duplicate image handler for 'TGA file'
+11:28:06: Debug: Adding duplicate image handler for 'XPM file'
