@@ -1,7 +1,9 @@
 # Reviewing this board (outside reviewers, people or AI)
 
-Written 2026-10-24, board **r41** on branch `analog-out`. Nothing has been ordered, built or flashed. We are asking
-for a review **before the first JLC order**: would you order these files as they are, and if not, why not?
+Written 2026-10-24 for **round 6**: the r41 layout with that day's fixes (R3 4.7k, invalid = 5 V, heater clamp), branch
+`analog-out`. Rounds 4 (Codex) and 5 (an outside Claude) reviewed r41 at `fad8032`; their findings and our answers are in
+`work/AUDIT.md`. Nothing has been ordered, built or flashed. We are asking for a review **before the first JLC order**:
+would you order these files as they are, and if not, why not? A reviewer from round 4 or 5 can start with the changes.
 
 The project is a fork of [mck1117/wideband](https://github.com/mck1117/wideband), the rusEFI LSU 4.9 controller.
 The fork adds a 0-5 V analog output on the carrier board, and Claude designed it from code with the owner
@@ -44,8 +46,9 @@ Freerouting and Java are only needed to regenerate the board, and a review doesn
 make -C firmware -j8 BOARD=f0_module                                  # 21.5 kB app; RAM full to the byte by design
 cd work
 python3 checks/fw_package.py build # bootloader + app image into work/fw-build/<commit>/ (adds 5 package-check cases)
+python3 gen/module_fab.py          # stages the module's JLC files in work/out/module/ (upstream rev C, 2 BOM swaps)
 python3 gen/export_fab.py          # writes the fab candidate to work/out/carrier/ (gitignored, so a clone lacks it)
-python3 checks/run_all.py          # expect: 20 checks, 0 failed, 2 advisory failed (upstream's own raw DRC, owner decision D2)
+python3 checks/run_all.py          # expect: 23 checks, 0 failed, 2 advisory failed (upstream's own raw DRC, owner decision D2)
 ```
 
 **Mode A:** run `sh checks/review_pack.sh` from `work/`. It writes `work/audit/carrier-f-<date>/`. Give the model
@@ -67,9 +70,12 @@ python3 checks/run_all.py          # expect: 20 checks, 0 failed, 2 advisory fai
 
 The priority list and the "known and accepted" list are in `work/AUDIT.md`, under "Hand-off". The short version:
 
+0. **The 2026-10-24 changes**: "Changed since rounds 4 and 5" in the hand-off, items 1-7. They cover the boot level
+   (R3 4.7k plus the PB1 pull-down), invalid = 5 V, the heater clamp, the checker fixes, the new full-scale sim and
+   the module order files.
 1. **Fab files against the design.** Check every CPL rotation and offset, the BOM part numbers and the not-fitted
    list. D2 and U2 are the tricky parts. The rotation *sense* (JLC = KiCad, counter-clockwise from the top) is
-   INFERRED.
+   INFERRED. The module's files (`python3 gen/module_fab.py`) haven't been through our rotation check.
 2. **The analog stage.** R11 is inside the DC loop, with feedback taken at the connector. Check stability into
    cable capacitance, accuracy into pull-up and pull-down receivers, and what happens with 12 V on J3-5.
 3. **Power.** The op-amp rail is 12 V → 1k → 18 V zener behind an SMCJ24CA TVS.
