@@ -7,8 +7,8 @@ MEASURED `stack_inventory.py` finds15callers/40BLX sites: five narrowed callers1
 | Caller | Complete current source target set | Evidence |
 | --- | --- | --- |
 |HeaterControllerBase::Update|Sampler's six interface methods plusHeaterController::SetDuty|heater_control.cpp:197-259;sampling.h;heater_thread.cpp:29-64;only one concrete sampler/heater type linked|
-|Sampler::GetSensorTemperature|GetSensorInternalResistance,GetNernstAc|sampling.cpp:72-103; compiler fallback dispatches through the same object|
-|Sampler::GetSensorInternalResistance|GetNernstAc|sampling.cpp:98-105|
+|Sampler::GetSensorTemperature|GetSensorInternalResistance,GetNernstAc|sampling.cpp:63-89; compiler fallback dispatches through the same object|
+|Sampler::GetSensorInternalResistance|GetNernstAc|sampling.cpp:82-89|
 |__port_thread_start|thread entry accounted on its own stack; no retained caller frame|ChibiOS chcoreasm.S:101-115; `blx r4` is entry dispatch, startup makes no push/sub frame|
 |adc_lld_serve_rx_interrupt|adcDoneCallback|ADCv1/hal_adc_lld.c:123-149 and hal_adc.h callback macros;f0 port.cpp:27-37 group has end_cb=adcDoneCallback,error_cb=null;only ADCD1/that group used|
 

@@ -1,0 +1,9 @@
+{
+  "command": [
+    "python3",
+    "audit/astra-2026-10-25b/verify_scope.py"
+  ],
+  "cwd": "/home/logan/projects/wideband-review-astra/work",
+  "returncode": 0,
+  "seconds": 0.12
+}
