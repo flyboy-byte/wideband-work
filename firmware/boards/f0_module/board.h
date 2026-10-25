@@ -332,7 +332,7 @@
                                      PIN_OSPEED_LOW(GPIOB_PIN14) |         \
                                      PIN_OSPEED_LOW(GPIOB_PIN15))
 #define VAL_GPIOB_PUPDR             (PIN_PUPDR_PULLUP(GPIOB_PIN0) |       \
-                                     PIN_PUPDR_PULLUP(GPIOB_PIN1) |       \
+                                     PIN_PUPDR_PULLDOWN(GPIOB_PIN1) |     \
                                      PIN_PUPDR_PULLUP(GPIOB_PIN2) |         \
                                      PIN_PUPDR_PULLUP(GPIOB_PIN3) |    \
                                      PIN_PUPDR_PULLUP(GPIOB_PIN4) |      \

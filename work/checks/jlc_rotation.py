@@ -45,9 +45,14 @@ def fetch(lcsc):
     if '--fetch' not in sys.argv:
         return None
     os.makedirs(CACHE, exist_ok=True)
-    # a browser-like user agent gets a 403 from easyeda.com's CDN; the plain one is answered (2026-10-24)
-    with urllib.request.urlopen(f'https://easyeda.com/api/products/{lcsc}/components?version=6.5.42', timeout=20) as r:
-        d = json.load(r)
+    # easyeda.com's CDN answers curl; it refused a browser-like user agent (2026-10-24, morning) and later Python's own
+    # urllib too (403, same day), so fetch with curl
+    url = f'https://easyeda.com/api/products/{lcsc}/components?version=6.5.42'
+    r = subprocess.run(['curl', '-sf', '--max-time', '20', url], capture_output=True, text=True)
+    if r.returncode:
+        print(f'{lcsc}: fetch failed (curl exit {r.returncode})')
+        return None
+    d = json.loads(r.stdout)
     time.sleep(1)
     if d.get('success'):
         json.dump(d, open(path, 'w'))

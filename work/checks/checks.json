@@ -256,5 +256,17 @@
       "sim/stability.sh",
       "sim/load_accuracy.sh"
     ]
+  },
+  {
+    "name": "Output low from reset until the app drives PB1 (R3 vs the PB1 pull in both board.h; outside review B1)",
+    "cmd": [
+      "python3",
+      "checks/boot_level.py"
+    ],
+    "files": [
+      "../hardware/board_carrier/board_carrier.kicad_pcb",
+      "../firmware/boards/f0_module/board.h",
+      "../firmware/boards/f0_module/bootloader/cfg/board.h"
+    ]
   }
 ]

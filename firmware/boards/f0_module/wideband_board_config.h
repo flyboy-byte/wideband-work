@@ -26,8 +26,11 @@
 #define AUXOUT_SEL1_PWM_CHANNEL 3
 // Output voltage at 100% duty: REF3030 (3.0 V) buffer, op-amp gain 1 + 68k/100k (work/docs/carrier.md)
 #define AUXOUT_FULL_SCALE_VOLTS (3.0f * (1.0f + 68.0f / 100.0f))
-// Output while the sensor is warming up or lambda is invalid
-#define AUXOUT_INVALID_VOLTS (0.0f)
+// Output while the sensor is warming up or lambda is invalid: 5.0 V = 20 AFR, the lean end. A closed-loop ECU that
+// misses the fault then adds fuel (runs rich) rather than pulling it, and a log shows an off-scale value. 0 V read as
+// 10 AFR, a believable rich reading, and into a pull-up input it floors at 0.6-1 V = 11-12 AFR (outside review N1,
+// 2026-10-24; decided by Claude on the owner's delegation)
+#define AUXOUT_INVALID_VOLTS (5.0f)
 // Per-board trim from bring-up test A1 (measured = gain * wanted + offset, so we send (wanted - offset) / gain).
 // Overridable at build time for one board, e.g. make BOARD=f0_module UDEFS='-DAUXOUT_TRIM_GAIN=1.012f'
 #ifndef AUXOUT_TRIM_GAIN

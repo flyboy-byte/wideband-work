@@ -1,7 +1,7 @@
 // Host tests for the 0-5 V analog output (docs/flashing-and-test-plan.md F3-F6), running the production auxout.cpp,
 // pump_dac.cpp and can_helper.cpp with the real f0_module board config. Expected values come from the design
 // (CLAUDE.md, work/docs/carrier.md), not from the code: full scale 3.000 V x 1.68 = 5.04 V; AFR 10 = 0 V ... 20 = 5 V;
-// 0 V while lambda is invalid; test mode 1.00 / 2.50 / 4.00 V, 10 s each.
+// 5.0 V (20 AFR) while lambda is invalid (since 2026-10-24, outside review N1); test mode 1.00 / 2.50 / 4.00 V, 10 s each.
 
 #include <gtest/gtest.h>
 
@@ -19,6 +19,7 @@ static constexpr int PumpChannel = 0;                 // TIM3 CH1, the pump DAC
 static constexpr uint64_t TicksPerSecond = 10000;     // f0 chconf.h CH_CFG_ST_FREQUENCY
 
 static float DutyFor(float volts) { return volts / FullScale; }
+static const float InvalidDuty = 5.0f / FullScale;   // 5.0 V, the lean end
 static float AfrToVolts(float afr) { return std::fmin(std::fmax((afr - 10.0f) / 10.0f * 5.0f, 0.0f), 5.0f); }
 
 class AuxOut : public ::testing::Test
@@ -152,7 +153,7 @@ TEST_F(AuxOut, InvalidWhileHeaterNotClosedLoop)
     Boot();
     fake::heaterClosedLoop = false;
     UpdateAuxOut();
-    EXPECT_EQ(AuxDuty(), 0.0f);
+    EXPECT_NEAR(AuxDuty(), InvalidDuty, 1e-6);
 }
 
 TEST_F(AuxOut, NernstWindowIsStrict)
@@ -166,7 +167,7 @@ TEST_F(AuxOut, NernstWindowIsStrict)
     {
         fake::nernstDc = c.nernst;
         UpdateAuxOut();
-        EXPECT_NEAR(AuxDuty(), c.valid ? valid : 0.0f, 2e-4) << "Nernst " << c.nernst;
+        EXPECT_NEAR(AuxDuty(), c.valid ? valid : InvalidDuty, 2e-4) << "Nernst " << c.nernst;
     }
 }
 
@@ -175,7 +176,7 @@ TEST_F(AuxOut, NanLambdaIsInvalid)
     Boot();
     fake::lambda = std::numeric_limits<float>::quiet_NaN();
     UpdateAuxOut();
-    EXPECT_EQ(AuxDuty(), 0.0f);
+    EXPECT_NEAR(AuxDuty(), InvalidDuty, 1e-6);
 }
 
 TEST_F(AuxOut, InfiniteLambdaReadsFullScale_Documented)

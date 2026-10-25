@@ -27,7 +27,7 @@ C0603 = 'Capacitor_SMD:C_0603_1608Metric'
 R0402 = 'Resistor_SMD:R_0402_1005Metric'
 C0402 = 'Capacitor_SMD:C_0402_1005Metric'
 PARTS = {
-    'R3':  ('Device', 'R', '100k', R0402, 'C25741', (215.9, 40.64), 'pull-down: output at 0 V while the MCU boots'),
+    'R3':  ('Device', 'R', '4.7k', R0402, 'C25900', (215.9, 40.64), 'pull-down: output at 0 V from reset until the app drives PB1. 4.7k, not 100k: the F042 pull-up on PB1 (25-55k) held 100k at 2.1-2.6 V, read as high (outside review B1, 2026-10-24); 4.7k gives 0.52 V worst case, under the buffer V_IL 0.8 V. C25900 Basic'),
     'U5':  ('Reference_Voltage', 'REF3030', 'REF3030', 'Package_TO_SOT_SMD:SOT-23', 'C38423', (254, 40.64),
             '3.000 V, the full-scale reference for the buffer'),
     'C11': ('Device', 'C', '100n', C0402, 'C1525', (292.1, 40.64), 'REF3030 input bypass'),
