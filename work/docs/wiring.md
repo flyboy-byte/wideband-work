@@ -88,7 +88,15 @@ See `renders/module/swd-pads.png` (from `gen/swd_diagram.py`, drawn from the boa
   Alternative with voltage sense: STLINK-V3MINIE; whether the TC2030-CTX-NL plugs into its 14-pin STDC14 socket without
   an adapter is UNKNOWN.
 - The three locating holes are 2 on one side and 1 on the other, so the "-NL" plug only goes on one way.
-- **Flash the module before soldering it to the carrier**, while J2 is fully exposed. After that J2 sits in the
-  carrier's 8.0 x 5.5 mm cutout, about 1 mm clear of the pad pattern each side. Whether the plug body fits through the
-  cutout (1.6 mm board plus the header standoff) is UNKNOWN until tried. You need it for the trim reflash after A1.
+- **Flash the module first, bare**, before any pins are fitted: nothing is in the cable's way. The module is
+  socketed (owner, 2026-10-25; `ROADMAP.md`), so it lifts off the carrier for every later flash.
+- **After the module's pins are fitted the cable may not seat**: its nose is 9.906 x 6.096 mm (Tag-Connect drawing,
+  sheet 2), centred on J2, and reaches about 0.75 mm into the J3-side pin strip on the module's underside (INFERRED
+  from both drawings; round 8 OR2). Try it on the bare module and again once the pins are on. If it won't seat, while
+  the module is still bare tack five thin wires (30 AWG wire-wrap) to pads 1 (3.3 V), 2 (SWDIO), 3 (nRESET), 4 (SWCLK)
+  and 5 (GND). Glue them down with a dab of hot glue or Kapton so they don't pull the pads, and end them in a 5-pin
+  0.1" header. That header plugs into the clone's jumpers for every trim reflash, with the module in or out.
+- Another builder reports the clone worked with STM32CubeProgrammer but not ST-Link Utility 4.5, and more reliably on
+  USB power (rusEFI forum t=1856, 2021-05; REPORTED; `docs/field-reports.md`). If it won't connect, try
+  "connect under reset" with nRESET wired.
 - Power the board from its own supply while flashing. Pad 1 only senses the target voltage.
