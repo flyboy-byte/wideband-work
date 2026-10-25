@@ -109,7 +109,7 @@ Module pad SEL_1 carries the PWM. On the carrier:
   as signal ground (on the pour beside J3-1; see `work/docs/carrier.md` "Grounding and the output")
 - LM2904 supply: 12 V → 1k → 18 V zener, because the input TVS lets the rail reach about 35-48 V
 
-Passives are 0402 except R6, R8, R9 (1206), R11, C16 and C17. Two M3 holes in the strip corners (r37).
+Passives in the analog stage are 0402 except R6, R8 and C17 (0603), and R9, R11 and C16 (1206) (board, 2026-10-24). Two M3 holes in the strip corners (r37).
 
 ## Rules
 
