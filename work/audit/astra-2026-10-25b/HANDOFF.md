@@ -2,6 +2,8 @@
 
 Read FINDINGS.md first. Reviewed design **18b6cef4c5ca249423fce5a9924ea7fc53124220**, not a generated replacement. PR https://github.com/flyboy-byte/wideband-work/pull/3 targets analog-out from review/astra-2026-10-25b. All reviewer changes are in this directory; the designer records the round in AUDIT.md after verifying it, per REVIEW.md's sending-it-back section.
 
+Final read-only checkout check: the designer concurrently advanced analog-out to **de4ee0d** (handoff/status update and WB_REPORT_DIR→CHECKS_REPORT_DIR rename in both reporting helpers). No difference from18b6cef in hardware/,firmware/,work/gen/ or work/sim/. This audit's executed checks remain pinned to18b6cef;the new reporting-variable rename was inspected,not rerun. Original checkout remains on analog-out;its KiCad lock file was left untouched. PR#3 was verified OPEN,ready for review,and audit-folder-only after the seven stage commits. Nothing was merged.
+
 ## Outcome
 
 No new BLOCKER/BUG in the targeted round6-fix review. Suitable for a supervised first prototype after factory rail/placement confirmation,not an unqualified automotive/fault-survival release. TK1/TK2 repaired false-PASS cases reproduce correctly;HP R9 fixes the nominal overload. Complete coverage and limitations are in FINDINGS.md.
