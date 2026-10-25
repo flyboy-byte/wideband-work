@@ -53,9 +53,11 @@ PARTS = {
     # J3-5): the receiver's input, pull-up or pull-down, no longer shifts the output (sim/load_accuracy.sh, C2). C4502: 470R 1206 1 % 250 mW [REPORTED, LCSC datasheet listing]
     'R11': ('Device', 'R', '470', 'Resistor_SMD:R_1206_3216Metric', 'C4502', (381.0, 213.36),
             'series resistor at J3-5: a 12 V wiring fault cannot back-feed +5V through D3'),
-    # 1206 (owner decision D1, 2026-10-23): load-dump current into the zener. C4410 UNI-ROYAL 1206W4F1001T5E 1 % 250 mW
-    # [REPORTED, LCSC/JLC listing 2026-10-24]
-    'R9':  ('Device', 'R', '1k', 'Resistor_SMD:R_1206_3216Metric', 'C4410', (215.9, 213.36), 'op-amp supply feed from the protected 12 V'),
+    # 1206 (owner decision D1, 2026-10-23): load-dump current into the zener. A load dump clamped by D1 (SMCJ24CA, up to
+    # 38.9 V) against D5 (18 V) puts (38.9 - 18)^2 / 1k = 0.44 W in R9 for about 400 ms (Codex round 6, R6-S3). The 250 mW
+    # general-purpose part (C4410) was over its rating there; C844867 Vishay CRCW12061K00FKEAHP is the pulse-proof HP
+    # series, 1 % 750 mW in the same 1206 footprint [REPORTED, JLC listing 2026-10-25; Extended]. checks/surge_budget.py
+    'R9':  ('Device', 'R', '1k', 'Resistor_SMD:R_1206_3216Metric', 'C844867', (215.9, 213.36), 'op-amp supply feed from the protected 12 V'),
     'D5':  ('Device', 'D_Zener', '18V', 'Diode_SMD:D_SOD-123', 'C173425', (241.3, 213.36),
             'clamps op-amp supply: TVS D1 (SMCJ24CA, C151279) lets the rail reach about 27-39 V; plain LM2904 is rated 26 V'),
     'C16': ('Device', 'C', '10u', 'Capacitor_SMD:C_1206_3216Metric', 'C13585', (266.7, 213.36), 'op-amp supply, 50 V'),

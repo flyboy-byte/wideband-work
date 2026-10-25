@@ -12,7 +12,7 @@ def main(kind, path, *flags):
     if not shutil.which('kicad-cli'):
         print('kicad-cli not installed'); return 77
     os.makedirs('checks/out', exist_ok=True)
-    out = f'checks/out/{os.path.splitext(os.path.basename(path))[0]}-{kind}.json'
+    out = os.path.join(os.environ.get('WB_REPORT_DIR', 'checks/out'), f'{os.path.splitext(os.path.basename(path))[0]}-{kind}.json')
     sev = [] if '--all' in flags else ['--severity-error']
     cmd = ['kicad-cli', 'pcb' if kind == 'drc' else 'sch', kind, *sev, '--format', 'json', '-o', out, path]
     r = subprocess.run(cmd, capture_output=True, text=True)

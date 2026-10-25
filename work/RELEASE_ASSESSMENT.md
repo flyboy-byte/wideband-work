@@ -128,7 +128,8 @@ move it to what a built board can tell us.
     error into a 100k input, which the trim removes for one receiver. It changes schematic, placement and routing (the D3 link
     must be redone). **Owner decision D6.**
 - **R2 RISK, R9 (1 kΩ, 0603) + D5 (18 V zener, 500 mW).** Normal use is a few mW. In a surge that the input TVS lets through
-  (35-48 V) the pair sees 17-30 mA: R9 0.3-0.9 W, zener 0.3-0.5 W. A short pulse is fine; a long one (load-dump class) can open
+  (35-48 V; corrected 2026-10-24 to 27-39 V for the SMCJ24CA on the board, and R9 is a 0.75 W pulse-proof part since
+  2026-10-25, `checks/surge_budget.py`) the pair sees 17-30 mA: R9 0.3-0.9 W, zener 0.3-0.5 W. A short pulse is fine; a long one (load-dump class) can open
   R9. Outcome: op-amp loses power, output goes to 0 V, the heater and CAN are not involved. Fix: R9 to 1206, or accept. INFERRED.
 - **R3 RISK, C17 sits 4.5 mm from U6 pin 8** (op-amp supply bypass). Bipolar op-amp at low speed, C16 (10 µF) is close, so I expect
   no problem, INFERRED. I tried to pull it in (weighting the net in the placer, run r33): the placement moved and routing got

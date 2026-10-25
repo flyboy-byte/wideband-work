@@ -36,8 +36,10 @@ footprint); check the housing.
   the CAN ID (`docs/firmware.md`).
 - **J3-1 and J3-7 are the same copper on the board.** If J3-1's wire ever opens, the heater current (amps) would
   return through J3-7 and the receiver's sensor-ground pin, which is not made for that (Codex C3). J3-1 must be a
-  solid crimp to the block. Optional, INFERRED: a 250-500 mA fuse in the J3-7 wire. The output's own current is under
-  2 mA, so the fuse adds no measurable offset, and it opens before an ECU's sensor ground carries heater current.
+  solid crimp to the block. An idea, not checked: a 250-500 mA fuse in the J3-7 wire. The output's own current is under
+  2 mA, so the fuse would add no measurable offset. Whether it opens before the ECU's sensor-ground track is damaged is
+  UNKNOWN: that needs the fuse's time-current curve and the ECU's ground rating, which we don't have (Codex round 6,
+  R6-S5). Don't rely on it; rely on the J3-1 crimp.
 - Bench test A4 measures the ground offset in the car: under 20 mV between J3-7 at the controller and the receiver's
   ground pin.
 

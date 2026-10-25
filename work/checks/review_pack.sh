@@ -23,6 +23,8 @@ python3 checks/audit_pack.py "$REV" \
   out/firmware.diff ../firmware/watchdog.h ../firmware/heater_control.cpp \
   docs/carrier.md docs/firmware.md docs/ordering.md docs/wiring.md RELEASE_ASSESSMENT.md ROADMAP.md \
   sim/stability.sh sim/load_accuracy.sh sim/full_scale_corners.sh sim/full_scale_corners.out \
-  checks/jlc_rotation.py checks/jlc_rotation.json checks/boot_level.py renders/module/swd-pads.png
+  checks/jlc_rotation.py checks/jlc_rotation.json checks/boot_level.py renders/module/swd-pads.png \
+  checks/stack_estimate.py checks/test_stack_estimate.py checks/surge_budget.py checks/test_sim_failures.py \
+  sim/completed.sh sim/stability.out
 (cd audit && rm -f "$REV-$(date +%F).zip" && zip -qr "$REV-$(date +%F).zip" "$REV-$(date +%F)")
 echo "zip for a chat reviewer: $DST.zip ($(du -h "$DST.zip" | cut -f1))"

@@ -94,3 +94,15 @@ that would help any board as a line for the `pcb-design` skill (see its "Lessons
   carrier's: a blind reviewer never saw the carrier's not-fitted list. Caught while rewriting the docs. Pack builders
   must refuse a name collision. Docs that quote numbers (the check count) need a check that compares them with the
   repo (`checks/review_docs.py`).
+- 2026-10-25 A static stack checker that "cuts loops through indirect calls as artefacts" hides exactly the recursion
+  it exists to find (Codex R6-S6). Over-approximating indirect targets is sound only if every loop that results still
+  fails; narrow the targets from the source instead, cross-checked against what each caller loads.
+- 2026-10-25 ngspice can abort a transient, exit 0 and print finite zeros for a window it never reached (Codex R6-S8);
+  "exit 0 and the numbers parse" passed it in all three wrappers. Have each deck print its last time point and require
+  it to reach the stop time. A sim's "before" level must be settled before the step (R6-S7).
+- 2026-10-25 A general-purpose 250 mW resistor in a load-dump path: the continuous power during a clamped 400 ms dump
+  was 190 % of rating. Budget every part between a TVS-clamped rail and a clamp with the TVS's clamping voltage, not
+  the nominal rail (`checks/surge_budget.py`).
+- 2026-10-25 Codex ran its review in the designer's own checkout and left it on `review/astra-2026-10-25`, so the
+  designer's next edits landed uncommitted on the reviewer's branch (caught by an empty `git diff HEAD...branch`).
+  Reviewers work in a `git worktree` of their own (REVIEW.md, route B).

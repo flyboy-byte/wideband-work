@@ -6,7 +6,11 @@
 Static estimate, not a measurement. From the disassembly: each function's frame is its pushes plus `sub sp, #n`; edges are
 direct calls (`bl`) and tail branches into another function. An indirect call (`blx rN`: virtual calls, function
 pointers) is charged the deepest function whose address appears anywhere in the image (vtables, pointer tables, and
-literal pools in .text), so the result can only overestimate there; an indirect call with no candidate fails. Recursion is reported, not followed. ChibiOS reserves the exception frame and interrupt
+literal pools in .text), so the result can only overestimate there; an indirect call with no candidate fails. Where
+that over-approximation makes loops that can't run (every virtual call charged with every virtual method), the caller's
+targets are narrowed by NARROW below, a table read from the source and cross-checked against the image. Any loop left,
+direct or indirect, fails as unbounded recursion (Codex R6-S6: loops through an indirect call used to be cut as
+artefacts, so a real recursion through a function pointer passed). ChibiOS reserves the exception frame and interrupt
 headroom outside the n of THD_WORKING_AREA(wa, n) (PORT_WA_SIZE), so each thread's depth is compared with n.
 Exit 1 if any thread's estimate exceeds its stack, or the analysis meets something it can't bound.
 """
@@ -22,6 +26,25 @@ THREADS = {'HeaterThread': (256, 'heater_thread.cpp'), 'PumpThread': (256, 'pump
            'SamplingThread': (256, 'sampling_thread.cpp'), 'CanTxThread': (512, 'can.cpp'),
            'CanRxThread': (512, 'can.cpp'), 'IndicationThread': (128, 'indication.cpp')}
 OPTIONAL = {'IndicationThread'}   # not built for f0_module
+
+# Indirect callers whose targets are narrowed from "every address-taken function" to what the source can reach. Read from
+# the source on 2026-10-25 (f0_module); each set must contain every function whose address the caller itself loads (its
+# literal pool), every name must be an address-taken function in the image, and a caller with no indirect call is stale.
+# Callers not listed keep the full over-approximation.
+SAMPLER = {'Sampler::GetNernstDc() const', 'Sampler::GetNernstAc() const', 'Sampler::GetPumpNominalCurrent() const',
+           'Sampler::GetInternalHeaterVoltage() const', 'Sampler::GetSensorTemperature() const',
+           'Sampler::GetSensorInternalResistance() const'}   # vtable for Sampler: the only ISampler in the build
+NARROW = {
+    # heater_control.cpp:197-259: virtual calls on `const ISampler&` (Sampler) and this->SetDuty (HeaterController)
+    'HeaterControllerBase::Update(ISampler const&, HeaterAllow)': SAMPLER | {'HeaterController::SetDuty(float) const'},
+    # sampling.cpp:63-90: GetSensorTemperature calls GetSensorInternalResistance, which calls GetNernstAc; both leaves
+    'Sampler::GetSensorTemperature() const': {'Sampler::GetSensorInternalResistance() const', 'Sampler::GetNernstAc() const'},
+    'Sampler::GetSensorInternalResistance() const': {'Sampler::GetNernstAc() const'},
+    # ChibiOS chcore_v6m: calls the thread function, which runs on its own stack and is checked as its own entry
+    '__port_thread_start': set(),
+    # ChibiOS ADC LLD: the end callback of the conversion group (convGroup.end_cb = adcDoneCallback); no error callback
+    'adc_lld_serve_rx_interrupt': {'adcDoneCallback(hal_adc_driver*)'},
+}
 
 
 def run(*cmd):
@@ -83,7 +106,8 @@ def main():
     # .text, where Thumb code keeps constants in literal pools after each function: a pointer loaded from there and
     # called with blx was missed when only .rodata/.data were read (Codex R41-CX1, 2026-10-24). Instruction words that
     # happen to look like a function address only add targets, so the estimate can only grow.
-    words = set()
+    words, pool = set(), {}
+    order = sorted(starts)
     for sec in ('.text', '.rodata', '.data'):
         try:
             dump = run('arm-none-eabi-objdump', '-s', '-j', sec, str(ELF))
@@ -92,32 +116,50 @@ def main():
         for line in dump.splitlines():
             m = re.match(r'^ ([0-9a-f]+) ((?:[0-9a-f]{8} ?){1,4})', line)
             if m:
-                for w in m.group(2).split():
-                    words.add(int.from_bytes(bytes.fromhex(w), 'little'))
+                for i, w in enumerate(m.group(2).split()):
+                    v = int.from_bytes(bytes.fromhex(w), 'little')
+                    words.add(v)
+                    if sec == '.text' and v & 1 and (v & ~1) in starts:   # which function's literal pool holds it
+                        at = int(m.group(1), 16) + 4 * i
+                        owner = starts[max((a for a in order if a <= at), default=order[0])]
+                        pool.setdefault(owner, set()).add(starts[v & ~1])
     # Thread entries are started by ChibiOS on their own stacks, never called from another thread's code (their addresses
     # sit in literal pools as chThdCreateStatic arguments); names are demangled, e.g. 'CanTxThread(void*)'
     entry = lambda n: n == 'main' or n.split('(')[0] in THREADS
     targets = {starts[w & ~1] for w in words if w & 1 and (w & ~1) in starts and not entry(starts[w & ~1])}
     unbounded = [f for f, n in indirect.items() if n] if not targets else []
+    present = [f for f in NARROW if f in frame]
+    for f, allowed in NARROW.items():
+        if not present:
+            break   # a test image without the firmware's classes: nothing to narrow
+        if f not in frame:
+            problems.append(f'NARROW lists {f}, which is not in this build: re-read the source')
+            continue
+        if not indirect.get(f):
+            problems.append(f'NARROW lists {f}, which makes no indirect call in this build: re-read the source')
+            continue
+        if allowed - targets:
+            problems.append(f'NARROW for {f} names {sorted(allowed - targets)}, not address-taken in this build')
+        if (pool.get(f, set()) - allowed) - {g for g in pool.get(f, set()) if entry(g)}:
+            problems.append(f'{f} loads {sorted(pool[f] - allowed)} itself but NARROW does not list them')
+    reach = lambda f: (NARROW[f] & targets) if f in NARROW else targets
 
     memo, stack, kinds = {}, [], []
-    recursion, cut = set(), set()
+    recursion = set()
 
     def depth(f, kind='direct'):
         if f in memo:
             return memo[f]
         if f in stack:
             i = stack.index(f)
-            loop = ' -> '.join(stack[i:] + [f])
-            # A loop through an indirect hop comes from charging every address-taken function to every indirect call;
-            # only a loop of direct calls is real recursion
-            (cut if 'indirect' in kinds[i + 1:] + [kind] else recursion).add(loop)
+            hops = [k for k in kinds[i + 1:] + [kind]]
+            recursion.add(' -> '.join(stack[i:] + [f]) + (' (through an indirect call)' if 'indirect' in hops else ''))
             return (0, None)
         stack.append(f)
         kinds.append(kind)
         sub = [(depth(c)[0], c) for c in calls.get(f, ())]
         if indirect.get(f):
-            sub += [(depth(t, 'indirect')[0], f'*{t}') for t in targets]
+            sub += [(depth(t, 'indirect')[0], f'*{t}') for t in reach(f)]
         stack.pop()
         kinds.pop()
         best = max(sub, default=(0, None))
@@ -125,9 +167,10 @@ def main():
         return memo[f]
 
     def path(f):
-        out = []
-        while f:
+        out, seen = [], set()
+        while f and f.lstrip('*') not in seen:   # a recursive chain would loop here (Codex R6-S6, the -v hang)
             name = f.lstrip('*')
+            seen.add(name)
             out.append(f'{f}({frame.get(name, 0)})')
             f = memo.get(name, (0, None))[1]
         return ' > '.join(out)
@@ -179,11 +222,6 @@ def main():
     unresolved = sorted({c for cs in calls.values() for c in cs if c.startswith('?')})
     if unresolved:
         problems.append(f'calls to addresses with no symbol: {unresolved[:5]}')
-    if cut:
-        print(f'  note: {len(cut)} loop(s) through indirect calls cut (an artefact of the over-approximation, -v lists them)')
-        if VERBOSE:
-            for c in sorted(cut):
-                print(f'       {c}')
     for f in unbounded:
         problems.append(f'{f}: indirect call with no possible target found, not bounded')
     for r in sorted(recursion):

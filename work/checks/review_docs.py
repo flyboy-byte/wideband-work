@@ -67,7 +67,7 @@ def self_test():
         return print('self-test: the real docs fail; fix them first') or 1
     cases = {
         'check count': (good[0].replace('expect: ', 'expect: 9', 1),) + good[1:],
-        'task IDs': (good[0], good[1].replace('### TK13.', '### TK14.'), *good[2:]),
+        'task IDs': (good[0], re.sub(r'^### TK\d+\.', '### TK98.', good[1], count=1, flags=re.M), *good[2:]),
         'pack file': (good[0], good[1].replace('`carrier-cpl.csv`', '`no-such-file.csv`', 1), *good[2:]),
         'script': (good[0], good[1].replace('checks/fab_files.py', 'checks/no_such.py', 1), *good[2:]),
         'placeholder': good[:5] + (good[5] + '\n<fill me>',),

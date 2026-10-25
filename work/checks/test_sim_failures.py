@@ -1,17 +1,31 @@
 #!/usr/bin/env python3
 """The sim wrappers fail when ngspice gives no valid result (Codex R41-CX2, 2026-10-24): a fake ngspice that exits 1,
 one that exits 0 with no measurement (what a failed operating point looks like), and one that answers, which must pass.
+Since Codex R6-S8 (2026-10-25) also: a transient that aborts part-way, exits 0 and prints finite zeros (real ngspice
+47 does this), and one that stops short of the measurement window without saying so; and full_scale_corners.sh too.
 Runs a copy of sim/ with a placeholder model file, so it needs neither ngspice nor TI's model.
   python3 checks/test_sim_failures.py      exit 1 on any wrong verdict"""
 import os, shutil, subprocess, sys, tempfile
 
 SIM = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'sim')
+WRAPPERS = ('stability.sh', 'load_accuracy.sh', 'full_scale_corners.sh')
+# A fake answer per deck: stability (7 values: the 6th the drift before the step in mV, the last a settling time),
+# full scale (5), load accuracy (1)
+ANSWER = ('if grep -q "let os" "$2"; then echo "RES 1.5 2.5 2.6 1.0 0.01 {drift}{ts}"; '
+          'elif grep -q "vout AVG" "$2"; then echo "RES {z}4.98 {z}11.6 {z}0.001 {z}4.97 {z}4.99"; else echo "RES {z}2.52"; fi')
 FAKES = {  # name: (script body, expected exit is nonzero)
     'exits 1': ('echo "intentional simulator failure" >&2; exit 1', True),
     'exits 0, no measurement': ('echo "doAnalyses: TRAN:  Timestep too small"; exit 0', True),
-    'exits 0, partial measurement': ('echo "RES 1.0 2.0"; exit 0', True),
-    'answers, no settling crossing': ('if grep -q "let os" "$2"; then echo "RES 1.5 2.5 2.6 1.0 0.01"; else echo "RES 2.52"; fi', False),
-    'answers': ('if grep -q "let os" "$2"; then echo "RES 1.5 2.5 2.6 1.0 0.01 120"; else echo "RES 2.52"; fi', False),
+    'exits 0, partial measurement': ('echo "RES 1.0 2.0"; echo "END 1"; exit 0', True),
+    'aborted part-way, zeros': ('echo "doAnalyses: TRAN:  Timestep too small; time = 5.22409e-06"; '
+                                'echo "run simulation(s) aborted"; echo "END 5.22409e-06"; '
+                                'if grep -q "let os" "$2"; then echo "RES 0 0 0 0 0 0"; '
+                                'elif grep -q "vout AVG" "$2"; then echo "RES 0 0 0 0 0"; else echo "RES 0"; fi', True),
+    'stopped short, no message': (ANSWER.format(ts=' 120', z='', drift='0.1') + '; echo "END 1e-4"', True),
+    'answers, no END line': (ANSWER.format(ts=' 120', z='', drift='0.1'), True),
+    'answers, not settled before step': (ANSWER.format(ts=' 120', z='', drift='3.2') + '; echo "END 1"', 'stability'),
+    'answers, no settling crossing': (ANSWER.format(ts='', z='', drift='0.1') + '; echo "END 1"', False),
+    'answers': (ANSWER.format(ts=' 120', z='', drift='0.1') + '; echo "END 1"', False),
 }
 
 
@@ -21,7 +35,7 @@ def main():
         sim = os.path.join(t, 'sim')
         os.makedirs(os.path.join(sim, 'models'))
         open(os.path.join(sim, 'models', 'lmx58_lm2904.lib'), 'w').close()
-        for name in ('stability.sh', 'load_accuracy.sh'):
+        for name in WRAPPERS + ('completed.sh',):
             shutil.copy(os.path.join(SIM, name), sim)
         bindir = os.path.join(t, 'bin')
         os.makedirs(bindir)
@@ -29,15 +43,16 @@ def main():
             stub = os.path.join(bindir, 'ngspice')
             open(stub, 'w').write('#!/bin/sh\n' + body + '\n')
             os.chmod(stub, 0o700)
-            for name in ('stability.sh', 'load_accuracy.sh'):
+            for name in WRAPPERS:
                 if name == 'load_accuracy.sh' and fake == 'exits 0, partial measurement':
                     continue  # it reads one value; covered by "no measurement"
                 p = subprocess.run(['bash', os.path.join(sim, name)], capture_output=True, text=True, timeout=120,
                                    env=dict(os.environ, PATH=bindir + os.pathsep + os.environ['PATH']))
-                ok = (p.returncode != 0) == want_fail
+                fail = want_fail if not isinstance(want_fail, str) else name.startswith(want_fail)
+                ok = (p.returncode != 0) == fail
                 bad += not ok
-                print(f"{'ok  ' if ok else 'FAIL'} {name:17} ngspice {fake:28} -> exit {p.returncode}"
-                      + ('' if ok else f' (want {"nonzero" if want_fail else "0"})\n' + p.stdout[-400:]))
+                print(f"{'ok  ' if ok else 'FAIL'} {name:21} ngspice {fake:30} -> exit {p.returncode}"
+                      + ('' if ok else f' (want {"nonzero" if fail else "0"})\n' + p.stdout[-400:]))
     print(f'sim wrappers: {bad} wrong verdict(s)')
     return 1 if bad else 0
 

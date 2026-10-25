@@ -5,7 +5,10 @@ STATE.md (between <!-- checks:start --> and <!-- checks:end -->). Exit 1 if any 
 checks.json: [{"name": "CPL vs board", "cmd": ["python3", "checks/cpl_vs_board.py", "board.kicad_pcb", "cpl.csv"],
                "files": ["board.kicad_pcb", "cpl.csv"]}, ...]
 Each check prints its result on its last line and exits 0 (pass) or non-zero (fail). A command that is not
-installed, or a check that exits 77 (kicad_check.py without KiCad), is recorded as "skipped", never as passed."""
+installed, or a check that exits 77 (kicad_check.py without KiCad), is recorded as "skipped", never as passed.
+
+  run_all.py --report DIR    reviewer mode: results and DRC/ERC reports go to DIR; STATE.md, checks/last_run.json and
+                             checks/out/ are left alone (Codex round 6, TK13: a review run dirtied the designer's files)"""
 import datetime, hashlib, json, os, re, shutil, subprocess, sys
 
 
@@ -22,6 +25,11 @@ def head():
 
 
 def main():
+    report = sys.argv[sys.argv.index('--report') + 1] if '--report' in sys.argv else None
+    env = dict(os.environ)
+    if report:
+        os.makedirs(report, exist_ok=True)
+        env['WB_REPORT_DIR'] = os.path.abspath(report)   # kicad_check.py writes its reports there
     checks = json.load(open('checks/checks.json'))
     today = datetime.date.today().isoformat()
     results = []
@@ -30,20 +38,20 @@ def main():
         if not shutil.which(c['cmd'][0]):
             results.append({'name': c['name'], 'status': 'skipped', 'summary': f"{c['cmd'][0]} not installed", 'files': files})
             continue
-        r = subprocess.run(c['cmd'], capture_output=True, text=True)
+        r = subprocess.run(c['cmd'], capture_output=True, text=True, env=env)
         lines = [l for l in (r.stdout + r.stderr).splitlines() if l.strip() and ': Debug: ' not in l]
         results.append({'name': c['name'], 'status': 'pass' if r.returncode == 0 else 'skipped' if r.returncode == 77 else 'fail',
                         'summary': lines[-1] if lines else f'exit {r.returncode}', 'files': files})
         if c.get('advisory'):
             results[-1]['advisory'] = c['advisory']   # shown, never blocks release.py
     run = {'date': today, 'git_head': head(), 'results': results}
-    json.dump(run, open('checks/last_run.json', 'w'), indent=1)
+    json.dump(run, open(os.path.join(report, 'last_run.json') if report else 'checks/last_run.json', 'w'), indent=1)
     rows = ['| Check | Result | Summary | Date | Files (sha256/12) |', '| --- | --- | --- | --- | --- |']
     for x in results:
         rows.append(f"| {x['name']} | {x['status'].upper()}{' (advisory)' if x.get('advisory') else ''} | {x['summary'].replace('|', '/')} | {today} | "
                     + ', '.join(f'`{os.path.basename(f)}` {h}' for f, h in x['files'].items()) + ' |')
     table = '<!-- checks:start -->\n' + '\n'.join(rows) + f'\n\nWritten by `checks/run_all.py` at commit {run["git_head"]}. Don\'t edit by hand.\n<!-- checks:end -->'
-    if os.path.exists('STATE.md'):
+    if os.path.exists('STATE.md') and not report:
         s = open('STATE.md').read()
         if '<!-- checks:start -->' in s:
             s = re.sub(r'<!-- checks:start -->.*?<!-- checks:end -->', lambda _: table, s, flags=re.S)

@@ -6,7 +6,7 @@ Round 3 (Codex, board r36) supersedes the historical R11/full-scale/grounding co
 `docs/codex-audit-2026-10-23.md`, with raw output in `audit/codex-2026-10-23/`.
 
 ## Hand-off (give this to each auditor with a read-only copy; not your conclusions)
-- **The work list is `review/TASKS.md`** (TK1-TK13: question, files, how to check, what "done" means), and the
+- **The work list is `review/TASKS.md`** (round 7: TK1-TK7; each with a question, files, how to check, what "done" means), and the
   report to fill in is `review/FINDINGS-TEMPLATE.md`. How to start, the routes and the setup: `../REVIEW.md`. This
   hand-off is the background for those tasks.
 - Board: carrier PCB for the rusEFI wideband module (LSU 4.9 controller), grown to 40.0 x 51.5 mm, adding a 0-5 V analog
@@ -15,51 +15,30 @@ Round 3 (Codex, board r36) supersedes the historical R11/full-scale/grounding co
     -> 330R -> 1N4148WS clamps -> 470R R11 -> J3-5.
   - DC feedback (68k) is taken at J3-5, after R11; 1 nF from the op-amp output for stability.
   - Firmware: branch `analog-out`.
-- Commit and files: the commit that adds this text (round 6).
-  - Board and schematic: `hardware/board_carrier/board_carrier.kicad_{sch,pcb}` (r41 layout, R3 4.7k).
+- Commit and files: the commit that adds this text (round 7).
+  - Board and schematic: `hardware/board_carrier/board_carrier.kicad_{sch,pcb}` (r41 layout, R3 4.7k, R9 C844867).
   - Carrier fab candidate: `work/out/carrier/` (run `gen/export_fab.py`).
   - Module files: `work/out/module/` (run `gen/module_fab.py`), upstream rev C with two BOM swaps.
   - Firmware: `git diff origin/master -- firmware`.
   - Docs and sims: `work/docs/{carrier,firmware,ordering}.md`, `work/sim/*.sh`, `work/ROADMAP.md`.
-- Changed since rounds 4 (Codex) and 5 (the cousin's Claude), both at r41 / `fad8032`. **Check these first:**
-  1. **B1 fix.** R3 100k -> 4.7k (C25900, a Basic part). PB1 is pull-down instead of pull-up in both
-     `firmware/boards/f0_module/board.h` and `bootloader/cfg/board.h`.
-     - Claim: the output is low from reset until `InitAuxDac()`, even with an invalid app or during a CAN update.
-     - Claim: with R3 4.7k alone (old firmware) PB1 reaches at most 0.54 V.
-     - Claim: PB1 sources about 0.7 mA into 4.7k while it drives the PWM.
-     - Check: the pull-down doesn't break the strap read (`port.cpp:readSelPin`, never called on SEL_1 in this build)
-       or anything else on PB1. `checks/boot_level.py`.
-  2. **Invalid lambda -> 5.0 V** (was 0 V), `AUXOUT_INVALID_VOLTS`. Reason: a missed fault then makes a closed-loop
-     ECU add fuel. Check every path that reaches the invalid value: warm-up, the Nernst window, NaN, heater stopped.
-     Check what a receiver sees in each, and what happens at the 0 V -> 5 V jump after boot.
-  3. **Heater clamp** (`firmware/heater_control.cpp`, upstream code): the effective voltage is clamped at 0 before
-     it's squared into a duty. Test `HeaterUpdate.HotterSensorNeverGetsMoreHeat`. Check the closed loop's behaviour
-     near the clamp (integrator wind-up with the output clamped, recovery when the sensor cools).
-  4. **Checker fixes** for Codex R41-CX1 (`checks/stack_estimate.py`: literal pools, unbounded indirect calls, thread
-     entries) and R41-CX2 (sim wrappers fail closed). Their regression tests: `checks/test_stack_estimate.py`,
-     `checks/test_sim_failures.py`. Is the stack estimate now sound for the production ELF? 15 loops through indirect
-     calls are still cut (`-v` lists them).
-  5. **New sim** `sim/full_scale_corners.sh`: TI model with D3/D4, the R9 supply and +5V at 4.8/5.0/5.2 V. It starts
-     with `uic` because the operating point fails through R9. Is that start valid, and is 60 ms enough to settle?
-  6. **Module order files**: R10 C23092 -> C2087389 (61.9R 0.1 %) and C3 C1585 -> C106862 (33n X7R). J1/J3 headers
-     are taken off the BOM/CPL. Are the substitutes right for those positions in upstream's circuit?
-     Module rotation check (`checks/jlc_rotation.py --board module`, new):
-     - Upstream's CPL agrees on 56 of 57 parts.
-     - Q1 (VND14NV04, TO-252) is corrected 180 -> 0 deg and shifted 0.91 mm (`gen/module_fab.py` CPL_FIX). Is that right?
-     - U9's EasyEDA pin names are overridden (`BAD_EASYEDA_NAMES`). Check the XC6206 pinout against Torex.
-     - The checker no longer folds a two-lead tab part's 180 into 0 (only true two-pad parts fit either way); the
-       carrier's 38 rotations are unchanged.
-  7. **Live stock check** `checks/bom_stock.py` (JLC's parts API) and the cost/route in `ROADMAP.md`.
-  8. **J3 silkscreen** (bottom): J3-5 OUT, J3-7 GND, and upstream's 12V under J3-6, which r1-r41 had deleted. The labels
-     are 1.0 mm; the layout is otherwise unchanged. Wiring sheet `docs/wiring.md`: J3 pins, the sensor plug, SWD.
-     Does it match the board? Diagram `renders/module/swd-pads.png`: is J2 reachable through the carrier cutout?
+- Changed since round 6 (Codex/Astra at `e0b802a`; its report `audit/astra-2026-10-25/`, our answers in "Round 6"
+  below). **Check these first** (`review/TASKS.md` TK1-TK5):
+  1. **Stack checker** (R6-S6): every call loop fails now; five callers get a source-read target table (`NARROW`).
+  2. **Sim wrappers** (R6-S8): `sim/completed.sh` requires the transient to reach its stop time with no abort
+     message. Stability (R6-S7): step at 3 ms, with a settled-baseline guard.
+  3. **R9** (R6-S3): C4410 (250 mW) -> C844867 Vishay CRCW1206 HP pulse-proof, 0.75 W, same footprint. New check
+     `checks/surge_budget.py`. The layout is unchanged: one LCSC field in the board and the schematic.
+  4. Backfeed (R6-S2) and C11's edge clearance (R6-S4) are accepted, with bench test A8 and the edge-rail order step.
+  5. Docs: offset budget (R6-S1), fuse wording (R6-S5), stale comments, and `run_all.py --report DIR` for reviewers.
+- Round 6's other conclusions stand. It found no reversed part, no open connection and no heater-control defect; U9's
+  pinout is settled from Torex's datasheet. Don't redo TK1-TK13 of round 6; its PARTLY rows are TK6 here.
 - Still open from before:
   - The rotation *sense* of the CPL is INFERRED (JLC = KiCad). D2 (SS54) is paired by pin name.
-  - R9/D5 surge is not simulated (Codex C6).
-  - JLC's edge-clearance rule for assembly: C11's centre is 1.85 mm from the edge.
+  - R9/D5 surge is a power budget, not a simulation (Codex C6, round 6 R6-S3).
 - Known and accepted (don't re-report):
   - Upstream's own DRC errors (module 11, carrier 23; owner decision D2).
   - No survival requirement for a 12-16 V fault on J3-5 (owner, C1).
+  - Backfeed into +5V from a 12 V fault on J3-5 (round 6 R6-S2, under C1; bench A8). C11 edge clearance: edge rails at the quote (R6-S4).
   - Below about 1 V into a pull-up input the output reads high.
   - **R1**: full scale into a 4.7k receiver drops 66-178 mV when +5V is 4.8 V (10k and up hold within +2 mV;
     `ROADMAP.md`, bench test A7).
@@ -82,6 +61,34 @@ Severity: BLOCKER = don't order; BUG = wrong but workable; RISK = could bite (st
 NOTE. Then: what was checked and found correct, and what couldn't be checked.
 
 ## Rounds
+### Round 6 — 2026-10-25, Codex (Astra, then 6.1 Sol in the same session; independent full-repository review of `e0b802a`)
+Raw report: `audit/astra-2026-10-25/` (PR #2, branch `review/astra-2026-10-25` at `43cc114`). Mode B, prior rounds
+visible. Coverage TK1-TK13 plus TK99: all rows filled. Verdict: "No, not yet as a release/order package": two checker
+bugs that let a failure pass. Verified by Claude Opus 5.5 (designer), 2026-10-25; each fix has a regression that fails
+on the code before it.
+
+| ID | Severity | Location | Evidence (reviewer's) | Our check | Status |
+| --- | --- | --- | --- | --- | --- |
+| R6-S6 | BUG | `checks/stack_estimate.py` | A real recursion through a function pointer (108 B a level) passed as 116 of 256 B; `-v` hung | Confirmed: every loop with an indirect hop was cut as an artefact. 15 such loops in the production ELF, all from charging every virtual method to every virtual call | **fixed**: loops always fail; the five looping callers get a target set read from the source (`NARROW`, cross-checked against each caller's literal pool and the address-taken set); `-v` path guarded. `test_stack_estimate.py` case 4 (fails, hangs, on the old checker). Production now 148/256 B heater and pump, 164 sampling, worst margin 92 B (was 64 B, which counted impossible paths) |
+| R6-S8 | BUG | `sim/full_scale_corners.sh` | ngspice aborts part-way, exits 0, prints finite zeros; the wrapper passed 27 injected cases | Confirmed, and wider: all three wrappers passed it (9 wrong verdicts in the new fake cases against the old wrappers) | **fixed**: `sim/completed.sh`: each deck prints its last time point; a run passes only if it reached the stop time and printed no abort message. `test_sim_failures.py` adds aborted-with-zeros, stopped-short, no END line, and full_scale_corners.sh. Real runs with TI's model: stability 25/25, load accuracy 48/48, full scale 27/27 pass with the check, full scale identical to the committed results |
+| R6-S3 | RISK | R9 C4410 / D5 C173425 | 38.9 V for 400 ms: R9 0.437 W against 0.25 W nominal; no pulse data | Agreed. Worst case with the zener's low end (17.1 V): 0.475 W in R9, 190 % of its rating; D5 0.378 W of 0.5 W | **fixed**: R9 -> C844867 Vishay CRCW12061K00FKEAHP (pulse-proof HP, 0.75 W, same 1206 footprint; JLC 15,000, Extended, $0.55). R9 63 %, D5 76 % of rating. New check `checks/surge_budget.py` (fails on C4410). Layout unchanged: one LCSC field in the board and schematic. D5 temperature derating not modelled (NOTE) |
+| R6-S2 | RISK | D3 / +5V | 12 V on J3-5: 13.6 mA into +5V; the LM78M05 can't sink | Same sum: (12 - 5 - 0.6) / 470 = 13.6 mA. The rail rises only if the board's own +5V load is below 13.6 mA (module, CAN transceiver, REF3030, op-amp: INFERRED above it; UNKNOWN measured). Off-board receiver into an unpowered board: a pull-up of 4.7k or more to 5 V puts under 1 mA into the rail (INFERRED) | **accepted** (owner C1: no survival requirement for 12-16 V on J3-5). Bench: measure the +5V load current at bring-up (A3 step) to put a number on it |
+| R6-S4 | RISK | C11 (50.4, 104.4 mm) | Body about 1.60 mm from the edge; JLC's terms ask 2.5 mm | Agreed (centre 1.85 mm, measured before). JLC's figure REPORTED by the reviewer | **accepted with an order step**: edge rails at the quote (`docs/ordering.md`, step 3); owner at the quote |
+| R6-S1 | NOTE | `docs/carrier.md` | TI SLOS068: LM2904 offset 3 typ / 7 max at 25 C / 10 mV over temperature, not "up to 3 mV" | Agreed: 11.8 mV at the output at 25 C, 16.8 mV over temperature | **fixed** in the budget (trim removes the initial part; drift stays) |
+| R6-S5 | NOTE | `docs/wiring.md` | The J3-7 fuse "opens before the ECU is damaged" has no I2t or receiver data | Agreed | **fixed**: now "an idea, not checked; rely on the J3-1 crimp" |
+| R6-S7 | NOTE | `sim/stability.sh` | Step at 400 us came before the output settled (10 nF: 1.7532 V before, 1.6823 V settled); 100 nF overshoot 28.0 % vs 22.8 % settled | Agreed | **fixed**: step at 3 ms; the case fails if the level drifts more than 0.5 mV in the 0.3-0.5 ms before the step. Rerun (`sim/stability.out`): 25/25 settled; as built (E) 0 % to 10 nF, 9.2 % at 47 nF, 22.4 % at 100 nF; no conclusion changes |
+
+Also from TK2 and TK13, verified and done:
+- U9 (XC6206, SOT-23) pinout: the reviewer read Torex's datasheet (ETR03005-009 p3): 1 VSS, 2 VOUT, 3 VIN, as our
+  override says (REPORTED, Torex via the reviewer; we couldn't fetch it). Closes the open U9 item.
+- Stale text: CLAUDE.md and RELEASE_ASSESSMENT.md said 35-48 V (that was the SMCJ30CA): now 27-39 V. Comments in
+  `test/aux_out/test_aux_out.cpp` (invalid = 5.0 V, not 0 V) and `firmware/can_helper.cpp` (about 5 Hz, two frames a
+  cycle, not 9 Hz) fixed; the firmware's behaviour is unchanged.
+- `run_all.py --report DIR`: a reviewer's run no longer rewrites STATE.md, `checks/last_run.json` or `checks/out/`.
+- REVIEW.md setup now names `sim/.spiceinit` (`ngbehavior=psa`, needed by TI's model outside `sim/`).
+- Not acted on: `watchdog.h` timeout arithmetic omits RLR + 1 (625 vs 626 counts, under 0.2 %, NOTE); the watchdog
+  covers only the heater loop (known and accepted).
+
 ### Round 4 — 2026-10-24, Codex (independent full-repository review, r41)
 Reviewed commit: `fad803240534f08eb3fbd7ce15ddc386e75148bb` (pack `8ad4b28`).
 Verdict: Not yet on this round's evidence; verification defects remain, and electrical/fab coverage is explicitly incomplete. No new physical board defect established.

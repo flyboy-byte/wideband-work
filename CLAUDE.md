@@ -107,7 +107,7 @@ Module pad SEL_1 carries the PWM. On the carrier:
   feedback after the resistor alone oscillates into cable capacitance.
 - 330R → 1N4148WS clamps to +5V and GND → 470R (R11, limits a 12 V wiring fault into +5V; inside the DC loop since r37) → connector J3-5, with J3-7
   as signal ground (on the pour beside J3-1; see `work/docs/carrier.md` "Grounding and the output")
-- LM2904 supply: 12 V → 1k → 18 V zener, because the input TVS lets the rail reach about 35-48 V
+- LM2904 supply: 12 V → 1k (pulse-proof 1206, C844867, since 2026-10-25) → 18 V zener, because the input TVS (SMCJ24CA) lets the rail reach about 27-39 V
 
 Passives in the analog stage are 0402 except R6, R8 and C17 (0603), and R9, R11 and C16 (1206) (board, 2026-10-24). Two M3 holes in the strip corners (r37).
 

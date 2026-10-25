@@ -7,6 +7,7 @@
 # E: D with the DC feedback taken at the connector, after R11 (as built from r37, C2 build-around); Cf stays 1 nF.
 # The load and cable sit on node conn; A-C join it to out through 1 mOhm (no effect).
 cd "$(dirname "$0")"
+. ./completed.sh
 [ -f models/lmx58_lm2904.lib ] || { echo "models/lmx58_lm2904.lib missing (TI SNOM268)"; exit 1; }
 run() { # topology cload cf
   local f; f=$(mktemp --suffix=.cir)
@@ -14,7 +15,7 @@ run() { # topology cload cf
 * stability $1 Cload=$2 Cf=$3
 .include models/lmx58_lm2904.lib
 VCC vcc 0 12
-VIN in 0 PULSE(1.00 1.10 400u 1n 1n 10 20)
+VIN in 0 PULSE(1.00 1.10 3m 1n 1n 10 20)
 XU in inn vcc 0 oa LMX58_LM2904
 R3 oa out 330
 R11 out conn ${4:-1m}
@@ -30,39 +31,51 @@ CIR
   esac
   cat >> "$f" <<'CIR'
 .save v(conn)
-.tran 50n 1.2m 0 50n
+.tran 50n 3.8m 0 50n
 .control
 run
-meas tran v0 AVG v(conn) from=300u to=395u
-meas tran vf AVG v(conn) from=1.0m to=1.2m
-meas tran vpk MAX v(conn) from=400u to=1.2m
-meas tran vlo MIN v(conn) from=1.0m to=1.2m
-meas tran vhi MAX v(conn) from=1.0m to=1.2m
+let tend = time[length(time)-1]
+echo "END $&tend"
+meas tran vb AVG v(conn) from=2.5m to=2.6m
+meas tran v0 AVG v(conn) from=2.9m to=2.995m
+meas tran vf AVG v(conn) from=3.6m to=3.8m
+meas tran vpk MAX v(conn) from=3m to=3.8m
+meas tran vlo MIN v(conn) from=3.6m to=3.8m
+meas tran vhi MAX v(conn) from=3.6m to=3.8m
 let os = 100*(vpk-vf)/(vf-v0)
 let late = 1000*(vhi-vlo)
 let lo1 = vf - 0.01*(vf-v0)
 meas tran t1 WHEN v(conn)=$&lo1 RISE=LAST
-let ts = 1e6*(t1-400e-6)
-echo "RES $&v0 $&vf $&vpk $&os $&late $&ts"
+let ts = 1e6*(t1-3e-3)
+let drift = 1000*(v0-vb)
+echo "RES $&v0 $&vf $&vpk $&os $&late $&drift $&ts"
 quit
 .endc
 .end
 CIR
   local out rc r; out=$(ngspice -b "$f" 2>&1); rc=$?
   rm -f "$f"
+  completed "$out" 3.8e-3 || rc="$rc, run incomplete: ended at $(grep -m1 '^END ' <<< "$out" | cut -d' ' -f2) s"
   r=$(grep '^RES' <<< "$out" | head -1 | cut -d' ' -f2-)
-  read -r v0 vf vpk os late ts <<< "$r"
+  read -r v0 vf vpk os late drift ts <<< "$r"
   local num='^-?[0-9]+(\.[0-9]+)?([eE][-+]?[0-9]+)?$' x
   # the settling time is a WHEN crossing that may not exist (a stage that never settles into the 1 % band):
   # print it as not found; every voltage must be there
   [[ $ts =~ $num ]] || ts=nan
-  for x in "$v0" "$vf" "$vpk" "$os" "$late"; do
-    if [ $rc -ne 0 ] || ! [[ $x =~ $num ]]; then
+  for x in "$v0" "$vf" "$vpk" "$os" "$late" "$drift"; do
+    if [ "$rc" != 0 ] || ! [[ $x =~ $num ]]; then
       # a missing measurement used to print as 0 (Codex R41-CX2): report it and fail the sweep
       printf '%s  Cload=%-4s Cf=%-4s  FAILED (ngspice exit %s, measurements: %s)\n' "$1" "$2" "$3" "$rc" "${r:-none}"
       FAILED=$((FAILED + 1)); return
     fi
   done
+  # the step used to come at 400 us, before the stage had settled from power-up (Codex round 6, R6-S7: 1.7532 V before
+  # against 1.6823 V settled at 10 nF), so the overshoot was taken from a moving baseline. Now at 3 ms, and the level
+  # 0.3-0.5 ms before the step must agree within 0.5 mV, or the case fails
+  if ! awk -v d="$drift" 'BEGIN { exit !(d < 0.5 && d > -0.5) }'; then
+    printf '%s  Cload=%-4s Cf=%-4s  FAILED (not settled before the step: drifting %s mV)\n' "$1" "$2" "$3" "$drift"
+    FAILED=$((FAILED + 1)); return
+  fi
   printf '%s  Cload=%-4s Cf=%-4s  before %.4f V  after %.4f V  peak %.4f V  overshoot %6.1f %%  ripple at end %6.2f mV  settles (1%%) %5s us\n' \
     "$1" "$2" "$3" "$v0" "$vf" "$vpk" "$os" "$late" "$( [ "$ts" = nan ] && echo 'not found' || printf '%.0f' "$ts")"
 }

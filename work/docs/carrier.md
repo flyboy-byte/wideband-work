@@ -119,7 +119,7 @@ error (0.1 V) is 0.2 AFR, which is why the reference buffer matters [INFERRED].
    | C: dual loop, Cf 100 pF | 1 pF / 1 nF / 10 nF / 47 nF | 0% / 0% / 11% / 39% | no | 9-161 us |
    | **C: dual loop, Cf 1 nF** | 1 pF / 1 nF / 10 nF / 47 nF | **0% at every load** | no | 145-254 us |
    | **D: C plus R11 470R to the connector** | 1 pF / 1 nF / 10 nF / 47 nF | **0% / 0% / 0% / 0.5%** | no | 175-254 us |
-   | **E: D with the DC feedback at the connector (as built, r37)** | 1 pF / 1 nF / 10 nF / 47 nF / 100 nF | **0% / 0% / 0% / 9.4% / 28%** | no (settles) | 92-572 us |
+   | **E: D with the DC feedback at the connector (as built, r37)** | 1 pF / 1 nF / 10 nF / 47 nF / 100 nF | **0% / 0% / 0% / 9.2% / 22.4%** | no (settles) | 95-621 us |
 
    D's final value: 1.8417 V against C's 1.8503 V, 0.46 % low into the 100k load (R11 outside the loop) [DOCUMENTED run,
    2026-10-23]. E (as built): 1.8503 V, the same as C: R11 is inside the loop [DOCUMENTED run, `sim/stability.sh`,
@@ -131,8 +131,10 @@ error (0.1 V) is 0.2 AFR, which is why the reference buffer matters [INFERRED].
 
    Resolution: 1024 PWM steps over 5.04 V = 4.9 mV = 0.0098 AFR. Accuracy budget: REF3030 ±0.2% initial and
    75 ppm/C (about ±0.45% over -40..+85 C), resistor tolerance (1%: about ±0.8% gain worst case; 0.1% parts or the
-   trim fix it), LM2904 offset up to 3 mV [DOCUMENTED: JLC listings below] [budget INFERRED]. Trim at bring-up covers
-   initial errors; drift stays.
+   trim fix it), LM2904 input offset 3 mV typical, **7 mV max at 25 C and 10 mV over temperature** for the plain LM2904
+   [DOCUMENTED: TI SLOS068, as cited by Codex round 6, R6-S1; this line said "up to 3 mV" from the JLC listing until
+   2026-10-25]. At the output that is x1.68: up to 11.8 mV at 25 C and 16.8 mV over temperature (0.03 AFR), in the
+   zero and full-scale points alike [CALCULATED]. Trim at bring-up covers initial errors; drift stays [budget INFERRED].
 
    Parts (JLC/LCSC search 2026-10-23, all listed as Extended) [DOCUMENTED: JLC API listings]:
 
@@ -140,7 +142,7 @@ error (0.1 V) is 0.2 AFR, which is why the reference buffer matters [INFERRED].
    | --- | --- | --- | --- | --- |
    | REF3030AIDBZR | C38423 | SOT-23 | 3.0 V, ±0.2%, 75 ppm/C, 25 mA, Vin 3.05-5.5 V, -40..+125 C | 43,373 |
    | 74LVC1G125GW,125 | C12519 | SOT-353 | 1.65-5.5 V, 32 mA, -40..+125 C | 50,292 |
-   | LM2904DR (TI) | C7934 | SOIC-8 | 3-32 V, 3 mV offset, -40..+125 C | 219,267 |
+   | LM2904DR (TI) | C7934 | SOIC-8 | 3-32 V, 3 mV offset (typical; 7 mV max, TI), -40..+125 C | 219,267 |
    | BZT52C18 | C173425 | SOD-123 | 17.1-18.9 V, 500 mW | 66,666 |
 
    Extended parts: these four (each carries JLC's per-part setup fee). The LM358DR2G (C7950) is Basic but rated
@@ -223,7 +225,8 @@ back through R11, which is outside the feedback loop as built, so the reading co
   at about 0.52 V, and a pull-down at the op-amp output made it worse (0.63 V floor) and stopped some runs converging. Not a
   fix; treat the bottom 1 V into a pull-up input as unverified until the bench.
 - Stability, step through the output (TI model, `stability.sh` method): E with Cf 1 nF: no overshoot up to 10 nF on the
-  cable, 9.4 % at 47 nF, 28 % at 100 nF (still settles); D: 0.5 % and 2.5 %. Cf 2.2 nF or 4.7 nF is worse (does not settle at
+  cable, 9.2 % at 47 nF, 22.4 % at 100 nF (still settles; rerun 2026-10-25 with the step at 3 ms after a settled
+  baseline, Codex R6-S7; it was 9.4 % and 28 % from an unsettled one; `sim/stability.out`); D: 0.5 % at 47 nF. Cf 2.2 nF or 4.7 nF is worse (does not settle at
   some loads). Cable capacitance is about 100 pF per metre (FROM MEMORY), so a few nF at most: E with Cf 1 nF it is.
 - Fault (C1, accepted risk): with 12 V on J3-5 the feedback now sees 12 V and drives the op-amp low; D did the same through
   the clamp node. R8 then carries about 5.6 V / 330R = 17 mA, about 95 mW in an 0603 rated 100 mW (INFERRED).
@@ -250,6 +253,7 @@ J3-5 (net AOUT_J). One schematic connection, folded into the next board run with
 | A2 | Sensor in free air, warmed up | DC volts at J3-5 vs AFR the firmware reports over CAN | volts match the curve within ±0.05 V |
 | A3 | Short J3-5 to GND briefly through the meter's current range | current | about 6 mA since r37 (feedback now sees the short, so the op-amp drives high into R8 + R11 = 800R while R9 1k starves its supply: (12 - V)/1k = (V - 1.5)/800 gives V about 6.2 V, I about 5.8 mA; INFERRED, LM2904 high-side drop 1.5 V FROM MEMORY; was about 9 mA before r37); board survives |
 | A7 | Powered, module in: meter +5V (J3) to J3-7 | DC volts | note it: below 5.0 V, full scale into a 4.7k receiver reads low (`sim/full_scale_corners.sh`: -66 mV at 4.8 V); 10k and up are unaffected |
+| A8 | Powered, module in, no sensor: meter in series with the +5V supply to the module (or the LM78M05 output current, from the drop across a temporary series resistor) | DC mA | note it: a 12 V fault on J3-5 pushes 13.6 mA into +5V through R11 and D3, and the LM78M05 can't sink, so the rail holds only if the board draws more than that (Codex round 6, R6-S2; accepted under C1) |
 | A5 | Bootloader only (app not yet flashed, or right after power-up): meter J3-5 to J3-7 from the moment power is applied (outside review B1, 2026-10-24) | DC volts during the first 2 s, and with no app at all | under 0.1 V the whole time (was about 5 V for 0.8 s with R3 100k and the PB1 pull-up); R3 4.7k and the PB1 pull-down hold it low |
 | A6 | App flashed, sensor connected, cold start | DC volts at J3-5 while the heater warms up, then after | 5.0 V (20 AFR, "invalid") until the controller reports closed loop over CAN, then follows the AFR (N1, 2026-10-24: invalid is the lean end, so a closed-loop ECU adds fuel instead of pulling it) |
 | A4 | In the car, engine running, sensor hot: meter (mV range) between J3-7 at the controller and the receiver's sensor-ground pin | DC mV | under 20 mV (= 0.04 AFR at 0.5 V per AFR); more means a ground offset in the wiring (see "Grounding and the output") |

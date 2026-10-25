@@ -62,7 +62,7 @@ TEST_F(AuxOut, OutOfRangeVoltsClampToTheEnds)
 TEST_F(AuxOut, NanVoltsGoesToFullScale_Documented)
 {
     // clampF(0, NaN, 1) returns 1. Nothing in the firmware feeds SetAuxDac a NaN today (an invalid lambda is replaced by
-    // 0 V first, see below); recorded so a future caller knows
+    // 5.0 V first, see below); recorded so a future caller knows
     Boot();
     SetAuxDac(0, std::numeric_limits<float>::quiet_NaN());
     EXPECT_EQ(AuxDuty(), 1.0f);

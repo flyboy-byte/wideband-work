@@ -9,7 +9,7 @@ sensor; upstream github.com/mck1117/wideband). Our fork adds a 0-5 V analog outp
 Speeduino, a Hondata FlashPro datalog or a gauge. Nothing has been ordered, built or flashed yet.
 
 **Read, in this order:**
-1. `TASKS.md`: the work list (TK1-TK13), in order of value, with how to check each task with and without a shell.
+1. `TASKS.md`: the work list (TK1, TK2, ...), in order of value, with how to check each task with and without a shell.
 2. `HANDOFF.md`: what changed since the last rounds, what is still open, and what is **known and accepted** (don't
    re-report those).
 3. `INDEX.md`: every file here and where it came from. If you were given one zip, unzip it first.

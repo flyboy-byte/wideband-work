@@ -8,6 +8,7 @@
 # results are averaged over 55-60 ms, after C16 settles (tau 10 ms). One ngspice at a time, only measured nodes saved.
 #   ./full_scale_corners.sh      -> one line per case; exit 1 if any case has no valid result
 cd "$(dirname "$0")"
+. ./completed.sh
 [ -f models/lmx58_lm2904.lib ] || { echo "models/lmx58_lm2904.lib missing (TI SNOM268)"; exit 1; }
 FAILED=0
 num='^-?[0-9]+(\.[0-9]+)?([eE][-+]?[0-9]+)?$'
@@ -39,6 +40,8 @@ D4 0 clamp d4148
 .tran 2u 60m 0 5u uic
 .control
 run
+let tend = time[length(time)-1]
+echo "END \$&tend"
 meas tran vout AVG v(conn) from=55m to=60m
 meas tran vcc AVG v(vcc) from=55m to=60m
 meas tran i5 AVG i(V5) from=55m to=60m
@@ -50,10 +53,11 @@ quit
 .end
 CIR
   local out rc r; out=$(timeout 300 nice -n 19 ngspice -b "$f" 2>&1); rc=$?; rm -f "$f"
+  completed "$out" 60e-3 || rc="$rc, run incomplete: ended at $(grep -m1 '^END ' <<< "$out" | cut -d' ' -f2) s"
   r=$(grep '^RES' <<< "$out" | head -1 | cut -d' ' -f2-)
   read -r vout vcc i5 vlo vhi <<< "$r"
   for x in "$vout" "$vcc" "$i5" "$vlo" "$vhi"; do
-    if [ $rc -ne 0 ] || ! [[ $x =~ $num ]]; then
+    if [ "$rc" != 0 ] || ! [[ $x =~ $num ]]; then
       printf 'supply %5s V  +5V %s V  load %-5s  FAILED (ngspice exit %s, measurements: %s)\n' "$1" "$2" "$3" "$rc" "${r:-none}"
       FAILED=$((FAILED + 1)); return
     fi

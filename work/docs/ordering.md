@@ -29,12 +29,17 @@ PCB orders.
      mask, the silk and the drills are all there.
    - PCB options: 1.6 mm FR-4, HASL (lead-free if wanted), green mask. Keep the defaults otherwise; the board needs no
      special stack-up or impedance control.
+   - **Edge rails.** C11 sits 1.85 mm (centre), about 1.6 mm (body) from the bottom edge. JLC's assembly terms ask for
+     2.5 mm from a part's body to the board edge (REPORTED: Codex round 6, R6-S4, citing JLC's terms; check the page).
+     Choose JLC's "edge rails" option (or have JLC panelize with rails) rather than moving C11. Cost UNKNOWN until the
+     quote; if JLC's review flags C11 anyway, its engineer's note decides.
    - **PCB Assembly** on, **top side** only (every placed part is on the top, D9), **Economic** class if the quote offers
      it for this BOM. REPORTED from the session that exported the files, unchecked: Economic about $8 setup, Standard
      about $50. Read the quote.
    - Upload the BOM and CPL. Then, part by part:
-     - **Every BOM line resolves to its LCSC number** (25 lines). There are 7 Extended parts, each with a loading fee:
-       D1, D5, R11, U1, U4, U5, U6 (`checks/bom_stock.py`).
+     - **Every BOM line resolves to its LCSC number** (26 lines). There are 8 Extended parts, each with a loading fee:
+       D1, D5, R9, R11, U1, U4, U5, U6 (`checks/bom_stock.py`). R9 is the pulse-proof C844867 since 2026-10-25 (R6-S3):
+       don't let a "basic part" suggestion swap it back to a 250 mW resistor.
      - **Stock:** run `python3 checks/bom_stock.py 5` on quote day. It reads JLC's own assembly stock, class and price.
        On 2026-10-24 all 26 lines were in stock for 5 boards, at about $20 of parts. LCSC's warehouse numbers had
        suggested C13585, C14663, C15849 and C7934 were short, but at JLC they were 2.6M, 44M, 13.8M and 219k.

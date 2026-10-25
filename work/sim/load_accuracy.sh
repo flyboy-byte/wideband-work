@@ -7,6 +7,7 @@
 # TI model took about 1 GB per run, and 12 in parallel ran a 14 GB machine out of memory (2026-10-24).
 #   ./load_accuracy.sh            -> one line per case: topology, target V, load, V at the connector
 cd "$(dirname "$0")"
+. ./completed.sh
 [ -f models/lmx58_lm2904.lib ] || { echo "models/lmx58_lm2904.lib missing (TI SNOM268)"; exit 1; }
 run() { # topology vin load-line
   local f fb=out; f=$(mktemp --suffix=.cir); [ "$1" = E ] && fb=conn
@@ -26,6 +27,8 @@ CF oa inn 1n
 .tran 1u 6m 0 2u
 .control
 run
+let tend = time[length(time)-1]
+echo "END \$&tend"
 meas tran v AVG v(conn) from=5.5m to=6m
 echo "RES \$&v"
 quit
@@ -33,8 +36,9 @@ quit
 .end
 CIR
   local out rc r; out=$(timeout 300 nice -n 19 ngspice -b "$f" 2>&1); rc=$?; rm -f "$f"
+  completed "$out" 6e-3 || rc="$rc, run incomplete: ended at $(grep -m1 '^END ' <<< "$out" | cut -d' ' -f2) s"
   r=$(grep '^RES' <<< "$out" | head -1); r=${r#RES }; r=${r// /}
-  if [ $rc -ne 0 ] || ! [[ $r =~ ^-?[0-9]+(\.[0-9]+)?([eE][-+]?[0-9]+)?$ ]]; then
+  if [ "$rc" != 0 ] || ! [[ $r =~ ^-?[0-9]+(\.[0-9]+)?([eE][-+]?[0-9]+)?$ ]]; then
     # ngspice can exit 0 after a failed operating point and print no value (Codex R41-CX2): count it as a failure
     printf '%s  target %.3f V  %-16s -> FAILED (ngspice exit %s, %s)\n' "$1" "$(echo "$2 * 1.68" | bc -l)" "${3#RL }" \
       "$rc" "$(grep -m1 -i 'error\|fail\|singular\|timestep' <<< "$out" || echo 'no measurement')"

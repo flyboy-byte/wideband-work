@@ -297,5 +297,17 @@
       "checks/checks.json",
       "AUDIT.md"
     ]
+  },
+  {
+    "name": "Op-amp supply survives a clamped load dump: R9 and D5 power within rating (Codex round 6, R6-S3)",
+    "cmd": [
+      "sh",
+      "-c",
+      "python3 checks/surge_budget.py --self-test && python3 checks/surge_budget.py"
+    ],
+    "files": [
+      "../hardware/board_carrier/board_carrier.kicad_pcb",
+      "checks/surge_budget.py"
+    ]
   }
 ]

@@ -11,19 +11,13 @@ Would I order these files as they are? **<yes / no>**: <one sentence why>.
 
 | Task | Status | Finding IDs | What I did (command, file, calculation) |
 | --- | --- | --- | --- |
-| TK1 Fab files | <OK / FINDING / PARTLY / NOT CHECKED> | | |
-| TK2 Module files | | | |
-| TK3 Boot level | | | |
-| TK4 Invalid output | | | |
-| TK5 Heater clamp | | | |
-| TK6 Analog DC | | | |
-| TK7 Stability | | | |
-| TK8 Faults | | | |
-| TK9 Op-amp supply | | | |
-| TK10 Layout | | | |
-| TK11 Wiring sheet | | | |
-| TK12 Firmware diff | | | |
-| TK13 These docs | | | |
+| TK1 Stack checker | <OK / FINDING / PARTLY / NOT CHECKED> | | |
+| TK2 Sim wrappers | | | |
+| TK3 R9 surge | | | |
+| TK4 Backfeed | | | |
+| TK5 Fab files | | | |
+| TK6 Round 6 leftovers | | | |
+| TK7 These docs | | | |
 | TK99 Beyond the list | | | |
 
 Status: OK = checked and found right; FINDING = see the table below; PARTLY = say what is left; NOT CHECKED = say why
@@ -60,6 +54,6 @@ INFERRED (your reasoning). A finding without a number or a source is a NOTE.
 
 <what, and what you would need>
 
-## TK13: what would have made this review faster
+## TK7: what would have made this review faster
 
 <missing files, unclear instructions, wrong paths>

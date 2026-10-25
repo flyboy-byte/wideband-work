@@ -12,7 +12,7 @@ adding a 0-5 V analog output on the carrier board. Claude designed it from code 
 
 | File | What it is |
 | --- | --- |
-| [`work/review/TASKS.md`](work/review/TASKS.md) | **The work list** (TK1-TK13), in order of value, each with a question, the files, how to check it with or without a shell, and what "done" means. Replaced each round. |
+| [`work/review/TASKS.md`](work/review/TASKS.md) | **The work list** (TK1, TK2, ... for this round), in order of value, each with a question, the files, how to check it with or without a shell, and what "done" means. Replaced each round. |
 | [`work/review/FINDINGS-TEMPLATE.md`](work/review/FINDINGS-TEMPLATE.md) | The report to fill in: verdict, one coverage row per task, findings, two worked examples of the level we want |
 | [`work/AUDIT.md`](work/AUDIT.md), "Hand-off" | What changed since the last round, what's open, and what's **known and accepted** (don't re-report) |
 | [`work/review/PROMPT.md`](work/review/PROMPT.md) | The prompt a chat reviewer gets with the pack |
@@ -40,8 +40,10 @@ evidence tag (DOCUMENTED / REPORTED / INFERRED / FROM MEMORY / UNKNOWN); attack 
 
 > You are an independent reviewer of a PCB and its firmware before the first order. You did not design it. Repo:
 > this checkout, branch `analog-out`. Read `REVIEW.md`, then `work/review/TASKS.md`, then the "Hand-off" section
-> of `work/AUDIT.md`. Create the branch `review/<you>-<date>` and the folder `work/audit/<you>-<date>/`, and copy
-> `work/review/FINDINGS-TEMPLATE.md` there as `FINDINGS.md`. Do the setup in `REVIEW.md`, then work through TK1-TK13
+> of `work/AUDIT.md`. Work in your own worktree so the designer's checkout stays on its branch:
+> `git worktree add ../wideband-review-<you> -b review/<you>-<date>` (then `cd` there and init the submodules). Create
+> the folder `work/audit/<you>-<date>/`, and copy
+> `work/review/FINDINGS-TEMPLATE.md` there as `FINDINGS.md`. Do the setup in `REVIEW.md`, then work through the TK tasks
 > in order without waiting for replies. After each task, update `FINDINGS.md` and commit. Don't trust our
 > conclusions in `work/docs/`, `work/RELEASE_ASSESSMENT.md` or earlier rounds: check them from the board, the
 > schematic, the fab files and the firmware source, and run the checks and sims yourself. Don't change design
@@ -77,7 +79,8 @@ Tools, with the versions we used (2026-10-24, Arch Linux). Older versions may wo
 | ngspice | 47 | `work/sim/*.sh` |
 | TI LM2904 PSpice model | SNOM268 | sims: download https://www.ti.com/lit/zip/SNOM268 and put `lmx58_lm2904.lib` in `work/sim/models/` (not committed: licence) |
 
-Freerouting and Java are only needed to regenerate the board, and a review doesn't need to regenerate it.
+The sims run from `work/sim/`, where `.spiceinit` sets `ngbehavior=psa`; TI's model fails to load without it, so a deck of your
+own must run there or set the same option (Codex round 6). Freerouting and Java are only needed to regenerate the board, and a review doesn't need to regenerate it.
 
 ```sh
 (cd firmware/boards/f0_module/bootloader && ./build_bootloader.sh)   # the app links the bootloader object
@@ -86,7 +89,7 @@ cd work
 python3 checks/fw_package.py build # bootloader + app image into work/fw-build/<commit>/ (adds 5 package-check cases)
 python3 gen/module_fab.py          # stages the module's JLC files in work/out/module/ (upstream rev C, 2 BOM swaps)
 python3 gen/export_fab.py          # writes the fab candidate to work/out/carrier/ (gitignored, so a clone lacks it)
-python3 checks/run_all.py          # expect: 25 checks, 0 failed, 2 advisory failed (upstream's own raw DRC, owner decision D2)
+python3 checks/run_all.py          # expect: 26 checks, 0 failed, 2 advisory failed (upstream's own raw DRC, owner decision D2)
 ```
 
 Missing a tool? Skip what needs it, mark those tasks PARTLY or NOT CHECKED with the reason, and carry on. A check

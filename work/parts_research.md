@@ -24,7 +24,8 @@ use the maker drawing and note it. Every value has a source URL; mark scaled val
 ## JLC part class and stock for the r40 BOM (2026-10-24)
 REPORTED: EasyEDA component data fetched 2026-10-24 (`checks/easyeda/<LCSC>.json`, fields "JLCPCB Part Class", `lcsc.stock`).
 `lcsc.stock` is LCSC's warehouse, not JLC's assembly stock; the JLC quote page is the final word on both.
-- 25 BOM lines, 7 Extended (a setup fee each): D1 C151279 SMCJ24CA, D5 C173425 BZT52C18, R11 C4502 470R 1206,
+- 26 BOM lines, 8 Extended (a setup fee each): D1 C151279 SMCJ24CA, D5 C173425 BZT52C18, R9 C844867 1k 1206 pulse-proof
+  (since 2026-10-25, Codex R6-S3; was C4410, Basic, 250 mW), R11 C4502 470R 1206,
   U1 C38695 TJA1051T/3, U4 C12519 74LVC1G125GW, U5 C38423 REF3030, U6 C7934 LM2904DR. R11 is the one a Basic 470R 1206
   could probably replace: C17969 checked 2026-10-24, it is 47R and Extended, so no; look in the JLC parts search at quote time.
 - Low or zero LCSC stock: C13585 10u 1206 (x5 per board) 0; C14663 100n 0603 (C17) 0; C15849 1u 0603 (x3) 50;
