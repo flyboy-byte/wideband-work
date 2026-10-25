@@ -1,0 +1,12 @@
+CuTop 1637 primitives identical with polarity-batch ordering preserved
+CuIn1 80 primitives identical with polarity-batch ordering preserved
+CuIn2 88 primitives identical with polarity-batch ordering preserved
+CuBottom 197 primitives identical with polarity-batch ordering preserved
+MaskTop 169 primitives identical with polarity-batch ordering preserved
+MaskBottom 25 primitives identical with polarity-batch ordering preserved
+EdgeCuts 4 primitives identical with polarity-batch ordering preserved
+SilkTop all dark silk primitives identical; 169 additional clear primitives in released plot; not claiming byte identity
+SilkBottom all dark silk primitives identical; 25 additional clear primitives in released plot; not claiming byte identity
+wideband_controller-PTH.drl all drill commands identical
+wideband_controller-NPTH.drl all drill commands identical
+Module copper/mask/outline/drills + dark silkscreen geometry: PASS; 7 negative controls reject a removed object.

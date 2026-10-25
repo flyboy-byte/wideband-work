@@ -1,0 +1,9 @@
+{
+  "command": [
+    "python3",
+    "checks/test_release.py"
+  ],
+  "cwd": "/home/logan/projects/wideband-review-order/work",
+  "returncode": 0,
+  "seconds": 0.04
+}

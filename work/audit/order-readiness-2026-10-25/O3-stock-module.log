@@ -1,0 +1,27 @@
+ok   C25077    R9             0402WGF100JTCE         Basic     stock   3477660  need  12  $  0.01
+ok   C25741    R15,R17,R20    0402WGF1003TCE         Basic     stock   7849332  need  16  $  0.02
+ok   C1525     C11,C12,C13,C14,C16,C2,C5,C8,C9 CL05B104KO5NNNC        Basic     stock  35691575  need  28  $  0.10
+ok   C25744    R11,R12,R21,R29,R3,R33,R34,R4 0402WGF1002TCE         Basic     stock  17923967  need  26  $  0.03
+ok   C11702    R1,R13,R18,R2,R25,R26,R27,R30 0402WGF1001TCE         Basic     stock  19360301  need  26  $  0.03
+ok   C52923    C1,C17,C4,C6,C7 CL05A105KA5NQNC        Basic     stock  11657530  need  20  $  0.13
+ok   C25768    R6             0402WGF2202TCE         Basic     stock   1318527  need  12  $  0.01
+ok   C25771    R5,R7          0402WGF2702TCE         Preferred stock    757623  need  14  $  0.01
+ok   C25890    R24            0402WGF3301TCE         Basic     stock   1788596  need  12  $  0.04
+ok   C106862   C3             CC0402KRX7R9BB333      Extended  stock    494847  need  22  $  0.10
+ok   C19666    C10            CL10A475KO8NNNC        Basic     stock   3882810  need  12  $  0.20
+ok   C25118    R8             0402WGF470JTCE         Preferred stock   1838866  need  14  $  0.02
+ok   C25792    R19            0402WGF4702TCE         Basic     stock   6700747  need  12  $  0.02
+ok   C25917    R16            0402WGF6801TCE         Preferred stock     71736  need  12  $  0.02
+ok   C2087389  R10            ERA-3AEB61R9V          Extended  stock      2517  need   4  $  0.48
+ok   C23221    R14            0603WAF6202T5E         Preferred stock    317680  need  12  $  0.03
+ok   C36871    R31,R32        0402WGF6802TCE         Preferred stock    121801  need  14  $  0.03
+ok   C29309    U5             AD8628ARTZ-REEL7       Extended  stock     27250  need   2  $  6.97
+ok   C2288     D3             KT-0603B               Extended  stock    174050  need  16  $  0.17
+ok   C12624    D2             KT-0603G               Extended  stock    454725  need  18  $  0.21
+ok   C50282    U1             MCP6004T-I/ST          Extended  stock     11181  need   2  $  1.12
+ok   C2286     D1,D4          KT-0603R               Basic     stock   7828301  need  14  $  0.11
+ok   C36658    U3             REF3033AIDBZR          Extended  stock     33819  need   2  $  0.92
+ok   C69216    U2             STM32F042K6T6          Extended  stock       199  need   2  $  8.03
+ok   C2649436  Q1             VND14NV04TR-E          Extended  stock      2678  need   2  $  3.87
+ok   C5446     U9             XC6206P332MR-G         Basic     stock    452101  need   4  $  0.58
+bom stock for 2 boards: 26 lines found, 0 problem(s); parts about $23.27; 9 Extended (loading fee each): C106862, C2087389, C29309, C2288, C12624, C50282, C36658, C69216, C2649436
