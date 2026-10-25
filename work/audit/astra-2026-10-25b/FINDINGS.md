@@ -13,7 +13,7 @@ Would I order these files as they are? **Not assessed yet**: review in progress.
 | --- | --- | --- | --- |
 | TK1 Stack checker | OK | — | Fresh ELF, four regressions, all40BLX sites and five narrowed caller sets checked. Worst thread margin92B reproduced; startup/interrupt scope assessed in TK1-stack-review.md. |
 | TK2 Sim wrappers | OK | — |26fixture verdicts correct; actual old abort logs and short/no-END cases rejected. Real25case stability sweep passes completion/baseline guards; E0%through10nF,9.2%at47nF. TK2-sims.md. |
-| TK3 R9 surge | | | |
+| TK3 R9 surge | PARTLY | R7-S1 | R9 nominal overload fixed:0.480W with -1%R vs0.75W conditional rating. MDD D5 derating gives92.7C case ceiling for0.382W. Real400ms input envelope/board cooling unknown; TK3-surge-review.md. |
 | TK4 Backfeed | | | |
 | TK5 Fab files | | | |
 | TK6 Round 6 leftovers | | | |
@@ -27,7 +27,7 @@ Status: OK = checked and found right; FINDING = see the table below; PARTLY = sa
 
 | ID | Task | Severity | Location | Evidence (numbers) | Smallest fix |
 | --- | --- | --- | --- | --- | --- |
-| <initials>1 | TK? | <BLOCKER / BUG / RISK / NOTE> | <file:line, or ref and x/y mm> | <measured or calculated, with source> | <one change> |
+| R7-S1 | TK3 | RISK | checks/surge_budget.py:6-10; R9/D5/D1 | DOCUMENTED/CALCULATED:0.480W R9 requires thermal conditions; D5 0.382W exceeds its derated rating above92.7C case.38.9V clamp is specified at a short pulse, not an arbitrary400ms event. | Keep HP R9; qualify the survival claim and define input/thermal envelope before claiming automotive-surge qualification. Detail in TK3-surge-review.md. |
 
 Severity: BLOCKER = don't order; BUG = wrong but workable; RISK = could bite (say when); NOTE = worth knowing.
 Tag each piece of evidence: MEASURED (you ran it), CALCULATED (show the sum), DOCUMENTED (name the datasheet and page),
