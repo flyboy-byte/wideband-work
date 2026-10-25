@@ -1,0 +1,13 @@
+{
+  "command": [
+    "make",
+    "-C",
+    "../firmware",
+    "-j8",
+    "BOARD=f0_module",
+    "ULIBS=/tmp/wb-round7-package/bl/wideband_bootloader.o"
+  ],
+  "cwd": "/home/logan/projects/wideband-review-astra/work",
+  "returncode": 0,
+  "seconds": 2.44
+}

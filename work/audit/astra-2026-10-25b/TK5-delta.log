@@ -1,0 +1,29 @@
+{
+  "board_lcsc": "C844867",
+  "position_mm": [
+    68.8,
+    94.4
+  ],
+  "rotation": -90.0,
+  "footprint": "R_1206_3216Metric",
+  "bom": {
+    "Comment": "1k",
+    "Designator": "R9",
+    "Footprint": "R_1206_3216Metric",
+    "LCSC Part #": "C844867"
+  },
+  "cpl": {
+    "Designator": "R9",
+    "Mid X": "68.8000",
+    "Mid Y": "-94.4000",
+    "Layer": "Top",
+    "Rotation": "270"
+  },
+  "only_board_delta": "C4410 -> C844867",
+  "candidate_hashes": {
+    "carrier-bom.csv": "4929cced2179046c943c34533d9e1723a5d36a91cacbcf3ef0df5cbf3c2a9b14",
+    "carrier-cpl.csv": "66a7fdc2200cd49ebc84ec2e26e2a087a8282eea3965b88dde4420c195656f02",
+    "not-fitted.csv": "36e2ae5c65c50fc6813f2340f7fb5dde9edbd7b350b9d133e378c1393189741e",
+    "carrier-gerbers.zip": "7d55a237a2ea44ddc4ff4d5e6f4283de236515cc223a9cc62b3fb53fd5fd872a"
+  }
+}

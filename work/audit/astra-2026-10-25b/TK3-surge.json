@@ -1,0 +1,9 @@
+{
+  "command": [
+    "python3",
+    "checks/surge_budget.py"
+  ],
+  "cwd": "/home/logan/projects/wideband-review-astra/work",
+  "returncode": 0,
+  "seconds": 0.45
+}

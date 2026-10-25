@@ -1,0 +1,28 @@
+FAIL    DRC module (errors): DRC 11 errors: solder_mask_bridge 10, clearance 1 (report /home/logan/projects/wideband-review-astra/work/audit/astra-2026-10-25b/wideband_controller-drc.json)  [advisory: D2 (owner, 2026-10-23): upstream's own errors, advisory; gated by "Module board identical to upstream" instead]
+PASS    Module board identical to upstream: module board vs upstream master: 0 file(s) differ
+PASS    ERC module (errors): ERC 0 errors (report /home/logan/projects/wideband-review-astra/work/audit/astra-2026-10-25b/wideband_controller-erc.json)
+FAIL    DRC carrier (errors): DRC 23 errors: courtyards_overlap 14, copper_edge_clearance 3, malformed_courtyard 3, starved_thermal 2 (report /home/logan/projects/wideband-review-astra/work/audit/astra-2026-10-25b/board_carrier-drc.json)  [advisory: D2 (owner, 2026-10-23): upstream's own errors, advisory; gated by "Carrier DRC vs upstream baseline" instead]
+PASS    Carrier DRC vs upstream baseline (new violations, unconnected): DRC vs upstream: 0 new violations, 0 unconnected
+PASS    Carrier: no new vias in SMD pads: via in pad: 0 new, 0 upstream
+PASS    Carrier layout review (sampled coupling and return-path heuristics): review triggers: 0
+PASS    Layout geometry helper unit tests: OK
+PASS    Layout track-order regression: PASS: tested orders agree
+PASS    ERC carrier (errors): ERC 0 errors (report /home/logan/projects/wideband-review-astra/work/audit/astra-2026-10-25b/board_carrier-erc.json)
+PASS    Carrier netlist self-check (generator table): netlist self-check: 18 nets, 0 problems
+PASS    No hand edits waiting: no drift
+PASS    JLC rotation, origin and pin names from each part's EasyEDA footprint: jlc rotation: 38 parts measured, 4 need a correction, 0 problem(s)
+PASS    Fab candidate (out/carrier) matches the board: Gerbers, BOM, CPL, not-fitted: fab files: 38 placed, 6 not fitted, outline 40.00 x 51.50 mm, 0 problem(s)
+PASS    Firmware: bootloader DATA writes stay inside the app partition (F1): 52 guard cases; 0 unsafe accepted writes, 0 valid writes refused (stub only)
+PASS    Firmware: package checker accepts good images, rejects bad ones (F2): 16 package cases, 0 wrong verdict(s)
+PASS    Firmware: HardFault entry reaches the C handler on a Cortex-M0 (F9, QEMU microbit): fault entry on Cortex-M0: as expected
+PASS    Firmware: host gtest suite (sampler, heater, F7, F1 bounds, D10 watchdog): [  PASSED  ] 70 tests.
+PASS    Firmware: analog output host tests, production auxout/pump_dac/can_helper on the f0 config (F3-F6): [  PASSED  ] 21 tests.
+PASS    Firmware: static worst-case stack per thread fits (F8 estimate, f0 build): stack estimate: ok, smallest margin 92 B
+PASS    Stack checker: known-answer Cortex-M0 cases incl. a pointer in a literal pool (Codex R41-CX1): stack checker cases: 4, 0 wrong verdict(s)
+PASS    Sim wrappers fail when ngspice gives no valid result (Codex R41-CX2): sim wrappers: 0 wrong verdict(s)
+PASS    Output low from reset until the app drives PB1 (R3 vs the PB1 pull in both board.h; outside review B1): boot level: output low from reset
+PASS    Module order files: JLC rotation, origin and pin names from EasyEDA against the order CPL (upstream rev C + fixes): jlc rotation: 57 parts measured, 6 need a correction, 0 problem(s)
+PASS    Reviewer docs agree with the repo (REVIEW.md check count, TASKS.md IDs and files, pack contents): review docs: 0 problem(s)
+PASS    Op-amp supply survives a clamped load dump: R9 and D5 power within rating (Codex round 6, R6-S3): surge budget: 0 problem(s)
+26 checks, 0 failed, 2 advisory failed, 0 skipped
+Reviewer-mode protected STATE/last_run/checks-out unchanged: True

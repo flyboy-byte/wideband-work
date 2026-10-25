@@ -1,0 +1,9 @@
+{
+  "command": [
+    "python3",
+    "audit/astra-2026-10-25b/run_checks_isolated.py"
+  ],
+  "cwd": "/home/logan/projects/wideband-review-astra/work",
+  "returncode": 0,
+  "seconds": 96.19
+}

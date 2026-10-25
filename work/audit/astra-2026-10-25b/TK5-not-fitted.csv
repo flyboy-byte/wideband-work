@@ -1,0 +1,7 @@
+Designator,Reason
+J3,through-hole connector (mx120g-12): owner hand-solders
+U3,"the wideband module: a separate board, soldered on by the owner"
+JP1,"solder jumper TEST: left open, owner bridges it for bench test A1 (no paste on its pads)"
+JP2,"solder jumper 120R: left open, owner bridges it on a bus with no other terminator (no paste on its pads)"
+H1,"M3 mounting hole (NPTH), no part"
+H2,"M3 mounting hole (NPTH), no part"

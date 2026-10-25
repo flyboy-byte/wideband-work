@@ -1,0 +1,11 @@
+{
+  "command": [
+    "python3",
+    "checks/stack_estimate.py",
+    "/tmp/wb-round7-package/app/wideband.elf",
+    "-v"
+  ],
+  "cwd": "/home/logan/projects/wideband-review-astra/work",
+  "returncode": 0,
+  "seconds": 0.14
+}

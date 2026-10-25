@@ -1,0 +1,27 @@
+ok   C15849    C1,C2,C3       CL10A105KB8NNNC        Basic     stock  13736346  need  25  $  0.36
+ok   C1567     C4,C5          0402CG470J500NT        Basic     stock    731954  need  20  $  0.16
+ok   C45783    C6             CL21A226MAQNNNE        Basic     stock   4274801  need   9  $  1.72
+ok   C13585    C7,C8,C9,C10,C16 CL31A106KBHNNNE        Basic     stock   2607109  need  29  $  6.90
+ok   C1525     C11,C12,C13,C14 CL05B104KO5NNNC        Basic     stock  35687407  need  30  $  0.10
+ok   C1523     C15            0402B102K500NT         Basic     stock   2782013  need  15  $  0.06
+ok   C14663    C17            CC0603KRX7R9BB104      Basic     stock  44060551  need  15  $  0.13
+ok   C151279   D1             SMCJ24CA               Extended  stock      6664  need   5  $  1.56
+ok   C22452    D2             SS54                   Basic     stock   1973868  need   9  $  0.40
+ok   C2128     D3,D4          1N4148WS               Basic     stock   2932249  need  20  $  0.26
+ok   C173425   D5             BZT52C18               Extended  stock     66651  need  15  $  0.25
+ok   C22962    R1             0603WAF2200T5E         Basic     stock   3286076  need  15  $  0.05
+ok   C23179    R2             0603WAF4700T5E         Basic     stock   5083410  need  15  $  0.03
+ok   C25900    R3             0402WGF4701TCE         Basic     stock  14661843  need  15  $  0.03
+ok   C25890    R4,R5          0402WGF3301TCE         Basic     stock   1780562  need  20  $  0.07
+ok   C23231    R6             0603WAF6802T5E         Basic     stock   1034566  need  15  $  0.02
+ok   C25741    R7             0402WGF1003TCE         Basic     stock   7843136  need  15  $  0.02
+ok   C23138    R8             0603WAF3300T5E         Basic     stock   3787481  need  15  $  0.03
+ok   C844867   R9             CRCW12061K00FKEAHP     Extended  stock     15000  need   9  $  0.55
+ok   C25079    R10            0402WGF1200TCE         Basic     stock    473675  need  15  $  0.05
+ok   C4502     R11            1206W4F4700T5E         Extended  stock    133166  need  15  $  0.07
+ok   C38695    U1             TJA1051T/3/1J          Extended  stock    114293  need   5  $  2.90
+ok   C58069    U2             L78M05ABDT-TR          Basic     stock    153233  need   5  $  1.03
+ok   C12519    U4             74LVC1G125GW,125       Extended  stock     50208  need   9  $  0.88
+ok   C38423    U5             REF3030AIDBZR          Extended  stock     43277  need   5  $  2.76
+ok   C7934     U6             LM2904DR               Extended  stock    219122  need   5  $  0.43
+bom stock for 5 boards: 26 lines found, 0 problem(s); parts about $20.83; 8 Extended (loading fee each): C151279, C173425, C844867, C4502, C38695, C12519, C38423, C7934
