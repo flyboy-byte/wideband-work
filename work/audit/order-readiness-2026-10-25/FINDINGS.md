@@ -8,7 +8,9 @@ risk pass; this review respects that hold. No purchase, upload, quote submission
 
 ## Verdict
 
-**Pending remaining checks; do not treat this intermediate report as permission to order.**
+**No, not with the current hand-assembly shopping list.** OR1 is a confirmed header-fit BUG. The released PCB files
+are internally consistent, but that does not establish physical assembly with the named header. Final recovery
+handoff still in progress; no design change or new release has been made.
 
 ## Coverage
 
@@ -16,13 +18,15 @@ risk pass; this review respects that hold. No purchase, upload, quote submission
 | --- | --- | --- | --- |
 | O1 Frozen release integrity and provenance | OK | | `O1-release-final.log`, `release-sha256.json` |
 | O2 Both boards' assembly mapping and module Gerber geometry | OK | | `O2-assembly.log`, `O2-module-geometry.log`, `O2-drc.log`, `O2-drift.log`, `O2-release-gate.log` |
-| O3 Two-assembled stock and factory requirements | IN PROGRESS | | Live stock queries; JLC primary sources |
-| O4 First-run recoverability and checkout handoff | NOT CHECKED | | Programming, hand-fitted parts, first-power plan |
+| O3 Two-assembled stock and factory requirements | PARTLY | OR3 | 52/52 lines available; `ORDER-CHECKLIST.md`; job-specific DFM/preview not performed |
+| O4 First-run recoverability and checkout handoff | IN PROGRESS | OR1 | `O4-header-fit.log`; manufacturer drawing visually read |
 
 ## Findings
 
 | ID | Task | Severity | Location | Evidence | Smallest fix |
 | --- | --- | --- | --- | --- | --- |
+| OR1 | O4 | BUG — hold order | `work/ROADMAP.md:116`; carrier U3 pins 1–16; released PTH drill | MEASURED holes 0.762 mm; DOCUMENTED Hanxia C32713274 drawing SQ 0.64 mm and recommended hole 1.02 mm. CALCULATED diagonal 0.9051 mm, 0.1431 mm larger than nominal hole. All 16 released holes checked (`O4-header-fit.log`). | Select and dimension-check a compatible interconnect (including tolerances, current, standoff and programming access). If retaining this header, designer must change/review/release larger holes. Do not assume drilling plated holes is a safe repair. |
+| OR3 | O3 | NOTE | `work/docs/ordering.md:11–13,40`; `work/fab/flyboy-o2-v1/README.md:33`; `work/HANDOFF.md` next steps | DOCUMENTED old instructions point to candidates, stock-check five assemblies and use old pricing; current owner quantity is two per board. | Use the frozen-file, two-assembly checklist supplied here; designer updates canonical pointers. |
 
 ## Checked and found right
 
@@ -52,3 +56,10 @@ risk pass; this review respects that hold. No purchase, upload, quote submission
 ## Could not check yet
 
 Factory placement preview, order-specific DFM acceptance, actual delivered boards and electrical bench behavior.
+
+## OR1 manufacturer source
+
+Hanxia drawing **HX PZ2.54-1x8P ZZ**, page 1/1, dated 2022/04/24; square-pin dimension and recommended PCB layout
+visually inspected, not inferred from a product photo:
+https://datasheet.lcsc.com/datasheet/pdf/85243369e68f3858b37abf71bad9b29e.pdf?productCode=C32713274
+This is the exact part named in `ROADMAP.md`; no assertion that every possible 2.54 mm header fails.

@@ -1,0 +1,20 @@
+U3 1 +5V released PTH mm 0.762 xy (47.3, -71.0)
+U3 2 GND released PTH mm 0.762 xy (47.3, -73.54)
+U3 3 /AOUT_PWM released PTH mm 0.762 xy (47.3, -76.08)
+U3 4 /TEST_SEL2 released PTH mm 0.762 xy (47.3, -78.62)
+U3 5 /CAN_RX released PTH mm 0.762 xy (47.3, -81.16)
+U3 6 /CAN_TX released PTH mm 0.762 xy (47.3, -83.7)
+U3 7 /LSU_Heater+ released PTH mm 0.762 xy (47.3, -86.24)
+U3 8 unconnected-(U3-Boot0-Pad8) released PTH mm 0.762 xy (47.3, -88.78)
+U3 9 GND released PTH mm 0.762 xy (72.7, -71.0)
+U3 10 GND released PTH mm 0.762 xy (72.7, -73.54)
+U3 11 /LSU_Heater- released PTH mm 0.762 xy (72.7, -76.08)
+U3 12 /LSU_Heater- released PTH mm 0.762 xy (72.7, -78.62)
+U3 13 /LSU_Ip released PTH mm 0.762 xy (72.7, -81.16)
+U3 14 /LSU_Vm released PTH mm 0.762 xy (72.7, -83.7)
+U3 15 /LSU_Rtrim released PTH mm 0.762 xy (72.7, -86.24)
+U3 16 /LSU_Un released PTH mm 0.762 xy (72.7, -88.78)
+Named header nominal pin diagonal mm 0.905096679918781 max square side fitting nominal hole 0.5388153672641491
+Nominal interference mm 0.14309667991878094
+CONFIRMED BUG: C32713274 nominal square pins do not fit any of the 16 released carrier module holes.
+Do not drill out plated holes as an assumed repair. Select/verify compatible tails or propose a new PCB release.
