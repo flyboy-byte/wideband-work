@@ -1,0 +1,226 @@
+stability.sh: simulator always exits 1; wrapper exits 1
+A  Cload=1p   Cf=-     before 0.0000 V  after 0.0000 V  peak 0.0000 V  overshoot    0.0 %  ripple at end   0.00 mV  settles (1%)     0 us
+A  Cload=1n   Cf=-     before 0.0000 V  after 0.0000 V  peak 0.0000 V  overshoot    0.0 %  ripple at end   0.00 mV  settles (1%)     0 us
+A  Cload=10n  Cf=-     before 0.0000 V  after 0.0000 V  peak 0.0000 V  overshoot    0.0 %  ripple at end   0.00 mV  settles (1%)     0 us
+A  Cload=47n  Cf=-     before 0.0000 V  after 0.0000 V  peak 0.0000 V  overshoot    0.0 %  ripple at end   0.00 mV  settles (1%)     0 us
+B  Cload=1p   Cf=-     before 0.0000 V  after 0.0000 V  peak 0.0000 V  overshoot    0.0 %  ripple at end   0.00 mV  settles (1%)     0 us
+B  Cload=1n   Cf=-     before 0.0000 V  after 0.0000 V  peak 0.0000 V  overshoot    0.0 %  ripple at end   0.00 mV  settles (1%)     0 us
+B  Cload=10n  Cf=-     before 0.0000 V  after 0.0000 V  peak 0.0000 V  overshoot    0.0 %  ripple at end   0.00 mV  settles (1%)     0 us
+B  Cload=47n  Cf=-     before 0.0000 V  after 0.0000 V  peak 0.0000 V  overshoot    0.0 %  ripple at end   0.00 mV  settles (1%)     0 us
+C  Cload=1p   Cf=100p  before 0.0000 V  after 0.0000 V  peak 0.0000 V  overshoot    0.0 %  ripple at end   0.00 mV  settles (1%)     0 us
+C  Cload=1n   Cf=100p  before 0.0000 V  after 0.0000 V  peak 0.0000 V  overshoot    0.0 %  ripple at end   0.00 mV  settles (1%)     0 us
+C  Cload=10n  Cf=100p  before 0.0000 V  after 0.0000 V  peak 0.0000 V  overshoot    0.0 %  ripple at end   0.00 mV  settles (1%)     0 us
+C  Cload=47n  Cf=100p  before 0.0000 V  after 0.0000 V  peak 0.0000 V  overshoot    0.0 %  ripple at end   0.00 mV  settles (1%)     0 us
+C  Cload=1p   Cf=1n    before 0.0000 V  after 0.0000 V  peak 0.0000 V  overshoot    0.0 %  ripple at end   0.00 mV  settles (1%)     0 us
+C  Cload=1n   Cf=1n    before 0.0000 V  after 0.0000 V  peak 0.0000 V  overshoot    0.0 %  ripple at end   0.00 mV  settles (1%)     0 us
+C  Cload=10n  Cf=1n    before 0.0000 V  after 0.0000 V  peak 0.0000 V  overshoot    0.0 %  ripple at end   0.00 mV  settles (1%)     0 us
+C  Cload=47n  Cf=1n    before 0.0000 V  after 0.0000 V  peak 0.0000 V  overshoot    0.0 %  ripple at end   0.00 mV  settles (1%)     0 us
+D  Cload=1p   Cf=1n    before 0.0000 V  after 0.0000 V  peak 0.0000 V  overshoot    0.0 %  ripple at end   0.00 mV  settles (1%)     0 us
+D  Cload=1n   Cf=1n    before 0.0000 V  after 0.0000 V  peak 0.0000 V  overshoot    0.0 %  ripple at end   0.00 mV  settles (1%)     0 us
+D  Cload=10n  Cf=1n    before 0.0000 V  after 0.0000 V  peak 0.0000 V  overshoot    0.0 %  ripple at end   0.00 mV  settles (1%)     0 us
+D  Cload=47n  Cf=1n    before 0.0000 V  after 0.0000 V  peak 0.0000 V  overshoot    0.0 %  ripple at end   0.00 mV  settles (1%)     0 us
+E  Cload=1p   Cf=1n    before 0.0000 V  after 0.0000 V  peak 0.0000 V  overshoot    0.0 %  ripple at end   0.00 mV  settles (1%)     0 us
+E  Cload=1n   Cf=1n    before 0.0000 V  after 0.0000 V  peak 0.0000 V  overshoot    0.0 %  ripple at end   0.00 mV  settles (1%)     0 us
+E  Cload=10n  Cf=1n    before 0.0000 V  after 0.0000 V  peak 0.0000 V  overshoot    0.0 %  ripple at end   0.00 mV  settles (1%)     0 us
+E  Cload=47n  Cf=1n    before 0.0000 V  after 0.0000 V  peak 0.0000 V  overshoot    0.0 %  ripple at end   0.00 mV  settles (1%)     0 us
+E  Cload=100n Cf=1n    before 0.0000 V  after 0.0000 V  peak 0.0000 V  overshoot    0.0 %  ripple at end   0.00 mV  settles (1%)     0 us
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+/home/logan/projects/wideband-work/work/sim/stability.sh: line 54: printf: : invalid number
+
+load_accuracy.sh: simulator always exits 1; wrapper exits 0
+D  target 0.100 V  conn 0 100k      ->  V
+D  target 0.100 V  conn 0 10k       ->  V
+D  target 0.100 V  conn 0 4.7k      ->  V
+D  target 0.100 V  conn v5 47k      ->  V
+D  target 0.100 V  conn v5 10k      ->  V
+D  target 0.100 V  conn v5 4.7k     ->  V
+D  target 1.000 V  conn 0 100k      ->  V
+D  target 1.000 V  conn 0 10k       ->  V
+D  target 1.000 V  conn 0 4.7k      ->  V
+D  target 1.000 V  conn v5 47k      ->  V
+D  target 1.000 V  conn v5 10k      ->  V
+D  target 1.000 V  conn v5 4.7k     ->  V
+D  target 2.500 V  conn 0 100k      ->  V
+D  target 2.500 V  conn 0 10k       ->  V
+D  target 2.500 V  conn 0 4.7k      ->  V
+D  target 2.500 V  conn v5 47k      ->  V
+D  target 2.500 V  conn v5 10k      ->  V
+D  target 2.500 V  conn v5 4.7k     ->  V
+D  target 5.000 V  conn 0 100k      ->  V
+D  target 5.000 V  conn 0 10k       ->  V
+D  target 5.000 V  conn 0 4.7k      ->  V
+D  target 5.000 V  conn v5 47k      ->  V
+D  target 5.000 V  conn v5 10k      ->  V
+D  target 5.000 V  conn v5 4.7k     ->  V
+E  target 0.100 V  conn 0 100k      ->  V
+E  target 0.100 V  conn 0 10k       ->  V
+E  target 0.100 V  conn 0 4.7k      ->  V
+E  target 0.100 V  conn v5 47k      ->  V
+E  target 0.100 V  conn v5 10k      ->  V
+E  target 0.100 V  conn v5 4.7k     ->  V
+E  target 1.000 V  conn 0 100k      ->  V
+E  target 1.000 V  conn 0 10k       ->  V
+E  target 1.000 V  conn 0 4.7k      ->  V
+E  target 1.000 V  conn v5 47k      ->  V
+E  target 1.000 V  conn v5 10k      ->  V
+E  target 1.000 V  conn v5 4.7k     ->  V
+E  target 2.500 V  conn 0 100k      ->  V
+E  target 2.500 V  conn 0 10k       ->  V
+E  target 2.500 V  conn 0 4.7k      ->  V
+E  target 2.500 V  conn v5 47k      ->  V
+E  target 2.500 V  conn v5 10k      ->  V
+E  target 2.500 V  conn v5 4.7k     ->  V
+E  target 5.000 V  conn 0 100k      ->  V
+E  target 5.000 V  conn 0 10k       ->  V
+E  target 5.000 V  conn 0 4.7k      ->  V
+E  target 5.000 V  conn v5 47k      ->  V
+E  target 5.000 V  conn v5 10k      ->  V
+E  target 5.000 V  conn v5 4.7k     ->  V

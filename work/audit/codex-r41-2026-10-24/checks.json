@@ -1,0 +1,235 @@
+[
+  {
+    "name": "DRC module (errors)",
+    "command": [
+      "python3",
+      "checks/kicad_check.py",
+      "drc",
+      "../hardware/board_module/wideband_controller.kicad_pcb"
+    ],
+    "returncode": 1,
+    "advisory": "D2 (owner, 2026-10-23): upstream's own errors, advisory; gated by \"Module board identical to upstream\" instead",
+    "seconds": 0.82,
+    "output": "DRC 11 errors: solder_mask_bridge 10, clearance 1 (report checks/out/wideband_controller-drc.json)\n"
+  },
+  {
+    "name": "Module board identical to upstream",
+    "command": [
+      "python3",
+      "checks/module_vs_upstream.py"
+    ],
+    "returncode": 0,
+    "advisory": null,
+    "seconds": 0.03,
+    "output": "module board vs upstream master: 0 file(s) differ\n"
+  },
+  {
+    "name": "ERC module (errors)",
+    "command": [
+      "python3",
+      "checks/kicad_check.py",
+      "erc",
+      "../hardware/board_module/wideband_controller.kicad_sch"
+    ],
+    "returncode": 0,
+    "advisory": null,
+    "seconds": 0.47,
+    "output": "ERC 0 errors (report checks/out/wideband_controller-erc.json)\n"
+  },
+  {
+    "name": "DRC carrier (errors)",
+    "command": [
+      "python3",
+      "checks/kicad_check.py",
+      "drc",
+      "../hardware/board_carrier/board_carrier.kicad_pcb"
+    ],
+    "returncode": 1,
+    "advisory": "D2 (owner, 2026-10-23): upstream's own errors, advisory; gated by \"Carrier DRC vs upstream baseline\" instead",
+    "seconds": 0.94,
+    "output": "DRC 23 errors: courtyards_overlap 14, copper_edge_clearance 3, malformed_courtyard 3, starved_thermal 2 (report checks/out/board_carrier-drc.json)\n"
+  },
+  {
+    "name": "Carrier DRC vs upstream baseline (new violations, unconnected)",
+    "command": [
+      "python3",
+      "checks/drc_vs_upstream.py"
+    ],
+    "returncode": 0,
+    "advisory": null,
+    "seconds": 2.31,
+    "output": "DRC vs upstream: 0 new violations, 0 unconnected\n"
+  },
+  {
+    "name": "Carrier: no new vias in SMD pads",
+    "command": [
+      "python3",
+      "checks/via_in_pad.py"
+    ],
+    "returncode": 0,
+    "advisory": null,
+    "seconds": 0.82,
+    "output": "via in pad: 0 new, 0 upstream\n15:42:11: Debug: Adding duplicate image handler for 'PNG file'\n15:42:11: Debug: Adding duplicate image handler for 'JPEG file'\n15:42:11: Debug: Adding duplicate image handler for 'TIFF file'\n15:42:11: Debug: Adding duplicate image handler for 'GIF file'\n15:42:11: Debug: Adding duplicate image handler for 'PNM file'\n15:42:11: Debug: Adding duplicate image handler for 'PCX file'\n15:42:11: Debug: Adding duplicate image handler for 'IFF file'\n15:42:11: Debug: Adding duplicate image handler for 'Windows icon file'\n15:42:11: Debug: Adding duplicate image handler for 'Windows cursor file'\n15:42:11: Debug: Adding duplicate image handler for 'Windows animated cursor file'\n15:42:11: Debug: Adding duplicate image handler for 'TGA file'\n15:42:11: Debug: Adding duplicate image handler for 'XPM file'\n"
+  },
+  {
+    "name": "Carrier layout review (sampled coupling and return-path heuristics)",
+    "command": [
+      "python3",
+      "checks/layout_review.py"
+    ],
+    "returncode": 0,
+    "advisory": null,
+    "seconds": 1.16,
+    "output": "1. Coupling (noisy -> sensitive): closest edge gap, length within 0.5 mm same layer, length stacked on the other layer\n         /AOUT_PWM      -> /VREF3       gap  0.52 mm  near  0.0 mm  stacked  0.0 mm\n         /AOUT_BUF      -> /AOUT_F1     gap  0.50 mm  near  0.2 mm  stacked  0.0 mm\n         /LSU_Heater-   -> /LSU_Ip      gap  0.90 mm  near  0.0 mm  stacked  0.0 mm\n2. Return path: share of each new signal track with filled GND on the other layer under it, or on its own layer\n   within 0.5 mm on both sides (coplanar); largest uncovered component, branch lengths summed\n   sampled track heuristic only; pads, unsplit junctions, impedance and actual current distribution are not solved\n         /AOUT_PWM     36.4 mm of track,  94.9 % over GND, uncovered component  0.7 mm\n         /AOUT_BUF      2.2 mm of track,  36.6 % over GND, uncovered component  1.4 mm\n         /AOUT_F1      11.8 mm of track,  92.0 % over GND, uncovered component  0.9 mm\n         /AOUT_F2       8.3 mm of track,  85.8 % over GND, uncovered component  0.5 mm\n         /AOUT_INN     11.4 mm of track,  91.3 % over GND, uncovered component  1.0 mm\n         /AOUT_OA       4.6 mm of track, 100.0 % over GND, uncovered component  0.0 mm\n         /AOUT         15.0 mm of track,  80.9 % over GND, uncovered component  1.8 mm\n         /AOUT_J       39.4 mm of track,  94.1 % over GND, uncovered component  1.2 mm\n         /VREF3         4.1 mm of track,  84.2 % over GND, uncovered component  0.7 mm\n3. GND pour\n  F.Cu: 7 filled GND piece(s)\n  B.Cu: 3 filled GND piece(s)\n  strip (y > 91.25): 16 GND vias; farthest bottom-pour point from a via 7.8 mm\nreview triggers: 0\n"
+  },
+  {
+    "name": "Layout geometry helper unit tests",
+    "command": [
+      "python3",
+      "checks/test_layout_metrics.py"
+    ],
+    "returncode": 0,
+    "advisory": null,
+    "seconds": 0.05,
+    "output": "...\n----------------------------------------------------------------------\nRan 3 tests in 0.000s\n\nOK\n"
+  },
+  {
+    "name": "Layout track-order regression",
+    "command": [
+      "python3",
+      "checks/audit_layout_order.py"
+    ],
+    "returncode": 0,
+    "advisory": null,
+    "seconds": 3.05,
+    "output": "original\n         /AOUT_PWM     36.4 mm of track,  94.9 % over GND, uncovered component  0.7 mm\n         /AOUT_BUF      2.2 mm of track,  36.6 % over GND, uncovered component  1.4 mm\n         /AOUT_F1      11.8 mm of track,  92.0 % over GND, uncovered component  0.9 mm\n         /AOUT_F2       8.3 mm of track,  85.8 % over GND, uncovered component  0.5 mm\n         /AOUT_INN     11.4 mm of track,  91.3 % over GND, uncovered component  1.0 mm\n         /AOUT_OA       4.6 mm of track, 100.0 % over GND, uncovered component  0.0 mm\n         /AOUT         15.0 mm of track,  80.9 % over GND, uncovered component  1.8 mm\n         /AOUT_J       39.4 mm of track,  94.1 % over GND, uncovered component  1.2 mm\n         /VREF3         4.1 mm of track,  84.2 % over GND, uncovered component  0.7 mm\nreverse\n         /AOUT_PWM     36.4 mm of track,  94.9 % over GND, uncovered component  0.7 mm\n         /AOUT_BUF      2.2 mm of track,  36.6 % over GND, uncovered component  1.4 mm\n         /AOUT_F1      11.8 mm of track,  92.0 % over GND, uncovered component  0.9 mm\n         /AOUT_F2       8.3 mm of track,  85.8 % over GND, uncovered component  0.5 mm\n         /AOUT_INN     11.4 mm of track,  91.3 % over GND, uncovered component  1.0 mm\n         /AOUT_OA       4.6 mm of track, 100.0 % over GND, uncovered component  0.0 mm\n         /AOUT         15.0 mm of track,  80.9 % over GND, uncovered component  1.8 mm\n         /AOUT_J       39.4 mm of track,  94.1 % over GND, uncovered component  1.2 mm\n         /VREF3         4.1 mm of track,  84.2 % over GND, uncovered component  0.7 mm\nsorted\n         /AOUT_PWM     36.4 mm of track,  94.9 % over GND, uncovered component  0.7 mm\n         /AOUT_BUF      2.2 mm of track,  36.6 % over GND, uncovered component  1.4 mm\n         /AOUT_F1      11.8 mm of track,  92.0 % over GND, uncovered component  0.9 mm\n         /AOUT_F2       8.3 mm of track,  85.8 % over GND, uncovered component  0.5 mm\n         /AOUT_INN     11.4 mm of track,  91.3 % over GND, uncovered component  1.0 mm\n         /AOUT_OA       4.6 mm of track, 100.0 % over GND, uncovered component  0.0 mm\n         /AOUT         15.0 mm of track,  80.9 % over GND, uncovered component  1.8 mm\n         /AOUT_J       39.4 mm of track,  94.1 % over GND, uncovered component  1.2 mm\n         /VREF3         4.1 mm of track,  84.2 % over GND, uncovered component  0.7 mm\nPASS: tested orders agree\n15:42:13: Debug: Adding duplicate image handler for 'PNG file'\n15:42:13: Debug: Adding duplicate image handler for 'JPEG file'\n15:42:13: Debug: Adding duplicate image handler for 'TIFF file'\n15:42:13: Debug: Adding duplicate image handler for 'GIF file'\n15:42:13: Debug: Adding duplicate image handler for 'PNM file'\n15:42:13: Debug: Adding duplicate image handler for 'PCX file'\n15:42:13: Debug: Adding duplicate image handler for 'IFF file'\n15:42:13: Debug: Adding duplicate image handler for 'Windows icon file'\n15:42:13: Debug: Adding duplicate image handler for 'Windows cursor file'\n15:42:13: Debug: Adding duplicate image handler for 'Windows animated cursor file'\n15:42:13: Debug: Adding duplicate image handler for 'TGA file'\n15:42:13: Debug: Adding duplicate image handler for 'XPM file'\n15:42:14: Debug: Adding duplicate image handler for 'PNG file'\n15:42:14: Debug: Adding duplicate image handler for 'JPEG file'\n15:42:14: Debug: Adding duplicate image handler for 'TIFF file'\n15:42:14: Debug: Adding duplicate image handler for 'GIF file'\n15:42:14: Debug: Adding duplicate image handler for 'PNM file'\n15:42:14: Debug: Adding duplicate image handler for 'PCX file'\n15:42:14: Debug: Adding duplicate image handler for 'IFF file'\n15:42:14: Debug: Adding duplicate image handler for 'Windows icon file'\n15:42:14: Debug: Adding duplicate image handler for 'Windows cursor file'\n15:42:14: Debug: Adding duplicate image handler for 'Windows animated cursor file'\n15:42:14: Debug: Adding duplicate image handler for 'TGA file'\n15:42:14: Debug: Adding duplicate image handler for 'XPM file'\n"
+  },
+  {
+    "name": "ERC carrier (errors)",
+    "command": [
+      "python3",
+      "checks/kicad_check.py",
+      "erc",
+      "../hardware/board_carrier/board_carrier.kicad_sch"
+    ],
+    "returncode": 0,
+    "advisory": null,
+    "seconds": 0.42,
+    "output": "ERC 0 errors (report checks/out/board_carrier-erc.json)\n"
+  },
+  {
+    "name": "Carrier netlist self-check (generator table)",
+    "command": [
+      "python3",
+      "gen/gen_carrier_sch.py",
+      "--check"
+    ],
+    "returncode": 0,
+    "advisory": null,
+    "seconds": 0.41,
+    "output": "netlist self-check: 18 nets, 0 problems\n"
+  },
+  {
+    "name": "No hand edits waiting",
+    "command": [
+      "python3",
+      "checks/drift.py",
+      "check"
+    ],
+    "returncode": 0,
+    "advisory": null,
+    "seconds": 0.03,
+    "output": "no drift\n"
+  },
+  {
+    "name": "JLC rotation, origin and pin names from each part's EasyEDA footprint",
+    "command": [
+      "python3",
+      "checks/jlc_rotation.py"
+    ],
+    "returncode": 0,
+    "advisory": null,
+    "seconds": 0.82,
+    "output": "  D2: paired by pin name: our 1 = EasyEDA 2, our 2 = EasyEDA 1\n  U1   C38695   TJA1051T/3/1J          correction 270  CPL     0  fit 0.12 mm  offset 0.00 mm\n  U2: paired by pin name: our 2 = EasyEDA 4\n  U2: tab pad(s) ['2'] left out of the fit and origin\n  U2   C58069   L78M05ABDT-TR          correction   0  CPL   270  fit 0.01 mm  offset 0.72 mm\n  U4   C12519   74LVC1G125GW,125       correction 180  CPL     0  fit 0.01 mm  offset 0.00 mm\n  U5   C38423   REF3030AIDBZR          correction 180  CPL    90  fit 0.40 mm  offset 0.10 mm\n  U6   C7934    LM2904DR               correction 270  CPL   270  fit 0.12 mm  offset 0.00 mm\njlc rotation: 38 parts measured, 4 need a correction, 0 problem(s)\n"
+  },
+  {
+    "name": "Fab candidate (out/carrier) matches the board: Gerbers, BOM, CPL, not-fitted",
+    "command": [
+      "python3",
+      "checks/fab_files.py"
+    ],
+    "returncode": 0,
+    "advisory": null,
+    "seconds": 0.86,
+    "output": "fab files: 38 placed, 6 not fitted, outline 40.00 x 51.50 mm, 0 problem(s)\n"
+  },
+  {
+    "name": "Firmware: bootloader DATA writes stay inside the app partition (F1)",
+    "command": [
+      "python3",
+      "checks/audit_bootloader_bounds.py"
+    ],
+    "returncode": 0,
+    "advisory": null,
+    "seconds": 0.15,
+    "output": "52 guard cases; 0 unsafe accepted writes, 0 valid writes refused (stub only)\n"
+  },
+  {
+    "name": "Firmware: package checker accepts good images, rejects bad ones (F2)",
+    "command": [
+      "python3",
+      "checks/test_fw_package.py"
+    ],
+    "returncode": 0,
+    "advisory": null,
+    "seconds": 2.63,
+    "output": "ok   accept: isAppValid() alone: upstream image  (bootloader isAppValid() accepts the image)\nok   reject: isAppValid() alone: CRC bytes swapped  (bootloader isAppValid() REJECTS the image)\nok   reject: isAppValid() alone: one byte flipped  (bootloader isAppValid() REJECTS the image)\nok   accept: upstream image as shipped (.h)\nok   accept: upstream image as .bin\nok   reject: one app byte flipped  (app image: CRC bytes 0e5f0bc2 != zlib CRC32 05757f7d (big-endian))\nok   reject: one padding byte changed  (app image: CRC bytes 0e5f0bc2 != zlib CRC32 ea9ba00e (big-endian))\nok   reject: CRC bytes in little-endian order  (app image: CRC bytes c20b5f0e != zlib CRC32 0e5f0bc2 (big-endian))\nok   reject: truncated by 4 bytes  (image.bin: 25596 bytes is neither the app image (25600) nor bootloader + app (31744))\nok   reject: extended by 4 bytes  (image.bin: 25604 bytes is neither the app image (25600) nor bootloader + app (31744))\nok   reject: linked for 0x08000000 (no bootloader offset), CRC redone  (app image: vector 1 = 0x080001a1 is not a Thumb address inside 0x08001800-0x08007bfc)\nok   reject: reset vector with the Thumb bit cleared, CRC redone  (app image: vector 1 = 0x080019a0 is not a Thumb address inside 0x08001800-0x08007bfc)\nok   reject: HardFault vector into the config page, CRC redone  (app image: vector 3 = 0x08007c01 is not a Thumb address inside 0x08001800-0x08007bfc)\nok   reject: stack pointer outside RAM, CRC redone  (app image: initial stack pointer 0x20002000 not a word address in RAM)\nok   reject: header array renamed  (header: array is named image / image_len; rusEFI expects build_wideband_image_bin)\nok   reject: header _len wrong  (header: 25600 bytes in the array but _len = 25596)\nok   accept: staged bootloader + app (1c8f942)\nok   reject: bootloader + app + a config page  (combined image: 32768 bytes, expected 31744 (reaches the config page))\nok   accept: bootloader + upstream app (both valid parts)\nok   reject: bootloader padded short by 4 (app shifted)  (app image: CRC bytes ffffffff != zlib CRC32 07984bef (big-endian))\nok   reject: bootloader reset vector pointing into the app  (bootloader: vector 1 = 0x08001901 is not a Thumb address inside 0x08000000-0x08001800)\n21 package cases, 0 wrong verdict(s)\n"
+  },
+  {
+    "name": "Firmware: HardFault entry reaches the C handler on a Cortex-M0 (F9, QEMU microbit)",
+    "command": [
+      "python3",
+      "checks/test_fault_entry_m0.py"
+    ],
+    "returncode": 0,
+    "advisory": null,
+    "seconds": 4.92,
+    "output": "ok   current handler: reached (expected reached)\nok   upstream's handler (master): lockup (expected lockup)\nok   current handler, then BKPT #0: lockup (expected lockup)\nok   f0 build fault entries: 37 lines, 0 Thumb-2-only instructions\nfault entry on Cortex-M0: as expected\n"
+  },
+  {
+    "name": "Firmware: host gtest suite (sampler, heater, F7, F1 bounds, D10 watchdog)",
+    "command": [
+      "python3",
+      "checks/host_tests.py"
+    ],
+    "returncode": 1,
+    "advisory": null,
+    "seconds": 9.88,
+    "output": "[  PASSED  ] 69 tests.\n"
+  },
+  {
+    "name": "Firmware: analog output host tests, production auxout/pump_dac/can_helper on the f0 config (F3-F6)",
+    "command": [
+      "make",
+      "-s",
+      "-C",
+      "../test/aux_out",
+      "run"
+    ],
+    "returncode": 2,
+    "advisory": null,
+    "seconds": 0.03,
+    "output": "Running main() from /home/logan/projects/wideband-work/test/googletest/googletest/src/gtest_main.cc\n[==========] Running 21 tests from 3 test suites.\n[----------] Global test environment set-up.\n[----------] 15 tests from AuxOut\n[ RUN      ] AuxOut.VoltsToDutyAgainstFullScale\n[       OK ] AuxOut.VoltsToDutyAgainstFullScale (0 ms)\n[ RUN      ] AuxOut.OutOfRangeVoltsClampToTheEnds\n[       OK ] AuxOut.OutOfRangeVoltsClampToTheEnds (0 ms)\n[ RUN      ] AuxOut.NanVoltsGoesToFullScale_Documented\n[       OK ] AuxOut.NanVoltsGoesToFullScale_Documented (0 ms)\n[ RUN      ] AuxOut.OnlyChannelZeroExists\n[       OK ] AuxOut.OnlyChannelZeroExists (0 ms)\n[ RUN      ] AuxOut.SharesTim3WithoutTouchingThePump\n[       OK ] AuxOut.SharesTim3WithoutTouchingThePump (0 ms)\n[ RUN      ] AuxOut.InitDrivesZeroBeforeHandingPb1ToTheTimer\n[       OK ] AuxOut.InitDrivesZeroBeforeHandingPb1ToTheTimer (0 ms)\n[ RUN      ] AuxOut.CurveFollowsAfr\n[       OK ] AuxOut.CurveFollowsAfr (0 ms)\n[ RUN      ] AuxOut.CurveClampsBelow10AndAbove20Afr\n[       OK ] AuxOut.CurveClampsBelow10AndAbove20Afr (0 ms)\n[ RUN      ] AuxOut.InvalidWhileHeaterNotClosedLoop\n[       OK ] AuxOut.InvalidWhileHeaterNotClosedLoop (0 ms)\n[ RUN      ] AuxOut.NernstWindowIsStrict\n[       OK ] AuxOut.NernstWindowIsStrict (0 ms)\n[ RUN      ] AuxOut.NanLambdaIsInvalid\n[       OK ] AuxOut.NanLambdaIsInvalid (0 ms)\n[ RUN      ] AuxOut.InfiniteLambdaReadsFullScale_Documented\n[       OK ] AuxOut.InfiniteLambdaReadsFullScale_Documented (0 ms)\n[ RUN      ] AuxOut.TestModeStepsEvery10sIncludingAfterTheTickCounterWraps\n[       OK ] AuxOut.TestModeStepsEvery10sIncludingAfterTheTickCounterWraps (0 ms)\n[ RUN      ] AuxOut.TestModeIgnoresTheSensor\n[       OK ] AuxOut.TestModeIgnoresTheSensor (0 ms)\n[ RUN      ] AuxOut.StrapIsReadOnceAtPowerUp\n[       OK ] AuxOut.StrapIsReadOnceAtPowerUp (0 ms)\n[----------] 15 tests from AuxOut (1 ms total)\n\n[----------] 1 test from CanTx\n[ RUN      ] CanTx.FrameIsDroppedNotWaitedFor\n[       OK ] CanTx.FrameIsDroppedNotWaitedFor (0 ms)\n[----------] 1 test from CanTx (0 ms total)\n\n[----------] 5 tests from CanTxLoop\n[ RUN      ] CanTxLoop.OneUpdatePerCycleWithFramesAcknowledged\n[       OK ] CanTxLoop.OneUpdatePerCycleWithFramesAcknowledged (1 ms)\n[ RUN      ] CanTxLoop.NoAckOnTheBusStillUpdatesEveryCycle\n[       OK ] CanTxLoop.NoAckOnTheBusStillUpdatesEveryCycle (1 ms)\n[ RUN      ] CanTxLoop.KeepsTheCadenceAcrossTheTickCounterWrap\n[       OK ] CanTxLoop.KeepsTheCadenceAcrossTheTickCounterWrap (1 ms)\n[ RUN      ] CanTxLoop.OutputFollowsLambdaThroughTheThread\n[       OK ] CanTxLoop.OutputFollowsLambdaThroughTheThread (0 ms)\n[ RUN      ] CanTxLoop.TestModeStepsThroughTheThreadWithTheBusDown\n[       OK ] CanTxLoop.TestModeStepsThroughTheThreadWithTheBusDown (2 ms)\n[----------] 5 tests from CanTxLoop (6 ms total)\n\n[----------] Global test environment tear-down\n[==========] 21 tests from 3 test suites ran. (8 ms total)\n[  PASSED  ] 21 tests.\n==518==LeakSanitizer has encountered a fatal error.\n==518==HINT: For debugging, try setting environment variable LSAN_OPTIONS=verbosity=1:log_threads=1\n==518==HINT: LeakSanitizer does not work under ptrace (strace, gdb, etc)\nmake: *** [Makefile:31: run] Error 1\n"
+  },
+  {
+    "name": "Firmware: static worst-case stack per thread fits (F8 estimate, f0 build)",
+    "command": [
+      "python3",
+      "checks/stack_estimate.py"
+    ],
+    "returncode": 0,
+    "advisory": null,
+    "seconds": 0.13,
+    "output": "firmware/build/wideband.elf: 131 functions, 13 indirect-call targets (address in flash data)\n  ok   HeaterThread(void*)  176 of 256 B (+80)\n  ok   PumpThread(void*)  176 of 256 B (+80)\n  ok   SamplingThread(void*)  164 of 256 B (+92)\n  ok   CanTxThread(void*)  312 of 512 B (+200)\n  ok   CanRxThread(void*)  220 of 512 B (+292)\n  IndicationThread not in this build\n  ok   main              188 of 1024 B (+836)\n  ok   interrupts (one)  184 of 1024 B exception stack (+840), deepest handler Vector78; nesting of interrupts not modelled\n  note: 6 loop(s) through indirect calls cut (an artefact of the over-approximation, -v lists them)\nstack estimate: ok, smallest margin 80 B\n"
+  }
+]

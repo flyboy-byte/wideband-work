@@ -1,0 +1,63 @@
+[
+  {
+    "case": "step_10n",
+    "returncode": 0,
+    "complete": true,
+    "values": {
+      "before": 1.68227,
+      "final": 1.85027,
+      "peak": 1.85027,
+      "late_min": 1.85027,
+      "late_max": 1.85027,
+      "rail": 9.99831,
+      "clamp_voltage": 1.86414,
+      "injection": -2.52312e-09
+    },
+    "overshoot_pct": 0.0,
+    "late_ripple_mV": 0.0
+  },
+  {
+    "case": "step_47n",
+    "returncode": 0,
+    "complete": true,
+    "values": {
+      "before": 1.68227,
+      "final": 1.85027,
+      "peak": 1.86579,
+      "late_min": 1.85027,
+      "late_max": 1.85027,
+      "rail": 9.99714,
+      "clamp_voltage": 1.86414,
+      "injection": -2.52312e-09
+    },
+    "overshoot_pct": 9.238095238095218,
+    "late_ripple_mV": 0.0
+  },
+  {
+    "case": "full_10k",
+    "returncode": 0,
+    "complete": false,
+    "values": {}
+  },
+  {
+    "case": "full_4k7",
+    "returncode": 0,
+    "complete": true,
+    "values": {
+      "before": 4.30567,
+      "final": 5.00211,
+      "peak": 5.00211,
+      "late_min": 5.00211,
+      "late_max": 5.00211,
+      "rail": 8.9103,
+      "clamp_voltage": 5.51631,
+      "injection": 0.000223061
+    }
+  },
+  {
+    "case": "low_supply_4k7",
+    "returncode": 0,
+    "complete": false,
+    "values": {}
+  }
+]

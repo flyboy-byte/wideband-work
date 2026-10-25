@@ -56,6 +56,18 @@ Severity: BLOCKER = don't order; BUG = wrong but workable; RISK = could bite (st
 NOTE. Then: what was checked and found correct, and what couldn't be checked.
 
 ## Rounds
+### Round 4 — 2026-10-24, Codex (independent full-repository review, r41)
+Reviewed commit: `fad803240534f08eb3fbd7ce15ddc386e75148bb` (pack `8ad4b28`).
+Verdict: Not yet on this round's evidence; verification defects remain, and electrical/fab coverage is explicitly incomplete. No new physical board defect established.
+Raw report, tests, decks and outputs: `audit/codex-r41-2026-10-24/FINDINGS.md`.
+
+| ID | Severity | Location | Evidence (numbers) | Smallest fix | Status |
+| --- | --- | --- | --- | --- | --- |
+| R41-CX1 | BUG | `checks/stack_estimate.py:83` | DOCUMENTED real ARMv6-M counterexample: 408-byte nested use on a 256-byte stack reported as 8 bytes, exit 0; indirect pointer in .text omitted | Fail unbounded indirect paths; sound target coverage plus regression | open; designer to verify |
+| R41-CX2 | BUG | `sim/load_accuracy.sh:35-36` | DOCUMENTED fault injection: simulator fails all 48 cases, wrapper exits 0 with missing voltages | Require complete finite measurements and propagate any failure | open; designer to verify |
+
+Independent circuit evidence: 10nF step 0% overshoot; 47nF step 9.238%; full-scale 4.7k case 5.00211 V with supply feed and illustrative clamps. Two other cases failed model convergence, not passed. Host suites pass 69+21 outside ptrace sandbox; all other nonadvisory configured checks return zero, but CX1 qualifies the stack result. See raw report for limits and next electrical/fab checks. No design files changed.
+
 ### Round 1 — 2026-10-23, Claude Sonnet 5.5 (self-audit, same session as the author: low independence; first written as "Claude Opus", which was wrong)
 Commit: bf13162 plus the `can_helper.cpp` change in the commit that adds this text
 Verdict: Not yet. Nothing found that makes the board unsafe or wrong for its main use, but R1/R2 are open RISKs, nothing has been
