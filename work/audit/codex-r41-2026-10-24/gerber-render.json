@@ -1,0 +1,14 @@
+{
+  "zip_sha256": "c24deb7ceadbb05ad7f3a52e0cbb4d8361cd08c68d4cf76881a7d76a6470236a",
+  "layers": {
+    "('top', 'copper')": 552,
+    "('top', 'mask')": 127,
+    "('top', 'silk')": 1010,
+    "('top', 'paste')": 96,
+    "('bottom', 'copper')": 225,
+    "('bottom', 'mask')": 32,
+    "('bottom', 'silk')": 733,
+    "('bottom', 'paste')": 0,
+    "('mechanical', 'outline')": 12
+  }
+}

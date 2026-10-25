@@ -1,0 +1,25 @@
+[
+  {
+    "case": "full_10k",
+    "complete": false,
+    "returncode": 0,
+    "values": {}
+  },
+  {
+    "case": "low_supply_4k7",
+    "complete": false,
+    "returncode": 0,
+    "values": {}
+  },
+  {
+    "case": "pullup_4k7_midscale",
+    "complete": false,
+    "timeout_seconds": 60
+  },
+  {
+    "case": "full_4k7_9V",
+    "complete": false,
+    "returncode": 0,
+    "values": {}
+  }
+]

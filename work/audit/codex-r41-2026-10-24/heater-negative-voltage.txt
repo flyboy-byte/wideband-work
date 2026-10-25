@@ -1,0 +1,7 @@
+Production f0 configuration; mock time and sampler only.
+ESR=300 temp=780 after=50ms state=2 raw_duty=0.332840 clipped_duty=0.332840 telemetry_voltage=0.000
+ESR=300 temp=780 after=2000ms state=2 raw_duty=0.332840 clipped_duty=0.332840 telemetry_voltage=0.000
+ESR=250 temp=806 after=50ms state=2 raw_duty=1.970784 clipped_duty=1.000000 telemetry_voltage=0.000
+ESR=250 temp=806 after=2000ms state=2 raw_duty=0.652367 clipped_duty=0.652367 telemetry_voltage=0.000
+ESR=200 temp=840 after=50ms state=2 raw_duty=11.455622 clipped_duty=1.000000 telemetry_voltage=0.000
+ESR=200 temp=840 after=2000ms state=2 raw_duty=3.847633 clipped_duty=1.000000 telemetry_voltage=0.000

@@ -1,0 +1,39 @@
+* r41 independent case low_supply_4k7; supply is protected rail AFTER D2
+.include /home/logan/projects/wideband-work/work/sim/models/lmx58_lm2904.lib
+VBAT battery 0 7
+R9 battery vcc 1k
+C16 vcc 0 10u
+C17 vcc 0 100n
+V5 five 0 5
+VIN input 0 PWL(0 1 0.5m 1 4.5m 2.976190476)
+XACTIVE input inv vcc 0 oa LMX58_LM2904
+XUNUSED 0 unused vcc 0 unused LMX58_LM2904
+R6 connector inv 68k
+R7 inv 0 100k
+C15 oa inv 1n
+R8 oa clamp 330
+R11 clamp connector 470
+RL connector 0 4700
+CL connector 0 1n
+* Illustrative silicon diode only: sensitivity, not a production-part guarantee.
+.model sensitivity D(Is=2.52n N=1.752 Rs=.568 Cjo=4p)
+D3 clamp five sensitivity
+D4 0 clamp sensitivity
+* Zener omitted: supply never exceeds 12V in these cases.
+.nodeset v(vcc)=5 v(oa)=1.8 v(clamp)=1.7 v(connector)=1.68 v(inv)=1 v(unused)=.003
+.save v(connector) v(vcc) v(clamp) v(oa) i(V5)
+.tran 1u 8m 0 2u
+.control
+set ngbehavior=psa
+run
+meas tran before AVG v(connector) from=3.5m to=3.9m
+meas tran final AVG v(connector) from=7.5m to=8m
+meas tran peak MAX v(connector) from=4m to=8m
+meas tran late_min MIN v(connector) from=7.5m to=8m
+meas tran late_max MAX v(connector) from=7.5m to=8m
+meas tran rail AVG v(vcc) from=7.5m to=8m
+meas tran clamp_voltage AVG v(clamp) from=7.5m to=8m
+meas tran injection AVG i(V5) from=7.5m to=8m
+quit
+.endc
+.end
