@@ -14,7 +14,7 @@ Would I order these files as they are? **Not yet assessed**: review in progress;
 | TK1 Fab files | PARTLY | — | MEASURED: 26/26 BOM and 38/38 CPL rows match board and cached transforms; 6 not-fitted consistent. `TK1-rows.md`, `TK1-fab.log`, `TK1-rotation.log`. JLC machine placement preview not available. |
 | TK2 Module files | OK | — | `TK2-rotation.log`: 57/57; four questions independently answered in `TK2-module.md`. Torex primary datasheet resolves U9 override; JLC preview still needed as for TK1. |
 | TK3 Boot level | PARTLY | — | Digital fix checks out: primary datasheets, both board.h files, SEL1 compile guard. Worst old-pullup bound 0.575V at 3.6V including R3+1%; PWM load <0.774mA. Rail sequencing/analog reset transient not established; see TK3-boot.md. |
-| TK4 Invalid output | | | |
+| TK4 Invalid output | PARTLY | — | 21/21 aux tests pass, source path table in TK4-invalid.md. Normal invalid states command5V; sensor fault detection and receiver response cannot be universalized from this logic. |
 | TK5 Heater clamp | | | |
 | TK6 Analog DC | | | |
 | TK7 Stability | | | |
@@ -65,6 +65,10 @@ DOCUMENTED/MEASURED: U9 pinout override is correct (Torex XC6206 ETR03005-009 p3
 ### TK3
 
 DOCUMENTED/CALCULATED: R3's digital low margin is adequate, PB1 is not read as a strap in this build, and PWM drive current is small relative to the specified GPIO capability. Bootloader/update/no-valid-app all retain the low command. That is a steady command guarantee, not proof that the connector is 0V during every supply ramp or immediately after a reset from full scale. `TK3-boot.md` gives the state table and measurement needed.
+
+### TK4
+
+MEASURED:21 auxiliary tests pass (`TK4-aux.log`). DOCUMENTED: every failed software validity predicate overrides the curve with5V; test mode intentionally bypasses it. INFERRED:5V is a reasonable lean-side fallback for a correctly configured AFR10-20 receiver, but is indistinguishable from a real lean reading and cannot guarantee safe fueling. Physical disconnect detection latency and specific receiver policies remain bench/configuration questions. See TK4-invalid.md.
 
 ## Could not check
 

@@ -1,0 +1,11 @@
+{
+  "command": [
+    "make",
+    "-C",
+    "../test/aux_out",
+    "run"
+  ],
+  "cwd": "/home/logan/projects/wideband-work/work",
+  "returncode": 0,
+  "seconds": 0.04
+}

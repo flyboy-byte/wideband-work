@@ -1,0 +1,9 @@
+{
+  "command": [
+    "python3",
+    "checks/host_tests.py"
+  ],
+  "cwd": "/home/logan/projects/wideband-work/work",
+  "returncode": 0,
+  "seconds": 10.81
+}

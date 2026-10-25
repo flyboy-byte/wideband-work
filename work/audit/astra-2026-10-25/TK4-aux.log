@@ -1,0 +1,60 @@
+make: Entering directory '/home/logan/projects/wideband-work/test/aux_out'
+ASAN_OPTIONS=detect_stack_use_after_return=1 build/aux_out_test
+Running main() from /home/logan/projects/wideband-work/test/googletest/googletest/src/gtest_main.cc
+[==========] Running 21 tests from 3 test suites.
+[----------] Global test environment set-up.
+[----------] 15 tests from AuxOut
+[ RUN      ] AuxOut.VoltsToDutyAgainstFullScale
+[       OK ] AuxOut.VoltsToDutyAgainstFullScale (0 ms)
+[ RUN      ] AuxOut.OutOfRangeVoltsClampToTheEnds
+[       OK ] AuxOut.OutOfRangeVoltsClampToTheEnds (0 ms)
+[ RUN      ] AuxOut.NanVoltsGoesToFullScale_Documented
+[       OK ] AuxOut.NanVoltsGoesToFullScale_Documented (0 ms)
+[ RUN      ] AuxOut.OnlyChannelZeroExists
+[       OK ] AuxOut.OnlyChannelZeroExists (0 ms)
+[ RUN      ] AuxOut.SharesTim3WithoutTouchingThePump
+[       OK ] AuxOut.SharesTim3WithoutTouchingThePump (0 ms)
+[ RUN      ] AuxOut.InitDrivesZeroBeforeHandingPb1ToTheTimer
+[       OK ] AuxOut.InitDrivesZeroBeforeHandingPb1ToTheTimer (0 ms)
+[ RUN      ] AuxOut.CurveFollowsAfr
+[       OK ] AuxOut.CurveFollowsAfr (0 ms)
+[ RUN      ] AuxOut.CurveClampsBelow10AndAbove20Afr
+[       OK ] AuxOut.CurveClampsBelow10AndAbove20Afr (0 ms)
+[ RUN      ] AuxOut.InvalidWhileHeaterNotClosedLoop
+[       OK ] AuxOut.InvalidWhileHeaterNotClosedLoop (0 ms)
+[ RUN      ] AuxOut.NernstWindowIsStrict
+[       OK ] AuxOut.NernstWindowIsStrict (0 ms)
+[ RUN      ] AuxOut.NanLambdaIsInvalid
+[       OK ] AuxOut.NanLambdaIsInvalid (0 ms)
+[ RUN      ] AuxOut.InfiniteLambdaReadsFullScale_Documented
+[       OK ] AuxOut.InfiniteLambdaReadsFullScale_Documented (0 ms)
+[ RUN      ] AuxOut.TestModeStepsEvery10sIncludingAfterTheTickCounterWraps
+[       OK ] AuxOut.TestModeStepsEvery10sIncludingAfterTheTickCounterWraps (0 ms)
+[ RUN      ] AuxOut.TestModeIgnoresTheSensor
+[       OK ] AuxOut.TestModeIgnoresTheSensor (0 ms)
+[ RUN      ] AuxOut.StrapIsReadOnceAtPowerUp
+[       OK ] AuxOut.StrapIsReadOnceAtPowerUp (0 ms)
+[----------] 15 tests from AuxOut (1 ms total)
+
+[----------] 1 test from CanTx
+[ RUN      ] CanTx.FrameIsDroppedNotWaitedFor
+[       OK ] CanTx.FrameIsDroppedNotWaitedFor (0 ms)
+[----------] 1 test from CanTx (0 ms total)
+
+[----------] 5 tests from CanTxLoop
+[ RUN      ] CanTxLoop.OneUpdatePerCycleWithFramesAcknowledged
+[       OK ] CanTxLoop.OneUpdatePerCycleWithFramesAcknowledged (0 ms)
+[ RUN      ] CanTxLoop.NoAckOnTheBusStillUpdatesEveryCycle
+[       OK ] CanTxLoop.NoAckOnTheBusStillUpdatesEveryCycle (1 ms)
+[ RUN      ] CanTxLoop.KeepsTheCadenceAcrossTheTickCounterWrap
+[       OK ] CanTxLoop.KeepsTheCadenceAcrossTheTickCounterWrap (1 ms)
+[ RUN      ] CanTxLoop.OutputFollowsLambdaThroughTheThread
+[       OK ] CanTxLoop.OutputFollowsLambdaThroughTheThread (0 ms)
+[ RUN      ] CanTxLoop.TestModeStepsThroughTheThreadWithTheBusDown
+[       OK ] CanTxLoop.TestModeStepsThroughTheThreadWithTheBusDown (2 ms)
+[----------] 5 tests from CanTxLoop (6 ms total)
+
+[----------] Global test environment tear-down
+[==========] 21 tests from 3 test suites ran. (8 ms total)
+[  PASSED  ] 21 tests.
+make: Leaving directory '/home/logan/projects/wideband-work/test/aux_out'
