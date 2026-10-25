@@ -1,0 +1,9 @@
+{
+  "command": [
+    "python3",
+    "audit/astra-2026-10-25/filter_exact.py"
+  ],
+  "cwd": "/home/logan/projects/wideband-work/work",
+  "returncode": 0,
+  "seconds": 0.04
+}

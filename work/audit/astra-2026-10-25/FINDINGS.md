@@ -16,7 +16,7 @@ Would I order these files as they are? **Not yet assessed**: review in progress;
 | TK3 Boot level | PARTLY | — | Digital fix checks out: primary datasheets, both board.h files, SEL1 compile guard. Worst old-pullup bound 0.575V at 3.6V including R3+1%; PWM load <0.774mA. Rail sequencing/analog reset transient not established; see TK3-boot.md. |
 | TK4 Invalid output | PARTLY | — | 21/21 aux tests pass, source path table in TK4-invalid.md. Normal invalid states command5V; sensor fault detection and receiver response cannot be universalized from this logic. |
 | TK5 Heater clamp | PARTLY | — | 70/70 host tests and 2 new production-code sequence tests pass. 60s clamp and30 recovery cycles; integrator bounded±3V. See TK5-heater.md; thermal plant/overshoot not simulated. |
-| TK6 Analog DC | | | |
+| TK6 Analog DC | PARTLY | R6-S1 | Independent exact RC ripple0.658/0.421mV at50/80%; gain tolerance calculation; primary LM2904 limits. Full-scale sweep running; longer-window/zero cases queued for later evidence update. TK6-calculations.md. |
 | TK7 Stability | | | |
 | TK8 Faults | | | |
 | TK9 Op-amp supply | | | |
@@ -33,7 +33,7 @@ Status: OK = checked and found right; FINDING = see the table below; PARTLY = sa
 
 | ID | Task | Severity | Location | Evidence (numbers) | Smallest fix |
 | --- | --- | --- | --- | --- | --- |
-| <initials>1 | TK? | <BLOCKER / BUG / RISK / NOTE> | <file:line, or ref and x/y mm> | <measured or calculated, with source> | <one change> |
+| R6-S1 | TK6 | NOTE | `work/docs/carrier.md:134,143` | DOCUMENTED TI SLOS068AB5.8: plain LM2904 offset3mV typ/7mV max at25C,10mV over temperature; CALCULATED output offset bound11.76mV at25C vs cited5.04mV. | Correct accuracy budget to the exact ordered variant's limits; retain two-point calibration. |
 
 Severity: BLOCKER = don't order; BUG = wrong but workable; RISK = could bite (say when); NOTE = worth knowing.
 Tag each piece of evidence: MEASURED (you ran it), CALCULATED (show the sum), DOCUMENTED (name the datasheet and page),
@@ -73,6 +73,10 @@ MEASURED:21 auxiliary tests pass (`TK4-aux.log`). DOCUMENTED: every failed softw
 ### TK5
 
 MEASURED: sustained zero clamp recovers; no permanent stuck state in30 cycles. CALCULATED: integrator can wind to its existing±3V limit, but cannot grow indefinitely. Recovery has one50ms derivative kick at the12V cap, then4.5V at target, then increasing heat on cooling. This verifies control-law sequences, not physical stability. See TK5-heater.md.
+
+### TK6
+
+CALCULATED exact periodic RC states give0.658mV p-p at50% and0.421mV at80%, residual<1e-15V (`TK6-filter.log`). Gain1.68, resistor-only extremes1.666535..1.693737. Full-scale and zero conclusions remain pending simulator completion; no result is inferred from the designer's saved output. Primary datasheet contradicts the3mV maximum offset in the accuracy documentation (R6-S1).
 
 ## Could not check
 
