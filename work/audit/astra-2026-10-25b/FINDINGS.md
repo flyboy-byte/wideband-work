@@ -16,7 +16,7 @@ Would I order these files as they are? **Not assessed yet**: review in progress.
 | TK3 R9 surge | PARTLY | R7-S1 | R9 nominal overload fixed:0.480W with -1%R vs0.75W conditional rating. MDD D5 derating gives92.7C case ceiling for0.382W. Real400ms input envelope/board cooling unknown; TK3-surge-review.md. |
 | TK4 Backfeed | PARTLY | R7-S2 | Source-checked loads:6.235mA typical subtotal excluding MCU/IO/LED/ADC; no guaranteed13.6mA floor. LM2904 is NOT on+5V. No pre-prototype swap recommended under C1; TK4-backfeed-review.md. |
 | TK5 Fab files | PARTLY | — | R9 exact part/unchanged geometry verified;26BOM/38CPL,live stock26/26available. Canonical suite26checks:0nonadvisory failures,2accepted advisories,0skipped; report isolation verified. C11 rail acceptance still order-day gate. TK5-fab-review.md. |
-| TK6 Round 6 leftovers | | | |
+| TK6 Round 6 leftovers | PARTLY | — | Added19ASan/UBSan cases using real f0 Sampler+heater:synthetic ESR fault invalidates526–576ms;DC step firstsample;ADCstall staysvalid2s(known watchdog scope). Physical unplug/ramp/thermal loop remain unqualified. TK6-sensor-latency.md. |
 | TK7 These docs | | | |
 | TK99 Beyond the list | | | |
 

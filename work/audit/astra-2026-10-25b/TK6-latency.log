@@ -1,0 +1,22 @@
+Compile: g++ -std=c++20 -O1 -g -include initializer_list -fsanitize=address,undefined -fno-omit-frame-pointer -DMOCK_TIMER -DWB_PROD=0 -I/home/logan/projects/wideband-review-astra/firmware/boards/f0_module -I/home/logan/projects/wideband-review-astra/firmware/boards/f0_module/io -I/home/logan/projects/wideband-review-astra/firmware/boards -I/home/logan/projects/wideband-review-astra/firmware -I/home/logan/projects/wideband-review-astra/firmware/util -I/home/logan/projects/wideband-review-astra/firmware/libfirmware/util/include /home/logan/projects/wideband-review-astra/work/audit/astra-2026-10-25b/sampler_latency.cpp /home/logan/projects/wideband-review-astra/firmware/sampling.cpp /home/logan/projects/wideband-review-astra/firmware/heater_control.cpp /home/logan/projects/wideband-review-astra/firmware/pid.cpp /home/logan/projects/wideband-review-astra/firmware/util/timer.cpp -o /tmp/wb-r7-latency-bpa2gol4/latency
+Assumed sample intervals, NOT a measured ADC cadence. lambda=1.0 fixed; no analog output settling model.
+ESR300_to6000_DCunchanged,dt_us=100,heater_phase_us=0,underheat_us=4600,zero_temp_us=96600,invalid_predicate_us=550000,heater_stop_us=550000
+DC045_to100,dt_us=100,heater_phase_us=0,underheat_us=-1,zero_temp_us=-1,invalid_predicate_us=100,heater_stop_us=-1
+ESR300_to6000_DCunchanged,dt_us=100,heater_phase_us=24000,underheat_us=4600,zero_temp_us=96600,invalid_predicate_us=526000,heater_stop_us=526000
+DC045_to100,dt_us=100,heater_phase_us=24000,underheat_us=-1,zero_temp_us=-1,invalid_predicate_us=100,heater_stop_us=-1
+ESR300_to6000_DCunchanged,dt_us=100,heater_phase_us=49000,underheat_us=4600,zero_temp_us=96600,invalid_predicate_us=551000,heater_stop_us=551000
+DC045_to100,dt_us=100,heater_phase_us=49000,underheat_us=-1,zero_temp_us=-1,invalid_predicate_us=100,heater_stop_us=-1
+ESR300_to6000_DCunchanged,dt_us=400,heater_phase_us=0,underheat_us=18400,zero_temp_us=386400,invalid_predicate_us=550000,heater_stop_us=550000
+DC045_to100,dt_us=400,heater_phase_us=0,underheat_us=-1,zero_temp_us=-1,invalid_predicate_us=400,heater_stop_us=-1
+ESR300_to6000_DCunchanged,dt_us=400,heater_phase_us=24000,underheat_us=18400,zero_temp_us=386400,invalid_predicate_us=526000,heater_stop_us=526000
+DC045_to100,dt_us=400,heater_phase_us=24000,underheat_us=-1,zero_temp_us=-1,invalid_predicate_us=400,heater_stop_us=-1
+ESR300_to6000_DCunchanged,dt_us=400,heater_phase_us=48800,underheat_us=18400,zero_temp_us=386400,invalid_predicate_us=551200,heater_stop_us=551200
+DC045_to100,dt_us=400,heater_phase_us=48800,underheat_us=-1,zero_temp_us=-1,invalid_predicate_us=400,heater_stop_us=-1
+ESR300_to6000_DCunchanged,dt_us=1000,heater_phase_us=0,underheat_us=46000,zero_temp_us=966000,invalid_predicate_us=550000,heater_stop_us=550000
+DC045_to100,dt_us=1000,heater_phase_us=0,underheat_us=-1,zero_temp_us=-1,invalid_predicate_us=1000,heater_stop_us=-1
+ESR300_to6000_DCunchanged,dt_us=1000,heater_phase_us=24000,underheat_us=46000,zero_temp_us=966000,invalid_predicate_us=576000,heater_stop_us=576000
+DC045_to100,dt_us=1000,heater_phase_us=24000,underheat_us=-1,zero_temp_us=-1,invalid_predicate_us=1000,heater_stop_us=-1
+ESR300_to6000_DCunchanged,dt_us=1000,heater_phase_us=49000,underheat_us=46000,zero_temp_us=966000,invalid_predicate_us=551000,heater_stop_us=551000
+DC045_to100,dt_us=1000,heater_phase_us=49000,underheat_us=-1,zero_temp_us=-1,invalid_predicate_us=1000,heater_stop_us=-1
+ADC_stall_last_valid,dt_us=400,heater_phase_us=0,underheat_us=-1,zero_temp_us=-1,invalid_predicate_us=-1,heater_stop_us=-1
+19 stimulus/schedule cases passed assertions.
