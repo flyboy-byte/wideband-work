@@ -1,0 +1,9 @@
+{
+  "command": [
+    "bash",
+    "sim/full_scale_corners.sh"
+  ],
+  "cwd": "/home/logan/projects/wideband-work/work",
+  "returncode": 0,
+  "seconds": 711.37
+}

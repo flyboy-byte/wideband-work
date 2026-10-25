@@ -1,0 +1,19 @@
+# TK12 remaining firmware and verification
+
+DOCUMENTED: read all18files in firmware diff against origin/master: auxiliary output/header/curve, PB1 board configs, bootloader bounds, board configuration/port, CAN scheduling/nonblocking send, heater clamp/watchdog, fault C/assembly entry, shared pump timer interface. New production behavior matches the stated architecture; no fresh proven production control bug found in these diff hunks. The checker defect below is real and affects the verification claim.
+
+MEASURED: ordinary make reports up-to-date; separately `checks/fw_package.py build /tmp/wb-round6-fresh-package` builds from fresh absolute directories and passes image/CRC/vector checks: app21616bytes,3980bytes spare flash,CRC984fc2b4. No flashing. Host70tests and auxiliary21tests pass;2new heater sequences pass. Configured check run results are TK12-checks.json (completion recorded separately).
+
+## Stack checker counterexample (R6-S6)
+MEASURED actual production ELF checker returns0, claiming heater/pump192/256bytes, minimum64bytes margin;15indirect cycles cut. Its three existing regression cases pass. But `stack_indirect_cycle.py` creates an ARMv6-M ELF with a **real self-call through a stored function pointer**, allocating108bytes at every recursive level. Checker returns0 and reports116/256bytes, finite140byte margin, while execution has unbounded depth. Raw assembly and log retained (TK12-indirect-cycle.S,TK12-cycle-bounded.log). This is not an invented production recursion claim.
+
+DOCUMENTED root cause: checks/stack_estimate.py:109-121 treats every cycle containing an indirect edge as a spurious artifact and returns0, without proving that the edge cannot execute. A real indirect recursive edge is therefore discarded. Verbose path output also loops on the cyclic memoized best-child chain; initial audit run was manually terminated by exact PID after27.6s (TK12-cycle.log). Bounded reproducer omits-v and has10s subprocess timeout.
+
+Smallest trustworthy fix: reject unresolved indirect cycles as unbounded unless target analysis proves them infeasible; retain known exact virtual dispatch edges or add validated annotations for false edges. Add real indirect-recursion regression. Until then, the64byte production margin is a heuristic estimate, not a proven upper bound. A runtime watermark can add evidence but does not establish worst-case by itself.
+
+## Watchdog, memory, test mode
+DOCUMENTED heater_thread.cpp:88-118 starts watchdog after1s and feeds only after heater updates; high-priority task that spins can prevent feeding. Existing accepted coverage excludes a dead lower-priority CAN/output thread while heater continues. Sensor freshness is also not a watchdog property. watchdog.h timeout arithmetic omits RLR+1 (625vs626counts), a sub0.2% difference, immaterial here; hardware-option-byte/LSI timing still need board confirmation.
+
+MEASURED ELF symbols have heap base=end=0x20001800; no malloc/calloc/realloc/operator-new/chHeapAlloc/chCoreAlloc symbols found by complete nm search. DOCUMENTED f0 chconf.h disables heap/memcore and enables stack check; tasks use static working areas. No runtime allocation in reviewed application paths found. This supports the fixed RAM architecture, not the unsound stack bound. Nested interrupt usage is explicitly outside the estimator.
+
+DOCUMENTED/MEASURED test mode uses64bit timestamp,10s steps1/2.5/4V; tests cover16bit tick wrap, startup strap capture, and no-ack CAN scheduling. SEL2 read once for mode; GetConfiguration may read SEL2 for index but never PB1 under the PWM compile guard. Bootloader write bounds validate entire aligned payload within app partition before subtraction; production-word-size nonzero by construction. QEMU fault-entry and package regression outputs retained with configured checks.

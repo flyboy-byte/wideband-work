@@ -1,0 +1,7 @@
+
+CHECKER_EXIT -15
+Traceback (most recent call last):
+  File "/home/logan/projects/wideband-work/work/audit/astra-2026-10-25/stack_indirect_cycle.py", line 16, in <module>
+    assert p.returncode==0,'Counterexample no longer passes: inspect whether checker fixed'
+           ^^^^^^^^^^^^^^^
+AssertionError: Counterexample no longer passes: inspect whether checker fixed

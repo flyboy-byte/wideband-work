@@ -1,0 +1,12 @@
+{
+  "command": [
+    "make",
+    "-C",
+    "../firmware",
+    "-j8",
+    "BOARD=f0_module"
+  ],
+  "cwd": "/home/logan/projects/wideband-work/work",
+  "returncode": 0,
+  "seconds": 0.14
+}

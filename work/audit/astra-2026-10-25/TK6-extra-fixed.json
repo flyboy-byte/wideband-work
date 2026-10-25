@@ -1,0 +1,10 @@
+{
+  "command": [
+    "python3",
+    "audit/astra-2026-10-25/analog_extra.py",
+    "TK6b"
+  ],
+  "cwd": "/home/logan/projects/wideband-work/work",
+  "returncode": 1,
+  "seconds": 0.1
+}

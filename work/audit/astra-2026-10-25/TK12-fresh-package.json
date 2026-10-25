@@ -1,0 +1,11 @@
+{
+  "command": [
+    "python3",
+    "checks/fw_package.py",
+    "build",
+    "/tmp/wb-round6-fresh-package"
+  ],
+  "cwd": "/home/logan/projects/wideband-work/work",
+  "returncode": 0,
+  "seconds": 4.15
+}

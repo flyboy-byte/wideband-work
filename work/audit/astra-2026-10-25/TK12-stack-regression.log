@@ -1,0 +1,4 @@
+ok   pointer in a literal pool, 400 B helper    exit 1 (want 1)
+ok   pointer in a literal pool, 100 B helper    exit 0 (want 0)
+ok   indirect call, no stored address           exit 1 (want 1)
+stack checker cases: 3, 0 wrong verdict(s)

@@ -1,0 +1,55 @@
+original
+         /AOUT_PWM     36.4 mm of track,  94.9 % over GND, uncovered component  0.7 mm
+         /AOUT_BUF      2.2 mm of track,  36.6 % over GND, uncovered component  1.4 mm
+         /AOUT_F1      11.8 mm of track,  92.0 % over GND, uncovered component  0.9 mm
+         /AOUT_F2       8.3 mm of track,  85.8 % over GND, uncovered component  0.5 mm
+         /AOUT_INN     11.4 mm of track,  91.3 % over GND, uncovered component  1.0 mm
+         /AOUT_OA       4.6 mm of track, 100.0 % over GND, uncovered component  0.0 mm
+         /AOUT         15.0 mm of track,  80.9 % over GND, uncovered component  1.8 mm
+         /AOUT_J       39.4 mm of track,  94.1 % over GND, uncovered component  1.2 mm
+         /VREF3         4.1 mm of track,  84.2 % over GND, uncovered component  0.7 mm
+reverse
+         /AOUT_PWM     36.4 mm of track,  94.9 % over GND, uncovered component  0.7 mm
+         /AOUT_BUF      2.2 mm of track,  36.6 % over GND, uncovered component  1.4 mm
+         /AOUT_F1      11.8 mm of track,  92.0 % over GND, uncovered component  0.9 mm
+         /AOUT_F2       8.3 mm of track,  85.8 % over GND, uncovered component  0.5 mm
+         /AOUT_INN     11.4 mm of track,  91.3 % over GND, uncovered component  1.0 mm
+         /AOUT_OA       4.6 mm of track, 100.0 % over GND, uncovered component  0.0 mm
+         /AOUT         15.0 mm of track,  80.9 % over GND, uncovered component  1.8 mm
+         /AOUT_J       39.4 mm of track,  94.1 % over GND, uncovered component  1.2 mm
+         /VREF3         4.1 mm of track,  84.2 % over GND, uncovered component  0.7 mm
+sorted
+         /AOUT_PWM     36.4 mm of track,  94.9 % over GND, uncovered component  0.7 mm
+         /AOUT_BUF      2.2 mm of track,  36.6 % over GND, uncovered component  1.4 mm
+         /AOUT_F1      11.8 mm of track,  92.0 % over GND, uncovered component  0.9 mm
+         /AOUT_F2       8.3 mm of track,  85.8 % over GND, uncovered component  0.5 mm
+         /AOUT_INN     11.4 mm of track,  91.3 % over GND, uncovered component  1.0 mm
+         /AOUT_OA       4.6 mm of track, 100.0 % over GND, uncovered component  0.0 mm
+         /AOUT         15.0 mm of track,  80.9 % over GND, uncovered component  1.8 mm
+         /AOUT_J       39.4 mm of track,  94.1 % over GND, uncovered component  1.2 mm
+         /VREF3         4.1 mm of track,  84.2 % over GND, uncovered component  0.7 mm
+PASS: tested orders agree
+20:55:42: Debug: Adding duplicate image handler for 'PNG file'
+20:55:42: Debug: Adding duplicate image handler for 'JPEG file'
+20:55:42: Debug: Adding duplicate image handler for 'TIFF file'
+20:55:42: Debug: Adding duplicate image handler for 'GIF file'
+20:55:42: Debug: Adding duplicate image handler for 'PNM file'
+20:55:42: Debug: Adding duplicate image handler for 'PCX file'
+20:55:42: Debug: Adding duplicate image handler for 'IFF file'
+20:55:42: Debug: Adding duplicate image handler for 'Windows icon file'
+20:55:42: Debug: Adding duplicate image handler for 'Windows cursor file'
+20:55:42: Debug: Adding duplicate image handler for 'Windows animated cursor file'
+20:55:42: Debug: Adding duplicate image handler for 'TGA file'
+20:55:42: Debug: Adding duplicate image handler for 'XPM file'
+20:55:43: Debug: Adding duplicate image handler for 'PNG file'
+20:55:43: Debug: Adding duplicate image handler for 'JPEG file'
+20:55:43: Debug: Adding duplicate image handler for 'TIFF file'
+20:55:43: Debug: Adding duplicate image handler for 'GIF file'
+20:55:43: Debug: Adding duplicate image handler for 'PNM file'
+20:55:43: Debug: Adding duplicate image handler for 'PCX file'
+20:55:43: Debug: Adding duplicate image handler for 'IFF file'
+20:55:43: Debug: Adding duplicate image handler for 'Windows icon file'
+20:55:43: Debug: Adding duplicate image handler for 'Windows cursor file'
+20:55:43: Debug: Adding duplicate image handler for 'Windows animated cursor file'
+20:55:43: Debug: Adding duplicate image handler for 'TGA file'
+20:55:43: Debug: Adding duplicate image handler for 'XPM file'

@@ -1,0 +1,33 @@
+* Independent TK6b-long-ic0
+.include /home/logan/projects/wideband-work/work/sim/models/lmx58_lm2904.lib
+VBAT bat 0 11.6
+R9 bat vcc 1k
+C16 vcc 0 10u
+C17 vcc 0 100n
+V5 five 0 4.8
+VIN input 0 PWL(0 1 2m 1 6m 2.976190476)
+XA input inv vcc 0 oa LMX58_LM2904
+XB 0 unused vcc 0 unused LMX58_LM2904
+R6 conn inv 68k
+R7 inv 0 100k
+C15 oa inv 1n
+R8 oa clamp 330
+R11 clamp conn 470
+RL conn 0 4.7k
+CL conn 0 1n
+.model dx D(Is=2.52n N=1.752 Rs=.568 Cjo=4p)
+D3 clamp five dx
+D4 0 clamp dx
+.ic v(vcc)=0
+.save v(conn) v(vcc)
+.tran 5u 120m 0 20u uic
+.control
+run
+meas tran vout AVG v(conn) from=115m to=120m
+meas tran vlo MIN v(conn) from=115m to=120m
+meas tran vhi MAX v(conn) from=115m to=120m
+meas tran rail AVG v(vcc) from=115m to=120m
+echo RES $&vout $&vlo $&vhi $&rail
+quit
+.endc
+.end

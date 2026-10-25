@@ -1,0 +1,10 @@
+ok   stability.sh      ngspice exits 1                      -> exit 1
+ok   load_accuracy.sh  ngspice exits 1                      -> exit 1
+ok   stability.sh      ngspice exits 0, no measurement      -> exit 1
+ok   load_accuracy.sh  ngspice exits 0, no measurement      -> exit 1
+ok   stability.sh      ngspice exits 0, partial measurement -> exit 1
+ok   stability.sh      ngspice answers, no settling crossing -> exit 0
+ok   load_accuracy.sh  ngspice answers, no settling crossing -> exit 0
+ok   stability.sh      ngspice answers                      -> exit 0
+ok   load_accuracy.sh  ngspice answers                      -> exit 0
+sim wrappers: 0 wrong verdict(s)

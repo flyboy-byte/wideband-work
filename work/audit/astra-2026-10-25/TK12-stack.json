@@ -1,0 +1,10 @@
+{
+  "command": [
+    "python3",
+    "checks/stack_estimate.py",
+    "-v"
+  ],
+  "cwd": "/home/logan/projects/wideband-work/work",
+  "returncode": 0,
+  "seconds": 0.15
+}

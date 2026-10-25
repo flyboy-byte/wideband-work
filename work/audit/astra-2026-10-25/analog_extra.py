@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 """Independent corner/initial-condition checks. Run from any cwd; retains decks and outputs."""
 from pathlib import Path
-import subprocess,re,math
+import subprocess,re,math,sys
 HERE=Path(__file__).resolve().parent
 MODEL=HERE.parents[1]/'sim/models/lmx58_lm2904.lib'
 def run(name,source,load,stop,initial=None,feed=False):
+    if len(sys.argv)>1:name=name.replace('TK6',sys.argv[1],1)
     supply='VBAT bat 0 11.6\nR9 bat vcc 1k\nC16 vcc 0 10u\nC17 vcc 0 100n' if feed else 'VCC vcc 0 12'
     deck=f'''* Independent {name}
 .include {MODEL}
@@ -39,7 +40,7 @@ quit
 '''
     path=HERE/(name+'.cir');path.write_text(deck)
     try:
-        p=subprocess.run(['ngspice','-b',str(path)],capture_output=True,text=True,timeout=180)
+        p=subprocess.run(['ngspice','-b',str(path)],cwd=MODEL.parent,capture_output=True,text=True,timeout=180)
         out=p.stdout+p.stderr
     except subprocess.TimeoutExpired as e:
         out=(e.stdout or b'').decode(errors='replace')+'\nTIMEOUT\n';p=None

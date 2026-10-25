@@ -1,0 +1,14 @@
+/tmp/wb_r6_cycle_739r9y5n/cycle.elf: 7 functions, 1 indirect-call targets (address stored in the image)
+  ok   HeaterThread(void*)  116 of 256 B (+140)
+  ok   PumpThread(void*)    0 of 256 B (+256)
+  ok   SamplingThread(void*)    0 of 256 B (+256)
+  ok   CanTxThread(void*)    0 of 512 B (+512)
+  ok   CanRxThread(void*)    0 of 512 B (+512)
+  IndicationThread not in this build
+  ok   main                0 of 512 B (+512)
+  ok   interrupts (one)    0 of 512 B exception stack (+512), deepest handler None; nesting of interrupts not modelled
+  note: 1 loop(s) through indirect calls cut (an artefact of the over-approximation, -v lists them)
+stack estimate: ok, smallest margin 140 B
+
+CHECKER_EXIT 0
+REPRODUCED: actual unbounded indirect recursion was accepted with a finite stack bound.

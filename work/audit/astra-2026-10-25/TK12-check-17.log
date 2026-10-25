@@ -1,0 +1,5 @@
+ok   current handler: reached (expected reached)
+ok   upstream's handler (master): lockup (expected lockup)
+ok   current handler, then BKPT #0: lockup (expected lockup)
+ok   f0 build fault entries: 37 lines, 0 Thumb-2-only instructions
+fault entry on Cortex-M0: as expected

@@ -1,0 +1,25 @@
+A  Cload=1p   Cf=-     before 1.6769 V  after 1.8443 V  peak 1.8847 V  overshoot   24.1 %  ripple at end   0.00 mV  settles (1%)     2 us
+A  Cload=1n   Cf=-     before 1.6769 V  after 1.8443 V  peak 1.8908 V  overshoot   27.7 %  ripple at end   0.00 mV  settles (1%)     7 us
+A  Cload=10n  Cf=-     before 1.9176 V  after 1.8443 V  peak 1.8443 V  overshoot   -0.0 %  ripple at end   0.00 mV  settles (1%) not found us
+A  Cload=47n  Cf=-     before 1.6769 V  after 1.8443 V  peak 1.8443 V  overshoot    0.0 %  ripple at end   0.00 mV  settles (1%)    70 us
+B  Cload=1p   Cf=-     before 1.6823 V  after 1.8503 V  peak 1.8905 V  overshoot   23.9 %  ripple at end   0.00 mV  settles (1%)     2 us
+B  Cload=1n   Cf=-     before 1.6823 V  after 1.8503 V  peak 1.9709 V  overshoot   71.7 %  ripple at end   0.00 mV  settles (1%)    53 us
+B  Cload=10n  Cf=-     before 1.7000 V  after 1.8482 V  peak 1.9960 V  overshoot   99.8 %  ripple at end  55.15 mV  settles (1%)   789 us
+B  Cload=47n  Cf=-     before 1.6793 V  after 1.8502 V  peak 1.9975 V  overshoot   86.2 %  ripple at end  15.94 mV  settles (1%)   797 us
+C  Cload=1p   Cf=100p  before 1.6823 V  after 1.8503 V  peak 1.8503 V  overshoot    0.0 %  ripple at end   0.00 mV  settles (1%)    26 us
+C  Cload=1n   Cf=100p  before 1.6823 V  after 1.8503 V  peak 1.8503 V  overshoot    0.0 %  ripple at end   0.00 mV  settles (1%)    25 us
+C  Cload=10n  Cf=100p  before 1.7019 V  after 1.8503 V  peak 1.8662 V  overshoot   10.7 %  ripple at end   0.00 mV  settles (1%)     9 us
+C  Cload=47n  Cf=100p  before 1.6824 V  after 1.8503 V  peak 1.9157 V  overshoot   38.9 %  ripple at end   0.00 mV  settles (1%)   161 us
+C  Cload=1p   Cf=1n    before 1.6894 V  after 1.8503 V  peak 1.8503 V  overshoot    0.0 %  ripple at end   0.01 mV  settles (1%)   254 us
+C  Cload=1n   Cf=1n    before 1.6919 V  after 1.8503 V  peak 1.8503 V  overshoot    0.0 %  ripple at end   0.01 mV  settles (1%)   253 us
+C  Cload=10n  Cf=1n    before 1.7775 V  after 1.8503 V  peak 1.8503 V  overshoot    0.0 %  ripple at end   0.00 mV  settles (1%)   238 us
+C  Cload=47n  Cf=1n    before 1.6827 V  after 1.8503 V  peak 1.8503 V  overshoot    0.0 %  ripple at end   0.00 mV  settles (1%)   145 us
+D  Cload=1p   Cf=1n    before 1.6815 V  after 1.8417 V  peak 1.8417 V  overshoot    0.0 %  ripple at end   0.01 mV  settles (1%)   254 us
+D  Cload=1n   Cf=1n    before 1.6833 V  after 1.8417 V  peak 1.8417 V  overshoot    0.0 %  ripple at end   0.01 mV  settles (1%)   253 us
+D  Cload=10n  Cf=1n    before 1.7620 V  after 1.8417 V  peak 1.8417 V  overshoot    0.0 %  ripple at end   0.00 mV  settles (1%)   248 us
+D  Cload=47n  Cf=1n    before 1.6683 V  after 1.8417 V  peak 1.8425 V  overshoot    0.5 %  ripple at end   0.00 mV  settles (1%)   175 us
+E  Cload=1p   Cf=1n    before 1.6898 V  after 1.8503 V  peak 1.8503 V  overshoot    0.0 %  ripple at end   0.01 mV  settles (1%)   258 us
+E  Cload=1n   Cf=1n    before 1.6913 V  after 1.8503 V  peak 1.8503 V  overshoot    0.0 %  ripple at end   0.01 mV  settles (1%)   254 us
+E  Cload=10n  Cf=1n    before 1.7532 V  after 1.8503 V  peak 1.8503 V  overshoot    0.0 %  ripple at end   0.00 mV  settles (1%)   220 us
+E  Cload=47n  Cf=1n    before 1.6898 V  after 1.8503 V  peak 1.8654 V  overshoot    9.4 %  ripple at end   0.04 mV  settles (1%)    92 us
+E  Cload=100n Cf=1n    before 1.5223 V  after 1.8528 V  peak 1.9455 V  overshoot   28.0 %  ripple at end   2.48 mV  settles (1%)   572 us

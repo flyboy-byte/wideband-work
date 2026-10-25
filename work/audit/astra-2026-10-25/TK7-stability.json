@@ -1,0 +1,9 @@
+{
+  "command": [
+    "bash",
+    "sim/stability.sh"
+  ],
+  "cwd": "/home/logan/projects/wideband-work/work",
+  "returncode": 0,
+  "seconds": 25.58
+}

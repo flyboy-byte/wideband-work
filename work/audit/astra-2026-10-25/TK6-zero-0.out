@@ -1,0 +1,21 @@
+
+Note: No compatibility mode selected!
+
+
+Circuit: * independent tk6-zero-0
+
+warning, model type mismatch in line
+    sor_swp clamp 55 clamp 55 s_vswitch_1
+warning, model type mismatch in line
+    sor_swn 56 clamp 56 clamp s_vswitch_2
+warning, model type mismatch in line
+    s1 28 29 sw_ol mid s_vswitch_3
+warning, model type mismatch in line
+    s7 vee out vee out s_vswitch_4
+warning, model type mismatch in line
+    s6 out vcc out vcc s_vswitch_5
+Error: no such function 'if' at line 228
+from file
+  /home/logan/projects/wideband-work/work/sim/models/lmx58_lm2904.lib
+
+ERROR: fatal error in ngspice, exit(1)

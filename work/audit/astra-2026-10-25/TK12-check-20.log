@@ -1,0 +1,11 @@
+firmware/build/wideband.elf: 131 functions, 22 indirect-call targets (address stored in the image)
+  ok   HeaterThread(void*)  192 of 256 B (+64)
+  ok   PumpThread(void*)  192 of 256 B (+64)
+  ok   SamplingThread(void*)  164 of 256 B (+92)
+  ok   CanTxThread(void*)  328 of 512 B (+184)
+  ok   CanRxThread(void*)  220 of 512 B (+292)
+  IndicationThread not in this build
+  ok   main              188 of 1024 B (+836)
+  ok   interrupts (one)  200 of 1024 B exception stack (+824), deepest handler Vector78; nesting of interrupts not modelled
+  note: 15 loop(s) through indirect calls cut (an artefact of the over-approximation, -v lists them)
+stack estimate: ok, smallest margin 64 B

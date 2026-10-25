@@ -1,0 +1,12 @@
+  D1: paired by pin name: our 1 = EasyEDA 2, our 2 = EasyEDA 1
+  D4: paired by pin name: our 1 = EasyEDA 2, our 2 = EasyEDA 1
+  Q1: tab pad(s) ['2'] left out of the fit and origin
+  Q1   C2649436 VND14NV04TR-E          correction 180  CPL     0  fit 0.00 mm  offset 0.91 mm
+  U1   C50282   MCP6004T-I/ST          correction 270  CPL   270  fit 0.15 mm  offset 0.00 mm
+  U2   C69216   STM32F042K6T6          correction 270  CPL    90  fit 0.07 mm  offset 0.00 mm
+  U3   C36658   REF3033AIDBZR          correction 180  CPL   180  fit 0.14 mm  offset 0.03 mm
+  U5   C29309   AD8628ARTZ-REEL7       correction 180  CPL     0  fit 0.01 mm  offset 0.00 mm
+  U9: EasyEDA pin names not used: XC6206P332MR: EasyEDA names pin 2 Vin and pin 3 Vout; the SOT-23 pinout is 1 VSS, 2 VOUT, 3 VIN as in KiCad (REPORTED, a datasheet-extraction wiki, 2026-10-24; the Torex PDF is still to read), and upstream's CPL agrees with the number pairing
+  U9   C5446    XC6206P332MR           correction 180  CPL   270  fit 0.31 mm  offset 0.08 mm
+module order CPL (out/module: upstream rev C plus CPL_FIX): 57 of 57 measured parts agree in rotation and position
+jlc rotation: 57 parts measured, 6 need a correction, 0 problem(s)
