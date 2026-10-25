@@ -1,0 +1,9 @@
+TK6c-long-ic11.6.out actual-abort helper exit 1
+TK6c-long-ic11.6.out partial-without-diagnostic helper exit 1
+TK6c-long-ic0.out actual-abort helper exit 1
+TK6c-long-ic0.out partial-without-diagnostic helper exit 1
+END '0.12' exit 0
+END '0.119' exit 1
+END 'nan' exit 1
+END 'inf' exit 1
+END '' exit 1

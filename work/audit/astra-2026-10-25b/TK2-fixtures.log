@@ -1,0 +1,27 @@
+ok   stability.sh          ngspice exits 1                        -> exit 1
+ok   load_accuracy.sh      ngspice exits 1                        -> exit 1
+ok   full_scale_corners.sh ngspice exits 1                        -> exit 1
+ok   stability.sh          ngspice exits 0, no measurement        -> exit 1
+ok   load_accuracy.sh      ngspice exits 0, no measurement        -> exit 1
+ok   full_scale_corners.sh ngspice exits 0, no measurement        -> exit 1
+ok   stability.sh          ngspice exits 0, partial measurement   -> exit 1
+ok   full_scale_corners.sh ngspice exits 0, partial measurement   -> exit 1
+ok   stability.sh          ngspice aborted part-way, zeros        -> exit 1
+ok   load_accuracy.sh      ngspice aborted part-way, zeros        -> exit 1
+ok   full_scale_corners.sh ngspice aborted part-way, zeros        -> exit 1
+ok   stability.sh          ngspice stopped short, no message      -> exit 1
+ok   load_accuracy.sh      ngspice stopped short, no message      -> exit 1
+ok   full_scale_corners.sh ngspice stopped short, no message      -> exit 1
+ok   stability.sh          ngspice answers, no END line           -> exit 1
+ok   load_accuracy.sh      ngspice answers, no END line           -> exit 1
+ok   full_scale_corners.sh ngspice answers, no END line           -> exit 1
+ok   stability.sh          ngspice answers, not settled before step -> exit 1
+ok   load_accuracy.sh      ngspice answers, not settled before step -> exit 0
+ok   full_scale_corners.sh ngspice answers, not settled before step -> exit 0
+ok   stability.sh          ngspice answers, no settling crossing  -> exit 0
+ok   load_accuracy.sh      ngspice answers, no settling crossing  -> exit 0
+ok   full_scale_corners.sh ngspice answers, no settling crossing  -> exit 0
+ok   stability.sh          ngspice answers                        -> exit 0
+ok   load_accuracy.sh      ngspice answers                        -> exit 0
+ok   full_scale_corners.sh ngspice answers                        -> exit 0
+sim wrappers: 0 wrong verdict(s)

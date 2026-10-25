@@ -1,0 +1,9 @@
+{
+  "command": [
+    "python3",
+    "checks/test_sim_failures.py"
+  ],
+  "cwd": "/home/logan/projects/wideband-review-astra/work",
+  "returncode": 0,
+  "seconds": 21.56
+}

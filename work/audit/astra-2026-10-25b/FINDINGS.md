@@ -12,7 +12,7 @@ Would I order these files as they are? **Not assessed yet**: review in progress.
 | Task | Status | Finding IDs | What I did (command, file, calculation) |
 | --- | --- | --- | --- |
 | TK1 Stack checker | OK | — | Fresh ELF, four regressions, all40BLX sites and five narrowed caller sets checked. Worst thread margin92B reproduced; startup/interrupt scope assessed in TK1-stack-review.md. |
-| TK2 Sim wrappers | | | |
+| TK2 Sim wrappers | OK | — |26fixture verdicts correct; actual old abort logs and short/no-END cases rejected. Real25case stability sweep passes completion/baseline guards; E0%through10nF,9.2%at47nF. TK2-sims.md. |
 | TK3 R9 surge | | | |
 | TK4 Backfeed | | | |
 | TK5 Fab files | | | |
