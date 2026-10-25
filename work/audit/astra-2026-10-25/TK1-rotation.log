@@ -1,0 +1,42 @@
+  C1   C15849   CL10A105KB8NNNC        correction   0  CPL   180  fit 0.09 mm  offset 0.00 mm
+  C10  C13585   CL31A106KBHNNNE        correction   0  CPL   180  fit 0.19 mm  offset 0.00 mm
+  C11  C1525    CL05B104KO5NNNC        correction   0  CPL     0  fit 0.06 mm  offset 0.00 mm
+  C12  C1525    CL05B104KO5NNNC        correction   0  CPL   180  fit 0.06 mm  offset 0.00 mm
+  C13  C1525    CL05B104KO5NNNC        correction   0  CPL   180  fit 0.06 mm  offset 0.00 mm
+  C14  C1525    CL05B104KO5NNNC        correction   0  CPL   270  fit 0.06 mm  offset 0.00 mm
+  C15  C1523    0402B102K500NT         correction   0  CPL   270  fit 0.06 mm  offset 0.00 mm
+  C16  C13585   CL31A106KBHNNNE        correction   0  CPL   270  fit 0.12 mm  offset 0.00 mm
+  C17  C14663   CC0603KRX7R9BB104      correction   0  CPL    90  fit 0.07 mm  offset 0.00 mm
+  C2   C15849   CL10A105KB8NNNC        correction   0  CPL    90  fit 0.09 mm  offset 0.00 mm
+  C3   C15849   CL10A105KB8NNNC        correction   0  CPL    90  fit 0.09 mm  offset 0.00 mm
+  C4   C1567    0402CG470J500NT        correction   0  CPL   270  fit 0.06 mm  offset 0.00 mm
+  C5   C1567    0402CG470J500NT        correction   0  CPL    90  fit 0.06 mm  offset 0.00 mm
+  C6   C45783   CL21A226MAQNNNE        correction   0  CPL   270  fit 0.06 mm  offset 0.00 mm
+  C7   C13585   CL31A106KBHNNNE        correction   0  CPL   180  fit 0.19 mm  offset 0.00 mm
+  C8   C13585   CL31A106KBHNNNE        correction   0  CPL     0  fit 0.19 mm  offset 0.00 mm
+  C9   C13585   CL31A106KBHNNNE        correction   0  CPL   180  fit 0.19 mm  offset 0.00 mm
+  D1   C151279  SMCJ24CA-C151279       correction   0  CPL     0  fit 0.04 mm  offset 0.00 mm
+  D2: paired by pin name: our 1 = EasyEDA 2, our 2 = EasyEDA 1
+  D2   C22452   SS54_C22452            correction   0  CPL   270  fit 0.50 mm  offset 0.00 mm
+  D3   C2128    1N4148WS T4            correction   0  CPL   270  fit 0.12 mm  offset 0.00 mm
+  D4   C2128    1N4148WS T4            correction   0  CPL    90  fit 0.12 mm  offset 0.00 mm
+  D5   C173425  BZT52C18_C173425       correction   0  CPL     0  fit 0.04 mm  offset 0.00 mm
+  R1   C22962   0603WAF2200T5E         correction   0  CPL    90  fit 0.03 mm  offset 0.00 mm
+  R10  C25079   0402WGF1200TCE         correction   0  CPL     0  fit 0.08 mm  offset 0.00 mm
+  R11  C4502    1206W4F4700T5E         correction   0  CPL    90  fit 0.02 mm  offset 0.00 mm
+  R2   C23179   0603WAF4700T5E         correction   0  CPL    90  fit 0.03 mm  offset 0.00 mm
+  R3   C25900   0402WGF4701TCE         correction   0  CPL   180  fit 0.08 mm  offset 0.00 mm
+  R4   C25890   0402WGF3301TCE         correction   0  CPL    90  fit 0.08 mm  offset 0.00 mm
+  R5   C25890   0402WGF3301TCE         correction   0  CPL     0  fit 0.08 mm  offset 0.00 mm
+  R6   C23231   0603WAF6802T5E         correction   0  CPL   270  fit 0.07 mm  offset 0.00 mm
+  R7   C25741   0402WGF1003TCE         correction   0  CPL     0  fit 0.08 mm  offset 0.00 mm
+  R8   C23138   0603WAF3300T5E         correction   0  CPL     0  fit 0.07 mm  offset 0.00 mm
+  R9   C4410    1206W4F1001T5E         correction   0  CPL   270  fit 0.02 mm  offset 0.00 mm
+  U1   C38695   TJA1051T/3/1J          correction 270  CPL     0  fit 0.12 mm  offset 0.00 mm
+  U2: paired by pin name: our 2 = EasyEDA 4
+  U2: tab pad(s) ['2'] left out of the fit and origin
+  U2   C58069   L78M05ABDT-TR          correction   0  CPL   270  fit 0.01 mm  offset 0.72 mm
+  U4   C12519   74LVC1G125GW,125       correction 180  CPL     0  fit 0.01 mm  offset 0.00 mm
+  U5   C38423   REF3030AIDBZR          correction 180  CPL    90  fit 0.40 mm  offset 0.10 mm
+  U6   C7934    LM2904DR               correction 270  CPL   270  fit 0.12 mm  offset 0.00 mm
+jlc rotation: 38 parts measured, 4 need a correction, 0 problem(s)
