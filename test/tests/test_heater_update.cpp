@@ -1,5 +1,7 @@
 #include <gtest/gtest.h>
 
+#include <utility>
+
 #include "heater_control.h"
 #include "sampling.h"
 #include "timer.h"
@@ -35,7 +37,9 @@ struct FakeSampler : public ISampler
     float GetPumpNominalCurrent() const override { return 0; }
     float GetInternalHeaterVoltage() const override { return supply; }
     float GetSensorTemperature() const override { return temperature; }
-    float GetSensorInternalResistance() const override { return 300; }
+    float GetSensorInternalResistance() const override { return esr; }
+
+    float esr = 300;
 };
 
 class HeaterUpdate : public ::testing::Test
@@ -221,4 +225,28 @@ TEST_F(HeaterUpdate, CanSaysNoHeatHoldsPreheat)
 {
     Run(20, HeaterAllow::NotAllowed);
     EXPECT_EQ(dut->GetHeaterState(), HeaterState::Preheat);
+}
+
+// A sensor running hotter than its target (hot exhaust at load) must get less heater, never more. Closed loop asks for
+// 7.5 V - PID(ESR); about 20 C above target that goes negative, and duty = (V / V_supply)^2 squared it back into a large
+// duty (Codex, round 4 second pass, 2026-10-24: 65 % at 806 C, 100 % at 840 C). ESR/temperature pairs from the LSU 4.9
+// table in sampling.cpp; both stay below the overheat stop (target + 100 C).
+TEST_F(HeaterUpdate, HotterSensorNeverGetsMoreHeat)
+{
+    ReachClosedLoop();
+    Run(2);
+    float atTarget = dut->lastDuty;
+
+    for (auto [esr, temp] : {std::pair{250.f, 806.f}, std::pair{200.f, 840.f}})
+    {
+        sampler.esr = esr;
+        sampler.temperature = temp;
+        for (int i = 0; i < 40; i++)
+        {
+            Run(HEATER_CONTROL_PERIOD / 1000.0f);
+            ASSERT_EQ(dut->GetHeaterState(), HeaterState::ClosedLoop);
+            EXPECT_LE(dut->lastDuty, atTarget) << "ESR " << esr << " after " << (i + 1) * HEATER_CONTROL_PERIOD << " ms";
+        }
+        EXPECT_NEAR(dut->lastDuty, 0, 1e-6) << "ESR " << esr;
+    }
 }
