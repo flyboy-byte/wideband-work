@@ -1,0 +1,11 @@
+{
+  "command": [
+    "python3",
+    "checks/bom_stock.py",
+    "2",
+    "fab/flyboy-o2-v1/module-bom.csv"
+  ],
+  "cwd": "/home/logan/projects/wideband-review-order/work",
+  "returncode": 0,
+  "seconds": 38.33
+}

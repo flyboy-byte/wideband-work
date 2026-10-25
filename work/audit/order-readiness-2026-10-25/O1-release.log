@@ -1,0 +1,22 @@
+HASH OK carrier-gerbers.zip c6d03f1de8706ffcc4bdf2c6c948315eec870fddc5f53b9c861583c308fb16c4
+HASH OK carrier-bom.csv 4929cced2179046c943c34533d9e1723a5d36a91cacbcf3ef0df5cbf3c2a9b14
+HASH OK carrier-cpl.csv 66a7fdc2200cd49ebc84ec2e26e2a087a8282eea3965b88dde4420c195656f02
+HASH OK carrier-not-fitted.csv 36e2ae5c65c50fc6813f2340f7fb5dde9edbd7b350b9d133e378c1393189741e
+HASH OK module-gerbers.zip 7b7f18362efd8d803eaf3d87285cf13fe40bb1a2ea682c3d88a1543b58621101
+HASH OK module-bom.csv ed5c6cf281b22b3ee5f687c2ee45135d34afd896c5e061ef84385a6cf65010f0
+HASH OK module-cpl.csv c35ba1cd84564759b312c6eef981ad4a2406d6fe75575356990ebf790e48a0aa
+HASH OK module-not-fitted.csv a55f5466c5241524fa819154b876d4ec3d070681411e79d1540ea44fc160bf2a
+Traceback (most recent call last):
+  File "/home/logan/projects/wideband-review-order/work/audit/order-readiness-2026-10-25/release_inventory.py", line 30, in <module>
+    assert sha(WORK/path).startswith(h), path
+           ~~~^^^^^^^^^^^
+  File "/home/logan/projects/wideband-review-order/work/audit/order-readiness-2026-10-25/release_inventory.py", line 9, in sha
+    def sha(p): return hashlib.sha256(p.read_bytes()).hexdigest()
+                                      ~~~~~~~~~~~~^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 777, in read_bytes
+    with self.open(mode='rb', buffering=0) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 771, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/home/logan/projects/wideband-review-order/work/out/carrier/carrier-bom.csv'

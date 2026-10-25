@@ -1,0 +1,341 @@
+{
+ "boards": 2,
+ "date": "2026-10-25",
+ "lines": [
+  {
+   "lcsc": "C15849",
+   "refs": [
+    "C1",
+    "C2",
+    "C3"
+   ],
+   "model": "CL10A105KB8NNNC",
+   "class": "Basic",
+   "stock": 13740823,
+   "need": 16,
+   "unit_usd": 0.0146,
+   "cost_usd": 0.2336
+  },
+  {
+   "lcsc": "C1567",
+   "refs": [
+    "C4",
+    "C5"
+   ],
+   "model": "0402CG470J500NT",
+   "class": "Basic",
+   "stock": 735539,
+   "need": 14,
+   "unit_usd": 0.0079,
+   "cost_usd": 0.1106
+  },
+  {
+   "lcsc": "C45783",
+   "refs": [
+    "C6"
+   ],
+   "model": "CL21A226MAQNNNE",
+   "class": "Basic",
+   "stock": 4276478,
+   "need": 6,
+   "unit_usd": 0.1912,
+   "cost_usd": 1.1472
+  },
+  {
+   "lcsc": "C13585",
+   "refs": [
+    "C7",
+    "C8",
+    "C9",
+    "C10",
+    "C16"
+   ],
+   "model": "CL31A106KBHNNNE",
+   "class": "Basic",
+   "stock": 2607713,
+   "need": 14,
+   "unit_usd": 0.2378,
+   "cost_usd": 3.3292
+  },
+  {
+   "lcsc": "C1525",
+   "refs": [
+    "C11",
+    "C12",
+    "C13",
+    "C14"
+   ],
+   "model": "CL05B104KO5NNNC",
+   "class": "Basic",
+   "stock": 35691575,
+   "need": 18,
+   "unit_usd": 0.0035,
+   "cost_usd": 0.063
+  },
+  {
+   "lcsc": "C1523",
+   "refs": [
+    "C15"
+   ],
+   "model": "0402B102K500NT",
+   "class": "Basic",
+   "stock": 2783638,
+   "need": 12,
+   "unit_usd": 0.0038,
+   "cost_usd": 0.0456
+  },
+  {
+   "lcsc": "C14663",
+   "refs": [
+    "C17"
+   ],
+   "model": "CC0603KRX7R9BB104",
+   "class": "Basic",
+   "stock": 44072186,
+   "need": 12,
+   "unit_usd": 0.0084,
+   "cost_usd": 0.1008
+  },
+  {
+   "lcsc": "C151279",
+   "refs": [
+    "D1"
+   ],
+   "model": "SMCJ24CA",
+   "class": "Extended",
+   "stock": 6664,
+   "need": 2,
+   "unit_usd": 0.3111,
+   "cost_usd": 0.6222
+  },
+  {
+   "lcsc": "C22452",
+   "refs": [
+    "D2"
+   ],
+   "model": "SS54",
+   "class": "Basic",
+   "stock": 1974899,
+   "need": 6,
+   "unit_usd": 0.0446,
+   "cost_usd": 0.2676
+  },
+  {
+   "lcsc": "C2128",
+   "refs": [
+    "D3",
+    "D4"
+   ],
+   "model": "1N4148WS",
+   "class": "Basic",
+   "stock": 2928321,
+   "need": 14,
+   "unit_usd": 0.0131,
+   "cost_usd": 0.1834
+  },
+  {
+   "lcsc": "C173425",
+   "refs": [
+    "D5"
+   ],
+   "model": "BZT52C18",
+   "class": "Extended",
+   "stock": 66651,
+   "need": 12,
+   "unit_usd": 0.0164,
+   "cost_usd": 0.1968
+  },
+  {
+   "lcsc": "C22962",
+   "refs": [
+    "R1"
+   ],
+   "model": "0603WAF2200T5E",
+   "class": "Basic",
+   "stock": 3286263,
+   "need": 12,
+   "unit_usd": 0.0033,
+   "cost_usd": 0.0396
+  },
+  {
+   "lcsc": "C23179",
+   "refs": [
+    "R2"
+   ],
+   "model": "0603WAF4700T5E",
+   "class": "Basic",
+   "stock": 5082022,
+   "need": 12,
+   "unit_usd": 0.0023,
+   "cost_usd": 0.0276
+  },
+  {
+   "lcsc": "C25900",
+   "refs": [
+    "R3"
+   ],
+   "model": "0402WGF4701TCE",
+   "class": "Basic",
+   "stock": 14689203,
+   "need": 12,
+   "unit_usd": 0.0021,
+   "cost_usd": 0.0252
+  },
+  {
+   "lcsc": "C25890",
+   "refs": [
+    "R4",
+    "R5"
+   ],
+   "model": "0402WGF3301TCE",
+   "class": "Basic",
+   "stock": 1788596,
+   "need": 14,
+   "unit_usd": 0.0036,
+   "cost_usd": 0.0504
+  },
+  {
+   "lcsc": "C23231",
+   "refs": [
+    "R6"
+   ],
+   "model": "0603WAF6802T5E",
+   "class": "Basic",
+   "stock": 1034401,
+   "need": 12,
+   "unit_usd": 0.0016,
+   "cost_usd": 0.0192
+  },
+  {
+   "lcsc": "C25741",
+   "refs": [
+    "R7"
+   ],
+   "model": "0402WGF1003TCE",
+   "class": "Basic",
+   "stock": 7849332,
+   "need": 12,
+   "unit_usd": 0.0015,
+   "cost_usd": 0.018
+  },
+  {
+   "lcsc": "C23138",
+   "refs": [
+    "R8"
+   ],
+   "model": "0603WAF3300T5E",
+   "class": "Basic",
+   "stock": 3788987,
+   "need": 12,
+   "unit_usd": 0.002,
+   "cost_usd": 0.024
+  },
+  {
+   "lcsc": "C844867",
+   "refs": [
+    "R9"
+   ],
+   "model": "CRCW12061K00FKEAHP",
+   "class": "Extended",
+   "stock": 15000,
+   "need": 6,
+   "unit_usd": 0.0616,
+   "cost_usd": 0.3696
+  },
+  {
+   "lcsc": "C25079",
+   "refs": [
+    "R10"
+   ],
+   "model": "0402WGF1200TCE",
+   "class": "Basic",
+   "stock": 475904,
+   "need": 12,
+   "unit_usd": 0.0034,
+   "cost_usd": 0.0408
+  },
+  {
+   "lcsc": "C4502",
+   "refs": [
+    "R11"
+   ],
+   "model": "1206W4F4700T5E",
+   "class": "Extended",
+   "stock": 133166,
+   "need": 12,
+   "unit_usd": 0.0048,
+   "cost_usd": 0.0576
+  },
+  {
+   "lcsc": "C38695",
+   "refs": [
+    "U1"
+   ],
+   "model": "TJA1051T/3/1J",
+   "class": "Extended",
+   "stock": 114293,
+   "need": 2,
+   "unit_usd": 0.5794,
+   "cost_usd": 1.1588
+  },
+  {
+   "lcsc": "C58069",
+   "refs": [
+    "U2"
+   ],
+   "model": "L78M05ABDT-TR",
+   "class": "Basic",
+   "stock": 153211,
+   "need": 2,
+   "unit_usd": 0.2061,
+   "cost_usd": 0.4122
+  },
+  {
+   "lcsc": "C12519",
+   "refs": [
+    "U4"
+   ],
+   "model": "74LVC1G125GW,125",
+   "class": "Extended",
+   "stock": 50208,
+   "need": 6,
+   "unit_usd": 0.0976,
+   "cost_usd": 0.5856
+  },
+  {
+   "lcsc": "C38423",
+   "refs": [
+    "U5"
+   ],
+   "model": "REF3030AIDBZR",
+   "class": "Extended",
+   "stock": 43275,
+   "need": 2,
+   "unit_usd": 0.5515,
+   "cost_usd": 1.103
+  },
+  {
+   "lcsc": "C7934",
+   "refs": [
+    "U6"
+   ],
+   "model": "LM2904DR",
+   "class": "Extended",
+   "stock": 219122,
+   "need": 2,
+   "unit_usd": 0.0868,
+   "cost_usd": 0.1736
+  }
+ ],
+ "parts_usd": 10.41,
+ "extended": [
+  "C151279",
+  "C173425",
+  "C844867",
+  "C4502",
+  "C38695",
+  "C12519",
+  "C38423",
+  "C7934"
+ ]
+}

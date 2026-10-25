@@ -1,0 +1,10 @@
+{
+  "carrier-gerbers.zip": "c6d03f1de8706ffcc4bdf2c6c948315eec870fddc5f53b9c861583c308fb16c4",
+  "carrier-bom.csv": "4929cced2179046c943c34533d9e1723a5d36a91cacbcf3ef0df5cbf3c2a9b14",
+  "carrier-cpl.csv": "66a7fdc2200cd49ebc84ec2e26e2a087a8282eea3965b88dde4420c195656f02",
+  "carrier-not-fitted.csv": "36e2ae5c65c50fc6813f2340f7fb5dde9edbd7b350b9d133e378c1393189741e",
+  "module-gerbers.zip": "7b7f18362efd8d803eaf3d87285cf13fe40bb1a2ea682c3d88a1543b58621101",
+  "module-bom.csv": "ed5c6cf281b22b3ee5f687c2ee45135d34afd896c5e061ef84385a6cf65010f0",
+  "module-cpl.csv": "c35ba1cd84564759b312c6eef981ad4a2406d6fe75575356990ebf790e48a0aa",
+  "module-not-fitted.csv": "a55f5466c5241524fa819154b876d4ec3d070681411e79d1540ea44fc160bf2a"
+}

@@ -1,0 +1,28 @@
+carrier : 26 BOM rows, 38 CPL rows, 6 not fitted: all identities/values/packages/positions/rotations/sides agree
+NOT FITTED carrier J3 paste pads: []
+NOT FITTED carrier U3 paste pads: []
+NOT FITTED carrier JP1 paste pads: []
+NOT FITTED carrier JP2 paste pads: []
+NOT FITTED carrier H1 paste pads: []
+NOT FITTED carrier H2 paste pads: []
+PCB thickness mm 1.6
+PCB outline bbox mm 40.05 51.55
+module : 26 BOM rows, 57 CPL rows, 3 not fitted: all identities/values/packages/positions/rotations/sides agree
+NOT FITTED module J1 paste pads: []
+NOT FITTED module J3 paste pads: []
+NOT FITTED module J2 paste pads: []
+PCB thickness mm 1.6
+PCB outline bbox mm 29.006 20.9415
+Frozen assembly mapping: PASS (rotation convention still requires factory preview).
+11:20:33: Debug: Adding duplicate image handler for 'PNG file'
+11:20:33: Debug: Adding duplicate image handler for 'JPEG file'
+11:20:33: Debug: Adding duplicate image handler for 'TIFF file'
+11:20:33: Debug: Adding duplicate image handler for 'GIF file'
+11:20:33: Debug: Adding duplicate image handler for 'PNM file'
+11:20:33: Debug: Adding duplicate image handler for 'PCX file'
+11:20:33: Debug: Adding duplicate image handler for 'IFF file'
+11:20:33: Debug: Adding duplicate image handler for 'Windows icon file'
+11:20:33: Debug: Adding duplicate image handler for 'Windows cursor file'
+11:20:33: Debug: Adding duplicate image handler for 'Windows animated cursor file'
+11:20:33: Debug: Adding duplicate image handler for 'TGA file'
+11:20:33: Debug: Adding duplicate image handler for 'XPM file'

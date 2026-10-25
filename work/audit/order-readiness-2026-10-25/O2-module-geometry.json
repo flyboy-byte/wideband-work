@@ -1,0 +1,9 @@
+{
+  "command": [
+    "/tmp/wb-order-gerber-venv/bin/python",
+    "audit/order-readiness-2026-10-25/module_geometry.py"
+  ],
+  "cwd": "/home/logan/projects/wideband-review-order/work",
+  "returncode": 0,
+  "seconds": 1.57
+}
