@@ -1,0 +1,61 @@
+initloop 1 site(s) FULL SET
+  8001944:	blx	r1
+finiloop 1 site(s) FULL SET
+  8001958:	blx	r1
+__port_thread_start 1 site(s) NARROW
+  80019d0:	blx	r4
+ targets: []
+dmaServeInterrupt 1 site(s) FULL SET
+  8001dc2:	blx	r4
+pwm_lld_serve_interrupt 5 site(s) FULL SET
+  8001ec0:	blx	r3
+  8001ed0:	blx	r3
+  8001ee0:	blx	r3
+  8001ef0:	blx	r3
+  8001f00:	blx	r3
+Sampler::GetSensorInternalResistance() const 1 site(s) NARROW
+  800200c:	blx	r3
+ targets: ['Sampler::GetNernstAc() const']
+Sampler::GetSensorTemperature() const 2 site(s) NARROW
+  80020f6:	blx	r2
+  80020fc:	blx	r3
+ targets: ['Sampler::GetNernstAc() const', 'Sampler::GetSensorInternalResistance() const']
+GetLambda(int) 1 site(s) FULL SET
+  8002246:	blx	r3
+HeaterControllerBase::Update(ISampler const&, HeaterAllow) 5 site(s) NARROW
+  8002baa:	blx	r3
+  8002bb8:	blx	r3
+  8002c92:	blx	r3
+  8002cc0:	blx	r3
+  8002dd2:	blx	r3
+ targets: ['HeaterController::SetDuty(float) const', 'Sampler::GetInternalHeaterVoltage() const', 'Sampler::GetNernstAc() const', 'Sampler::GetNernstDc() const', 'Sampler::GetPumpNominalCurrent() const', 'Sampler::GetSensorInternalResistance() const', 'Sampler::GetSensorTemperature() const']
+adc_lld_serve_rx_interrupt 4 site(s) NARROW
+  8002f32:	blx	r3
+  8002f54:	blx	r3
+  8002f98:	blx	r3
+  8002fba:	blx	r3
+ targets: ['adcDoneCallback(hal_adc_driver*)']
+PumpThread(void*) 4 site(s) FULL SET
+  80033c8:	blx	r3
+  800346a:	blx	r3
+  8003488:	blx	r3
+  8003496:	blx	r3
+CanTxThread(void*) 6 site(s) FULL SET
+  8003f8a:	blx	r3
+  800412c:	blx	r3
+  8004252:	blx	r3
+  80042c6:	blx	r3
+  80043b2:	blx	r3
+  800440e:	blx	r3
+Vector70 1 site(s) FULL SET
+  8004784:	blx	r3
+VectorB8 6 site(s) FULL SET
+  80048f0:	blx	r3
+  8004990:	blx	r3
+  80049ea:	blx	r3
+  8004a2c:	blx	r3
+  8004a82:	blx	r3
+  8004aec:	blx	r3
+Vector8C 1 site(s) FULL SET
+  8004cb0:	blx	r3
+TOTAL 15 callers 40 BLX sites

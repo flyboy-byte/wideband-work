@@ -1,0 +1,1 @@
+Independent round 7 review of the round 6 fixes at design commit18b6cef. Review in progress: TK1–TK7 in order, with a commit and evidence after each task. Only this review's audit folder changes; no design fixes are implemented here. Final verdict and coverage will be recorded before the usage reserve is reached.

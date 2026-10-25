@@ -1,0 +1,11 @@
+{
+  "command": [
+    "python3",
+    "checks/fw_package.py",
+    "build",
+    "/tmp/wb-round7-package"
+  ],
+  "cwd": "/home/logan/projects/wideband-review-astra/work",
+  "returncode": 0,
+  "seconds": 5.32
+}

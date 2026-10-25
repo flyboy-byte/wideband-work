@@ -1,0 +1,17 @@
+/tmp/wb-round7-package/app/wideband.elf: 131 functions, 22 indirect-call targets (address stored in the image)
+  ok   HeaterThread(void*)  148 of 256 B (+108)
+       HeaterThread(void*)(32) > HeaterControllerBase::Update(ISampler const&, HeaterAllow)(32) > *Sampler::GetSensorTemperature() const(32) > *Sampler::GetSensorInternalResistance() const(8) > __aeabi_fdiv(40) > __gnu_thumb1_case_uqi(4)
+  ok   PumpThread(void*)  148 of 256 B (+108)
+       PumpThread(void*)(32) > *HeaterControllerBase::Update(ISampler const&, HeaterAllow)(32) > *Sampler::GetSensorTemperature() const(32) > *Sampler::GetSensorInternalResistance() const(8) > __aeabi_fdiv(40) > __gnu_thumb1_case_uqi(4)
+  ok   SamplingThread(void*)  164 of 256 B (+92)
+       SamplingThread(void*)(56) > chThdSleep(8) > chSchGoSleepTimeoutS(56) > chSchGoSleepS(8) > __port_switch(36)
+  ok   CanTxThread(void*)  284 of 512 B (+228)
+       CanTxThread(void*)(160) > GetLambda(int)(8) > *HeaterControllerBase::Update(ISampler const&, HeaterAllow)(32) > *Sampler::GetSensorTemperature() const(32) > *Sampler::GetSensorInternalResistance() const(8) > __aeabi_fdiv(40) > __gnu_thumb1_case_uqi(4)
+  ok   CanRxThread(void*)  220 of 512 B (+292)
+       CanRxThread(void*)(72) > GetConfiguration()(24) > readSelPin(stm32_gpio_t*, unsigned long) [clone .constprop.0](16) > chThdSleep(8) > chSchGoSleepTimeoutS(56) > chSchGoSleepS(8) > __port_switch(36)
+  IndicationThread not in this build
+  ok   main              188 of 1024 B (+836)
+       main(40) > GetConfiguration()(24) > readSelPin(stm32_gpio_t*, unsigned long) [clone .constprop.0](16) > chThdSleep(8) > chSchGoSleepTimeoutS(56) > chSchGoSleepS(8) > __port_switch(36)
+  ok   interrupts (one)  156 of 1024 B exception stack (+868), deepest handler Vector78; nesting of interrupts not modelled
+       Vector78(8) > Vector74(16) > pwm_lld_serve_interrupt(16) > *HeaterControllerBase::Update(ISampler const&, HeaterAllow)(32) > *Sampler::GetSensorTemperature() const(32) > *Sampler::GetSensorInternalResistance() const(8) > __aeabi_fdiv(40) > __gnu_thumb1_case_uqi(4)
+stack estimate: ok, smallest margin 92 B
