@@ -1,6 +1,6 @@
 {
  "date": "2026-10-25",
- "git_head": "de4ee0d",
+ "git_head": "9481317",
  "results": [
   {
    "name": "DRC module (errors)",
@@ -120,7 +120,7 @@
     "../hardware/board_carrier/board_carrier.kicad_pcb": "986aced34840",
     "out/carrier/carrier-bom.csv": "4929cced2179",
     "out/carrier/carrier-cpl.csv": "66a7fdc2200c",
-    "out/carrier/carrier-gerbers.zip": "a4cf250dac67"
+    "out/carrier/carrier-gerbers.zip": "c6d03f1de870"
    }
   },
   {

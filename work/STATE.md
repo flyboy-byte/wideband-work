@@ -63,7 +63,7 @@ Mark a stage done only when its exit condition is true. Strike through, don't de
 | Carrier netlist self-check (generator table) | PASS | netlist self-check: 18 nets, 0 problems | 2026-10-25 | `board_carrier.kicad_sch` 7899a4c38db8, `gen_carrier_sch.py` bc7a0b98744c |
 | No hand edits waiting | PASS | no drift | 2026-10-25 |  |
 | JLC rotation, origin and pin names from each part's EasyEDA footprint | PASS | jlc rotation: 38 parts measured, 4 need a correction, 0 problem(s) | 2026-10-25 | `board_carrier.kicad_pcb` 986aced34840, `board_carrier.kicad_sch` 7899a4c38db8 |
-| Fab candidate (out/carrier) matches the board: Gerbers, BOM, CPL, not-fitted | PASS | fab files: 38 placed, 6 not fitted, outline 40.00 x 51.50 mm, 0 problem(s) | 2026-10-25 | `board_carrier.kicad_pcb` 986aced34840, `carrier-bom.csv` 4929cced2179, `carrier-cpl.csv` 66a7fdc2200c, `carrier-gerbers.zip` a4cf250dac67 |
+| Fab candidate (out/carrier) matches the board: Gerbers, BOM, CPL, not-fitted | PASS | fab files: 38 placed, 6 not fitted, outline 40.00 x 51.50 mm, 0 problem(s) | 2026-10-25 | `board_carrier.kicad_pcb` 986aced34840, `carrier-bom.csv` 4929cced2179, `carrier-cpl.csv` 66a7fdc2200c, `carrier-gerbers.zip` c6d03f1de870 |
 | Firmware: bootloader DATA writes stay inside the app partition (F1) | PASS | 52 guard cases; 0 unsafe accepted writes, 0 valid writes refused (stub only) | 2026-10-25 | `bootloader.cpp` 21cbac0cd469, `bootloader_bounds.h` 72e216e2e7bc |
 | Firmware: package checker accepts good images, rejects bad ones (F2) | PASS | 21 package cases, 0 wrong verdict(s) | 2026-10-25 | `fw_package.py` 34a1c5eb78dd, `wideband_image.h` 1ee39ace5944, `bootloader.cpp` 21cbac0cd469 |
 | Firmware: HardFault entry reaches the C handler on a Cortex-M0 (F9, QEMU microbit) | PASS | fault entry on Cortex-M0: as expected | 2026-10-25 | `main_hardfault_asm.S` d32262764759, `main.cpp` f1c2e96ebf08 |
@@ -78,7 +78,7 @@ Mark a stage done only when its exit condition is true. Strike through, don't de
 | Op-amp supply survives a clamped load dump: R9 and D5 power within rating (Codex round 6, R6-S3) | PASS | surge budget: 0 problem(s) | 2026-10-25 | `board_carrier.kicad_pcb` 986aced34840, `surge_budget.py` a12d878ff9c3 |
 | Release gate judges the latest audit round, wherever AUDIT.md lists it (Codex round 7 follow-up) | PASS | release gate rounds: 4/4 right | 2026-10-25 | `release.py` cc666e23c085, `test_release.py` 3cb68936a838 |
 
-Written by `checks/run_all.py` at commit de4ee0d. Don't edit by hand.
+Written by `checks/run_all.py` at commit 9481317. Don't edit by hand.
 <!-- checks:end -->
 
 ## Bring-up results
