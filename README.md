@@ -13,7 +13,7 @@ This repository is three things at once.
 **1. A wideband O2 controller.** It is upstream's open STM32 controller for a Bosch LSU 4.9 sensor plus a 0-5 V analog
 output on the carrier board. With that output it works with any ECU or logger that reads a voltage, not only rusEFI
 over CAN: Speeduino, a Honda K20 on Hondata FlashPro (datalogging), a gauge for carburettor tuning. The output is
-10-20 AFR = 0-5 V, 0 V while the sensor isn't ready, buffered from a 3.000 V reference and filtered. The op-amp takes
+10-20 AFR = 0-5 V, 5 V (off-scale lean) while the sensor isn't ready, buffered from a 3.000 V reference and filtered. The op-amp takes
 its feedback at the output pin, so the receiver's input (pull-up or pull-down) doesn't shift the reading, and it stays
 stable into cable capacitance; both were checked against TI's op-amp model. The firmware also gains an independent
 watchdog on the heater loop, and fixes for three bugs found by host and emulator tests: two inherited from upstream

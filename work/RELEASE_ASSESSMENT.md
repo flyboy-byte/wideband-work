@@ -7,7 +7,7 @@ Nothing is ordered, pushed or flashed.
 
 ## 1. The concept
 The rusEFI wideband module (upstream, unchanged) sits on a carrier board, grown to 40.0 x 51.5 mm (1.57 x 2.03 in), that
-adds a 0-5 V output at J3-5 (AFR 10 = 0 V ... 20 = 5 V, 0 V while the sensor is not valid). The module's spare pin SEL_1
+adds a 0-5 V output at J3-5 (AFR 10 = 0 V ... 20 = 5 V, 5 V while the sensor is not valid). The module's spare pin SEL_1
 makes a 46.9 kHz PWM; a 74LVC1G125 on a 3.000 V reference squares it; two RC filters smooth it; an LM2904 scales it x1.68;
 330R, clamp diodes and a 470R series resistor protect the pin. The DC feedback is taken at J3-5 itself, so whatever input
 the receiver has (pull-up or pull-down, 4.7k-100k) doesn't shift the reading (simulated). Every SMD part is on the top
@@ -59,7 +59,7 @@ rusEFI CAN works as before. Receivers: Speeduino, Hondata FlashPro (datalogging)
 | --- | --- | --- | --- |
 | D1 | R9 → 1206? (still open; room exists now) (R8 needs no change: fine in a GND short, and the 12 V short is fixed by D6, not by a bigger R8) | Keep 0603 and accept R2 as RISK until the audit | Parts move; the placer and router must run again (about 4 min each, but `close_d3_link` may stop applying) | **Decided: 1206 (owner 2026-10-23); done r37 (C4410)**
 | D2 | Release gate: the two raw DRC checks (module 11, carrier 23, all upstream's) always FAIL, and since 2026-10-23 so does the layout review (C7, 6.8 mm PWM return gap, inspected, accept recommended in `AUDIT.md`), so `release.py` can never pass | Not changed | Swap the DRC checks in `checks.json` for the "vs upstream" check, and either accept C7 as a recorded, dated waiver or move JP2 and re-run the board: **loosens your money gate, so your call** | **Decided: DRC vs upstream + dated C7 waiver (owner 2026-10-23); done 2026-10-24: raw DRC checks marked advisory in `checks.json`, new "Module board identical to upstream" check; C7 needs no waiver (r37 layout review 0 triggers)**
-| D3 | Output value while the sensor is invalid | 0 V | A mid value would look like a real AFR to a tune |
+| D3 | Output value while the sensor is invalid | ~~0 V~~ 5.0 V (2026-10-24, owner delegated; outside review N1) | A mid value would look like a real AFR to a tune; 0 V looked like a real 10 AFR and pushes a closed-loop ECU lean |
 | D4 | How the module gets flashed | Tag-Connect pads kept reachable | none yet |
 | D5 | ~~C17~~ done (r36, 2.1 mm); silkscreen overlaps remain (cosmetic) | Ship as is | a label pass |
 | D6 | ~~Series resistor at J3-5~~ | **Done r36** (owner agreed): R11 470R 1206, C4502 | 0.46 % low into 100k, trimmed |
@@ -82,7 +82,7 @@ updated; `docs/carrier.md` "Layout" and "Grounding and the output" have the deta
 
 ### 1. The concept in one paragraph
 The rusEFI wideband module (upstream, unchanged) sits on a carrier board that adds a 0-5 V output at connector pin J3-5
-(AFR 10 = 0 V … 20 = 5 V, 0 V while the sensor is not valid). The module's spare pin SEL_1 makes a PWM at 46.9 kHz; a
+(AFR 10 = 0 V … 20 = 5 V, 5 V while the sensor is not valid). The module's spare pin SEL_1 makes a PWM at 46.9 kHz; a
 74LVC1G125 on a 3.000 V reference squares it up; two RC filters smooth it; an LM2904 scales it ×1.68 to 5.04 V; a 330 Ω
 resistor, two clamp diodes and a 470 Ω series resistor at the pin protect the output. rusEFI CAN keeps working as before. Receivers: Speeduino, FlashPro
 (datalogging), a carb gauge.

@@ -42,7 +42,15 @@ All behind `AUXOUT_SEL1_PWM_CHANNEL`, defined only in `boards/f0_module/wideband
 - **Curve:** compiled in, in `boards/f0_module/port.cpp` `GetConfiguration()`: AFR 10.0 = 0 V to AFR 20.0 = 5 V,
   linear, 8 points; source = AFR channel 0 (14.7 x lambda). f0 has no UART/TunerStudio to edit it.
 - **Invalid lambda:** while the heater isn't in closed loop or lambda fails the CAN frame's validity test, the output
-  is `AUXOUT_INVALID_VOLTS` (0.0 V).
+  is `AUXOUT_INVALID_VOLTS` (5.0 V = 20 AFR, the lean end, since 2026-10-24; was 0 V). Reason: a closed-loop ECU that
+  misses the fault then adds fuel instead of pulling it, and a log shows an off-scale value; 0 V read as a believable
+  10 AFR and into a pull-up input floored at 11-12 AFR (outside review N1).
+- **PB1 at boot:** the app's and the bootloader's `board.h` set PB1 pull-down (was pull-up), so with R3 4.7k the buffer
+  reads low until `InitAuxDac()` hands PB1 to TIM3 (outside review B1). Changing the bootloader means the first flash
+  must include the bootloader (SWD), which it does anyway.
+- **Heater:** the closed-loop voltage is clamped at 0 V before it is squared into a duty (`heater_control.cpp`,
+  upstream code): a sensor hotter than target got up to 100 % duty (Codex round 4 second pass, test
+  `HeaterUpdate.HotterSensorNeverGetsMoreHeat`). Bounded before by the overheat stop, which lost the reading.
 - **Strap:** SEL_1 is never read as a strap (its pad mode is never changed back to input); it counts as floating.
   SEL_2 still straps: low = CAN index 4, floating = no override, high = index 1. CAN-set index still works.
 - **Test mode:** SEL_2 tied low at power-up makes the output step 1.00 -> 2.50 -> 4.00 V, 10 s each, repeating,
@@ -154,6 +162,6 @@ starts the independent watchdog (IWDG) from the heater thread, after its 1 s set
   disassembly: indirect calls are charged the deepest address-taken function (overestimates), ChibiOS's reserved context
   space is counted again (overestimates), interrupt nesting is not counted (underestimates the exception stack). A runtime
   high-water mark on the board (ChibiOS fills stacks when CH_DBG_FILL_THREADS is on) is still the real measurement.
-- The 0 V invalid output reads as 10 AFR on a receiver. Owner to decide if another value is better.
+- ~~The 0 V invalid output reads as 10 AFR on a receiver. Owner to decide.~~ Decided 2026-10-24 (owner delegated): 5.0 V, see "Invalid lambda".
 - Trim needs a reflash per board, so how the owner flashes the module (SWD probe on the Tag-Connect pads, or rusEFI
   over CAN) is an open question.

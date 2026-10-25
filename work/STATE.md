@@ -1,6 +1,6 @@
 # STATE — rusEFI wideband (module + carrier)
 
-Status: 2026-10-24 — board r41, fab candidate in work/out/carrier (rebuild with gen/export_fab.py), 20 checks: 0 failed, 2 advisory (raw upstream DRC, D2). **Ready for external review** (round 4): `REVIEW.md` at the repo root (fresh-clone setup verified the same day, blind pack or full repo, report format); pack `audit/carrier-f-2026-10-24/` from `sh checks/review_pack.sh`. Pushed 2026-10-24 (owner said so): analog-out at 8ad4b28, dotfiles 70aa5e9. Then JLC quote (owner, money), release.py. Firmware: watchdog D10 done, host 69 + aux 21. Nothing ordered or flashed.
+Status: 2026-10-24 (evening) — board r41 + B1 fix (R3 4.7k; layout unchanged), firmware with PB1 pull-down, invalid = 5.0 V and the heater clamp; 23 checks: 0 failed, 2 advisory. Five audit rounds; round 5 (cousin's Claude) BUG B1 fixed, RISK R1 confirmed on TI's model (only 4.7k receivers with +5V low miss full scale). **Next: re-audit of these changes (round 6), module pre-order check, then the order (owner).** The whole road, costs, shopping list and manufacturer choice: `ROADMAP.md`. JLC stock checked live for both boards (`checks/bom_stock.py`); module JLC files staged with 2 substitutions (`gen/module_fab.py`). Pushed 2026-10-24 (owner: push it all).
 Revision in progress: none yet   Revisions used (never reused): none by the owner. Upstream module exports are rev A, B, C (upstream's own scheme, not ours).
 <If the project already names revisions its own way (v1.0.0), keep its scheme.>
 Review pages: status report https://claude.ai/artifact/YRsjXKGZKG5AFbwkcMuYZ4 (private; rebuilt by `checks/report.py`)  fit check <link>  audit <link>
@@ -67,13 +67,14 @@ Mark a stage done only when its exit condition is true. Strike through, don't de
 | Firmware: bootloader DATA writes stay inside the app partition (F1) | PASS | 52 guard cases; 0 unsafe accepted writes, 0 valid writes refused (stub only) | 2026-10-24 | `bootloader.cpp` 21cbac0cd469, `bootloader_bounds.h` 72e216e2e7bc |
 | Firmware: package checker accepts good images, rejects bad ones (F2) | PASS | 21 package cases, 0 wrong verdict(s) | 2026-10-24 | `fw_package.py` 34a1c5eb78dd, `wideband_image.h` 1ee39ace5944, `bootloader.cpp` 21cbac0cd469 |
 | Firmware: HardFault entry reaches the C handler on a Cortex-M0 (F9, QEMU microbit) | PASS | fault entry on Cortex-M0: as expected | 2026-10-24 | `main_hardfault_asm.S` d32262764759, `main.cpp` f1c2e96ebf08 |
-| Firmware: host gtest suite (sampler, heater, F7, F1 bounds, D10 watchdog) | PASS | [  PASSED  ] 69 tests. | 2026-10-24 | `heater_control.cpp` c4a69cba915d, `sampling.cpp` 8a229de01887, `watchdog.h` 3c55e521fda5, `bootloader_bounds.h` 72e216e2e7bc |
+| Firmware: host gtest suite (sampler, heater, F7, F1 bounds, D10 watchdog) | PASS | [  PASSED  ] 70 tests. | 2026-10-24 | `heater_control.cpp` 7368eb50561e, `sampling.cpp` 8a229de01887, `watchdog.h` 3c55e521fda5, `bootloader_bounds.h` 72e216e2e7bc |
 | Firmware: analog output host tests, production auxout/pump_dac/can_helper on the f0 config (F3-F6) | PASS | [  PASSED  ] 21 tests. | 2026-10-24 | `auxout.cpp` 417044786829, `pump_dac.cpp` ac1d4bf351de, `can_helper.cpp` dc0ba8d660e6, `aux_curve.h` bb88ea23e570, `wideband_board_config.h` 75af39efb19f |
 | Firmware: static worst-case stack per thread fits (F8 estimate, f0 build) | PASS | stack estimate: ok, smallest margin 64 B | 2026-10-24 | `auxout.cpp` 417044786829, `can.cpp` 65a7078908bf, `heater_thread.cpp` 1c61085261f8, `pump_control.cpp` 6449053857fe, `sampling_thread.cpp` 65d58bbf0b52 |
 | Stack checker: known-answer Cortex-M0 cases incl. a pointer in a literal pool (Codex R41-CX1) | PASS | stack checker cases: 3, 0 wrong verdict(s) | 2026-10-24 | `stack_estimate.py` 4a8fc8d65248 |
 | Sim wrappers fail when ngspice gives no valid result (Codex R41-CX2) | PASS | sim wrappers: 0 wrong verdict(s) | 2026-10-24 | `stability.sh` 34e48e6b3d5a, `load_accuracy.sh` c9a8b3e9ea4e |
+| Output low from reset until the app drives PB1 (R3 vs the PB1 pull in both board.h; outside review B1) | PASS | boot level: output low from reset | 2026-10-24 | `board_carrier.kicad_pcb` 8bd963c4811b, `board.h` 0a70a2bb2fa0, `board.h` 1dc40c1c92c0 |
 
-Written by `checks/run_all.py` at commit f66d5b5. Don't edit by hand.
+Written by `checks/run_all.py` at commit 32139c1. Don't edit by hand.
 <!-- checks:end -->
 
 ## Bring-up results
@@ -85,6 +86,7 @@ Written by `checks/run_all.py` at commit f66d5b5. Don't edit by hand.
 | --- | --- | --- |
 
 ## Open register (2026-10-24, end of session)
+- 2026-10-24 evening: owner delegated B1/N1/R1 and the heater clamp to Claude and said push everything (his cousin's review, Codex's PR and second pass, our tests). Done: `AUDIT.md` rounds 4 and 5 with follow-through; `ROADMAP.md` for the route. Watch for a PR from the cousin (he may not be finished) or anyone else.
 - 2026-10-24 External-review prep done: `REVIEW.md`; checks use `origin/master` when a clone has no local `master` (`checks/upstream_ref.py`); reviewers' raw output under `audit/<reviewer>-<date>/` is now tracked (packs are not); a fresh clone ran all 20 checks after building bootloader + app (stack check needs the ELF). pcb-design skill lessons added (pad pairing by pin function, fab warnings in the DRC gate, BOM from the board, independent fab-file check, outside reviewers, SPICE memory): dotfiles commit 70aa5e9, pushed 2026-10-24.
 - Owner (do not re-ask): engine-bay heat is not a design driver for this prototype.
 - Owner (2026-10-24, do not re-ask): no pushing or merging until the outside reviewer (his cousin's Opus) has audited; keep working locally. Upstream's own analog output (PR #352, merged 2026-10-24) is not used: we use our design (`docs/analog-out.md`).

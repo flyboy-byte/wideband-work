@@ -34,10 +34,10 @@ PCB orders.
      about $50. Read the quote.
    - Upload the BOM and CPL. Then, part by part:
      - **Every BOM line resolves to its LCSC number** (25 lines). There are 7 Extended parts, each with a loading fee:
-       D1, D5, R11, U1, U4, U5, U6 (`parts_research.md`).
-     - **Stock.** Look first at C13585 (10u 1206, x5 per board), C14663 (100n 0603, C17), C15849 (1u 0603, x3) and
-       C7934 (LM2904DR), which were low or zero at LCSC on 2026-10-24. LCSC's warehouse isn't JLC's assembly stock;
-       the quote page is the final word.
+       D1, D5, R11, U1, U4, U5, U6 (`checks/bom_stock.py`).
+     - **Stock:** run `python3 checks/bom_stock.py 5` on quote day. It reads JLC's own assembly stock, class and price.
+       On 2026-10-24 all 26 lines were in stock for 5 boards, at about $20 of parts. LCSC's warehouse numbers had
+       suggested C13585, C14663, C15849 and C7934 were short, but at JLC they were 2.6M, 44M, 13.8M and 219k.
      - Not fitted: J3, U3, JP1, JP2, H1, H2 (`not-fitted.csv`). J3 is through-hole and the owner solders it. The jumpers
        are solder pads.
 4. **Placement preview** (turn on "Confirm Parts Placement" if offered). This is the check that matters most, because the
@@ -77,8 +77,13 @@ Never edit the BOM or CPL by hand. Instead:
   - Pin names are field 4 of the third `~`-separated segment of each `P~` shape.
   - The JSON also carries `lcsc.stock` and "JLCPCB Part Class".
   - Answers are cached in `checks/easyeda/` (committed), so the rotation check runs offline.
-- **JLC parts search** (jlcpcb.com/parts) for live JLC stock, price and library class. We have no script for it (UNKNOWN
-  endpoint). Check it by hand on quote day.
+- **JLC parts search API**, the JSON behind jlcpcb.com/parts:
+  `POST https://jlcpcb.com/api/overseas-pcb-order/v1/shoppingCart/smtGood/selectSmtComponentList` with
+  `{"keyword": "<LCSC#>", "currentPage": 1, "pageSize": 5}`.
+  - It answered with no key (REPORTED, 2026-10-24). It's unofficial, so it may change.
+  - It returns `stockCount` (JLC's assembly stock), `componentLibraryType` (`base` = Basic, `expand` = Extended),
+    `preferredComponentFlag`, price breaks and `lossNumber` (attrition).
+  - `checks/bom_stock.py` uses it; the idea comes from the pcb-design skill author's v2.
 - **Datasheets:** maker PDFs, cited per part in `parts_research.md`. The maker's drawing beats EasyEDA when they
   disagree.
 

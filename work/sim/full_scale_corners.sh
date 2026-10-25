@@ -58,9 +58,11 @@ CIR
       FAILED=$((FAILED + 1)); return
     fi
   done
-  # i(V5) is the current into the source's + terminal: negative = D3 pushing current into the +5V rail
-  printf 'supply %5s V  +5V %s V  load %-5s  connector %.4f V (%+.0f mV)  op-amp rail %.2f V  into +5V %.2f mA  settled %.2f mV\n' \
-    "$1" "$2" "$3" "$vout" "$(echo "($vout - 5.0) * 1000" | bc -l)" "$vcc" "$(echo "-($i5) * 1000" | bc -l)" "$(echo "($vhi - $vlo) * 1000" | bc -l)"
+  # i(V5): ngspice's current through the source, positive into its + terminal = D3 pushing current into the +5V rail.
+  # Arithmetic in awk: ngspice may print 3.3e-07, which bc can't read
+  awk -v s="$1" -v r="$2" -v l="$3" -v v="$vout" -v c="$vcc" -v i="$i5" -v lo="$vlo" -v hi="$vhi" 'BEGIN {
+    printf "supply %5s V  +5V %s V  load %-5s  connector %.4f V (%+.0f mV)  op-amp rail %.2f V  D3 into +5V %.2f mA  settled %.2f mV\n",
+      s, r, l, v, (v - 5.0) * 1000, c, i * 1000, (hi - lo) * 1000 }'
 }
 for s in 13.4 11.6 9.0; do for v5 in 4.8 5.0 5.2; do for l in 4.7k 10k 100k; do run $s $v5 $l; done; done; done
 [ "$FAILED" -eq 0 ] || { echo "$FAILED case(s) FAILED: no valid result; not a pass"; exit 1; }

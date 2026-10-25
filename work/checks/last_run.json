@@ -1,6 +1,6 @@
 {
  "date": "2026-10-24",
- "git_head": "f66d5b5",
+ "git_head": "32139c1",
  "results": [
   {
    "name": "DRC module (errors)",
@@ -154,9 +154,9 @@
   {
    "name": "Firmware: host gtest suite (sampler, heater, F7, F1 bounds, D10 watchdog)",
    "status": "pass",
-   "summary": "[  PASSED  ] 69 tests.",
+   "summary": "[  PASSED  ] 70 tests.",
    "files": {
-    "../firmware/heater_control.cpp": "c4a69cba915d",
+    "../firmware/heater_control.cpp": "7368eb50561e",
     "../firmware/sampling.cpp": "8a229de01887",
     "../firmware/watchdog.h": "3c55e521fda5",
     "../firmware/boards/f0_module/bootloader/bootloader_bounds.h": "72e216e2e7bc"
@@ -201,6 +201,16 @@
    "files": {
     "sim/stability.sh": "34e48e6b3d5a",
     "sim/load_accuracy.sh": "c9a8b3e9ea4e"
+   }
+  },
+  {
+   "name": "Output low from reset until the app drives PB1 (R3 vs the PB1 pull in both board.h; outside review B1)",
+   "status": "pass",
+   "summary": "boot level: output low from reset",
+   "files": {
+    "../hardware/board_carrier/board_carrier.kicad_pcb": "8bd963c4811b",
+    "../firmware/boards/f0_module/board.h": "0a70a2bb2fa0",
+    "../firmware/boards/f0_module/bootloader/cfg/board.h": "1dc40c1c92c0"
    }
   }
  ]

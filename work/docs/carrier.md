@@ -58,7 +58,8 @@ error (0.1 V) is 0.2 AFR, which is why the reference buffer matters [INFERRED].
 
    ```
    module SEL_1 (PB1, 3.3 V PWM, 46.9 kHz)
-     -> 100k pull-down (output 0 V while the MCU boots)
+     -> 4.7k pull-down R3 (output 0 V from reset until the app drives PB1; 100k lost to the MCU's own pull-up, outside
+        review B1, 2026-10-24; the bootloader and app now set PB1 pull-down too)
      -> 74LVC1G125 buffer, VCC = 3.000 V from REF3030, OE tied low   (full scale = the reference, not the LDO)
      -> 3.3k / 100n -> 3.3k / 100n                                   (lambda-x2's values)
      -> LM2904 non-inverting, gain 1 + 68k/100k = 1.68 -> full scale 5.04 V
@@ -246,4 +247,6 @@ J3-5 (net AOUT_J). One schematic connection, folded into the next board run with
 | A1 | Close the TEST jumper (module SEL_2 to GND), power up; output steps 1.00 / 2.50 / 4.00 V, 10 s each (firmware before 2026-10-23 stayed at 1.00 V: fixed, `firmware.md` F5). Meter J3-5 to J3-7 | DC volts at each step | before trim: within ±0.10 V; after trim and reflash: within ±0.02 V |
 | A2 | Sensor in free air, warmed up | DC volts at J3-5 vs AFR the firmware reports over CAN | volts match the curve within ±0.05 V |
 | A3 | Short J3-5 to GND briefly through the meter's current range | current | about 6 mA since r37 (feedback now sees the short, so the op-amp drives high into R8 + R11 = 800R while R9 1k starves its supply: (12 - V)/1k = (V - 1.5)/800 gives V about 6.2 V, I about 5.8 mA; INFERRED, LM2904 high-side drop 1.5 V FROM MEMORY; was about 9 mA before r37); board survives |
+| A5 | Bootloader only (app not yet flashed, or right after power-up): meter J3-5 to J3-7 from the moment power is applied (outside review B1, 2026-10-24) | DC volts during the first 2 s, and with no app at all | under 0.1 V the whole time (was about 5 V for 0.8 s with R3 100k and the PB1 pull-up); R3 4.7k and the PB1 pull-down hold it low |
+| A6 | App flashed, sensor connected, cold start | DC volts at J3-5 while the heater warms up, then after | 5.0 V (20 AFR, "invalid") until the controller reports closed loop over CAN, then follows the AFR (N1, 2026-10-24: invalid is the lean end, so a closed-loop ECU adds fuel instead of pulling it) |
 | A4 | In the car, engine running, sensor hot: meter (mV range) between J3-7 at the controller and the receiver's sensor-ground pin | DC mV | under 20 mV (= 0.04 AFR at 0.5 V per AFR); more means a ground offset in the wiring (see "Grounding and the output") |

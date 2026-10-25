@@ -71,3 +71,18 @@ that would help any board as a line for the `pcb-design` skill (see its "Lessons
   reviewer's raw output with the packs (`work/audit/`). Caught by: cloning into a scratch folder and running every
   check before asking an outside reviewer. Fix: `checks/upstream_ref.py`, setup steps in `REVIEW.md`, only packs
   ignored. Do the clone test before every outside review.
+- 2026-10-24 A boot-time default nobody looked at: R3 100k was meant to hold the output at 0 V during boot, but the
+  MCU's own pull-up on the same pin (set in both board.h files, upstream's choice for the strap) won, and the output sat
+  at full scale for the bootloader's 0.8 s. Caught by: the outside reviewer reading board.h next to the schematic. Fix:
+  check every "default state" claim against every driver of that node, including the MCU's internal pulls, in the
+  bootloader as well as the app (`checks/boot_level.py`).
+- 2026-10-24 Tool traps in one afternoon: `bc` can't read `3.3e-07` (ngspice prints it; a column came out as amps
+  instead of microamps); `pkill -f <name>` matched its own shell; Python's urllib got a 403 from easyeda.com where curl
+  is answered; a `with open(p,'w')` that reads `p` in the same expression empties the file; a check that compares
+  demangled names (`CanTxThread(void*)`) with plain ones never matches. Do arithmetic in awk/python, name the PID, fetch
+  with curl, and test an exclusion list against real names.
+- 2026-10-24 TI's LM2904 model can't solve its operating point when the supply comes through a resistor (R9 1k): every
+  stepping method fails. Start the transient with `uic` and the supply capacitor charged (`.ic`), and let it settle;
+  a switch shorting R9 for 1 ms gave the same answer.
+- 2026-10-24 LCSC warehouse stock is not JLC assembly stock (LM2904: 112 vs 219,277). Check stock with JLC's own parts
+  API (`checks/bom_stock.py`), and check the upstream module's BOM too: two of its parts were out at JLC.

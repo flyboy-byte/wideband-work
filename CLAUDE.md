@@ -36,7 +36,7 @@ It's a learning project: build and test it ourselves, don't buy a ready-made uni
 ## Where it stands (2026-10-23; check `work/STATE.md` for newer)
 
 - **Firmware** (branch `analog-out`): builds. Analog output on module pad SEL_1 = PB1 = TIM3_CH4 (shares the pump-DAC
-  timer, 46.9 kHz). Compiled-in curve 10 AFR = 0 V … 20 AFR = 5 V, 0 V while lambda is invalid. Bench test mode (SEL_2
+  timer, 46.9 kHz). Compiled-in curve 10 AFR = 0 V … 20 AFR = 5 V, 5.0 V (20 AFR, lean end) while lambda is invalid (was 0 V until 2026-10-24). Bench test mode (SEL_2
   strapped low: 1.00/2.50/4.00 V steps) and trim constants. RAM is full to the byte, which is safe because nothing is
   allocated at runtime. Untested on hardware. Host-tested 2026-10-24 (69 + 21 tests); watchdog (D10) refreshed by the heater loop; upstream bugs fixed in the bootloader
   bounds (F1) and the Cortex-M0 fault handler (F9), our test-mode bug fixed (F5): `work/docs/firmware.md`.
@@ -99,7 +99,7 @@ Run history and what each change did: `work/HANDOFF.md`.
 ## Design in one paragraph (sources in `work/docs/`)
 
 Module pad SEL_1 carries the PWM. On the carrier:
-- 100k pull-down → 74LVC1G125 buffer powered from a REF3030 (3.000 V), so the PWM amplitude is the reference, not the
+- 4.7k pull-down (R3; PB1 pull-down in both board.h; output low from reset) → 74LVC1G125 buffer powered from a REF3030 (3.000 V), so the PWM amplitude is the reference, not the
   MCU supply
 - 2× RC 3.3k/100n
 - LM2904 ×1.68 (68k/100k) with a dual-loop feedback: DC feedback from J3-5 (after the 330R and R11, so the receiver's
