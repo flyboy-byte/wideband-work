@@ -1,0 +1,15 @@
+/home/logan/projects/wideband-work/work/audit/astra-2026-10-25/heater_recovery.cpp: In member function ‘virtual void HeaterUpdate_AuditRecoveryAfterLongHotClamp_Test::TestBody()’:
+/home/logan/projects/wideband-work/work/audit/astra-2026-10-25/heater_recovery.cpp:16:102: error: ‘sqrt’ is not a member of ‘std’
+   16 |     std::printf("RECOVERY first=%.6f settled=%.6f effective=%.3f V\n", first, dut->lastDuty, 13*std::sqrt(dut->lastDuty));
+      |                                                                                                      ^~~~
+/home/logan/projects/wideband-work/work/audit/astra-2026-10-25/heater_recovery.cpp:21:79: error: ‘sqrt’ is not a member of ‘std’
+   21 |     std::printf("COOLER duty=%.6f effective=%.3f V\n", dut->lastDuty, 13*std::sqrt(dut->lastDuty));
+      |                                                                               ^~~~
+Traceback (most recent call last):
+  File "/home/logan/projects/wideband-work/work/audit/astra-2026-10-25/run_heater.py", line 11, in <module>
+    subprocess.run(cmd,check=True)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/subprocess.py", line 578, in run
+    raise CalledProcessError(retcode, process.args,
+                             output=stdout, stderr=stderr)
+subprocess.CalledProcessError: Command '['g++', '-std=c++20', '-g', '-O1', '-fsanitize=address,undefined', '-fno-omit-frame-pointer', '-DMOCK_TIMER', '-DWB_PROD=0', '-I/home/logan/projects/wideband-work/test', '-I/home/logan/projects/wideband-work/firmware', '-I/home/logan/projects/wideband-work/firmware/boards', '-I/home/logan/projects/wideband-work/firmware/util', '-I/home/logan/projects/wideband-work/firmware/libfirmware/util/include', '-I/home/logan/projects/wideband-work/test/googletest/googletest/include', '-I/home/logan/projects/wideband-work/test/googletest/googletest', '/home/logan/projects/wideband-work/work/audit/astra-2026-10-25/heater_recovery.cpp', '/home/logan/projects/wideband-work/firmware/heater_control.cpp', '/home/logan/projects/wideband-work/firmware/pid.cpp', '/home/logan/projects/wideband-work/firmware/util/timer.cpp', '/home/logan/projects/wideband-work/test/test_stubs.cpp', '/home/logan/projects/wideband-work/test/googletest/googletest/src/gtest-all.cc', '/home/logan/projects/wideband-work/test/googletest/googletest/src/gtest_main.cc', '-lpthread', '-o', '/tmp/wb_r6_heater_hj59cjvt/heater']' returned non-zero exit status 1.
