@@ -23,7 +23,7 @@ Would I order these files as they are? **Not yet assessed**: review in progress;
 | TK10 Layout | FINDING | R6-S4 | DRC0new/0open; vias0new; layout0triggers. Supply-cap distances1.69/3.94/2.73mm; C11 body~1.60mm from edge vs JLC2.5mm rule. TK10-layout.md/log. |
 | TK11 Wiring sheet | PARTLY | R6-S5 |12/12 J3 and6/6 J2 pad mappings match PCB; Tag-Connect primary drawing confirms1:1IDC cable. Clone/moulded housing identity and through-cutout reach remain physical checks. TK11-wiring.md. |
 | TK12 Firmware diff | FINDING | R6-S6 | Read18changed files; fresh firmware package passes(21616Bapp,CRC984fc2b4). Existing checker passes but real indirect-recursion ELF falsely passes116/256B. Configured checks running; TK12-firmware.md. |
-| TK13 These docs | | | |
+| TK13 These docs | OK | R6-S1,R6-S5 | Reviewed task/report/setup against sources and all25configured checks. Specific corrections below; checker itself reports docs consistent. |
 | TK99 Beyond the list | | | |
 
 Status: OK = checked and found right; FINDING = see the table below; PARTLY = say what is left; NOT CHECKED = say why
@@ -89,4 +89,11 @@ CALCULATED exact periodic RC states give0.658mV p-p at50% and0.421mV at80%, resi
 
 ## TK13: what would have made this review faster
 
-<missing files, unclear instructions, wrong paths>
+1. Keep exact ordered manufacturer/variant and primary datasheet URLs in the pack. U9's UNKNOWN pinout was readily settled from Torex's primary PDF; same-name MDD/Diodes zeners must not be conflated. R6-S1 corrects the plain LM2904 maximum offset.
+2. TK9 still says35-48V though carrier.md corrects the SMCJ24CA assumption to~27-39V. Name the actual protected waveform and source impedance; a TVS headline clamp rating does not qualify400ms load dump.
+3. TK6's11-13V op-amp rail description omits load-dependentR9 drop; the current full-scale run measures as low as7.02V. State supply input and measured op-amp rail separately.
+4. Include the simulator initialization requirement explicitly: `work/sim/.spiceinit` sets `ngbehavior=psa`. TI's model fails outside that directory without the equivalent setting. My extra harness initially ran in the wrong cwd twice; raw failures are retained, not called circuit failures. Existing wrappers correctly cd into sim/.
+5. Describe `boot_level.py` as a static digital-level check, not proof of every power-ramp/reset transient (TK3). Physical unplug latency and lower-priority thread freshness are separate from the validity predicate (TK4).
+6. The optional signal-ground fuse paragraph promises coordination without fuse/receiver I²t data (R6-S5); remove the assurance until qualified.
+7. Minor stale source comments: test/aux_out/test_aux_out.cpp's NaN-voltage test still says invalid lambda is replaced by0V; current policy is5V. can_helper.cpp comment says about9Hz but two100ms frame waits would be about5Hz; the nonblocking fix itself is correct and tested.
+8. `run_all.py` rewrites the designer's STATE.md and tracked timestamped reports. A read-only/report-directory mode would make independent reviews easier. This audit ran all25configured checks through its own runner, preserving STATE.md; the module command verified existing staged files without regeneration.25checks finish with23zero exits and2accepted advisory DRC failures. Those passes do not invalidate the new stack-checker counterexample.

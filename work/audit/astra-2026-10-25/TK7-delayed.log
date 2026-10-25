@@ -1,0 +1,6 @@
+SOURCE SHA256 34e48e6b3d5a0a886110528d9100d336290ea6846343acf64053b23199d37b3a
+E  Cload=1p   Cf=1n    before 1.6823 V  after 1.8503 V  peak 1.8503 V  overshoot    0.0 %  ripple at end   0.00 mV  settles (1%)   258 us
+E  Cload=1n   Cf=1n    before 1.6823 V  after 1.8503 V  peak 1.8503 V  overshoot    0.0 %  ripple at end   0.00 mV  settles (1%)   255 us
+E  Cload=10n  Cf=1n    before 1.6823 V  after 1.8503 V  peak 1.8503 V  overshoot    0.0 %  ripple at end   0.00 mV  settles (1%)   219 us
+E  Cload=47n  Cf=1n    before 1.6823 V  after 1.8503 V  peak 1.8658 V  overshoot    9.2 %  ripple at end   0.00 mV  settles (1%)    95 us
+E  Cload=100n Cf=1n    before 1.6823 V  after 1.8503 V  peak 1.8887 V  overshoot   22.8 %  ripple at end   0.00 mV  settles (1%)   609 us

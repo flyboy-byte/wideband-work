@@ -1,0 +1,9 @@
+{
+  "command": [
+    "python3",
+    "audit/astra-2026-10-25/stability_current.py"
+  ],
+  "cwd": "/home/logan/projects/wideband-work/work",
+  "returncode": 0,
+  "seconds": 23.59
+}

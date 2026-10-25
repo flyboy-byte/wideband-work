@@ -40,7 +40,7 @@ quit
 '''
     path=HERE/(name+'.cir');path.write_text(deck)
     try:
-        p=subprocess.run(['ngspice','-b',str(path)],cwd=MODEL.parent,capture_output=True,text=True,timeout=180)
+        p=subprocess.run(['ngspice','-b',str(path)],cwd=MODEL.parent.parent,capture_output=True,text=True,timeout=180)
         out=p.stdout+p.stderr
     except subprocess.TimeoutExpired as e:
         out=(e.stdout or b'').decode(errors='replace')+'\nTIMEOUT\n';p=None
