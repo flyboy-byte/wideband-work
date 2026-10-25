@@ -19,7 +19,7 @@ Would I order these files as they are? **Not yet assessed**: review in progress;
 | TK6 Analog DC | PARTLY | R6-S1 | Independent exact RC ripple0.658/0.421mV at50/80%; gain tolerance calculation; primary LM2904 limits. Full-scale sweep running; longer-window/zero cases queued for later evidence update. TK6-calculations.md. |
 | TK7 Stability | PARTLY | — | Reviewed actual E topology and measurement validity; five nominal step cases queued serially behind TK6. No phase-margin/process-corner claim. TK7-stability.md. |
 | TK8 Faults | FINDING | R6-S2 | Calculated12V injection13.6mA into held5V rail; no guaranteed sink. Grounded output~5.2mA in illustrative coupled-supply model. Open power ground routes heater current through receiver ground. TK8-faults.md. |
-| TK9 Op-amp supply | | | |
+| TK9 Op-amp supply | FINDING | R6-S3 | At illustrative38.9V/400ms:R9 437mW/0.175J,D5 376mW/0.150J. Exact vendor pulse/thermal data missing; nominal ratings do not establish survival. TK9-surge.md. |
 | TK10 Layout | | | |
 | TK11 Wiring sheet | | | |
 | TK12 Firmware diff | | | |
@@ -35,6 +35,7 @@ Status: OK = checked and found right; FINDING = see the table below; PARTLY = sa
 | --- | --- | --- | --- | --- | --- |
 | R6-S1 | TK6 | NOTE | `work/docs/carrier.md:134,143` | DOCUMENTED TI SLOS068AB5.8: plain LM2904 offset3mV typ/7mV max at25C,10mV over temperature; CALCULATED output offset bound11.76mV at25C vs cited5.04mV. | Correct accuracy budget to the exact ordered variant's limits; retain two-point calibration. |
 | R6-S2 | TK8 | RISK | D3/+5V, `work/docs/carrier.md:91` | CALCULATED12V fault injects13.6mA if rail held5V; ST L78M has no guaranteed sink. Unpowered initial R11 load276mW. Previously open backfeed risk remains unqualified, especially receiver connected while board off. | Establish sink/clamp behavior and receiver protection for powered/off states, or isolate the clamp from the unsinkable rail. |
+| R6-S3 | TK9 | RISK | R9 C4410 / D5 C173425 | CALCULATED38.9V/400ms ideal18V clamp:R9 0.437W/0.175J(1.75x nominal continuous rating); exact UNI-ROYAL/MDD pulse qualification absent. Not proof of failure, but survival is unestablished. | Qualify exact parts against protected waveform, or select a documented pulse-rated R9. |
 
 Severity: BLOCKER = don't order; BUG = wrong but workable; RISK = could bite (say when); NOTE = worth knowing.
 Tag each piece of evidence: MEASURED (you ran it), CALCULATED (show the sum), DOCUMENTED (name the datasheet and page),
