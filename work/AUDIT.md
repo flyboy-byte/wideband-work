@@ -61,6 +61,21 @@ Severity: BLOCKER = don't order; BUG = wrong but workable; RISK = could bite (st
 NOTE. Then: what was checked and found correct, and what couldn't be checked.
 
 ## Rounds
+### Round 8 — 2026-10-25, Codex (Astra; ordering readiness of the released `flyboy-o2-v1`, owner-directed, no brief)
+Commit: c07643c (release `a642c86`; board, firmware and generators unchanged since round 7)
+Raw report: `audit/order-readiness-2026-10-25/` (PR #4, branch `review/order-readiness-2026-10-25` at `fa34127`), with
+`FIRST-RUN-RECOVERY.md` and `ORDER-CHECKLIST.md`. Verdict: "No, not with the current hand-assembly shopping list."
+Confirmed right: the eight frozen files match RELEASE.json; carrier Gerbers and drills equal fresh exports; module
+Gerbers geometrically equal to upstream rev C; all 52 BOM lines, 95 placements and 9 not-fitted entries match the
+boards; 52/52 lines in stock for 2 assemblies (parts about $34, not a quote). Verified by Claude Opus 5.5 (designer).
+
+| ID | Severity | Location | Evidence (reviewer's) | Our check | Status |
+| --- | --- | --- | --- | --- | --- |
+| OR1 | BUG | carrier U3 (module footprint), `ROADMAP.md` header line | Carrier holes 0.762 mm; the named header C32713274 has 0.64 mm square pins (0.905 mm diagonal; Hanxia drawing asks for a 1.02 mm hole) | Confirmed: U3 pads drill 0.762 / pad 1.524, identical in upstream's `master` carrier (upstream's footprint, not ours). Module J1/J3 holes are 1.0 mm. sqrt(2) x 0.64 = 0.905 mm. A square-pin header can't enter the carrier | **open**: the interconnect must be chosen (round machined pins fit 0.762 mm without a board change; or larger holes = new revision). Owner decision pending |
+| OR2 | RISK | module J2 (Tag-Connect pads) / carrier cutout | Cutout 7.874 x 5.334 mm (footprint Edge.Cuts); TC2030-IDC-NL body 9.906 x 6.096 mm: it can't enter; reach from outside unproven | Cutout confirmed from the footprint (1.524-9.398 x 1.905-7.239 mm). Cable size from the reviewer (DOCUMENTED, Tag-Connect sheet 2; not rechecked) | **open**: tied to OR1. A removable (socketed) module makes SWD reachable off the carrier |
+| OR3 | NOTE | `docs/ordering.md`, fab README, HANDOFF | Old pointers to candidate files, 5-board stock check and old prices; quantity is now 2 | Confirmed | open: update with the OR1 answer |
+| OR4 | RISK | first power-up | No current-limited source specified; a destructive first-power fault isn't covered by bare spares under one-order-only | Agreed; the owner has no bench supply | open: first-power source and stop values before energizing |
+
 ### Round 7 — 2026-10-25, Codex (Astra; a re-check of the round 6 fixes at `18b6cef`)
 Commit: 18b6cef (board, firmware and generators unchanged since; later commits changed notes and check scripts only)
 Raw report: `audit/astra-2026-10-25b/` (PR #3, branch `review/astra-2026-10-25b` at `dac8653`). Mode B, own worktree,
