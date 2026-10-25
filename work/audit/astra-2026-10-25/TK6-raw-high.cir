@@ -1,0 +1,34 @@
+* full scale corner: supply 13.4 V, +5V 4.8 V, load 4.7k
+.include models/lmx58_lm2904.lib
+VBAT battery 0 13.4
+R9 battery vcc 1k
+C16 vcc 0 10u
+C17 vcc 0 100n
+V5 five 0 4.8
+VIN input 0 PWL(0 1 2m 1 6m 2.976190476)
+XA input inv vcc 0 oa LMX58_LM2904
+XB 0 unused vcc 0 unused LMX58_LM2904
+R6 conn inv 68k
+R7 inv 0 100k
+C15 oa inv 1n
+R8 oa clamp 330
+R11 clamp conn 470
+RL conn 0 4.7k
+CL conn 0 1n
+.model d4148 D(Is=2.52n N=1.752 Rs=.568 Cjo=4p)
+D3 clamp five d4148
+D4 0 clamp d4148
+.ic v(vcc)=13.4
+.save v(conn) v(vcc) i(V5)
+.tran 2u 60m 0 5u uic
+.control
+run
+meas tran vout AVG v(conn) from=55m to=60m
+meas tran vcc AVG v(vcc) from=55m to=60m
+meas tran i5 AVG i(V5) from=55m to=60m
+meas tran vlo MIN v(conn) from=55m to=60m
+meas tran vhi MAX v(conn) from=55m to=60m
+echo "RES $&vout $&vcc $&i5 $&vlo $&vhi"
+quit
+.endc
+.end

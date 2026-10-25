@@ -1,0 +1,3 @@
+TK6-raw-high raw completion True supply  13.4 V  +5V 4.8 V  load 4.7k   connector 4.9338 V (-66 mV)  op-amp rail 8.26 V  D3 into +5V 3.36 mA  settled 0.00 mV
+TK6-raw-low raw completion True supply   9.0 V  +5V 4.8 V  load 4.7k   connector 4.8218 V (-178 mV)  op-amp rail 7.02 V  D3 into +5V 0.23 mA  settled 0.00 mV
+TK6-raw-10k raw completion True supply  11.6 V  +5V 5.0 V  load 10k    connector 5.0022 V (+2 mV)  op-amp rail 10.37 V  D3 into +5V 0.00 mA  settled 0.01 mV

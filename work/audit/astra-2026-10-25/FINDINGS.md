@@ -1,11 +1,13 @@
-# Findings: Astra review / Codex, 2026-10-25 — round 6
+# Findings: Codex (Astra → 6.1 Sol) — round 6
 
 Reviewed: `e0b802a5ca53d679b9fa85e5889658d3f74d6dab` on `analog-out`. Mode B, full repo (prior rounds visible, not blind).
-Tools available: shell, KiCad, ngspice + locally licensed TI model, ARM compiler. No hardware. Review branch/folder dated as requested by owner.
+Tools available: shell, KiCad, ngspice + locally licensed TI model, ARM compiler, QEMU. No hardware. Performed2026-10-24; folder dated2026-10-25 as requested. Owner confirmed switching from Astra to6.1Sol during this review; this is one continuous reviewer, not two independent audits.
 
 ## Verdict
 
-Would I order these files as they are? **Not yet assessed**: review in progress; no release or hardware approval implied.
+Would I order these files as they are? **No, not yet as a release/order package.** Two reproduced verification bugs remain: indirect recursion receives a finite stack PASS(R6-S6), and an aborted simulator can receive a wrapper PASS(R6-S8). Resolve those claims and obtain assembly rail/clearance acceptance(R6-S4). Backfeed and surge qualification remain conditional risks(R6-S2/S3).
+
+The circuit is plausible for a supervised prototype. No new proven reversed part, open connection, or production heater-control defect was found. The heater fix recovers in host sequence tests; nominal analog and stability results reproduce. Safe connection to a particular ECU, power-ramp behavior, thermal stability and transient survival remain outside this evidence. A green check table is insufficient while its checkers have false-PASS cases.
 
 ## Coverage (one row per task in TASKS.md; fill it in as you go, not at the end)
 
@@ -16,13 +18,13 @@ Would I order these files as they are? **Not yet assessed**: review in progress;
 | TK3 Boot level | PARTLY | — | Digital fix checks out: primary datasheets, both board.h files, SEL1 compile guard. Worst old-pullup bound 0.575V at 3.6V including R3+1%; PWM load <0.774mA. Rail sequencing/analog reset transient not established; see TK3-boot.md. |
 | TK4 Invalid output | PARTLY | — | 21/21 aux tests pass, source path table in TK4-invalid.md. Normal invalid states command5V; sensor fault detection and receiver response cannot be universalized from this logic. |
 | TK5 Heater clamp | PARTLY | — | 70/70 host tests and 2 new production-code sequence tests pass. 60s clamp and30 recovery cycles; integrator bounded±3V. See TK5-heater.md; thermal plant/overshoot not simulated. |
-| TK6 Analog DC | PARTLY | R6-S1 | Independent exact RC ripple0.658/0.421mV at50/80%; gain tolerance calculation; primary LM2904 limits. Full-scale sweep running; longer-window/zero cases queued for later evidence update. TK6-calculations.md. |
-| TK7 Stability | PARTLY | — | Reviewed actual E topology and measurement validity; five nominal step cases queued serially behind TK6. No phase-margin/process-corner claim. TK7-stability.md. |
+| TK6 Analog DC | PARTLY | R6-S1,R6-S8 |27nominal corner values reproduce; accepted deficit66..178mV. Exact RC ripple0.658/0.421mV. Zero-model floor0.517V(pull-down)/1.298V(pull-up);120ms supply-start runs abort and are rejected. TK6-results.md. |
+| TK7 Stability | FINDING | R6-S7 | Original25cases plus5delayed E cases:0% overshoot to10nF,9.2% at47nF,22.8% at100nF. No process-corner/phase-margin proof. TK7-stability.md. |
 | TK8 Faults | FINDING | R6-S2 | Calculated12V injection13.6mA into held5V rail; no guaranteed sink. Grounded output~5.2mA in illustrative coupled-supply model. Open power ground routes heater current through receiver ground. TK8-faults.md. |
 | TK9 Op-amp supply | FINDING | R6-S3 | At illustrative38.9V/400ms:R9 437mW/0.175J,D5 376mW/0.150J. Exact vendor pulse/thermal data missing; nominal ratings do not establish survival. TK9-surge.md. |
 | TK10 Layout | FINDING | R6-S4 | DRC0new/0open; vias0new; layout0triggers. Supply-cap distances1.69/3.94/2.73mm; C11 body~1.60mm from edge vs JLC2.5mm rule. TK10-layout.md/log. |
 | TK11 Wiring sheet | PARTLY | R6-S5 |12/12 J3 and6/6 J2 pad mappings match PCB; Tag-Connect primary drawing confirms1:1IDC cable. Clone/moulded housing identity and through-cutout reach remain physical checks. TK11-wiring.md. |
-| TK12 Firmware diff | FINDING | R6-S6 | Read18changed files; fresh firmware package passes(21616Bapp,CRC984fc2b4). Existing checker passes but real indirect-recursion ELF falsely passes116/256B. Configured checks running; TK12-firmware.md. |
+| TK12 Firmware diff | FINDING | R6-S6 | Read18changed files; fresh package passes(21616Bapp,CRC984fc2b4).25configured checks:23pass,2accepted advisory failures. Real indirect-recursion ELF falsely passes116/256B. TK12-firmware.md. |
 | TK13 These docs | OK | R6-S1,R6-S5 | Reviewed task/report/setup against sources and all25configured checks. Specific corrections below; checker itself reports docs consistent. |
 | TK99 Beyond the list | FINDING | R6-S8 | Real ngspice early abort prints finite zero measurements; production full-scale wrapper accepts27/27 injected aborted-zero cases,exit0. TK99-zero-regression.log and TK99-sim-validation.md. |
 
@@ -83,11 +85,16 @@ MEASURED: sustained zero clamp recovers; no permanent stuck state in30 cycles. C
 
 ### TK6
 
-CALCULATED exact periodic RC states give0.658mV p-p at50% and0.421mV at80%, residual<1e-15V (`TK6-filter.log`). Gain1.68, resistor-only extremes1.666535..1.693737. Full-scale and zero conclusions remain pending simulator completion; no result is inferred from the designer's saved output. Primary datasheet contradicts the3mV maximum offset in the accuracy documentation (R6-S1).
+CALCULATED exact periodic RC states give0.658mV p-p at50% and0.421mV at80%, residual<1e-15V (`TK6-filter.log`). Gain1.68, resistor-only extremes1.666535..1.693737. Nominal full-scale values reproduce, with validity limitations and failed extended runs separated in TK6-results.md. Primary datasheet contradicts the3mV maximum offset in the accuracy documentation (R6-S1).
 
 ## Could not check
 
-<what, and what you would need>
+- JLC placement preview, approved panel/rail plan, delivered part identity and order-day stock/quote. No order or release performed.
+- Physical supply ramps, brownouts, warm resets and powered-receiver/unpowered-controller behavior; a meter cannot exclude short transients.
+- Heater thermal plant, physical disconnect latency, actual receiver/cable behavior, ground offset and fuse coordination.
+- Exact UNI-ROYAL/MDD pulse qualification and protected load-dump waveform.
+- TI macromodel startup-basin independence: extended supply-start attempts abort numerically.
+- A formal production worst-case stack bound: the counterexample proves the checker is unsound, not that production recurses.
 
 ## TK13: what would have made this review faster
 
