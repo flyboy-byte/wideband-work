@@ -64,9 +64,27 @@ See `renders/module/swd-pads.png` (from `gen/swd_diagram.py`, drawn from the boa
 
 - J2 on the module's underside: pad 1 = 3.3 V (target sense), 2 = SWDIO, 3 = nRESET, 4 = SWCLK, 5 = GND,
   6 = SWO (not connected). DOCUMENTED, module netlist.
-- The pattern looks like Tag-Connect's ARM Cortex layout, which means the **TC2030-CTX-NL** cable (10-pin 0.05"
-  Cortex Debug plug), for a probe with that connector or with STDC14 (STLINK-V3MINIE). FROM MEMORY: confirm the
-  cable's pinout against J2 before buying.
+- The pattern looks like Tag-Connect's ARM Cortex layout. A probe with the 10-pin 0.05" Cortex connector takes the
+  **TC2030-CTX-NL**; the owner's route below uses the **TC2030-IDC-NL** instead (FROM MEMORY: confirm either cable's
+  pinout against J2 before buying).
+- **Owner's route (2026-10-24): HiLetgo ST-Link V2 clone + TC2030-IDC-NL + 4 male-to-female jumpers.** The clone has a
+  2x5 0.1" header with its own labelled pinout (no ARM 10-pin), and the IDC-NL ends in a 6-pin 0.1" socket wired 1:1 to
+  the J2 pads (FROM MEMORY: check with a meter before first use).
+
+  | J2 pad / IDC pin | Signal | Clone pin |
+  | --- | --- | --- |
+  | 2 | SWDIO | SWDIO |
+  | 4 | SWCLK | SWCLK |
+  | 5 | GND | GND |
+  | 3 | nRESET | RST (optional) |
+  | 1 | 3.3 V | **not connected**: the clone's 3.3 V is a supply output, not a sense input |
+  | 6 | SWO | not connected |
+
+  Flash with stlink-tools: `st-flash write work/fw-build/<commit>/wideband_image_with_bl.bin 0x08000000`, then read back
+  and compare (`st-flash read`, `docs/flashing-and-test-plan.md` step 5). No mass erase, no option bytes. Clones may
+  carry remarked chips and ST's CubeProgrammer may refuse them; stlink-tools / OpenOCD usually work (FROM MEMORY).
+  Alternative with voltage sense: STLINK-V3MINIE; whether the TC2030-CTX-NL plugs into its 14-pin STDC14 socket without
+  an adapter is UNKNOWN.
 - The three locating holes are 2 on one side and 1 on the other, so the "-NL" plug only goes on one way.
 - **Flash the module before soldering it to the carrier**, while J2 is fully exposed. After that J2 sits in the
   carrier's 8.0 x 5.5 mm cutout, about 1 mm clear of the pad pattern each side. Whether the plug body fits through the

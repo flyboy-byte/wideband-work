@@ -107,8 +107,8 @@ little more than 2.
 
 | What | Why | Part / note | Status |
 | --- | --- | --- | --- |
-| SWD programmer | first flash, trim reflash, recovery | ST-LINK V2 clone or STLINK-V3MINIE (FROM MEMORY ~$10-20) | D4, owner |
-| Tag-Connect cable | the module's J2 pads | TC2030-CTX-NL (no legs, 10-pin Cortex plug; J2's pinout looks like Tag-Connect's Cortex layout, FROM MEMORY ~$40-50). `docs/wiring.md`, `renders/module/swd-pads.png` | D4. Budget alternative: hold the probe wires on the pads by hand for each flash (fiddly, and trim means reflashing) |
+| SWD programmer | first flash, trim reflash, recovery | **HiLetgo ST-Link V2 clone** (owner's pick, ~$10, FROM MEMORY); STLINK-V3MINIE is the alternative with voltage sense | D4 chosen 2026-10-24 |
+| Tag-Connect cable + jumpers | the module's J2 pads to the clone | **TC2030-IDC-NL** (no legs, 6-pin 0.1" socket, 1:1 to J2; FROM MEMORY ~$40) + 4 male-to-female jumpers; wiring table in `docs/wiring.md` | to buy |
 | J3 connector | carrier sensor/power/CAN/output header, hand-soldered | Molex 36783-1201 (MX120G, 12-way, right angle, -40..105 C) | DOCUMENTED ([Molex](https://www.molex.com/en-us/products/part-detail/367831201)) |
 | J3 mating plug + terminals + seals | the harness side | Molex 36792-1201 (MX120G 12-circuit sealed receptacle; Newark lists it as the mate); terminals and seals per Molex AS-36783-001-001 | REPORTED, confirm terminals |
 | Bosch LSU 4.9 sensor | the sensor | Bosch 0 258 017 025 or equivalent (`parts_research.md`: EUR 70-91, REPORTED) | owner |

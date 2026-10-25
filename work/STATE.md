@@ -53,17 +53,17 @@ Mark a stage done only when its exit condition is true. Strike through, don't de
 | DRC module (errors) | FAIL (advisory) | DRC 11 errors: solder_mask_bridge 10, clearance 1 (report checks/out/wideband_controller-drc.json) | 2026-10-24 | `wideband_controller.kicad_pcb` 0179d031bc63 |
 | Module board identical to upstream | PASS | module board vs upstream master: 0 file(s) differ | 2026-10-24 |  |
 | ERC module (errors) | PASS | ERC 0 errors (report checks/out/wideband_controller-erc.json) | 2026-10-24 | `wideband_controller.kicad_sch` e54843a1e6ef |
-| DRC carrier (errors) | FAIL (advisory) | DRC 23 errors: courtyards_overlap 14, copper_edge_clearance 3, malformed_courtyard 3, starved_thermal 2 (report checks/out/board_carrier-drc.json) | 2026-10-24 | `board_carrier.kicad_pcb` 8bd963c4811b |
-| Carrier DRC vs upstream baseline (new violations, unconnected) | PASS | DRC vs upstream: 0 new violations, 0 unconnected | 2026-10-24 | `board_carrier.kicad_pcb` 8bd963c4811b |
-| Carrier: no new vias in SMD pads | PASS | via in pad: 0 new, 0 upstream | 2026-10-24 | `board_carrier.kicad_pcb` 8bd963c4811b |
-| Carrier layout review (sampled coupling and return-path heuristics) | PASS | review triggers: 0 | 2026-10-24 | `board_carrier.kicad_pcb` 8bd963c4811b, `layout_review.py` 2dfa9e8efa14, `layout_metrics.py` 23c78d58fd8a |
+| DRC carrier (errors) | FAIL (advisory) | DRC 23 errors: courtyards_overlap 14, copper_edge_clearance 3, malformed_courtyard 3, starved_thermal 2 (report checks/out/board_carrier-drc.json) | 2026-10-24 | `board_carrier.kicad_pcb` 814ef38918b1 |
+| Carrier DRC vs upstream baseline (new violations, unconnected) | PASS | DRC vs upstream: 0 new violations, 0 unconnected | 2026-10-24 | `board_carrier.kicad_pcb` 814ef38918b1 |
+| Carrier: no new vias in SMD pads | PASS | via in pad: 0 new, 0 upstream | 2026-10-24 | `board_carrier.kicad_pcb` 814ef38918b1 |
+| Carrier layout review (sampled coupling and return-path heuristics) | PASS | review triggers: 0 | 2026-10-24 | `board_carrier.kicad_pcb` 814ef38918b1, `layout_review.py` 2dfa9e8efa14, `layout_metrics.py` 23c78d58fd8a |
 | Layout geometry helper unit tests | PASS | OK | 2026-10-24 | `layout_metrics.py` 23c78d58fd8a, `test_layout_metrics.py` 2d93b205dd56 |
-| Layout track-order regression | PASS | PASS: tested orders agree | 2026-10-24 | `board_carrier.kicad_pcb` 8bd963c4811b, `layout_review.py` 2dfa9e8efa14, `layout_metrics.py` 23c78d58fd8a, `audit_layout_order.py` c40bda9f97e2 |
+| Layout track-order regression | PASS | PASS: tested orders agree | 2026-10-24 | `board_carrier.kicad_pcb` 814ef38918b1, `layout_review.py` 2dfa9e8efa14, `layout_metrics.py` 23c78d58fd8a, `audit_layout_order.py` c40bda9f97e2 |
 | ERC carrier (errors) | PASS | ERC 0 errors (report checks/out/board_carrier-erc.json) | 2026-10-24 | `board_carrier.kicad_sch` 742b4bfdedd3 |
 | Carrier netlist self-check (generator table) | PASS | netlist self-check: 18 nets, 0 problems | 2026-10-24 | `board_carrier.kicad_sch` 742b4bfdedd3, `gen_carrier_sch.py` c35c337eebd7 |
 | No hand edits waiting | PASS | no drift | 2026-10-24 |  |
-| JLC rotation, origin and pin names from each part's EasyEDA footprint | PASS | jlc rotation: 38 parts measured, 4 need a correction, 0 problem(s) | 2026-10-24 | `board_carrier.kicad_pcb` 8bd963c4811b, `board_carrier.kicad_sch` 742b4bfdedd3 |
-| Fab candidate (out/carrier) matches the board: Gerbers, BOM, CPL, not-fitted | PASS | fab files: 38 placed, 6 not fitted, outline 40.00 x 51.50 mm, 0 problem(s) | 2026-10-24 | `board_carrier.kicad_pcb` 8bd963c4811b, `carrier-bom.csv` 790bdb6de3f9, `carrier-cpl.csv` 66a7fdc2200c, `carrier-gerbers.zip` 06e83cf93099 |
+| JLC rotation, origin and pin names from each part's EasyEDA footprint | PASS | jlc rotation: 38 parts measured, 4 need a correction, 0 problem(s) | 2026-10-24 | `board_carrier.kicad_pcb` 814ef38918b1, `board_carrier.kicad_sch` 742b4bfdedd3 |
+| Fab candidate (out/carrier) matches the board: Gerbers, BOM, CPL, not-fitted | PASS | fab files: 38 placed, 6 not fitted, outline 40.00 x 51.50 mm, 0 problem(s) | 2026-10-24 | `board_carrier.kicad_pcb` 814ef38918b1, `carrier-bom.csv` 790bdb6de3f9, `carrier-cpl.csv` 66a7fdc2200c, `carrier-gerbers.zip` 94a3500d6a70 |
 | Firmware: bootloader DATA writes stay inside the app partition (F1) | PASS | 52 guard cases; 0 unsafe accepted writes, 0 valid writes refused (stub only) | 2026-10-24 | `bootloader.cpp` 21cbac0cd469, `bootloader_bounds.h` 72e216e2e7bc |
 | Firmware: package checker accepts good images, rejects bad ones (F2) | PASS | 21 package cases, 0 wrong verdict(s) | 2026-10-24 | `fw_package.py` 34a1c5eb78dd, `wideband_image.h` 1ee39ace5944, `bootloader.cpp` 21cbac0cd469 |
 | Firmware: HardFault entry reaches the C handler on a Cortex-M0 (F9, QEMU microbit) | PASS | fault entry on Cortex-M0: as expected | 2026-10-24 | `main_hardfault_asm.S` d32262764759, `main.cpp` f1c2e96ebf08 |
@@ -72,10 +72,10 @@ Mark a stage done only when its exit condition is true. Strike through, don't de
 | Firmware: static worst-case stack per thread fits (F8 estimate, f0 build) | PASS | stack estimate: ok, smallest margin 64 B | 2026-10-24 | `auxout.cpp` 417044786829, `can.cpp` 65a7078908bf, `heater_thread.cpp` 1c61085261f8, `pump_control.cpp` 6449053857fe, `sampling_thread.cpp` 65d58bbf0b52 |
 | Stack checker: known-answer Cortex-M0 cases incl. a pointer in a literal pool (Codex R41-CX1) | PASS | stack checker cases: 3, 0 wrong verdict(s) | 2026-10-24 | `stack_estimate.py` 4a8fc8d65248 |
 | Sim wrappers fail when ngspice gives no valid result (Codex R41-CX2) | PASS | sim wrappers: 0 wrong verdict(s) | 2026-10-24 | `stability.sh` 34e48e6b3d5a, `load_accuracy.sh` c9a8b3e9ea4e |
-| Output low from reset until the app drives PB1 (R3 vs the PB1 pull in both board.h; outside review B1) | PASS | boot level: output low from reset | 2026-10-24 | `board_carrier.kicad_pcb` 8bd963c4811b, `board.h` 0a70a2bb2fa0, `board.h` 1dc40c1c92c0 |
+| Output low from reset until the app drives PB1 (R3 vs the PB1 pull in both board.h; outside review B1) | PASS | boot level: output low from reset | 2026-10-24 | `board_carrier.kicad_pcb` 814ef38918b1, `board.h` 0a70a2bb2fa0, `board.h` 1dc40c1c92c0 |
 | Module order files: JLC rotation, origin and pin names from EasyEDA against the order CPL (upstream rev C + fixes) | PASS | jlc rotation: 57 parts measured, 6 need a correction, 0 problem(s) | 2026-10-24 | `wideband_controller.kicad_pcb` 0179d031bc63, `module_fab.py` fe36cd34cf0f, `jlc_rotation.py` b1455144624f |
 
-Written by `checks/run_all.py` at commit c872a61. Don't edit by hand.
+Written by `checks/run_all.py` at commit ba01449. Don't edit by hand.
 <!-- checks:end -->
 
 ## Bring-up results
@@ -90,6 +90,7 @@ Written by `checks/run_all.py` at commit c872a61. Don't edit by hand.
 - 2026-10-24 evening: owner delegated B1/N1/R1 and the heater clamp to Claude and said push everything (his cousin's review, Codex's PR and second pass, our tests). Done: `AUDIT.md` rounds 4 and 5 with follow-through; `ROADMAP.md` for the route. Watch for a PR from the cousin (he may not be finished) or anyone else.
 - 2026-10-24 External-review prep done: `REVIEW.md`; checks use `origin/master` when a clone has no local `master` (`checks/upstream_ref.py`); reviewers' raw output under `audit/<reviewer>-<date>/` is now tracked (packs are not); a fresh clone ran all 20 checks after building bootloader + app (stack check needs the ELF). pcb-design skill lessons added (pad pairing by pin function, fab warnings in the DRC gate, BOM from the board, independent fab-file check, outside reviewers, SPICE memory): dotfiles commit 70aa5e9, pushed 2026-10-24.
 - Owner (do not re-ask): engine-bay heat is not a design driver for this prototype.
+- Owner (2026-10-24, do not re-ask): first-flash hardware (D4) = HiLetgo ST-Link V2 clone + TC2030-IDC-NL + jumpers (`docs/wiring.md`).
 - Owner (2026-10-24, do not re-ask): no pushing or merging until the outside reviewer (his cousin's Opus) has audited; keep working locally. Upstream's own analog output (PR #352, merged 2026-10-24) is not used: we use our design (`docs/analog-out.md`).
 - 2026-10-24 Codex round 4 on fork PR #1 (not merged). CX1 stack checker and CX2 sim wrappers fixed locally (`AUDIT.md`, follow-through part 1). Upstream heater bug (negative voltage squared to full duty when the sensor runs hot): fix prepared on local branch `heater-clamp`, owner decides.
 - **Board/fab**: audit round 4 (Codex, plus an outside Opus reviewer via `REVIEW.md`): ~~rebuild the pack first~~ done 2026-10-24 at r41 (`checks/review_pack.sh`). ~~Push needed before an outside reviewer can clone~~ pushed 2026-10-24. JLC quote (owner): Gerbers in JLC's viewer, placement preview (D2 first), stock C13585/C14663/C15849/C7934, edge rails (C11 1.85 mm from edge), Basic 470R 1206 for R11. ~~TODO `docs/ordering.md`~~ written 2026-10-24 (quote steps, options, placement-preview list, substitution rule, APIs).
