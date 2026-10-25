@@ -75,7 +75,8 @@ The priority list and the "known and accepted" list are in `work/AUDIT.md`, unde
    the module order files.
 1. **Fab files against the design.** Check every CPL rotation and offset, the BOM part numbers and the not-fitted
    list. D2 and U2 are the tricky parts. The rotation *sense* (JLC = KiCad, counter-clockwise from the top) is
-   INFERRED. The module's files (`python3 gen/module_fab.py`) haven't been through our rotation check.
+   INFERRED. The module's order files (`python3 gen/module_fab.py`) are checked by `checks/jlc_rotation.py --board module`. Q1 is
+   corrected there; is that right?
 2. **The analog stage.** R11 is inside the DC loop, with feedback taken at the connector. Check stability into
    cable capacitance, accuracy into pull-up and pull-down receivers, and what happens with 12 V on J3-5.
 3. **Power.** The op-amp rail is 12 V → 1k → 18 V zener behind an SMCJ24CA TVS.

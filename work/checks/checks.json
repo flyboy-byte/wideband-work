@@ -268,5 +268,18 @@
       "../firmware/boards/f0_module/board.h",
       "../firmware/boards/f0_module/bootloader/cfg/board.h"
     ]
+  },
+  {
+    "name": "Module order files: JLC rotation, origin and pin names from EasyEDA against the order CPL (upstream rev C + fixes)",
+    "cmd": [
+      "sh",
+      "-c",
+      "python3 gen/module_fab.py >/dev/null && python3 checks/jlc_rotation.py --board module"
+    ],
+    "files": [
+      "../hardware/board_module/wideband_controller.kicad_pcb",
+      "gen/module_fab.py",
+      "checks/jlc_rotation.py"
+    ]
   }
 ]

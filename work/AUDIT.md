@@ -39,8 +39,13 @@ Round 3 (Codex, board r36) supersedes the historical R11/full-scale/grounding co
   5. **New sim** `sim/full_scale_corners.sh`: TI model with D3/D4, the R9 supply and +5V at 4.8/5.0/5.2 V. It starts
      with `uic` because the operating point fails through R9. Is that start valid, and is 60 ms enough to settle?
   6. **Module order files**: R10 C23092 -> C2087389 (61.9R 0.1 %) and C3 C1585 -> C106862 (33n X7R). J1/J3 headers
-     are taken off the BOM/CPL. Are the substitutes right for those positions in upstream's circuit? The module CPL
-     hasn't been through our rotation check.
+     are taken off the BOM/CPL. Are the substitutes right for those positions in upstream's circuit?
+     Module rotation check (`checks/jlc_rotation.py --board module`, new):
+     - Upstream's CPL agrees on 56 of 57 parts.
+     - Q1 (VND14NV04, TO-252) is corrected 180 -> 0 deg and shifted 0.91 mm (`gen/module_fab.py` CPL_FIX). Is that right?
+     - U9's EasyEDA pin names are overridden (`BAD_EASYEDA_NAMES`). Check the XC6206 pinout against Torex.
+     - The checker no longer folds a two-lead tab part's 180 into 0 (only true two-pad parts fit either way); the
+       carrier's 38 rotations are unchanged.
   7. **Live stock check** `checks/bom_stock.py` (JLC's parts API) and the cost/route in `ROADMAP.md`.
 - Still open from before:
   - The rotation *sense* of the CPL is INFERRED (JLC = KiCad). D2 (SS54) is paired by pin name.

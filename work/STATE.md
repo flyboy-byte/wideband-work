@@ -1,6 +1,6 @@
 # STATE — rusEFI wideband (module + carrier)
 
-Status: 2026-10-24 (evening) — board r41 + B1 fix (R3 4.7k; layout unchanged), firmware with PB1 pull-down, invalid = 5.0 V and the heater clamp; 23 checks: 0 failed, 2 advisory. Five audit rounds; round 5 (cousin's Claude) BUG B1 fixed, RISK R1 confirmed on TI's model (only 4.7k receivers with +5V low miss full scale). **Next: re-audit of these changes (round 6), module pre-order check, then the order (owner).** The whole road, costs, shopping list and manufacturer choice: `ROADMAP.md`. JLC stock checked live for both boards (`checks/bom_stock.py`); module JLC files staged with 2 substitutions (`gen/module_fab.py`). Pushed 2026-10-24 (owner: push it all).
+Status: 2026-10-24 (evening) — board r41 + B1 fix (R3 4.7k; layout unchanged), firmware with PB1 pull-down, invalid = 5.0 V and the heater clamp; 23 checks: 0 failed, 2 advisory. Five audit rounds; round 5 (cousin's Claude) BUG B1 fixed, RISK R1 confirmed on TI's model (only 4.7k receivers with +5V low miss full scale). **Next: re-audit of these changes (round 6, hand-off ready), then the order (owner).** Module pre-order check done: Q1 (VND14 heater switch) would have been placed turned 180 from upstream's CPL; corrected in the staged files. The whole road, costs, shopping list and manufacturer choice: `ROADMAP.md`. JLC stock checked live for both boards (`checks/bom_stock.py`); module JLC files staged with 2 substitutions (`gen/module_fab.py`). Pushed 2026-10-24 (owner: push it all).
 Revision in progress: none yet   Revisions used (never reused): none by the owner. Upstream module exports are rev A, B, C (upstream's own scheme, not ours).
 <If the project already names revisions its own way (v1.0.0), keep its scheme.>
 Review pages: status report https://claude.ai/artifact/YRsjXKGZKG5AFbwkcMuYZ4 (private; rebuilt by `checks/report.py`)  fit check <link>  audit <link>
@@ -73,8 +73,9 @@ Mark a stage done only when its exit condition is true. Strike through, don't de
 | Stack checker: known-answer Cortex-M0 cases incl. a pointer in a literal pool (Codex R41-CX1) | PASS | stack checker cases: 3, 0 wrong verdict(s) | 2026-10-24 | `stack_estimate.py` 4a8fc8d65248 |
 | Sim wrappers fail when ngspice gives no valid result (Codex R41-CX2) | PASS | sim wrappers: 0 wrong verdict(s) | 2026-10-24 | `stability.sh` 34e48e6b3d5a, `load_accuracy.sh` c9a8b3e9ea4e |
 | Output low from reset until the app drives PB1 (R3 vs the PB1 pull in both board.h; outside review B1) | PASS | boot level: output low from reset | 2026-10-24 | `board_carrier.kicad_pcb` 8bd963c4811b, `board.h` 0a70a2bb2fa0, `board.h` 1dc40c1c92c0 |
+| Module order files: JLC rotation, origin and pin names from EasyEDA against the order CPL (upstream rev C + fixes) | PASS | jlc rotation: 57 parts measured, 6 need a correction, 0 problem(s) | 2026-10-24 | `wideband_controller.kicad_pcb` 0179d031bc63, `module_fab.py` fe36cd34cf0f, `jlc_rotation.py` b1455144624f |
 
-Written by `checks/run_all.py` at commit 32139c1. Don't edit by hand.
+Written by `checks/run_all.py` at commit c872a61. Don't edit by hand.
 <!-- checks:end -->
 
 ## Bring-up results

@@ -1,5 +1,5 @@
 {
- "headline": "Board r41: analog stage on the top (one-sided JLC assembly), feedback taken at the output pin so any receiver input reads right (simulated), watchdog in the firmware, fab files exported and checked part by part. Nothing ordered or built; outside audit round 4 is next, then your JLC quote.",
+ "headline": "Board r41 + B1 fix (2026-10-24): output held at 0 V from reset (R3 4.7k, PB1 pull-down), invalid lambda reads 5 V (lean end), heater no longer heats a hot sensor. Five audit rounds; round 6 (re-audit of these changes) is next, then your JLC order: about $180-215 for 5 carriers + 5 modules, every part in stock. Route and shopping list: work/ROADMAP.md.",
  "tests": [
   {
    "id": "r33",
@@ -87,15 +87,51 @@
   },
   {
    "id": "Audit 4",
-   "what": "Codex audit of r41 and the fab files.",
-   "state": "todo",
-   "result": "Pack: work/audit/carrier-f-2026-10-24/."
+   "what": "Codex audit of r41 (fork PR #1, merged).",
+   "state": "done",
+   "result": "2 checker bugs (stack estimate, sim wrappers) fixed with regression tests; heater bug found in its unfinished second pass."
   },
   {
-   "id": "Quote",
-   "what": "JLC quote and placement preview (your money call).",
+   "id": "Heater",
+   "what": "Hot sensor got up to 100 % heater (upstream code: negative voltage squared).",
+   "state": "done",
+   "result": "Voltage clamped at 0; host test HotterSensorNeverGetsMoreHeat."
+  },
+  {
+   "id": "Audit 5",
+   "what": "Outside review by your cousin's Claude.",
+   "state": "done",
+   "result": "BUG B1 (full lean for 0.8 s at power-up) fixed: R3 4.7k + PB1 pull-down, check boot_level.py, bench A5. N1: invalid now 5 V."
+  },
+  {
+   "id": "R1",
+   "what": "Full scale into a 4.7k receiver with the clamps and real supply (TI model, 27 cases).",
+   "state": "done",
+   "result": "10k and up: +2 mV everywhere. 4.7k: -66 to -178 mV only when +5V sits at 4.8 V. Accepted; bench A7 measures +5V."
+  },
+  {
+   "id": "Module",
+   "what": "Module (upstream rev C) order files and rotation check.",
+   "state": "done",
+   "result": "2 parts out at JLC substituted (R10 61.9R, C3 33n). 56 of 57 rotations agree with upstream; Q1 heater switch would have gone on turned 180: fixed."
+  },
+  {
+   "id": "Stock",
+   "what": "Live JLC stock and price for both BOMs (bom_stock.py).",
+   "state": "done",
+   "result": "All in stock; parts about $20 (carriers) + $57 (modules) for 5 each."
+  },
+  {
+   "id": "Audit 6",
+   "what": "Re-audit of the 2026-10-24 changes (Codex and/or your cousin).",
    "state": "todo",
-   "result": "Check D2 and every IC in the preview; stock on C13585, C14663, C7934."
+   "result": "Start at REVIEW.md; pack: sh checks/review_pack.sh."
+  },
+  {
+   "id": "Order",
+   "what": "Programmer, bench gear, then the JLC order (your money calls).",
+   "state": "todo",
+   "result": "ROADMAP.md shopping list; ordering.md for the quote; placement preview Q1 and D2 first."
   }
  ]
 }

@@ -1,6 +1,6 @@
 {
  "date": "2026-10-24",
- "git_head": "32139c1",
+ "git_head": "c872a61",
  "results": [
   {
    "name": "DRC module (errors)",
@@ -211,6 +211,16 @@
     "../hardware/board_carrier/board_carrier.kicad_pcb": "8bd963c4811b",
     "../firmware/boards/f0_module/board.h": "0a70a2bb2fa0",
     "../firmware/boards/f0_module/bootloader/cfg/board.h": "1dc40c1c92c0"
+   }
+  },
+  {
+   "name": "Module order files: JLC rotation, origin and pin names from EasyEDA against the order CPL (upstream rev C + fixes)",
+   "status": "pass",
+   "summary": "jlc rotation: 57 parts measured, 6 need a correction, 0 problem(s)",
+   "files": {
+    "../hardware/board_module/wideband_controller.kicad_pcb": "0179d031bc63",
+    "gen/module_fab.py": "fe36cd34cf0f",
+    "checks/jlc_rotation.py": "b1455144624f"
    }
   }
  ]

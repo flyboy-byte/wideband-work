@@ -15,8 +15,9 @@ Prices are REPORTED, from JLC's pages and live API on 2026-10-24; re-read the qu
 - **Module (upstream's board, rev C)**: not modified by us.
   - Its JLC files are staged in `work/out/module/` (`gen/module_fab.py`), with two BOM swaps for parts JLC can't
     supply (R10 61.9R, C3 33n). The hand-soldered headers are taken off the assembly list.
-  - It has not been through our rotation check. Upstream designed it for JLC, but we haven't confirmed that anyone
-    built rev C from these exact files (UNKNOWN).
+  - Rotation check done (57 parts): upstream's CPL agrees with the EasyEDA measurement on 56. Q1 (VND14NV04 heater switch,
+    TO-252) needed 0 deg, not 180, so it's corrected in the staged CPL. Whether anyone built rev C from these exact
+    files is UNKNOWN.
 - **Firmware**: builds at 21.5 kB, with RAM full by design.
   - 70 host tests and 21 analog-output tests pass; the stack estimate fits with a 64 B margin.
   - Nothing has run on hardware yet.
@@ -27,7 +28,7 @@ Prices are REPORTED, from JLC's pages and live API on 2026-10-24; re-read the qu
 | # | Step | Exit | Who | Money |
 | --- | --- | --- | --- | --- |
 | 1 | Re-audit of the 2026-10-24 changes (R3 4.7k and PB1 pull-down, invalid = 5 V, heater clamp, new checks and sims) | An audit round names the current commit with no open BLOCKER or BUG (`release.py` enforces it) | Codex and/or the cousin's Claude, then Claude verifies | no |
-| 2 | Module pre-order check | Our rotation/pin check run on the module CPL, or the JLC placement preview read part by part (U2 pin 1 first) | Claude (script) / owner (preview) | no |
+| 2 | ~~Module pre-order check~~ done 2026-10-24 | `checks/jlc_rotation.py --board module`: 57 parts. Upstream's CPL agrees on 56; **Q1 (VND14 heater switch) would have been placed turned 180 deg**, so it's corrected in `out/module/module-cpl.csv`. U9's EasyEDA pin names are wrong; the Torex PDF is to read. Owner still reads the placement preview, Q1 first | Claude / owner (preview) | no |
 | 3 | Buy the programmer and bench parts (list below) | In hand before the boards arrive | owner | ~$60-120 |
 | 4 | Order carrier + module at JLC, in one cart | `release.py` released the carrier; module files from `out/module/`; order rows in `ORDERS.md` | owner | ~$170-220 for 5 + 5 (below) |
 | 5 | While they ship (about 1-3 weeks, FROM MEMORY) | Flash package built and checked (`fw_package.py`); TC2030 pad-1 picture; wiring sheet with terminal numbers; bench power plan | Claude | no |
@@ -141,7 +142,7 @@ What it means:
 ## Everything else still open (one list)
 
 - Re-audit of the 2026-10-24 changes (step 1). Watch for a PR from the cousin; he may not be finished.
-- Module rotation/pin check (step 2).
+- Torex XC6206 datasheet: confirm pin 2 = VOUT (U9; EasyEDA's names say otherwise, a secondary source agrees with KiCad).
 - The J3 mating plug part number (shopping list).
 - R9/D5 surge (Codex C6) is not simulated. Power on the 1206 resistor at the TVS clamp level was 0.44 W against a
   0.25 W rating for an unknown time (Codex, INFERRED). Owner C1: no fault-survival requirement. It stays a known RISK

@@ -10,6 +10,9 @@
      turned 180, a different pinout under the same package).
 
   python3 checks/jlc_rotation.py [-v] [--fetch]     writes checks/jlc_rotation.json (designator -> CPL rotation)
+  python3 checks/jlc_rotation.py --board module     upstream's module board (rev C): LCSC numbers from the staged order
+                                                    BOM (gen/module_fab.py), then each part's rotation in upstream's CPL
+                                                    is compared with ours; writes checks/jlc_rotation_module.json
 
 EasyEDA data is cached in checks/easyeda/<LCSC>.json (public part data; --fetch gets missing ones from
 easyeda.com/api/products/<LCSC>/components, one request a second). Exit 1 on: a part with no data, no quarter turn that
@@ -31,11 +34,25 @@ SCH = os.path.join(REPO, 'hardware/board_carrier/board_carrier.kicad_sch')
 CACHE = os.path.join(HERE, 'easyeda')
 OUT = os.path.join(HERE, 'jlc_rotation.json')
 VERBOSE = '-v' in sys.argv
+MODULE = '--board' in sys.argv and sys.argv[sys.argv.index('--board') + 1] == 'module'
+if MODULE:
+    PCB = os.path.join(REPO, 'hardware/board_module/wideband_controller.kicad_pcb')
+    SCH = os.path.join(REPO, 'hardware/board_module/wideband_controller.kicad_sch')
+    OUT = os.path.join(HERE, 'jlc_rotation_module.json')
+    MODULE_BOM = os.path.join(HERE, '..', 'out', 'module', 'module-bom.csv')
+    MODULE_CPL = os.path.join(HERE, '..', 'out', 'module', 'module-cpl.csv')
 UNIT = 0.254          # EasyEDA footprint unit: 10 mil
 MAX_OFFSET = 2.0      # mm; smaller offsets go into the CPL position
 REPORT_OFFSET = 0.1   # mm; listed
 # Pin names that mean the same, normalised (upper case, letters and digits only)
-SAME = [{'VI', 'IN', 'VIN', 'INPUT'}, {'VO', 'OUT', 'VOUT', 'OUTPUT'}, {'K', 'CATHODE'}, {'A', 'ANODE'}]
+SAME = [{'VI', 'IN', 'VIN', 'INPUT'}, {'VO', 'OUT', 'VOUT', 'OUTPUT'}, {'K', 'CATHODE'}, {'A', 'ANODE'},
+        {'S', 'SOURCE'}, {'D', 'DRAIN'}, {'G', 'GATE'}]
+# Parts whose EasyEDA symbol pin names are wrong: pair by pad number, and don't compare names
+BAD_EASYEDA_NAMES = {
+    'C5446': 'XC6206P332MR: EasyEDA names pin 2 Vin and pin 3 Vout; the SOT-23 pinout is 1 VSS, 2 VOUT, 3 VIN as in KiCad '
+             '(REPORTED, a datasheet-extraction wiki, 2026-10-24; the Torex PDF is still to read), and upstream\'s CPL '
+             'agrees with the number pairing',
+}
 
 
 def fetch(lcsc):
@@ -139,9 +156,20 @@ def main():
     board = pcbnew.LoadBoard(PCB)
     sch = schematic_pins()
     problems, table = [], {}
+    order = {}
+    if MODULE:
+        import csv
+        if not os.path.exists(MODULE_BOM):
+            print('no out/module/module-bom.csv: run gen/module_fab.py first')
+            return 77
+        for r in csv.DictReader(open(MODULE_BOM)):
+            for d in r['Designator'].split(','):
+                order[d] = r['LCSC']
     for fp in sorted(board.GetFootprints(), key=lambda f: f.GetReference()):
         ref = fp.GetReference()
         lcsc = fp.GetFieldText('LCSC') if fp.HasField('LCSC') else ''
+        if MODULE:
+            lcsc = order.get(ref, '')     # what JLC will place: the order BOM, substitutions included
         pads = [p for p in fp.Pads() if p.GetNumber()]
         if not lcsc or not pads or any(p.GetAttribute() != pcbnew.PAD_ATTRIB_SMD for p in pads):
             continue
@@ -155,7 +183,9 @@ def main():
             ours.setdefault(p.GetNumber(), []).append((T(r.x), T(r.y)))
         ours = {n: (sum(q[0] for q in v) / len(v), sum(q[1] for q in v) / len(v)) for n, v in ours.items()}
         theirs = easyeda_pads(d)
-        names = easyeda_pin_names(d)
+        names = {} if lcsc in BAD_EASYEDA_NAMES else easyeda_pin_names(d)
+        if lcsc in BAD_EASYEDA_NAMES:
+            print(f'  {ref}: EasyEDA pin names not used: {BAD_EASYEDA_NAMES[lcsc]}')
         # Pair our pads with theirs: by pin name when both name the pin with letters, else by number
         def canon(n):
             n = norm(n)
@@ -217,7 +247,9 @@ def main():
         err, c = fits[0]
         # EasyEDA's land patterns are often longer, so pad centres sit up to about 0.5 mm further out: the best turn has
         # to fit within 0.8 mm and beat the next one by 0.5 mm (a wrong quarter turn is off by a pad pitch or more)
-        two_pin = len(common) == 2
+        # Only a two-terminal part fits either way round; a transistor with its tab left out also has two leads in the fit
+        # but is not symmetric (it folded a TO-252's 180 into 0 until 2026-10-24)
+        two_pin = len(common) == 2 and len(pads) == 2
         polar = ref[0] == 'D' and not all(re.fullmatch(r'A?\d', norm(sch.get((ref, n), '')) or '') for n in common)
         if err > 0.8:
             problems.append(f'{ref} {lcsc}: no quarter turn puts EasyEDA pads on ours (best {c} deg, {err:.2f} mm off)')
@@ -242,6 +274,12 @@ def main():
                 continue              # A1/A2 against 1/2: a bidirectional TVS
             if how.get(n) == 'band':
                 continue              # polarity settled by the cathode band above
+            if len(a) >= 2 and len(bname) >= 2 and (a.startswith(bname) or bname.startswith(a)):
+                continue              # PF0 / PF0OSCIN, VSSA / VSS: the same pin, one name longer
+            if a == 'V' and ref[0] == 'U':
+                continue              # an op-amp symbol's V+ / V- lose their sign in norm(): not comparable
+            if {a, bname} == {'G', 'IN'}:
+                continue              # a smart switch's IN drawn with a MOSFET symbol's G
             mism.append(f'pad {n}: schematic {a}, EasyEDA {bname}')
         if mism:
             problems.append(f'{ref} {lcsc}: pin names: ' + '; '.join(mism))
@@ -255,6 +293,31 @@ def main():
             print(f'  {ref:4s} {lcsc:8s} {d["result"]["title"][:22]:22s} correction {c:3d}  CPL {table[ref]["cpl_rot"]:5.0f}'
                   f'  fit {err:.2f} mm  offset {off:.2f} mm' + (f'  PIN NAMES: {mism}' if mism else ''))
     json.dump(table, open(OUT, 'w'), indent=1, sort_keys=True)
+    if MODULE:
+        # Upstream's CPL against the measurement: rotation and position (position = footprint origin, Y negated, plus the
+        # measured shift, which for upstream's files is what JLC would need; a difference means their CPL or ours is off)
+        import csv
+        cpl = {r['Designator']: r for r in csv.DictReader(open(MODULE_CPL))}
+        T = pcbnew.ToMM
+        fps = {f.GetReference(): f for f in board.GetFootprints()}
+        agree = 0
+        for ref, t in sorted(table.items()):
+            r = cpl.get(ref)
+            if not r:
+                problems.append(f'{ref}: measured, but not in the module CPL'); continue
+            dr = (float(r['Rotation']) - t['cpl_rot']) % 360
+            if dr in (180.0,) and not t['polarized'] and ref[0] in 'RCL':
+                dr = 0.0
+            f = fps[ref]
+            ex, ey = T(f.GetPosition().x) + t['pos_shift_mm'][0], -(T(f.GetPosition().y) + t['pos_shift_mm'][1])
+            dpos = math.hypot(float(r['Mid X']) - ex, float(r['Mid Y']) - ey)
+            if dr or dpos > 0.3:
+                problems.append(f'{ref} {t["lcsc"]}: upstream CPL rotation {float(r["Rotation"]):.0f}, measured {t["cpl_rot"]:.0f}'
+                                f' (off {dr:.0f} deg); position off {dpos:.2f} mm')
+            else:
+                agree += 1
+        print(f'module order CPL (out/module: upstream rev C plus CPL_FIX): {agree} of {len(table)} measured parts agree in '
+              f'rotation and position')
     for p in problems:
         print('FAIL', p)
     print(f'jlc rotation: {len(table)} parts measured, {sum(t["correction"] != 0 for t in table.values())} need a '

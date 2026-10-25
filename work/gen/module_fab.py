@@ -7,11 +7,12 @@ The module board files stay exactly upstream's (checks/module_vs_upstream.py); o
 for a part JLC can't supply. Each swap keeps the value and package and says why. Found with checks/bom_stock.py on
 2026-10-24 (JLC stock). Re-run bom_stock.py on order day and add to SUBS if anything else ran out.
 """
-import csv, os, shutil
+import csv, json, os, shutil
 
 WORK = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
 SRC = os.path.join(WORK, '..', 'hardware', 'board_module', 'export', 'rev C')
 OUT = os.path.join(WORK, 'out', 'module')
+ROT = os.path.join(WORK, 'checks', 'jlc_rotation_module.json')
 
 # designator: (upstream LCSC, substitute LCSC, why)
 SUBS = {
@@ -24,6 +25,14 @@ SUBS = {
 # Not assembled by JLC: through-hole on the bottom, the owner solders them (they join the module to the carrier)
 NOT_FITTED = {'J1': '1x8 2.54 mm header, through-hole, bottom: owner solders', 'J3': '1x8 2.54 mm header, through-hole, '
               'bottom: owner solders', 'J2': 'Tag-Connect TC2030 pads, no part'}
+
+# CPL rows corrected from the EasyEDA measurement (checks/jlc_rotation.py --board module -> checks/jlc_rotation_module.json)
+CPL_FIX = {
+    'Q1': 'VND14NV04 (TO-252), C2649436: EasyEDA puts its tab on the -X side where KiCad has it on +X, so JLC needs 0 deg, not '
+          'upstream\'s 180 (that would put the tab on the lead pads); origin moved 0.91 mm to the leads\' centre as EasyEDA '
+          'has it. Upstream\'s CPL agrees with the measurement on the other 56 parts; this LCSC number is much newer than '
+          'the rest, so the part was probably swapped after the CPL was made (INFERRED). Check it in the placement preview.',
+}
 
 
 def main():
@@ -52,6 +61,15 @@ def main():
     with open(os.path.join(OUT, 'module-cpl.csv'), 'w', newline='') as f:
         w = csv.DictWriter(f, fieldnames=list(cpl[0].keys()))
         w.writeheader()
+        rot = json.load(open(ROT)) if os.path.exists(ROT) else {}
+        for r in cpl:
+            if r[key] in CPL_FIX:
+                t = rot.get(r[key])
+                if not t:
+                    raise SystemExit(f'{r[key]}: no measurement in {ROT}: run checks/jlc_rotation.py --board module first')
+                r['Rotation'] = f"{t['cpl_rot']:.1f}"
+                r['Mid X'] = f"{float(r['Mid X']) + t['pos_shift_mm'][0]:.4f}"
+                r['Mid Y'] = f"{float(r['Mid Y']) - t['pos_shift_mm'][1]:.4f}"
         w.writerows(r for r in cpl if r[key] not in NOT_FITTED)
     with open(os.path.join(OUT, 'not-fitted.csv'), 'w', newline='') as f:
         f.write('Designator,Reason\n' + ''.join(f'{d},"{why}"\n' for d, why in NOT_FITTED.items()))
@@ -61,9 +79,11 @@ def main():
                 'Gerbers are upstream\'s rev C exports, unchanged; the CPL is theirs without J1/J3. BOM changes:\n\n')
         for d, (old, new, why) in SUBS.items():
             f.write(f'- {d}: {old} -> {new}. {why}\n')
+        for d, why in CPL_FIX.items():
+            f.write(f'- CPL {d}: {why}\n')
         f.write('\n4 layers, 29.0 x 20.9 mm, 57 SMD parts all on the top; J1/J3 (1x8 headers) and J2 (Tag-Connect pads) '
-                'on the bottom, not assembled (not-fitted.csv). Not yet checked with our rotation check: read the JLC placement preview part by part, '
-                'starting with U2 (STM32F042, LQFP-32) pin 1, Q1, U1, U3, U5 and the LEDs.\n')
+                'on the bottom, not assembled (not-fitted.csv). Rotation check: `checks/jlc_rotation.py --board module` (57 parts). '
+                'Still read the JLC placement preview: Q1 first, then U2 (STM32F042) pin 1, U9, U1, U3, U5 and the LEDs.\n')
     print(f'wrote {os.path.relpath(OUT, WORK)}: module-gerbers.zip, module-bom.csv ({len(rows)} lines, '
           f'{len(SUBS)} substituted), module-cpl.csv, not-fitted.csv, README.md')
 

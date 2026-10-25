@@ -9,7 +9,7 @@ day.
 | Board | Files | Status |
 | --- | --- | --- |
 | Carrier (ours, r41) | `work/out/carrier/`: `carrier-gerbers.zip`, `carrier-bom.csv`, `carrier-cpl.csv`, `not-fitted.csv`, `README.md` | Candidate. Released only by `checks/release.py` after an audit round with no open BLOCKER or BUG (stage 9) |
-| Module (upstream's, rev C) | upstream's `hardware/board_module/` exports, 2026-03-22 | Not prepared: our rotation and fab checks haven't been run on it yet (STATE, Open register) |
+| Module (upstream's, rev C) | `work/out/module/` from `gen/module_fab.py`: upstream's 2026-03-22 Gerbers; BOM with R10/C3 substituted and J1/J3 removed; CPL with Q1 corrected | Staged. `checks/jlc_rotation.py --board module`: 57 parts agree. Read the placement preview, Q1 first |
 | SWD probe / cable for first flash | none | Owner's choice (D4, `docs/flashing-and-test-plan.md`) |
 
 The module is 4-layer, 29.0 x 20.9 mm and has 60 parts. Its J1/J3 headers go on the bottom, which the owner hand-solders, and
