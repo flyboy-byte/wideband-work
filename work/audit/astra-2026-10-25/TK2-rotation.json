@@ -1,0 +1,12 @@
+{
+  "command": [
+    "python3",
+    "checks/jlc_rotation.py",
+    "--board",
+    "module",
+    "-v"
+  ],
+  "cwd": "/home/logan/projects/wideband-work/work",
+  "returncode": 0,
+  "seconds": 0.92
+}

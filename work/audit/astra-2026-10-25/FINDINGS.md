@@ -12,7 +12,7 @@ Would I order these files as they are? **Not yet assessed**: review in progress;
 | Task | Status | Finding IDs | What I did (command, file, calculation) |
 | --- | --- | --- | --- |
 | TK1 Fab files | PARTLY | — | MEASURED: 26/26 BOM and 38/38 CPL rows match board and cached transforms; 6 not-fitted consistent. `TK1-rows.md`, `TK1-fab.log`, `TK1-rotation.log`. JLC machine placement preview not available. |
-| TK2 Module files | | | |
+| TK2 Module files | OK | — | `TK2-rotation.log`: 57/57; four questions independently answered in `TK2-module.md`. Torex primary datasheet resolves U9 override; JLC preview still needed as for TK1. |
 | TK3 Boot level | | | |
 | TK4 Invalid output | | | |
 | TK5 Heater clamp | | | |
@@ -57,6 +57,10 @@ INFERRED (your reasoning). A finding without a number or a source is a NOTE.
 ### TK1
 
 MEASURED: the independent `placement_rows.py` checks every BOM/CPL row, including value, package, LCSC field, side, position and angle arithmetic. All match. Five high-risk pad-net/transform checks are recorded in `TK1-rows.md`: D2 cathode goes to protected supply (not raw); U2 tab is GND, leads input/output, offset 0.725 mm; U4 pins 1/3 GND, 2 PWM, 4 output, 5 reference; U5 pins 1/2/3 input/reference/GND; U6 pins 1/2/3 output/negative/positive, 4 GND, 8 supply, 6/7 tied as unused follower. These match the ST L78M, Nexperia 74LVC1G125, TI REF30 and LM2904 pin conventions inspected in the earlier source review. CAD values are not proof of delivered component identity. Independent arithmetic still shares the cached footprint data with the exporter; final JLC preview is outstanding. No definite reversed part found.
+
+### TK2
+
+DOCUMENTED/MEASURED: U9 pinout override is correct (Torex XC6206 ETR03005-009 p3). Q1 tab/drain is board pad 2; CPL correction and shift agree with the footprint fit. R10 keeps 61.9 ohm and improves initial tolerance; C3 is the 33 nF feedback capacitor in parallel with R33 10k, not a bypass cap. See `TK2-module.md` for calculations and primary sources.
 
 ## Could not check
 
