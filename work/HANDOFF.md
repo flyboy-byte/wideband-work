@@ -51,6 +51,7 @@ PASS    Firmware: static worst-case stack per thread fits (F8 estimate, f0 build
   `sh checks/review_pack.sh`. Watch for a PR from the cousin.
 - **Module**: `gen/module_fab.py` stages upstream rev C with R10/C3 substituted, J1/J3 off the BOM, Q1 CPL corrected
   (180 -> 0, would have gone on turned); `checks/jlc_rotation.py --board module` 57/57.
+- **SWD (D4, owner)**: HiLetgo ST-Link V2 clone + TC2030-IDC-NL + jumpers; table and `st-flash` command in `docs/wiring.md`.
 - **Route, costs, shopping list, manufacturer**: `ROADMAP.md`. Wiring: `docs/wiring.md`. Ordering: `docs/ordering.md`.
 - **Open**: round 6; Torex XC6206 pin table (site blocks fetches; owner can read it in a browser); TC2030 plug fit
   through the cutout (try with the cable); J3 terminals/seals for Molex 36792-1201; owner's purchases and the order.

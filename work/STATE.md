@@ -75,7 +75,7 @@ Mark a stage done only when its exit condition is true. Strike through, don't de
 | Output low from reset until the app drives PB1 (R3 vs the PB1 pull in both board.h; outside review B1) | PASS | boot level: output low from reset | 2026-10-24 | `board_carrier.kicad_pcb` 814ef38918b1, `board.h` 0a70a2bb2fa0, `board.h` 1dc40c1c92c0 |
 | Module order files: JLC rotation, origin and pin names from EasyEDA against the order CPL (upstream rev C + fixes) | PASS | jlc rotation: 57 parts measured, 6 need a correction, 0 problem(s) | 2026-10-24 | `wideband_controller.kicad_pcb` 0179d031bc63, `module_fab.py` fe36cd34cf0f, `jlc_rotation.py` b1455144624f |
 
-Written by `checks/run_all.py` at commit ba01449. Don't edit by hand.
+Written by `checks/run_all.py` at commit 8a9abc7. Don't edit by hand.
 <!-- checks:end -->
 
 ## Bring-up results
