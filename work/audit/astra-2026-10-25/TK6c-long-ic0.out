@@ -1,0 +1,26 @@
+Note: gnd in a subcircuit is not set to 0 automatically
+
+Note: Compatibility modes selected: ps a
+
+
+Circuit: * independent tk6c-long-ic0
+
+Reducing trtol to 1 for xspice 'A' devices
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+Operating point simulation skipped by 'uic',
+  now using transient initial conditions.
+ Reference value :  1.79768e-04
+ Reference value :  1.79768e-04
+No. of Data Rows : 499
+vout                =  0.00000e+00 from=  1.15000e-01 to=  1.79768e-04
+vlo                 =  0.00000e+00 at=  0.00000e+00
+vhi                 =  0.00000e+00 at=  0.00000e+00
+rail                =  0.00000e+00 from=  1.15000e-01 to=  1.79768e-04
+RES 0 0 0 0
+ngspice-47 done
+doAnalyses: TRAN:  Timestep too small; time = 0.000179768, timestep = 2.5e-17: trouble with node "e.xb.e1#branch"
+
+
+run simulation(s) aborted

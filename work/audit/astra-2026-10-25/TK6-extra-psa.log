@@ -1,0 +1,4 @@
+TK6c-long-ic11.6 PASS measurements ['0', '0', '0', '0']
+TK6c-long-ic0 PASS measurements ['0', '0', '0', '0']
+TK6c-zero-0 PASS measurements ['0.516541', '0.516541', '0.516541', '12']
+TK6c-zero-five PASS measurements ['1.29828', '1.29828', '1.29828', '12']

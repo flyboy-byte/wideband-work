@@ -1,0 +1,7 @@
+REAL LOG long-ic11.6 complete False
+REAL LOG long-ic0 complete False
+REAL LOG zero-0 complete True
+REAL LOG zero-five complete True
+PRODUCTION WRAPPER EXIT 0 (expected nonzero for abort)
+supply  13.4 V  +5V 4.8 V  load 4.7k   connector 0.0000 V (-5000 mV)  op-amp rail 0.00 V  D3 into +5V 0.00 mA  settled 0.00 mV
+REPRODUCED: all27aborted zero-result fixtures accepted.

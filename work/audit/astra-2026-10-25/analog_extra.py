@@ -2,6 +2,7 @@
 """Independent corner/initial-condition checks. Run from any cwd; retains decks and outputs."""
 from pathlib import Path
 import subprocess,re,math,sys
+from spice_validation import reached_window
 HERE=Path(__file__).resolve().parent
 MODEL=HERE.parents[1]/'sim/models/lmx58_lm2904.lib'
 def run(name,source,load,stop,initial=None,feed=False):
@@ -47,7 +48,7 @@ quit
     (HERE/(name+'.out')).write_text(out)
     match=re.search(r'^RES (.*)$',out,re.M)
     values=match.group(1).split() if match else []
-    good=len(values)==4 and all(re.fullmatch(r'[-+\d.eE]+',x) and math.isfinite(float(x)) for x in values)
+    good=len(values)==4 and all(re.fullmatch(r'[-+\d.eE]+',x) and math.isfinite(float(x)) for x in values) and reached_window(out,stop/1000)
     print(name, 'PASS measurements '+str(values) if p and p.returncode==0 and good else 'FAILED; see raw output',flush=True)
     return bool(p and p.returncode==0 and good)
 ok=True

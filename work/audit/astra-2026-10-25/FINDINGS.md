@@ -24,7 +24,7 @@ Would I order these files as they are? **Not yet assessed**: review in progress;
 | TK11 Wiring sheet | PARTLY | R6-S5 |12/12 J3 and6/6 J2 pad mappings match PCB; Tag-Connect primary drawing confirms1:1IDC cable. Clone/moulded housing identity and through-cutout reach remain physical checks. TK11-wiring.md. |
 | TK12 Firmware diff | FINDING | R6-S6 | Read18changed files; fresh firmware package passes(21616Bapp,CRC984fc2b4). Existing checker passes but real indirect-recursion ELF falsely passes116/256B. Configured checks running; TK12-firmware.md. |
 | TK13 These docs | OK | R6-S1,R6-S5 | Reviewed task/report/setup against sources and all25configured checks. Specific corrections below; checker itself reports docs consistent. |
-| TK99 Beyond the list | | | |
+| TK99 Beyond the list | FINDING | R6-S8 | Real ngspice early abort prints finite zero measurements; production full-scale wrapper accepts27/27 injected aborted-zero cases,exit0. TK99-zero-regression.log and TK99-sim-validation.md. |
 
 Status: OK = checked and found right; FINDING = see the table below; PARTLY = say what is left; NOT CHECKED = say why
 (no tool, no time, no file).
@@ -39,6 +39,8 @@ Status: OK = checked and found right; FINDING = see the table below; PARTLY = sa
 | R6-S4 | TK10 | RISK | C11(50.4,104.4mm),lower edge | MEASURED center1.85mm/body~1.60mm from edge; DOCUMENTED JLC assembly terms require body clearance2.5mm. Bare-board assembly route not yet qualified. | Obtain JLC rail/panel acceptance;5mm tooling rails may avoid layout changes. |
 | R6-S5 | TK11 | NOTE | `work/docs/wiring.md`,optional J3-7 fuse paragraph | DOCUMENTED claim promises250-500mA fuse opens before receiver damage; no time-current/I²t or receiver withstand evidence. Rating alone cannot prove coordination. | Qualify exact fuse/receiver combination or label it an unverified candidate. |
 | R6-S6 | TK12 | BUG | `work/checks/stack_estimate.py:109` | MEASURED real indirect recursion with108B per level accepted as116/256B,exit0; verbose path hangs. Production's64B margin is not a proven bound. | Fail unresolved indirect cycles, or prove target exclusions; add the retained ARM regression. |
+| R6-S7 | TK7 | NOTE | `work/sim/stability.sh:19`,400us initial wait | MEASURED original10nF pre-step1.7532V vs settled1.6823V; delayed3ms test changes100nF overshoot28.0%->22.8%. Nominal0..10nF still0%. | Wait for a settled pre-step baseline and verify baseline/terminal drift before computing metrics. |
+| R6-S8 | TK99 | BUG | `work/sim/full_scale_corners.sh:58` | MEASURED real ngspice abort at5.22us/179.8us returns zero averages for115-120ms. Fault-injected production wrapper accepts27/27 aborted-zero cases,exit0. Finite numbers alone do not establish completed simulation. | Reject abort diagnostics and require final simulated time to cover the measurement window; add this regression. |
 
 Severity: BLOCKER = don't order; BUG = wrong but workable; RISK = could bite (say when); NOTE = worth knowing.
 Tag each piece of evidence: MEASURED (you ran it), CALCULATED (show the sum), DOCUMENTED (name the datasheet and page),

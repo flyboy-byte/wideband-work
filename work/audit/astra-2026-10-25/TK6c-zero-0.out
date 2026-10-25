@@ -1,0 +1,442 @@
+Note: gnd in a subcircuit is not set to 0 automatically
+
+Note: Compatibility modes selected: ps a
+
+
+Circuit: * independent tk6c-zero-0
+
+Reducing trtol to 1 for xspice 'A' devices
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+Initial Transient Solution
+--------------------------
+
+Node                                   Voltage
+----                                   -------
+vcc                                         12
+five                                       4.8
+input                                        1
+xa.esdn                                -667.39
+xa.mid                                 3.95029
+xa.37                                        1
+xa.57                                   183.95
+xa.58                                  -176.05
+xa.51                                  43.9503
+xa.52                                 -36.0497
+xa.45                                 -6.85187
+xa.vclp                               -5.65187
+xa.56                                 -6.85917
+xa.44                                 -6.85917
+xa.43                                 -4.45187
+xa.55                                 -4.45187
+xa.42                                 -4.45187
+xa.33                                  1.30005
+oa                                     1.30005
+xa.79                              3.95031e-06
+xa.vee_b                           3.95031e-06
+xa.80                                     10.5
+xa.vcc_b                                    12
+xa.86                                   1.0018
+xa.22                                  3.94997
+xa.23                                 0.028051
+xa.26                                  1.00203
+xa.xu3.e1_int1                        -2.94826
+xa.24                                  1.00203
+xa.27                                       12
+xa.xu3.e2_int1                          8.0497
+xa.25                                  -667.39
+xa.xu1.vref                            3.91029
+xa.xu1.vshf                           -6.51491
+xa.vimon                              -6.55491
+xa.xu1.zc                              2.96145
+xa.xu1.gzc_int1                             -1
+xa.crs                                 4.95029
+xa.xu1.gcr_int1                              1
+xa.28                                 -621.363
+xa.29                                 -613.914
+xa.30                                  -2652.6
+xa.31                                  3.28644
+xa.32                                 -2651.42
+xa.xu2.g1_int1                        -2655.38
+xa.cl_clamp                           -5.65015
+xa.34                                 -6.89157
+xa.35                                 -6.87917
+xa.clamp                              -6.86678
+xa.xu5.g1_int1                          -0.005
+xa.36                                 -1095.84
+xa.38                                  3.95029
+xa.39                                  3.95029
+xa.40                                   3.9576
+xa.41                                   3.9576
+xa.xi_nn.7                            0.833786
+xa.xi_nn.8                            0.833786
+xa.xi_nn.3                                   0
+xa.xi_nn.6                                   0
+xa.xi_nn.4                                   0
+xa.xi_nn.5                                   0
+xa.xi_np.7                            0.833786
+xa.xi_np.8                            0.833786
+xa.xi_np.3                                   0
+xa.xi_np.6                                   0
+xa.xi_np.4                                   0
+xa.xi_np.5                                   0
+xa.xe_n.7                             0.833786
+xa.xe_n.8                             0.833786
+xa.xe_n.3                                    0
+xa.xe_n.6                                    0
+xa.xe_n.4                                    0
+xa.xe_n.5                                    0
+xa.esdp                                      1
+xa.vsense                             -6.86678
+xa.xvccs_lim_1.g1_int1              -0.0010998
+xa.46                                  1.00203
+xa.47                                   3.9503
+xa.48                                  4.75526
+xa.49                                  3.95019
+xa.50                                  1.92875
+xa.xiqpos.g1_int1                            0
+xa.xiqneg.g1_int1                    0.0105052
+xa.53                                  3.95029
+xa.xcl_amp.gvo+_int1                         0
+xa.54                                  3.95029
+xa.xcl_amp.gvo-_int1                         0
+xa.60                                  3.95029
+xa.xgr_amp.gvo+_int1                         0
+xa.59                                 -6.86678
+xa.61                                  3.95029
+xa.xgr_amp.gvo-_int1                         0
+xa.62                                  3.95029
+xa.63                                  3.95029
+xa.xgr_src.g1_int1                           0
+xa.64                                  3.95029
+xa.65                                  3.95029
+xa.xcl_src.g1_int1                           0
+xa.66                                  10.4916
+xa.xclawp.g1_int1                   0.00150838
+xa.xclawp.g1_int2                      10.5052
+xa.67                                  1.30131
+xa.xclawn.g1_int1                   0.00130131
+xa.xclawn.g1_int2                      10.5052
+xa.68                                  10.4916
+xa.69                                  1.30131
+xa.vcc_clp                             10.4916
+xa.vee_clp                             1.30131
+xa.70                                  3.95029
+xa.xclaw_amp.gvo+_int1                       0
+xa.vout_s                              1.30007
+xa.71                                  3.95153
+xa.xclaw_amp.gvo-_int1              0.00124143
+xa.72                                  3.95029
+xa.73                                  3.95153
+xa.claw_clamp                         -5.65015
+xa.xclaw_src.g1_int1               -0.00124143
+xa.sw_ol                               3.95029
+xa.74                                  3.95029
+xa.xol_sense.gsw+_int1                       0
+xa.75                                 -6.55459
+xa.76                                  1.30005
+xa.77                                 -5.65015
+xa.78                                  1.00203
+xa.xvcm_clamp.g1_int1                 -2.94826
+xa.81                                  3.95029
+xa.82                              3.95426e-06
+xa.83                                       12
+xa.84                                   1.0017
+xa.85                                   1.0017
+inv                                    -667.39
+xb.esdn                                1.28549
+xb.mid                                 3.95029
+xb.37                             -3.39724e-09
+xb.57                                   183.95
+xb.58                                  -176.05
+xb.51                                  43.9503
+xb.52                                 -36.0497
+xb.45                                0.0124327
+xb.vclp                                1.21243
+xb.56                                0.0124327
+xb.44                                0.0124327
+xb.43                                  2.41243
+xb.55                                  2.41243
+xb.42                                  2.41243
+xb.33                                  1.28549
+unused                                 1.28549
+xb.79                              3.95029e-06
+xb.vee_b                           3.95029e-06
+xb.80                                     10.5
+xb.vcc_b                                    12
+xb.86                                   0.0018
+xb.22                                  3.94997
+xb.23                                 0.028051
+xb.26                               0.00199994
+xb.xu3.e1_int1                        -3.94829
+xb.24                               0.00199994
+xb.27                                  1.28549
+xb.xu3.e2_int1                         -2.6648
+xb.25                                  1.28549
+xb.xu1.vref                            3.91029
+xb.xu1.vshf                            3.98919
+xb.vimon                               3.94919
+xb.xu1.zc                              4.94799
+xb.xu1.gzc_int1                              1
+xb.crs                                 4.95029
+xb.xu1.gcr_int1                              1
+xb.28                                 -2.95592
+xb.29                                 -2.92702
+xb.30                                 -25.6192
+xb.31                                  3.94289
+xb.32                                 -25.6369
+xb.xu2.g1_int1                        -29.5873
+xb.cl_clamp                            1.20873
+xb.34                                  1.20873
+xb.35                                  1.18208
+xb.clamp                               1.15543
+xb.xu5.g1_int1                          -0.005
+xb.36                                 -124.399
+xb.38                                  3.95029
+xb.39                                  3.95029
+xb.40                                  3.95029
+xb.41                                  3.95029
+xb.xi_nn.7                            0.833786
+xb.xi_nn.8                            0.833786
+xb.xi_nn.3                                   0
+xb.xi_nn.6                                   0
+xb.xi_nn.4                                   0
+xb.xi_nn.5                                   0
+xb.xi_np.7                            0.833786
+xb.xi_np.8                            0.833786
+xb.xi_np.3                                   0
+xb.xi_np.6                                   0
+xb.xi_np.4                                   0
+xb.xi_np.5                                   0
+xb.xe_n.7                             0.833786
+xb.xe_n.8                             0.833786
+xb.xe_n.3                                    0
+xb.xe_n.6                                    0
+xb.xe_n.4                                    0
+xb.xe_n.5                                    0
+xb.esdp                           -3.39724e-09
+xb.vsense                              1.15543
+xb.xvccs_lim_1.g1_int1            -0.000128349
+xb.46                               0.00199994
+xb.47                                   3.9503
+xb.48                                  4.75526
+xb.49                                  3.95016
+xb.50                                  1.24355
+xb.xiqpos.g1_int1                            0
+xb.xiqneg.g1_int1                  1.09753e-06
+xb.53                                  3.95029
+xb.xcl_amp.gvo+_int1                         0
+xb.54                                  3.95029
+xb.xcl_amp.gvo-_int1                         0
+xb.60                                  3.95029
+xb.xgr_amp.gvo+_int1                         0
+xb.59                                  1.15543
+xb.61                                  3.95029
+xb.xgr_amp.gvo-_int1                         0
+xb.62                                  3.95029
+xb.63                                  3.95029
+xb.xgr_src.g1_int1                           0
+xb.64                                  3.95029
+xb.65                                  3.95029
+xb.xcl_src.g1_int1                           0
+xb.66                                    10.83
+xb.xclawp.g1_int1                      0.00117
+xb.xclawp.g1_int2                   0.00109753
+xb.67                                 0.025004
+xb.xclawn.g1_int1                      2.5e-05
+xb.xclawn.g1_int2                   0.00109753
+xb.68                                    10.83
+xb.69                                 0.025004
+xb.vcc_clp                               10.83
+xb.vee_clp                            0.025004
+xb.70                                  3.95029
+xb.xclaw_amp.gvo+_int1                       0
+xb.vout_s                              1.28585
+xb.71                                  3.95029
+xb.xclaw_amp.gvo-_int1                       0
+xb.72                                  3.95029
+xb.73                                  3.95029
+xb.claw_clamp                          1.20873
+xb.xclaw_src.g1_int1                         0
+xb.sw_ol                               3.95029
+xb.74                                  3.95029
+xb.xol_sense.gsw+_int1                       0
+xb.75                                  3.94919
+xb.76                                  1.28549
+xb.77                                  1.20873
+xb.78                               0.00199994
+xb.xvcm_clamp.g1_int1                 -3.94829
+xb.81                                  3.95029
+xb.82                              3.95424e-06
+xb.83                                       12
+xb.84                                0.0016716
+xb.85                                0.0016716
+conn                                   -4.7857
+clamp                                -0.635137
+b.xb.xvcm_clamp.bg1#branch                   0
+b.xb.xol_sense.bgsw+#branch                  0
+b.xb.xclaw_src.bg1#branch                    0
+b.xb.xclaw_amp.bgvo-#branch                  0
+b.xb.xclaw_amp.bgvo+#branch                  0
+b.xb.xclawn.bg1#branch                       0
+b.xb.xclawp.bg1#branch                       0
+b.xb.xcl_src.bg1#branch                      0
+b.xb.xgr_src.bg1#branch                      0
+b.xb.xgr_amp.bgvo-#branch                    0
+b.xb.xgr_amp.bgvo+#branch                    0
+b.xb.xcl_amp.bgvo-#branch                    0
+b.xb.xcl_amp.bgvo+#branch                    0
+b.xb.xiqneg.bg1#branch                       0
+b.xb.xiqpos.bg1#branch                       0
+b.xb.xvccs_lim_1.bg1#branch                  0
+b.xb.xu5.bg1#branch                          0
+b.xb.xu2.bg1#branch                          0
+b.xb.xu1.bgcr#branch                         0
+b.xb.xu1.bgzc#branch                         0
+b.xb.xu3.be2#branch                          0
+b.xb.xu3.be1#branch                          0
+b.xa.xvcm_clamp.bg1#branch                   0
+b.xa.xol_sense.bgsw+#branch                  0
+b.xa.xclaw_src.bg1#branch                    0
+b.xa.xclaw_amp.bgvo-#branch                  0
+b.xa.xclaw_amp.bgvo+#branch                  0
+b.xa.xclawn.bg1#branch                       0
+b.xa.xclawp.bg1#branch                       0
+b.xa.xcl_src.bg1#branch                      0
+b.xa.xgr_src.bg1#branch                      0
+b.xa.xgr_amp.bgvo-#branch                    0
+b.xa.xgr_amp.bgvo+#branch                    0
+b.xa.xcl_amp.bgvo-#branch                    0
+b.xa.xcl_amp.bgvo+#branch                    0
+b.xa.xiqneg.bg1#branch                       0
+b.xa.xiqpos.bg1#branch                       0
+b.xa.xvccs_lim_1.bg1#branch                  0
+b.xa.xu5.bg1#branch                          0
+b.xa.xu2.bg1#branch                          0
+b.xa.xu1.bgcr#branch                         0
+b.xa.xu1.bgzc#branch                         0
+b.xa.xu3.be2#branch                          0
+b.xa.xu3.be1#branch                          0
+h.xb.h1#branch                    -5.35177e-12
+v.xb.v4#branch                    -1.09753e-06
+h.xb.h3#branch                    -3.95028e-12
+v.xb.v12#branch                   -4.92595e-12
+h.xb.h2#branch                    -3.95029e-12
+v.xb.v11#branch                    2.27363e-12
+h.xa.h1#branch                    -3.17288e-06
+v.xa.v4#branch                      -0.0105049
+h.xa.h3#branch                    -3.95028e-12
+v.xa.v12#branch                   -3.77032e-13
+h.xa.h2#branch                    -1.94709e-08
+v.xa.v11#branch                    -0.00730828
+e.xb.e1#branch                    -7.57735e-07
+e.xb.e4#branch                     3.70167e-05
+e.xb.e5#branch                     3.59851e-06
+e.xb.xe_n.e3#branch                     -2e-08
+e.xb.xe_n.e2#branch                          0
+e.xb.xe_n.e1#branch                          0
+e.xb.xi_np.e2#branch                         0
+e.xb.xi_np.e1#branch                         0
+e.xb.xi_nn.e2#branch                         0
+e.xb.xi_nn.e1#branch                         0
+e.xb.xu1.eshf#branch                         0
+e.xb.xu3.e2#branch                           0
+e.xb.xu3.e1#branch                           0
+e.xa.e1#branch                     3.23386e-05
+e.xa.e4#branch                    -1.71724e-05
+e.xa.e5#branch                     2.55361e-07
+e.xa.xe_n.e3#branch                -1.9997e-08
+e.xa.xe_n.e2#branch                          0
+e.xa.xe_n.e1#branch                          0
+e.xa.xi_np.e2#branch                         0
+e.xa.xi_np.e1#branch                         0
+e.xa.xi_nn.e2#branch                         0
+e.xa.xi_nn.e1#branch                         0
+e.xa.xu1.eshf#branch                         0
+e.xa.xu3.e2#branch                           0
+e.xa.xu3.e1#branch                           0
+v.xb.xu1.v1#branch                           0
+v.xb.v_os#branch                  -5.39412e-15
+v.xb.vcm_max#branch                -6.5497e-12
+v.xb.vcm_min#branch                3.95029e-12
+v.xb.v_orp#branch                            0
+v.xb.v_orn#branch                            0
+v.xb.v_iscn#branch                       4e-11
+v.xb.v_iscp#branch                      -4e-11
+v.xb.v_grn#branch                      1.8e-10
+v.xb.v_grp#branch                     -1.8e-10
+v.xa.xu1.v1#branch                           0
+v.xa.v_os#branch                  -3.03564e-12
+v.xa.vcm_max#branch                -6.5497e-12
+v.xa.vcm_min#branch                3.95029e-12
+v.xa.v_orp#branch                            0
+v.xa.v_orn#branch                            0
+v.xa.v_iscn#branch                       4e-11
+v.xa.v_iscp#branch                      -4e-11
+v.xa.v_grn#branch                      1.8e-10
+v.xa.v_grp#branch                     -1.8e-10
+vin#branch                         1.63637e-05
+v5#branch                          8.51805e-10
+vcc#branch                             -0.0007
+a.xb.xclawn.ag1#branch_1_0                   0
+a.xb.xclawp.ag1#branch_1_0                   0
+a.xa.xclawn.ag1#branch_1_0                   0
+a.xa.xclawp.ag1#branch_1_0                   0
+
+ Reference value :  0.00000e+00
+ Reference value :  3.16795e-04
+ Reference value :  3.16795e-04
+ Reference value :  3.16795e-04
+ Reference value :  3.16796e-04
+ Reference value :  3.16796e-04
+ Reference value :  3.16796e-04
+ Reference value :  3.16796e-04
+ Reference value :  3.16796e-04
+ Reference value :  3.16796e-04
+ Reference value :  3.16796e-04
+ Reference value :  3.16796e-04
+ Reference value :  3.16796e-04
+ Reference value :  3.16796e-04
+ Reference value :  3.16797e-04
+ Reference value :  3.16808e-04
+ Reference value :  3.16816e-04
+ Reference value :  3.16816e-04
+ Reference value :  3.16817e-04
+ Reference value :  3.16826e-04
+ Reference value :  3.16826e-04
+ Reference value :  3.16827e-04
+ Reference value :  3.16827e-04
+ Reference value :  3.16827e-04
+ Reference value :  3.16827e-04
+ Reference value :  3.16827e-04
+ Reference value :  3.16827e-04
+ Reference value :  3.16827e-04
+ Reference value :  3.16827e-04
+ Reference value :  3.16827e-04
+ Reference value :  3.16827e-04
+ Reference value :  3.16827e-04
+ Reference value :  3.16828e-04
+ Reference value :  3.16834e-04
+ Reference value :  3.16834e-04
+ Reference value :  3.16835e-04
+ Reference value :  3.16840e-04
+ Reference value :  3.16841e-04
+ Reference value :  3.16841e-04
+ Reference value :  3.39956e-04
+No. of Data Rows : 9497
+vout                =  5.16541e-01 from=  1.00000e-02 to=  1.50000e-02
+vlo                 =  5.16541e-01 at=  1.00100e-02
+vhi                 =  5.16541e-01 at=  1.50000e-02
+rail                =  1.20000e+01 from=  1.00000e-02 to=  1.50000e-02
+RES 0.516541 0.516541 0.516541 12
+ngspice-47 done
+Note: Starting dynamic gmin stepping
+Warning: Dynamic gmin stepping failed
+Note: Starting true gmin stepping
+Warning: True gmin stepping failed
+Note: Starting source stepping
+Warning: source stepping failed
+Note: Transient op started
+Note: Transient op finished successfully
