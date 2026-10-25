@@ -1,7 +1,7 @@
 # Audit — rusEFI wideband carrier (0-5 V analog output)
 
-Current review: **round 6** (r41 layout + the 2026-10-24 fixes) is open for Codex and outside reviewers; start at `REVIEW.md`
-(repo root). Rounds 4 (Codex) and 5 (the cousin's Claude) were at `fad8032`; their findings are answered below.
+Current review: **round 7** (Codex/Astra, PR #3, at `18b6cef`: a re-check of the round 6 fixes) is answered below; no
+open BLOCKER or BUG. The next review is planned after bench data (A1-A8). Outside reviewers start at `REVIEW.md` (repo root). Rounds 4 (Codex) and 5 (the cousin's Claude) were at `fad8032`; their findings are answered below.
 Round 3 (Codex, board r36) supersedes the historical R11/full-scale/grounding conclusions; its report is
 `docs/codex-audit-2026-10-23.md`, with raw output in `audit/codex-2026-10-23/`.
 
@@ -61,6 +61,28 @@ Severity: BLOCKER = don't order; BUG = wrong but workable; RISK = could bite (st
 NOTE. Then: what was checked and found correct, and what couldn't be checked.
 
 ## Rounds
+### Round 7 — 2026-10-25, Codex (Astra; a re-check of the round 6 fixes at `18b6cef`)
+Commit: 18b6cef (board, firmware and generators unchanged since; later commits changed notes and check scripts only)
+Raw report: `audit/astra-2026-10-25b/` (PR #3, branch `review/astra-2026-10-25b` at `dac8653`). Mode B, own worktree,
+no designer files changed. Coverage TK1-TK7 filled; TK99 not checked (targeted round). Verdict: "Yes for a supervised
+first prototype, after the existing order-day rail/placement checks; not as a qualified automotive/fault-survival
+product." No BLOCKER or BUG. Verified by Claude Opus 5.5 (designer), 2026-10-25.
+
+Confirmed right: the stack checker (four regressions, all 40 indirect-call sites, worst thread margin 92 B reproduced on
+a fresh ELF), the sim wrappers (26 fake-failure verdicts, the old abort logs rejected, stability 25/25 rerun), the R9
+part in board and BOM with unchanged geometry, 26/26 BOM lines in stock, 26 checks with reviewer reports kept apart. It
+added 19 ASan/UBSan cases on the real f0 sampler and heater (an ESR fault invalidates the reading in 526-576 ms).
+
+| ID | Severity | Location | Evidence (reviewer's) | Our check | Status |
+| --- | --- | --- | --- | --- | --- |
+| R7-S1 | RISK | `checks/surge_budget.py`; R9/D5/D1 | R9 0.480 W with a -1 % part; its 0.75 W needs Rth <= 110 K/W (Vishay 20043 note 3). D5 0.382 W is within its derated rating only below 92.7 C case (MDD BZT52 fig. 1). 38.9 V is the SMCJ24CA clamp at a 10/1000 us pulse, not a 400 ms dump | Same sums (checker rerun: 0.480 W, 0.382 W, 93 C). Agreed it is a conditional budget; no part change asked | **fixed in the wording**: the checker uses the -1 % R9 and prints both thermal conditions; `carrier.md` says "conditional budget, not load-dump qualification". Engine-bay qualification is not a requirement (do-not-re-raise), and a failure there loses only the analog output |
+| R7-S2 | NOTE | `review/TASKS.md` TK4, `carrier.md` A8, this file R6-S2 | U6.8 is VOP12, not +5V: the LM2904 can't count as a +5V load. A8 as written measured the module branch only. Typical loads 6.2 mA plus the MCU; no guaranteed 13.6 mA floor | Confirmed from `carrier-nets.txt` (`/VOP12: ... U6.8`). Our R6-S2 answer listed the op-amp: wrong | **fixed**: load list corrected in TASKS, AUDIT R6-S2 and A8; A8 now measures the whole U2 output in reset, bootloader, CAN idle and LEDs-off states. Backfeed stays accepted under C1; no 12 V-on-J3-5 test on the owner's bench |
+| R7-S3 | NOTE | `REVIEW.md`, this file's header, `docs/ordering.md:74` | Headers said round 6; REVIEW setup showed plain `run_all.py`; the swap rule let a 250 mW 1k 1206 replace R9 (0.480/0.250 = 192 %) | Confirmed | **fixed**: headers name round 7; setup shows `--report`; a swap must keep the power, pulse and thermal rating |
+
+Not checked, and why (from its report): the real load-dump waveform and TVS energy, the board's thermal resistance,
+the minimum +5V current in every state, the factory's rail plan for C11, physical unplug latency and the heater's
+thermal loop. All need hardware; A8 and the bring-up tests cover the ones the owner's bench can.
+
 ### Round 6 — 2026-10-25, Codex (Astra, then 6.1 Sol in the same session; independent full-repository review of `e0b802a`)
 Raw report: `audit/astra-2026-10-25/` (PR #2, branch `review/astra-2026-10-25` at `43cc114`). Mode B, prior rounds
 visible. Coverage TK1-TK13 plus TK99: all rows filled. Verdict: "No, not yet as a release/order package": two checker
@@ -72,7 +94,7 @@ on the code before it.
 | R6-S6 | BUG | `checks/stack_estimate.py` | A real recursion through a function pointer (108 B a level) passed as 116 of 256 B; `-v` hung | Confirmed: every loop with an indirect hop was cut as an artefact. 15 such loops in the production ELF, all from charging every virtual method to every virtual call | **fixed**: loops always fail; the five looping callers get a target set read from the source (`NARROW`, cross-checked against each caller's literal pool and the address-taken set); `-v` path guarded. `test_stack_estimate.py` case 4 (fails, hangs, on the old checker). Production now 148/256 B heater and pump, 164 sampling, worst margin 92 B (was 64 B, which counted impossible paths) |
 | R6-S8 | BUG | `sim/full_scale_corners.sh` | ngspice aborts part-way, exits 0, prints finite zeros; the wrapper passed 27 injected cases | Confirmed, and wider: all three wrappers passed it (9 wrong verdicts in the new fake cases against the old wrappers) | **fixed**: `sim/completed.sh`: each deck prints its last time point; a run passes only if it reached the stop time and printed no abort message. `test_sim_failures.py` adds aborted-with-zeros, stopped-short, no END line, and full_scale_corners.sh. Real runs with TI's model: stability 25/25, load accuracy 48/48, full scale 27/27 pass with the check, full scale identical to the committed results |
 | R6-S3 | RISK | R9 C4410 / D5 C173425 | 38.9 V for 400 ms: R9 0.437 W against 0.25 W nominal; no pulse data | Agreed. Worst case with the zener's low end (17.1 V): 0.475 W in R9, 190 % of its rating; D5 0.378 W of 0.5 W | **fixed**: R9 -> C844867 Vishay CRCW12061K00FKEAHP (pulse-proof HP, 0.75 W, same 1206 footprint; JLC 15,000, Extended, $0.55). R9 63 %, D5 76 % of rating. New check `checks/surge_budget.py` (fails on C4410). Layout unchanged: one LCSC field in the board and schematic. D5 temperature derating not modelled (NOTE) |
-| R6-S2 | RISK | D3 / +5V | 12 V on J3-5: 13.6 mA into +5V; the LM78M05 can't sink | Same sum: (12 - 5 - 0.6) / 470 = 13.6 mA. The rail rises only if the board's own +5V load is below 13.6 mA (module, CAN transceiver, REF3030, op-amp: INFERRED above it; UNKNOWN measured). Off-board receiver into an unpowered board: a pull-up of 4.7k or more to 5 V puts under 1 mA into the rail (INFERRED) | **accepted** (owner C1: no survival requirement for 12-16 V on J3-5). Bench: measure the +5V load current at bring-up (A3 step) to put a number on it |
+| R6-S2 | RISK | D3 / +5V | 12 V on J3-5: 13.6 mA into +5V; the LM78M05 can't sink | Same sum: (12 - 5 - 0.6) / 470 = 13.6 mA. The rail rises only if the board's own +5V load is below 13.6 mA (module, CAN transceiver, REF3030; UNKNOWN measured, and typical figures alone don't put it above 13.6 mA in reset or idle. Corrected in round 7, R7-S2: the op-amp is on VOP12, not +5V). Off-board receiver into an unpowered board: a pull-up of 4.7k or more to 5 V puts under 1 mA into the rail (INFERRED) | **accepted** (owner C1: no survival requirement for 12-16 V on J3-5). Bench: measure the +5V load current at bring-up (A3 step) to put a number on it |
 | R6-S4 | RISK | C11 (50.4, 104.4 mm) | Body about 1.60 mm from the edge; JLC's terms ask 2.5 mm | Agreed (centre 1.85 mm, measured before). JLC's figure REPORTED by the reviewer | **accepted with an order step**: edge rails at the quote (`docs/ordering.md`, step 3); owner at the quote |
 | R6-S1 | NOTE | `docs/carrier.md` | TI SLOS068: LM2904 offset 3 typ / 7 max at 25 C / 10 mV over temperature, not "up to 3 mV" | Agreed: 11.8 mV at the output at 25 C, 16.8 mV over temperature | **fixed** in the budget (trim removes the initial part; drift stays) |
 | R6-S5 | NOTE | `docs/wiring.md` | The J3-7 fuse "opens before the ECU is damaged" has no I2t or receiver data | Agreed | **fixed**: now "an idea, not checked; rely on the J3-1 crimp" |

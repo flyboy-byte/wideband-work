@@ -1,7 +1,8 @@
 # Reviewing this board (outside reviewers, people or AI)
 
-Updated 2026-10-24 for **round 6**: the r41 layout with that day's fixes (R3 4.7k, invalid = 5 V, heater clamp) on
-branch `analog-out`. Nothing has been ordered, built or flashed. The question for a reviewer: **would you order these
+Updated 2026-10-25 after **round 7** (Codex/Astra, PR #3): the r41 layout with the 2026-10-24 fixes (R3 4.7k,
+invalid = 5 V, heater clamp) and round 6's (R9 C844867, checker fixes) on branch `analog-out`. The next round is
+planned after bench data; `work/review/TASKS.md` holds the last round's list until then. Nothing has been ordered, built or flashed. The question for a reviewer: **would you order these
 files as they are, and if not, why not?**
 
 The project is a fork of [mck1117/wideband](https://github.com/mck1117/wideband), the rusEFI LSU 4.9 controller,
@@ -89,7 +90,8 @@ cd work
 python3 checks/fw_package.py build # bootloader + app image into work/fw-build/<commit>/ (adds 5 package-check cases)
 python3 gen/module_fab.py          # stages the module's JLC files in work/out/module/ (upstream rev C, 2 BOM swaps)
 python3 gen/export_fab.py          # writes the fab candidate to work/out/carrier/ (gitignored, so a clone lacks it)
-python3 checks/run_all.py          # expect: 26 checks, 0 failed, 2 advisory failed (upstream's own raw DRC, owner decision D2)
+python3 checks/run_all.py --report ../../my-review   # reviewer mode: leaves STATE.md and last_run.json alone
+                                   # expect: 27 checks, 0 failed, 2 advisory failed (upstream's own raw DRC, owner decision D2)
 ```
 
 Missing a tool? Skip what needs it, mark those tasks PARTLY or NOT CHECKED with the reason, and carry on. A check

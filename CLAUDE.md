@@ -2,7 +2,7 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-Last updated 2026-10-25 (round 6 answered). `AGENTS.md` is the authoritative, model-agnostic guide (evidence tags, subagents, Codex
+Last updated 2026-10-25 (round 7 answered). `AGENTS.md` is the authoritative, model-agnostic guide (evidence tags, subagents, Codex
 audits) and wins over this file. Where this file and `work/STATE.md` / `work/HANDOFF.md` disagree, those win: they
 hold the current state; this file holds orientation.
 
@@ -41,9 +41,9 @@ It's a learning project: build and test it ourselves, don't buy a ready-made uni
   Watchdog refreshed by the heater loop; heater voltage clamped at 0 (upstream bug); upstream bootloader (F1) and
   Cortex-M0 fault-handler (F9) bugs fixed. Host tests 70 + 21. Untested on hardware: `work/docs/firmware.md`.
 - **Carrier**: r41 layout, 40.0 x 51.5 mm, analog stage on the top; R3 4.7k, R9 pulse-proof C844867. 0 new DRC, 0 open,
-  0 vias in pads. Fab candidate staged in `work/out/carrier/`, not released. 26 checks pass (2 advisory: upstream DRC).
+  0 vias in pads. Fab candidate staged in `work/out/carrier/`, not released. 27 checks pass (2 advisory: upstream DRC).
 - **Module board**: upstream's rev C, staged for JLC by `work/gen/module_fab.py` (two substitutions, Q1 CPL fixed).
-- **Audits**: rounds 1-6 in `work/AUDIT.md`; round 7 (Codex, a re-check of the round 6 fixes) next or running.
+- **Audits**: rounds 1-7 in `work/AUDIT.md`; round 7 (Codex, PR #3) found no BLOCKER or BUG. Next review after bench data.
   Outside reviewers start from `REVIEW.md` and `work/review/TASKS.md`. Then `release.py` and the order (owner).
 
 ## Commands

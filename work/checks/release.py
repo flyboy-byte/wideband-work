@@ -8,7 +8,8 @@ Refuses (exit 1, every reason listed) unless:
   - checks/last_run.json passed (none failed or skipped; a check marked "advisory" in checks.json may fail, it is listed), nothing but notes (*.md) changed since the commit it
     ran at, and every checked file still has the hash it was checked with;
   - checks/drift.py reports no hand edits waiting to be folded into the generator;
-  - the last round in AUDIT.md names a commit after which only notes (*.md) changed, and has no open BLOCKER or BUG;
+  - the latest round in AUDIT.md (the highest round number, wherever it sits in the file) names a commit after which only
+    notes (*.md), check scripts and reviewers' audit folders changed, and has no open BLOCKER or BUG;
   - REV is not already used (fab/REV/ absent, REV not in STATE.md's "Revisions used" line).
 On success writes fab/REV/RELEASE.json (commit, hashes, checks) and reminds you what to record."""
 import datetime, hashlib, json, os, re, shutil, subprocess, sys
@@ -19,12 +20,27 @@ def sh(*cmd):
     return r.returncode, r.stdout.strip()
 
 
-def design_changes(since):
-    """Files other than notes (*.md) changed between commit `since` and HEAD; None if `since` is unknown."""
+def design_changes(since, audit=False):
+    """Files other than notes changed between commit `since` and HEAD; None if `since` is unknown. Reviewers' audit
+    folders and check output never count; with audit=True check scripts don't either (the checks gate covers them)."""
     rc, out = sh('git', 'diff', '--name-only', since, 'HEAD')
     if rc:
         return None
-    return [f for f in out.splitlines() if f and not f.endswith('.md') and f != 'checks/last_run.json']
+    def counts(f):
+        dirs = f.split('/')[:-1]
+        if f.endswith('.md') or f.endswith('checks/last_run.json') or 'audit' in dirs:
+            return False
+        if 'checks' in dirs:                      # checks/out/ is check output; the scripts count unless audit=True
+            return not audit and 'out' not in dirs
+        return True
+    return [f for f in out.splitlines() if f and counts(f)]
+
+
+def latest_round(audit):
+    """The section of AUDIT.md for the highest-numbered round; files list rounds newest first or last, so use the number."""
+    parts = re.split(r'\n(?=### Round )', audit)[1:]
+    num = lambda p: int(re.match(r'### Round (\d+)', p).group(1)) if re.match(r'### Round (\d+)', p) else -1
+    return max(parts, key=num) if parts else None
 
 
 def sha(p):
@@ -69,13 +85,12 @@ def main(rev, files):
             why.append('hand edits not folded into the generator:\n    ' + out.replace('\n', '\n    '))
     try:
         audit = open('AUDIT.md').read()
-        rounds = re.split(r'\n### Round ', audit)
-        if len(rounds) < 2:
+        last = latest_round(audit)
+        if last is None:
             why.append('AUDIT.md has no round')
         else:
-            last = rounds[-1]
             m = re.search(r'Commit:\s*`?([0-9a-f]{7,40})', last)
-            moved = design_changes(m.group(1)) if m else None
+            moved = design_changes(m.group(1), audit=True) if m else None
             if moved is None or moved:
                 why.append(f"design files changed since the audited commit ({m.group(1) if m else 'none named'}): audit again"
                            + (f" ({', '.join(moved[:5])})" if moved else ''))

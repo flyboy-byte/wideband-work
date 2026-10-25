@@ -1,6 +1,6 @@
 {
  "date": "2026-10-25",
- "git_head": "18b6cef",
+ "git_head": "de4ee0d",
  "results": [
   {
    "name": "DRC module (errors)",
@@ -228,12 +228,12 @@
    "status": "pass",
    "summary": "review docs: 0 problem(s)",
    "files": {
-    "../REVIEW.md": "03a46b495d88",
-    "review/TASKS.md": "c8ef35f54227",
+    "../REVIEW.md": "4ca0666dfb44",
+    "review/TASKS.md": "d7455f56fb34",
     "review/FINDINGS-TEMPLATE.md": "7d85be0c9a6e",
     "checks/review_pack.sh": "fbeab94d332c",
-    "checks/checks.json": "dc4c91019308",
-    "AUDIT.md": "cd1726084e56"
+    "checks/checks.json": "65fa8b4c7038",
+    "AUDIT.md": "50b4673514ca"
    }
   },
   {
@@ -242,7 +242,16 @@
    "summary": "surge budget: 0 problem(s)",
    "files": {
     "../hardware/board_carrier/board_carrier.kicad_pcb": "986aced34840",
-    "checks/surge_budget.py": "1db2f3367695"
+    "checks/surge_budget.py": "a12d878ff9c3"
+   }
+  },
+  {
+   "name": "Release gate judges the latest audit round, wherever AUDIT.md lists it (Codex round 7 follow-up)",
+   "status": "pass",
+   "summary": "release gate rounds: 4/4 right",
+   "files": {
+    "checks/release.py": "cc666e23c085",
+    "checks/test_release.py": "3cb68936a838"
    }
   }
  ]

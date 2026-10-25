@@ -7,7 +7,12 @@ D1 (SMCJ24CA) holds the protected 12 V rail at up to 38.9 V, its clamping voltag
 length of a load dump (about 400 ms). R9 (1k) feeds D5 (18 V zener, BZT52C18 17.1-18.9 V) from that rail. The parts
 must carry this power within their continuous rating: a pulse curve for 400 ms isn't published for the general-purpose
 parts, and 400 ms is long enough to treat as steady. Ratings by LCSC number are from JLC's listings (REPORTED); the
-part numbers are read from the board, so a BOM swap is checked. Temperature derating is not modelled.
+part numbers are read from the board, so a BOM swap is checked.
+
+This is a budget at the TVS's datasheet clamp, not load-dump qualification (Codex round 7, R7-S1): 38.9 V is specified
+at a 10/1000 us pulse, and a real 400 ms dump depends on its source. The ratings hold only under their thermal
+conditions: R9's 0.75 W needs an assembled Rth of 110 K/W or less (Vishay 20043 note 3), and D5's 0.5 W derates
+linearly from 75 C to zero at 150 C case (MDD BZT52, fig. 1), so the case ceiling is printed for D5.
 """
 import os, sys
 
@@ -16,7 +21,7 @@ import pcbnew
 BOARD = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', 'hardware/board_carrier/board_carrier.kicad_pcb')
 V_CLAMP = 38.9                 # SMCJ24CA V_C at I_PP (docs/carrier.md, DOCUMENTED from the datasheet listing)
 VZ = (17.1, 18.9)              # BZT52C18 zener voltage range (C173425 listing)
-R9 = 1000.0
+R9 = 1000.0 * 0.99          # 1 % part at its low end: most current
 RATED_W = {                    # LCSC -> continuous power rating, W (JLC listing)
     'C4410': 0.25,             # UNI-ROYAL 1206W4F1001T5E, general purpose (up to 2026-10-24)
     'C844867': 0.75,           # Vishay CRCW12061K00FKEAHP, pulse-proof HP series (from 2026-10-25)
@@ -33,7 +38,8 @@ def problems(lcsc_r9, lcsc_d5):
         if rated is None:
             out.append(f'{ref}: {lcsc} has no rating in surge_budget.py: add it from the part\'s datasheet')
             continue
-        rows.append(f'  {ref} {lcsc}: {p:.3f} W at {V_CLAMP} V clamp, rated {rated} W ({p / rated:.0%})')
+        note = f', case under {150 - 75 * p / rated:.0f} C' if ref == 'D5' else ', if Rth <= 110 K/W'
+        rows.append(f'  {ref} {lcsc}: {p:.3f} W at {V_CLAMP} V clamp, rated {rated} W ({p / rated:.0%}{note})')
         if p > rated:
             out.append(f'{ref} {lcsc}: {p:.3f} W during a clamped load dump, over its {rated} W rating')
     return out, rows

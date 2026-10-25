@@ -309,5 +309,16 @@
       "../hardware/board_carrier/board_carrier.kicad_pcb",
       "checks/surge_budget.py"
     ]
+  },
+  {
+    "name": "Release gate judges the latest audit round, wherever AUDIT.md lists it (Codex round 7 follow-up)",
+    "cmd": [
+      "python3",
+      "checks/test_release.py"
+    ],
+    "files": [
+      "checks/release.py",
+      "checks/test_release.py"
+    ]
   }
 ]

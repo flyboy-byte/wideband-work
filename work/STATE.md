@@ -1,6 +1,6 @@
 # STATE — rusEFI wideband (module + carrier)
 
-Status: 2026-10-25 — board r41 + B1 fix + **R9 pulse-proof (C844867, round 6 R6-S3; layout unchanged)**; firmware unchanged since 2026-10-24 (comments only). Six audit rounds. Round 6 (Codex/Astra, PR #2) found two checker bugs that let failures pass (stack checker cut real recursion through pointers; sim wrappers passed aborted runs): both fixed with regressions that fail on the old code; one surge risk fixed by the R9 swap; two risks accepted (backfeed under C1, bench A8; C11 edge rails at the quote). **Next: round 7, a short re-audit of those fixes (`review/TASKS.md`), then `release.py` and the order (owner).** U9 pinout closed (Torex, via round 6). Costs, route, shopping list: `ROADMAP.md`.
+Status: 2026-10-25 — board r41 + B1 fix + **R9 pulse-proof (C844867, round 6 R6-S3; layout unchanged)**; firmware unchanged since 2026-10-24 (comments only). Seven audit rounds; **round 7 (Codex/Astra, PR #3, 2026-10-25): no BLOCKER or BUG**, verdict "yes for a supervised first prototype"; R7-S1 (surge is a conditional budget) and R7-S2/S3 (+5V load list, doc headers) answered in wording, A8 now measures the whole +5V load. The release gate read the oldest audit round (AUDIT.md lists newest first): fixed, `checks/test_release.py`. Round 6 (Codex/Astra, PR #2) found two checker bugs that let failures pass (stack checker cut real recursion through pointers; sim wrappers passed aborted runs): both fixed with regressions that fail on the old code; one surge risk fixed by the R9 swap; two risks accepted (backfeed under C1, bench A8; C11 edge rails at the quote). **Next: the owner picks the first revision name, then `release.py` and the order (owner).** U9 pinout closed (Torex, via round 6). Costs, route, shopping list: `ROADMAP.md`.
 Revision in progress: none yet   Revisions used (never reused): none by the owner. Upstream module exports are rev A, B, C (upstream's own scheme, not ours).
 <If the project already names revisions its own way (v1.0.0), keep its scheme.>
 Review pages: status report https://claude.ai/artifact/YRsjXKGZKG5AFbwkcMuYZ4 (private; rebuilt by `checks/report.py`)  fit check <link>  audit <link>
@@ -74,10 +74,11 @@ Mark a stage done only when its exit condition is true. Strike through, don't de
 | Sim wrappers fail when ngspice gives no valid result (Codex R41-CX2) | PASS | sim wrappers: 0 wrong verdict(s) | 2026-10-25 | `stability.sh` b5a591f40734, `load_accuracy.sh` ff3f503474e9 |
 | Output low from reset until the app drives PB1 (R3 vs the PB1 pull in both board.h; outside review B1) | PASS | boot level: output low from reset | 2026-10-25 | `board_carrier.kicad_pcb` 986aced34840, `board.h` 0a70a2bb2fa0, `board.h` 1dc40c1c92c0 |
 | Module order files: JLC rotation, origin and pin names from EasyEDA against the order CPL (upstream rev C + fixes) | PASS | jlc rotation: 57 parts measured, 6 need a correction, 0 problem(s) | 2026-10-25 | `wideband_controller.kicad_pcb` 0179d031bc63, `module_fab.py` fe36cd34cf0f, `jlc_rotation.py` b1455144624f |
-| Reviewer docs agree with the repo (REVIEW.md check count, TASKS.md IDs and files, pack contents) | PASS | review docs: 0 problem(s) | 2026-10-25 | `REVIEW.md` 03a46b495d88, `TASKS.md` c8ef35f54227, `FINDINGS-TEMPLATE.md` 7d85be0c9a6e, `review_pack.sh` fbeab94d332c, `checks.json` dc4c91019308, `AUDIT.md` cd1726084e56 |
-| Op-amp supply survives a clamped load dump: R9 and D5 power within rating (Codex round 6, R6-S3) | PASS | surge budget: 0 problem(s) | 2026-10-25 | `board_carrier.kicad_pcb` 986aced34840, `surge_budget.py` 1db2f3367695 |
+| Reviewer docs agree with the repo (REVIEW.md check count, TASKS.md IDs and files, pack contents) | PASS | review docs: 0 problem(s) | 2026-10-25 | `REVIEW.md` 4ca0666dfb44, `TASKS.md` d7455f56fb34, `FINDINGS-TEMPLATE.md` 7d85be0c9a6e, `review_pack.sh` fbeab94d332c, `checks.json` 65fa8b4c7038, `AUDIT.md` 50b4673514ca |
+| Op-amp supply survives a clamped load dump: R9 and D5 power within rating (Codex round 6, R6-S3) | PASS | surge budget: 0 problem(s) | 2026-10-25 | `board_carrier.kicad_pcb` 986aced34840, `surge_budget.py` a12d878ff9c3 |
+| Release gate judges the latest audit round, wherever AUDIT.md lists it (Codex round 7 follow-up) | PASS | release gate rounds: 4/4 right | 2026-10-25 | `release.py` cc666e23c085, `test_release.py` 3cb68936a838 |
 
-Written by `checks/run_all.py` at commit 18b6cef. Don't edit by hand.
+Written by `checks/run_all.py` at commit de4ee0d. Don't edit by hand.
 <!-- checks:end -->
 
 ## Bring-up results

@@ -106,3 +106,10 @@ that would help any board as a line for the `pcb-design` skill (see its "Lessons
 - 2026-10-25 Codex ran its review in the designer's own checkout and left it on `review/astra-2026-10-25`, so the
   designer's next edits landed uncommitted on the reviewer's branch (caught by an empty `git diff HEAD...branch`).
   Reviewers work in a `git worktree` of their own (REVIEW.md, route B).
+- 2026-10-25 `release.py` judged "the last round" by the last `### Round` heading, but AUDIT.md lists rounds newest
+  first, so the gate read round 5 (and refused for a missing commit line, the right answer for the wrong reason). Caught
+  while answering round 7. The gate now takes the highest round number (`checks/test_release.py`). Its file filter also
+  counted reviewers' audit folders and check scripts as design changes, which would have demanded a re-audit after
+  every review merge.
+- 2026-10-25 Round 7 caught the designer listing the LM2904 as a +5V load in the backfeed answer: its supply pin is on
+  VOP12. Read the net from the netlist before counting a part as a load.

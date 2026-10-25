@@ -71,8 +71,9 @@ Never edit the BOM or CPL by hand. Instead:
    `checks/easyeda/`, then measures its rotation, origin and pin names), then run `gen/export_fab.py` and
    `checks/run_all.py`.
 4. A substitute must keep the ratings: C16/C17 sit on the 18 V op-amp rail (25 V or more), R9 is 1206 for surge, and
-   R11 is 1206. A plain resistor of the same value and package is the only swap that can skip the audit; anything
-   active goes through an audit round.
+   R11 is 1206. A plain resistor of the same value, package **and power, pulse and thermal rating** is the only swap
+   that can skip the audit (R9 needs 0.75 W: a 250 mW 1206 would take 192 % in a clamped load dump; Codex round 7,
+   R7-S3); anything active goes through an audit round.
 
 ## Data sources and APIs
 

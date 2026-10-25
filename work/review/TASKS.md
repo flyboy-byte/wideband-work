@@ -82,7 +82,7 @@ Effort: S under 15 min, M 15-45 min, L longer (with a shell; reading-only takes 
 - **Why:** round 6 (R6-S2), accepted under owner decision C1 (no survival requirement for 12-16 V on J3-5). 12 V on
   J3-5 gives (12 - 5 - 0.6) / 470 = 13.6 mA through R11 and D3 into +5V, and the LM78M05 (U2) can't sink.
 - **Files:** `carrier-nets.txt`, `carrier.md` (bench test A8), `module-nets.txt`, `wiring.md`.
-- **Questions:** what does the board draw from +5V (module, TJA1051, REF3030, LM2904, LEDs)? Is it reliably above
+- **Questions:** what does the board draw from +5V (module, TJA1051, REF3030; the LM2904 is on VOP12, not +5V: R7-S2)? Is it reliably above
   13.6 mA in every state, including CAN idle and the bootloader? If not, how high does the rail rise, and which part
   fails first? Is there a fix that needs no layout change (a part value or a part swap), and would you make it before
   the first order?

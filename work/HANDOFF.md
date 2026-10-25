@@ -1,88 +1,59 @@
 # HANDOFF — dense session context (read after STATE.md)
 
-Written 2026-10-25 (Opus 5.5) at the end of the session that answered round 6. Replaces the 2026-10-24 version (in git
-history). Replace it at the next handoff.
+Written 2026-10-25 (Opus 5.5) after answering round 7. Replaces the earlier 2026-10-25 version (in git history).
+Replace it at the next handoff.
 
 ## Verify first, don't assume
-- `git status`: clean except `hardware/board_carrier/~board_carrier.kicad_pro.lck`, a stale KiCad lock from 2026-10-23
-  (KiCad isn't running; leave it). `git branch --show-current` must say `analog-out`: **Codex once ran in this checkout
-  and left it on its review branch**, so later edits landed there. `git log --oneline -5`. `master` = upstream
-  mck1117/wideband; `upstream` push disabled; `origin` = public fork. Push is allowed (owner lifted the hold 2026-10-24).
-- `cd work && python3 checks/run_all.py`: **26 checks, 0 failed, 2 advisory** (raw upstream DRC, owner decision D2).
-  A reviewer runs `python3 checks/run_all.py --report DIR` instead (leaves STATE.md and tracked reports alone).
-- Firmware: `cd firmware/boards/f0_module/bootloader && ./build_bootloader.sh`, then `make -C firmware -j8 BOARD=f0_module`
-  (the stack check reads `firmware/build/wideband.elf`; rebuild f0 last). Host tests 70/70 (`checks/host_tests.py`),
-  aux 21/21 (`make -C test/aux_out run`).
-- Sims (TI model in `sim/models/`, not committed): one at a time under `nice`; on this shared machine stability takes
-  tens of minutes each (full scale took about an hour on 2026-10-25).
+- `git status`: clean except `hardware/board_carrier/~board_carrier.kicad_pro.lck` (KiCad lock; `drift.py check` said
+  no drift on 2026-10-25). `git branch --show-current` must say `analog-out` (Codex once left this checkout on its
+  review branch). `master` = upstream mck1117/wideband; `upstream` push disabled; `origin` = public fork. Push allowed.
+- `cd work && python3 checks/run_all.py`: **27 checks, 0 failed, 2 advisory** (raw upstream DRC, owner decision D2).
+  Reviewers use `--report DIR`. The run rewrites timestamps in STATE.md and `checks/out/`: commit or `git checkout` them.
+- Firmware: `cd firmware/boards/f0_module/bootloader && ./build_bootloader.sh`, then `make -C firmware -j8 BOARD=f0_module`.
+- Sims (TI model in `sim/models/`, not committed): one at a time under `nice`.
 
-Last raw output (2026-10-25, after the round 6 fixes):
+Last raw output (2026-10-25, after the round 7 answers):
 ```
-FAIL  DRC module (errors): DRC 11 errors: solder_mask_bridge 10, clearance 1  [advisory, D2]
-FAIL  DRC carrier (errors): DRC 23 errors: courtyards_overlap 14, copper_edge_clearance 3, ...  [advisory, D2]
-PASS  Carrier DRC vs upstream baseline: 0 new violations, 0 unconnected
-PASS  JLC rotation (carrier): 38 parts measured, 4 need a correction, 0 problem(s)
-PASS  Fab candidate matches the board: 38 placed, 6 not fitted, outline 40.00 x 51.50 mm, 0 problem(s)
-PASS  Host gtest suite: [  PASSED  ] 70 tests.     PASS  Analog output host tests: [  PASSED  ] 21 tests.
-PASS  Static worst-case stack: ok, smallest margin 92 B     PASS  Stack checker cases: 4, 0 wrong verdict(s)
-PASS  Sim wrappers: 0 wrong verdict(s)     PASS  Boot level: output low from reset
-PASS  Module order files: 57 parts measured, 6 need a correction, 0 problem(s)
-PASS  Reviewer docs agree with the repo: 0 problem(s)     PASS  Surge budget: 0 problem(s)
-26 checks, 0 failed, 2 advisory failed, 0 skipped   (the other 12 pass as before: last_run.json)
+  R9 C844867: 0.480 W at 38.9 V clamp, rated 0.75 W (64%, if Rth <= 110 K/W)
+  D5 C173425: 0.382 W at 38.9 V clamp, rated 0.5 W (76%, case under 93 C)
+surge budget: 0 problem(s)
+release gate rounds: 4/4 right            (old gate judged: Round 5; new: Round 7)
+27 checks, 0 failed, 2 advisory failed, 0 skipped
 ```
 
 ## Where things stand (2026-10-25)
-- **Board**: r41 layout, unchanged since 2026-10-24. Part changes: R3 4.7k (B1, 2026-10-24), **R9 C844867** (Vishay
-  CRCW1206 HP pulse-proof, 0.75 W; R6-S3, 2026-10-25), one LCSC field each in the board and schematic. Fab candidate
-  `work/out/carrier/` re-exported (26 BOM lines, 8 Extended). Not released; nothing ordered.
-- **Firmware**: unchanged in behaviour since 2026-10-24 (PB1 pull-down, invalid = 5.0 V, heater clamp, watchdog);
-  2026-10-25 changed two comments only.
-- **Audits**: rounds 1-6 recorded in `AUDIT.md`. Round 6 (Codex/Astra, PR #2, merged by fast-forward): 2 BUG
-  (both in our checkers: stack checker, sim wrappers), 3 RISK, 3 NOTE; 5 fixed, 2 accepted, each fix with a
-  regression that fails on the old code. **Round 7 running now** (owner started Astra on 2026-10-25 with the prompt
-  below; its folder will be `work/audit/astra-2026-10-25b/`, branch `review/astra-2026-10-25b`, in its own worktree
-  `../wideband-review-astra`). Tasks: `review/TASKS.md` TK1-TK7.
-- **Cousin (sidewinderzz)**: no activity since his round 5 branch (2026-10-24 21:43 UTC); his `analog-out` is behind.
-- **Module**: `gen/module_fab.py` stages upstream rev C (R10/C3 substituted, J1/J3 off BOM, Q1 CPL 180 -> 0). U9
-  pinout settled by round 6 from Torex's datasheet.
-- **Recommendation given to the owner (2026-10-25)**: after round 7, if there's no BLOCKER or BUG, release and order;
-  stop routine desk reviews; the next review worth paying for comes after bench data (A1-A8).
+- **Board**: r41 layout, unchanged since 2026-10-24; R3 4.7k, R9 C844867. Fab candidate `work/out/carrier/` (26 BOM
+  lines, 8 Extended). Not released; nothing ordered. Revisions used: none.
+- **Firmware**: unchanged in behaviour since 2026-10-24.
+- **Audits**: rounds 1-7 in `AUDIT.md`. **Round 7** (Codex/Astra, PR #3, merged with a merge commit): no BLOCKER or
+  BUG; verdict "yes for a supervised first prototype, not a qualified automotive/fault-survival product". R7-S1 RISK
+  (surge is a conditional budget: R9 Rth, D5 case under 93 C, the TVS clamp is for a 10/1000 us pulse) answered in
+  wording; R7-S2 (the LM2904 is on VOP12, not +5V; A8 now measures the whole +5V load per state) and R7-S3 (headers,
+  `--report` in setup, swap rule keeps power/pulse/thermal rating) fixed. It added 19 sampler/heater latency tests in
+  its folder.
+- **Found while answering**: `release.py` read the oldest round (last heading). Fixed here and in the skill
+  (dotfiles c4a93a6), with `checks/test_release.py`.
+- **Recommendation stands**: no more routine desk reviews; next review after bench data (A1-A8).
+- Cousin (sidewinderzz): no activity since 2026-10-24 21:43 UTC.
 
 ## Next, in order
-1. **Round 7 result**: when the owner says it's done, check `gh pr list -R flyboy-byte/wideband-work`, read
-   `work/audit/astra-2026-10-25b/FINDINGS.md`, verify each finding yourself (fix + regression that fails on the old
-   code, or a written answer), add a "Round 7" section to `AUDIT.md`, merge the PR (it should only add its folder:
-   check `git diff --name-only analog-out...origin/<branch>`).
-2. **Release** (if no open BLOCKER/BUG): `python3 gen/export_fab.py`, `python3 checks/run_all.py`, then
-   `python3 checks/release.py <new rev> out/carrier/carrier-gerbers.zip out/carrier/carrier-bom.csv out/carrier/carrier-cpl.csv out/carrier/not-fitted.csv`.
-   `release.py` needs the last audit round to cover the current design. Revision letters used: `STATE.md`.
-3. **Order** (owner, money): `docs/ordering.md`. Edge rails for C11 (R6-S4); placement preview Q1 (module) and D2
-   (carrier) first; `checks/bom_stock.py 5` on the day. About $180-215 for 5 + 5 (`ROADMAP.md`).
-4. **Owner purchases**: HiLetgo ST-Link V2 + TC2030-IDC-NL + jumpers, LSU 4.9 + Bosch 1 928 404 669 plug kit,
-   Molex 36792-1201 (terminals and seals from AS-36783-001-001). Bench tests: `docs/carrier.md` A1-A8, W1, H1-H6.
+1. **Owner picks the first revision name** (none used; e.g. `carrier-a`, or `v1.0`). Then
+   `python3 gen/export_fab.py && python3 checks/run_all.py`, commit, and
+   `python3 checks/release.py <rev> out/carrier/carrier-gerbers.zip out/carrier/carrier-bom.csv out/carrier/carrier-cpl.csv out/carrier/not-fitted.csv`.
+   Then fill `fab/<rev>/README.md`, add the rev to "Revisions used" in STATE.md, commit. The module files (`out/module/`)
+   are upstream rev C and go in the same order.
+2. **Order** (owner, money): `docs/ordering.md`. Edge rails for C11 (R6-S4); placement preview Q1 (module) and D2
+   (carrier); `checks/bom_stock.py 5` on the day. About $180-215 for 5 + 5 (`ROADMAP.md`).
+3. **Owner purchases**: HiLetgo ST-Link V2 + TC2030-IDC-NL + jumpers, LSU 4.9 + Bosch 1 928 404 669 plug kit,
+   Molex 36792-1201. Bench tests: `docs/carrier.md` A1-A8, W1, H1-H6.
 
-Round 7 start (the owner pasted this into Codex):
-```
-cd ~/projects/wideband-work && git pull && codex
-Independent review, round 7. Check our round 6 fixes; don't trust our docs. Read REVIEW.md, then work/review/TASKS.md,
-then the "Hand-off" in work/AUDIT.md. Work in your own worktree (git worktree add ../wideband-review-astra -b
-review/astra-2026-10-25b), folder work/audit/astra-2026-10-25b/, with FINDINGS.md copied from
-work/review/FINDINGS-TEMPLATE.md. Work TK1-TK7 in order without waiting for me; update FINDINGS.md and commit after each
-task. Run checks with `python3 checks/run_all.py --report <your folder>`. Don't change design files. With a quarter of
-your budget left, write the verdict, push, and open a PR to flyboy-byte/wideband-work.
-```
-
-## This session (2026-10-25), what changed and where
+## This session (2026-10-25, after the first handoff of the day)
 | Item | What | Evidence |
 | --- | --- | --- |
-| Review docs | `REVIEW.md` (three rules, two routes, agent prompt with worktree), `review/TASKS.md`, `review/FINDINGS-TEMPLATE.md`, `review/PROMPT.md`; pack adds plain-text part/net lists (`checks/pack_extras.py`), module Gerbers, `INDEX.md`, a zip | `checks/review_docs.py` (self-test 5/5) |
-| Pack bug | carrier and module `README.md`/`not-fitted.csv` collided; module's overwrote the carrier's | `audit_pack.py` refuses collisions, `FILE=NAME` renames |
-| R6-S6 | stack checker cut real recursion through pointers | `NARROW` table + every loop fails; test case 4 fails (hangs) on the old checker; production margin 92 B |
-| R6-S8 | aborted ngspice runs passed all three wrappers | `sim/completed.sh`; 9 fake cases fail on the old wrappers; real runs 25/25, 48/48, 27/27 (full scale identical) |
-| R6-S7 | stability step before the output settled | step at 3 ms + 0.5 mV drift guard; `sim/stability.out`: E 0 % to 10 nF, 9.2 % / 22.4 % at 47 / 100 nF |
-| R6-S3 | R9 250 mW at 0.475 W in a clamped load dump | R9 -> C844867; `checks/surge_budget.py` fails on C4410 |
-| Docs | offset budget 7 mV max (R6-S1); fuse wording (R6-S5); 35-48 V -> 27-39 V; bench test A8 (backfeed); edge rails step; `run_all.py --report` | `AUDIT.md` round 6 |
-| Skill | `pcb-design` updated and pushed (dotfiles): reviewer briefing, `templates/review/`, scripts (`run_all --report`, advisory, `audit_pack` fixes), sim completion, surge budget | `~/.claude/skills/pcb-design` and `~/.agents/skills/pcb-design` in step |
+| Round 7 | verified R7-S1..S3 against nets and datasheet figures; AUDIT "Round 7"; PR #3 merged | `AUDIT.md` |
+| R7-S1 | `surge_budget.py`: -1 % R9, thermal conditions printed; `carrier.md` "conditional budget" | checker output above |
+| R7-S2/S3 | +5V load list, A8 per-state whole-board current, REVIEW/AUDIT headers, `--report` in setup, swap rule | `review_docs.py` passes |
+| Release gate | highest round number; audit folders and check scripts aren't design changes | `checks/test_release.py` (fails on the old gate: no `latest_round`) |
 
 ## Board run history (generator `gen/gen_carrier_pcb.py`, seed 7)
 | Run | Change | Result |
@@ -128,6 +99,9 @@ your budget left, write the verdict, push, and open a PR to flyboy-byte/wideband
   against the stop time (`sim/completed.sh`).
 - bash reads a script as it runs: don't edit a `sim/*.sh` while it's running.
 - A Codex reviewer in the same checkout switches its branch: reviewers use `git worktree` (REVIEW.md).
+- Astra's review branches start from the commit it reviewed, not our latest: merge them (`--no-ff`), they don't
+  fast-forward. Check scope with `git diff --name-only $(git merge-base analog-out B) B`.
+- `release.py` takes the highest `### Round N` in AUDIT.md (rounds are listed newest first) and needs a `Commit:` line in it.
 
 ## Owner (Logan)
 Autonomy on "keep going": reversible steps, questions + defaults into STATE.md; stop for money, deleting, overwriting his

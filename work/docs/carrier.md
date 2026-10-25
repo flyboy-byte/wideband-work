@@ -98,7 +98,11 @@ error (0.1 V) is 0.2 AFR, which is why the reference buffer matters [INFERRED].
      27-39 V in a surge (the 35-48 V used before was the SMCJ30CA's, so the design below was sized for more); the plain TI LM2904 is rated 26 V, not 32 V
      ([TI SLOS068AB](https://www.ti.com/lit/ds/symlink/lm358.pdf), supply tables; Codex audit C6). 1k + 18 V zener
      (BZT52C18, C173425) holds it below that; the op-amp draws about 1 mA, so the 1k costs about 1 V of headroom
-     (fine down to about 7.5 V battery for a 5 V output) [INFERRED].
+     (fine down to about 7.5 V battery for a 5 V output) [INFERRED]. At the 38.9 V clamp R9 takes 0.48 W of its 0.75 W
+     and D5 0.38 W of 0.5 W (`checks/surge_budget.py`). That is a conditional budget, not load-dump qualification
+     (Codex round 7, R7-S1): R9's rating assumes an assembled Rth of 110 K/W or less, D5 is within rating only below
+     about 93 C case, and the SMCJ24CA's 38.9 V is specified for a 10/1000 us pulse, not a 400 ms dump from an
+     unknown source. A failure there loses the analog output only.
    - REF3030 output: 100 nF, inside the 0.1-10 uF stable range in TI's current datasheet (SBVS032J) [REPORTED via a
      search summary of the table; confirm it is the REF3030 row].
 
@@ -253,7 +257,7 @@ J3-5 (net AOUT_J). One schematic connection, folded into the next board run with
 | A2 | Sensor in free air, warmed up | DC volts at J3-5 vs AFR the firmware reports over CAN | volts match the curve within ±0.05 V |
 | A3 | Short J3-5 to GND briefly through the meter's current range | current | about 6 mA since r37 (feedback now sees the short, so the op-amp drives high into R8 + R11 = 800R while R9 1k starves its supply: (12 - V)/1k = (V - 1.5)/800 gives V about 6.2 V, I about 5.8 mA; INFERRED, LM2904 high-side drop 1.5 V FROM MEMORY; was about 9 mA before r37); board survives |
 | A7 | Powered, module in: meter +5V (J3) to J3-7 | DC volts | note it: below 5.0 V, full scale into a 4.7k receiver reads low (`sim/full_scale_corners.sh`: -66 mV at 4.8 V); 10k and up are unaffected |
-| A8 | Powered, module in, no sensor: meter in series with the +5V supply to the module (or the LM78M05 output current, from the drop across a temporary series resistor) | DC mA | note it: a 12 V fault on J3-5 pushes 13.6 mA into +5V through R11 and D3, and the LM78M05 can't sink, so the rail holds only if the board draws more than that (Codex round 6, R6-S2; accepted under C1) |
+| A8 | Powered, module in, no sensor: the whole +5V load, not only the module's: the LM78M05 (U2) output current, from the drop across a temporary series resistor in its output (or the 12 V input current with the heater unplugged, minus U2's few mA quiescent). Note it in each state: held in reset, bootloader, running with CAN idle, LEDs off. The +5V loads are the TJA1051, the REF3030 and the module (the LM2904 is on its own 18 V rail, VOP12, so it doesn't count; Codex round 7, R7-S2) | DC mA | note it: a 12 V fault on J3-5 pushes 13.6 mA into +5V through R11 and D3, and the LM78M05 can't sink, so the rail holds only if the board draws more than that (Codex round 6, R6-S2; accepted under C1) |
 | A5 | Bootloader only (app not yet flashed, or right after power-up): meter J3-5 to J3-7 from the moment power is applied (outside review B1, 2026-10-24) | DC volts during the first 2 s, and with no app at all | under 0.1 V the whole time (was about 5 V for 0.8 s with R3 100k and the PB1 pull-up); R3 4.7k and the PB1 pull-down hold it low |
 | A6 | App flashed, sensor connected, cold start | DC volts at J3-5 while the heater warms up, then after | 5.0 V (20 AFR, "invalid") until the controller reports closed loop over CAN, then follows the AFR (N1, 2026-10-24: invalid is the lean end, so a closed-loop ECU adds fuel instead of pulling it) |
 | A4 | In the car, engine running, sensor hot: meter (mV range) between J3-7 at the controller and the receiver's sensor-ground pin | DC mV | under 20 mV (= 0.04 AFR at 0.5 V per AFR); more means a ground offset in the wiring (see "Grounding and the output") |
