@@ -1,0 +1,9 @@
+{
+  "command": [
+    "python3",
+    "audit/order-readiness-2026-10-25/release_inventory.py"
+  ],
+  "cwd": "/home/logan/projects/wideband-review-order/work",
+  "returncode": 0,
+  "seconds": 0.93
+}
