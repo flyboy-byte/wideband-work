@@ -113,3 +113,5 @@ that would help any board as a line for the `pcb-design` skill (see its "Lessons
   every review merge.
 - 2026-10-25 Round 7 caught the designer listing the LM2904 as a +5V load in the backfeed answer: its supply pin is on
   VOP12. Read the net from the netlist before counting a part as a load.
+- 2026-10-25 Reviewer worktrees (`../wideband-review-*`) were left in `~/projects` after their PRs merged; the owner found
+  them. REVIEW.md now has the designer remove them after each merge.

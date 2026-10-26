@@ -108,6 +108,10 @@ name and the commit you reviewed. Where two reviewers disagree, the owner decide
 report doesn't win by default. A design change made because of a finding gets its own check, a bench test and an
 item in the next round's `TASKS.md`.
 
+After the merge the designer removes the reviewer's worktree and branch (`git worktree remove --force
+../wideband-review-<you>` once `git status` there is clean and the branch is merged; `--force` is needed because
+of the submodules), so old checkouts don't pile up beside the repo.
+
 Out of scope for any reviewer:
 - ordering, pushing to `analog-out`, and publishing;
 - engine-bay temperature ratings (the owner has said they aren't a design driver for this prototype);
